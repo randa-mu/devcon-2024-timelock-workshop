@@ -139,14 +139,9 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
 
     /// @notice Reveals the unsealed bid amount after auction ends
     function revealBid(uint256 bidID, uint256 unsealedAmount) external onlyAfterEnded {
-        // todo refactor function to be callable by timelock contract only
+        // todo refactor function to be callable by timelock contract only with unsealed bid
         require(bidsById[bidID].bidID != 0, "Bid ID does not exist.");
-        require(bidsById[bidID].bidder == msg.sender, "Only the bidder can reveal their bid.");
         require(!bidsById[bidID].revealed, "Bid already revealed.");
-
-        bidsById[bidID].unsealedAmount = unsealedAmount;
-        bidsById[bidID].revealed = true;
-        revealedBidsCount += 1;
 
         updateHighestBid(bidID, unsealedAmount);
     }
@@ -158,14 +153,12 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
     /// @param unsealedAmount The unsealed bid amount
     function updateHighestBid(uint256 bidID, uint256 unsealedAmount) internal {
         Bid storage bid = bidsById[bidID];
-        require(bid.bidID != 0, "Bid ID does not exist.");
-        require(!bid.revealed, "Bid already revealed.");
 
         bid.unsealedAmount = unsealedAmount;
         bid.revealed = true;
         revealedBidsCount += 1;
 
-        if (unsealedAmount > highestBid) {
+        if (unsealedAmount > highestBid && unsealedAmount > reservePrice) {
             highestBid = unsealedAmount;
             highestBidder = bid.bidder;
         }
@@ -189,13 +182,24 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
         return highestBidder;
     }
 
+    function getBidWithBidder(address bidder) external view returns (Bid memory) {
+        return bidsById[bidderToBidID[bidder]];
+    }
+
+    function getBidWithBidID(uint256 bidID) external view returns (Bid memory) {
+        return bidsById[bidID];
+    }
+
     // ** Internal Utilities **
+
+    uint256 internal id = 0;
 
     /// @notice Generates a unique ID for the bid based on the sealed amount
     /// @param sealedAmount The sealed (encrypted) bid amount
     /// @return A unique bid identifier
     function generateBidID(bytes calldata sealedAmount) internal returns (uint256) {
+        id += 1;
         // todo refactor function to return requestID from timelock contract
-        return uint256(keccak256(abi.encodePacked(sealedAmount)));
+        return id;
     }
 }
