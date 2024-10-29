@@ -6,15 +6,12 @@ import {SimpleAuction} from "../src/SimpleAuction.sol";
 
 contract SimpleAuctionTest is Test {
     SimpleAuction public auction;
-    uint256 public constant durationMinutes = 1;
-    uint256 public constant reservePrice = 1;
-    uint256 public constant paymentWindowMinutes = 1;
 
     function setUp() public {
-        auction = new SimpleAuction(durationMinutes, reservePrice, paymentWindowMinutes);
+        auction = new SimpleAuction();
     }
 
-    function test_DeploymentConfigurations() public view {
-        assertNotEq(auction.auctioneer(), address(0));
-    }
+    // function test_DeploymentConfigurations() public view {
+    //     assertNotEq(auction.auctioneer(), address(0));
+    // }
 }

@@ -1,20 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.28;
 
-abstract contract SimpleAuctionBase {
-    address public auctioneer;
-    uint256 public auctionEndTime;
-    // todo the "highest" variables (highestBidder and highestBid) will only be used after the end of the auction, post decryption of bid amounts
-    // todo add decrypt function that takes an array of decrypted values / bytes linked to bid ids
-    address public highestBidder;
-    uint256 public highestBid;
-    uint256 public reservePrice; // todo rename to reserveDeposit
-    bool public auctionEnded;
-    // window for highest bidder to fulfil the bid, afterwhich auctioneer can claim their reserve deposit.
-    uint256 public paymentDeadline;
-    bool public paymentCompleted;
-    // todo rename to reserveDeposits
-    mapping(address => uint256) public deposits; // Reserve deposits by bidders
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+
+abstract contract SimpleAuctionBase is ReentrancyGuard {
+    struct Bid {
+        uint256 bidID;
+        bytes sealedAmount;
+        uint256 unsealedAmount;
+        address bidder;
+        bool revealed;
+    }
 
     enum AuctionState {
         Ongoing,
@@ -22,27 +18,44 @@ abstract contract SimpleAuctionBase {
     }
 
     AuctionState public auctionState;
-    // todo encrypt bid amount and emit data needed for offchain timelock encryption
-    // people can only bid once so their wallet address can be bid id for offchain purposes
+    address public auctioneer;
+    uint256 public auctionEndBlock;
+    uint256 public highestBidPaymentDeadlineBlock;
+    uint256 public totalBids;
+    uint256 public revealedBidsCount;
+    address public highestBidder;
+    uint256 public highestBid;
+    uint256 public reservePrice;
+    bool public highestBidPaid;
 
-    event NewBid(address indexed bidder, uint256 amount);
+    mapping(address => uint256) public depositedReservePrice;
+    mapping(uint256 => Bid) public bidsById;
+    mapping(address => uint256) public bidderToBidID;
+
+    event NewBid(uint256 bidID, address indexed bidder, bytes sealedAmount);
     event AuctionEnded(address winner, uint256 amount);
+    event RevealReceived(uint256 bidID, address bidder, uint256 unsealedAmount);
+    event HighestBidFulfilled(address bidder, uint256 amount);
     event ReserveClaimed(address claimant, uint256 amount);
-    event PaymentCompleted(address bidder, uint256 amount);
     event ForfeitedReserveClaimed(address auctioneer, uint256 amount);
 
     modifier onlyAuctioneer() {
-        require(msg.sender == auctioneer, "Only the auctioneer can call this.");
+        require(msg.sender == auctioneer, "Only auctioneer can call this.");
         _;
     }
 
     modifier onlyWhileOngoing() {
-        require(block.timestamp < auctionEndTime, "Auction has already ended.");
+        require(block.number < auctionEndBlock, "Auction has already ended.");
         _;
     }
 
     modifier onlyAfterEnded() {
-        require(block.timestamp >= auctionEndTime, "Auction is still ongoing.");
+        require(block.number >= auctionEndBlock, "Auction is still ongoing.");
+        _;
+    }
+
+    modifier allBidsUnsealed() {
+        require(revealedBidsCount == totalBids, "Not all bids have been revealed.");
         _;
     }
 
@@ -50,121 +63,129 @@ abstract contract SimpleAuctionBase {
         require(msg.value == reservePrice, "Bid must be exactly equal to the reserve price.");
         _;
     }
-    // todo use blocks for auction duration and to sync with offchain timelock easily
 
-    constructor(uint256 durationMinutes, uint256 _reservePrice, uint256 paymentWindowMinutes) {
+    constructor(uint256 durationBlocks, uint256 _reservePrice, uint256 highestBidPaymentWindowBlocks) {
         auctioneer = msg.sender;
-        auctionEndTime = block.timestamp + (durationMinutes * 1 minutes);
+        auctionEndBlock = block.number + durationBlocks;
+        highestBidPaymentDeadlineBlock = auctionEndBlock + highestBidPaymentWindowBlocks;
         reservePrice = _reservePrice;
         auctionState = AuctionState.Ongoing;
-        auctionEnded = false;
-        paymentCompleted = false;
-        paymentDeadline = auctionEndTime + (paymentWindowMinutes * 1 minutes);
     }
+
+    // ** Setter Functions **
 
     function depositReserve() external payable {
         require(msg.value == reservePrice, "Deposit must be exactly equal to the reserve price.");
-        deposits[msg.sender] += msg.value;
+        depositedReservePrice[msg.sender] += msg.value;
     }
 
-    function bid() external payable onlyWhileOngoing {
-        require(deposits[msg.sender] >= reservePrice, "You must deposit the reserve price before bidding.");
-        // todo task - change logic to match interface for timelock
-        // we can have base contract with correct logic as virtual with
-        // pseudo code comments but not fully implemented
-        // have a toggle in README with correct logic
-        require(msg.value > highestBid, "Bid must be higher than the current highest bid.");
+    // Override this function in child SimpleAuction contract
+    function sealedBid(bytes calldata sealedAmount) internal virtual onlyWhileOngoing {
+        // todo convert logic into pseudo code with numbered tasks for workshop
+        // after unit tests
+        require(depositedReservePrice[msg.sender] >= reservePrice, "Deposit the reserve price before bidding.");
 
-        // todo when bidding, no payments made, and no refunds.
-        // they simply indicate an amount which will be encrypted and emitted in an event
-        // Refund the previous highest bidder if there is one
-        if (highestBidder != address(0)) {
-            // Send the highest bid back to the previous highest bidder
-            payable(highestBidder).transfer(highestBid);
-        }
+        uint256 bidID = generateBidID(sealedAmount);
+        require(bidsById[bidID].bidID == 0, "Bid ID must be unique");
 
-        // todo these variables are not used during timelock window till end of auction.
-        // just store bid information and timelocked bid
-        highestBidder = msg.sender;
-        highestBid = msg.value;
+        Bid memory newBid =
+            Bid({bidID: bidID, sealedAmount: sealedAmount, unsealedAmount: 0, bidder: msg.sender, revealed: false});
 
-        emit NewBid(msg.sender, msg.value);
+        bidsById[bidID] = newBid;
+        bidderToBidID[msg.sender] = bidID;
+        totalBids += 1;
+
+        emit NewBid(bidID, msg.sender, sealedAmount);
     }
 
-    // todo task - called after timelock
-    function endAuction() external onlyAuctioneer onlyAfterEnded {
-        auctionState = AuctionState.Ended;
-        auctionEnded = true;
-        // todo this logic is useful only after timelock
-        if (highestBid > 0) {
-            // Transfer the highest bid amount to the auctioneer
-            // todo no payment made till highest bidder is known after timelock and they
-            // fulfil their bid by paying
-            payable(auctioneer).transfer(highestBid);
-            emit AuctionEnded(highestBidder, highestBid);
-        } else {
-            emit AuctionEnded(address(0), 0); // No valid bids
-        }
-    }
-
-    // todo called at the end of auction
-    // todo add a window after the auction within which the highest bidder has to complete payment
-    // if they do not complete after this window, auctioneer can claim their reserve deposit
-    function completePayment() external payable {
-        require(auctionEnded, "Auction is still ongoing.");
+    function fulfilHighestBid() external payable onlyAfterEnded allBidsUnsealed nonReentrant {
+        require(highestBid > 0, "Highest bid is zero");
         require(msg.sender == highestBidder, "Only the highest bidder can complete the payment.");
-        require(block.timestamp <= paymentDeadline, "Payment deadline has passed.");
-        require(!paymentCompleted, "Payment has already been completed.");
+        require(block.number <= highestBidPaymentDeadlineBlock, "Payment deadline has passed.");
+        require(!highestBidPaid, "Payment has already been completed.");
         require(
             msg.value == highestBid - reservePrice, "Payment must be equal to highest bid minus the reserve amount."
         );
 
-        paymentCompleted = true;
-
-        // Transfer the payment to the auctioneer
+        highestBidPaid = true;
         payable(auctioneer).transfer(msg.value + reservePrice);
 
-        emit PaymentCompleted(msg.sender, msg.value + reservePrice);
+        emit HighestBidFulfilled(msg.sender, msg.value + reservePrice);
     }
 
-    // todo task - we will only know highest bidder and highest bid after timelock
-    function claimReserve() external {
-        require(auctionEnded, "Auction is still ongoing.");
+    function claimReservePriceDeposit() external onlyAfterEnded allBidsUnsealed nonReentrant {
         require(msg.sender != highestBidder, "Highest bidder cannot claim the reserve.");
-        uint256 depositAmount = deposits[msg.sender];
-
+        uint256 depositAmount = depositedReservePrice[msg.sender];
         require(depositAmount > 0, "No reserve amount to claim.");
 
-        // Reset the deposit for the claimant
-        deposits[msg.sender] = 0;
-
-        // Refund the reserve deposit to non-winning bidders
+        depositedReservePrice[msg.sender] = 0;
         payable(msg.sender).transfer(depositAmount);
         emit ReserveClaimed(msg.sender, depositAmount);
     }
 
-    function claimForfeitedReserve() external onlyAuctioneer {
-        require(auctionEnded, "Auction is still ongoing.");
-        require(block.timestamp > paymentDeadline, "Payment deadline has not passed.");
-        require(!paymentCompleted, "Payment has already been completed.");
+    function claimForfeitedReservePriceDeposit() external onlyAuctioneer onlyAfterEnded allBidsUnsealed nonReentrant {
+        require(block.number > highestBidPaymentDeadlineBlock, "Payment deadline has not passed.");
+        require(!highestBidPaid, "Payment has already been completed.");
 
-        uint256 forfeitedAmount = deposits[highestBidder];
+        uint256 forfeitedAmount = depositedReservePrice[highestBidder];
         require(forfeitedAmount > 0, "No forfeited reserve to claim.");
 
-        // Reset the deposit for the highest bidder
-        deposits[highestBidder] = 0;
-
-        // Transfer the forfeited reserve to the auctioneer
+        depositedReservePrice[highestBidder] = 0;
         payable(auctioneer).transfer(forfeitedAmount);
         emit ForfeitedReserveClaimed(auctioneer, forfeitedAmount);
     }
 
-    // todo the functions below should return zero values till after timelock
+    // todo refactor function to be callable by timelock contract only
+    function revealBid(uint256 bidID, uint256 unsealedAmount) external onlyAfterEnded {
+        require(bidsById[bidID].bidID != 0, "Bid ID does not exist.");
+        require(bidsById[bidID].bidder == msg.sender, "Only the bidder can reveal their bid.");
+        require(!bidsById[bidID].revealed, "Bid already revealed.");
+
+        bidsById[bidID].unsealedAmount = unsealedAmount;
+        bidsById[bidID].revealed = true;
+        revealedBidsCount += 1;
+
+        updateHighestBid(bidID, unsealedAmount);
+    }
+
+    // ** Internal Functions **
+
+    function updateHighestBid(uint256 bidID, uint256 unsealedAmount) internal {
+        Bid storage bid = bidsById[bidID];
+        require(bid.bidID != 0, "Bid ID does not exist.");
+        require(!bid.revealed, "Bid already revealed.");
+
+        bid.unsealedAmount = unsealedAmount;
+        bid.revealed = true;
+        revealedBidsCount += 1;
+
+        if (unsealedAmount > highestBid) {
+            highestBid = unsealedAmount;
+            highestBidder = bid.bidder;
+        }
+
+        emit RevealReceived(bidID, bid.bidder, unsealedAmount);
+    }
+
+    function endAuction() external onlyAuctioneer onlyAfterEnded {
+        auctionState = AuctionState.Ended;
+        emit AuctionEnded(highestBidder, highestBid);
+    }
+
+    // ** Getter Functions **
+
     function getHighestBid() external view returns (uint256) {
         return highestBid;
     }
 
     function getHighestBidder() external view returns (address) {
         return highestBidder;
+    }
+
+    // ** Internal Utilities **
+
+    // todo refactor function to return requestID from timelock contract
+    function generateBidID(bytes calldata sealedAmount) internal returns (uint256) {
+        return uint256(keccak256(abi.encodePacked(sealedAmount)));
     }
 }
