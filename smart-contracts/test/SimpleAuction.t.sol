@@ -41,24 +41,24 @@ contract SimpleAuctionTest is Test {
 
     function test_RevealBid() public {
         // First, place a bid
-        uint256 bidAmount = 1000;
+        uint256 bidAmount = 0.5 ether;
         vm.deal(bidder1, 1 ether);
         vm.startPrank(bidder1);
-        // todo not working
+        // todo only .prank(addr) not working for some reason??
         // vm.prank(bidder1);
-        auction.sealedBid{value: auction.reservePrice()}(abi.encodePacked(bidAmount)); // Place a sealed bid of bidAmount
+        uint256 bidID = auction.sealedBid{value: auction.reservePrice()}(abi.encodePacked(bidAmount)); // Place a sealed bid of bidAmount
         vm.stopPrank();
 
         // Move to the auction end block to end the auction
         vm.roll(auction.auctionEndBlock() + 1);
         
         // Reveal the bid
-        auction.revealBid(1, 1000); // Reveal the bid
+        auction.revealBid(bidID, bidAmount); // Reveal the bid
 
-        SimpleAuction.Bid memory b = auction.getBidWithBidID(1);
+        SimpleAuction.Bid memory b = auction.getBidWithBidID(bidID);
         
         assertEq(auction.highestBidder(), bidder1, "Highest bidder should be bidder1");
         assertEq(b.bidder, bidder1, "Bidder for bid ID 1 should be bidder1");
-        assertEq(auction.highestBid(), 1000, "Highest bid should be 1000");
+        assertEq(auction.highestBid(), bidAmount, "Highest bid should be 1000");
     }
 }

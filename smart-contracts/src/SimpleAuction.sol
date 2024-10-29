@@ -12,7 +12,7 @@ contract SimpleAuction is SimpleAuctionBase {
     /// @notice Bidders need to deposit the exact reserve price before placing a sealed bid
     /// @dev To be overridden by child contract to implement full bid sealing logic
     /// @param sealedAmount The encrypted bid amount
-    function sealedBid(bytes calldata sealedAmount) external payable override onlyWhileOngoing meetsExactReservePrice {
+    function sealedBid(bytes calldata sealedAmount) external payable override onlyWhileOngoing meetsExactReservePrice returns (uint256) {
         // todo convert logic into pseudo code with numbered tasks for workshop
         // after unit tests
 
@@ -32,5 +32,7 @@ contract SimpleAuction is SimpleAuctionBase {
         totalBids += 1;
 
         emit NewBid(bidID, msg.sender, sealedAmount);
+
+        return bidID;
     }
 }
