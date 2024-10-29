@@ -6,15 +6,22 @@ import {SimpleAuction} from "../src/SimpleAuction.sol";
 
 contract SimpleAuctionScript is Script {
     SimpleAuction public simpleAuction;
-
-    function setUp() public {}
+    uint256 public durationBlocks = 10;
+    uint256 public reservePrice = 0.1 ether;
+    uint256 public highestBidPaymentWindowBlocks = 5;
 
     function run() public {
         vm.startBroadcast();
 
-        simpleAuction = new SimpleAuction();
+        simpleAuction = new SimpleAuction(
+            durationBlocks,
+            reservePrice,
+            highestBidPaymentWindowBlocks
+        );
         console.log("Simple Auction contract deployed to:", address(simpleAuction));
-        // todo log constructor parameters as well
+        console.log("Auction duration in blocks:", durationBlocks);
+        console.log("Auction reserve price in wei:", reservePrice);
+        console.log("Window for fulfilling highest bid in blocks", highestBidPaymentWindowBlocks);
 
         vm.stopBroadcast();
     }

@@ -18,6 +18,7 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
     enum AuctionState {
         Ongoing, // Auction is currently active
         Ended // Auction has ended
+
     }
 
     // ** State Variables **
@@ -88,32 +89,7 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
     /// @notice Bidders need to deposit the exact reserve price before placing a sealed bid
     /// @dev To be overridden by child contract to implement full bid sealing logic
     /// @param sealedAmount The encrypted bid amount
-    function sealedBid(bytes calldata sealedAmount) internal virtual onlyWhileOngoing meetsExactReservePrice {
-        // todo convert logic into pseudo code with numbered tasks for workshop
-        // after unit tests
-
-        // Generate a unique bid ID based on the sealed amount
-        uint256 bidID = generateBidID(sealedAmount);
-        // Check that the bid ID does not already exist to enforce uniqueness
-        require(bidsById[bidID].bidID == 0, "Bid ID must be unique");
-        // Create a new bid with the given parameters
-        Bid memory newBid = Bid({
-            bidID: bidID, 
-            sealedAmount: sealedAmount, 
-            unsealedAmount: 0, 
-            bidder: msg.sender, 
-            revealed: false
-        });
-        // Store the bid in mappings for tracking and retrieval
-        bidsById[bidID] = newBid;
-        bidderToBidID[msg.sender] = bidID;
-        // Track the reserve deposit for refund purposes
-        depositedReservePrice[msg.sender] += msg.value;
-        // Increment the total bid count
-        totalBids += 1;
-
-        emit NewBid(bidID, msg.sender, sealedAmount);
-    }
+    function sealedBid(bytes calldata sealedAmount) external payable virtual onlyWhileOngoing meetsExactReservePrice {}
 
     /// @notice Allows the highest bidder to complete payment after auction ends and all bids are revealed
     function fulfilHighestBid() external payable onlyAfterEnded allBidsUnsealed nonReentrant {
@@ -121,7 +97,9 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
         require(msg.sender == highestBidder, "Only the highest bidder can complete the payment.");
         require(block.number <= highestBidPaymentDeadlineBlock, "Payment deadline has passed.");
         require(!highestBidPaid, "Payment has already been completed.");
-        require(msg.value == highestBid - reservePrice, "Payment must be equal to highest bid minus the reserve amount.");
+        require(
+            msg.value == highestBid - reservePrice, "Payment must be equal to highest bid minus the reserve amount."
+        );
 
         highestBidPaid = true;
         payable(auctioneer).transfer(msg.value + reservePrice);
@@ -141,7 +119,13 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
     }
 
     /// @notice Allows auctioneer to claim forfeited reserve price if highest bidder fails to complete payment
-    function withdrawForfeitedDepositFromHighestBidder() external onlyAuctioneer onlyAfterEnded allBidsUnsealed nonReentrant {
+    function withdrawForfeitedDepositFromHighestBidder()
+        external
+        onlyAuctioneer
+        onlyAfterEnded
+        allBidsUnsealed
+        nonReentrant
+    {
         require(block.number > highestBidPaymentDeadlineBlock, "Payment deadline has not passed.");
         require(!highestBidPaid, "Payment has already been completed.");
 
