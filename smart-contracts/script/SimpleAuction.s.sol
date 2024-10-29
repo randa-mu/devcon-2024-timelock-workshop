@@ -5,6 +5,7 @@ import {Script, console} from "forge-std/Script.sol";
 import {SimpleAuction} from "../src/SimpleAuction.sol";
 
 contract SimpleAuctionScript is Script {
+    // todo we can use command line arguments
     SimpleAuction public simpleAuction;
     uint256 public durationBlocks = 10;
     uint256 public reservePrice = 0.1 ether;
