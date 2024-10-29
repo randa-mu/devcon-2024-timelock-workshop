@@ -10,7 +10,15 @@ contract SimpleAuctionTest is Test {
     uint256 public reservePrice = 0.1 ether;
     uint256 public highestBidPaymentWindowBlocks = 5;
 
+    address auctioneer;
+    address bidder1;
+    address bidder2;
+
     function setUp() public {
+        auctioneer = address(this); // Use the test contract as auctioneer
+        bidder1 = address(1);
+        bidder2 = address(2);
+
         auction = new SimpleAuction(
             durationBlocks,
             reservePrice,
@@ -18,7 +26,9 @@ contract SimpleAuctionTest is Test {
         );
     }
 
-    // function test_DeploymentConfigurations() public view {
-    //     assertNotEq(auction.auctioneer(), address(0));
-    // }
+    function test_DeploymentConfigurations() public view {
+        assertEq(auction.auctioneer(), address(this));
+    }
+
+
 }

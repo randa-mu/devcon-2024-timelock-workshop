@@ -40,7 +40,7 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
     // ** Events **
     event NewBid(uint256 bidID, address indexed bidder, bytes sealedAmount);
     event AuctionEnded(address winner, uint256 amount);
-    event RevealReceived(uint256 bidID, address bidder, uint256 unsealedAmount);
+    event BidUnsealed(uint256 bidID, address bidder, uint256 unsealedAmount);
     event HighestBidFulfilled(address bidder, uint256 amount);
     event ReserveClaimed(address claimant, uint256 amount);
     event ForfeitedReserveClaimed(address auctioneer, uint256 amount);
@@ -61,7 +61,7 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
         _;
     }
 
-    modifier allBidsUnsealed() {
+    modifier onlyAfterBidsUnsealed() {
         require(revealedBidsCount == totalBids, "Not all bids have been revealed.");
         _;
     }
@@ -92,7 +92,7 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
     function sealedBid(bytes calldata sealedAmount) external payable virtual onlyWhileOngoing meetsExactReservePrice {}
 
     /// @notice Allows the highest bidder to complete payment after auction ends and all bids are revealed
-    function fulfilHighestBid() external payable onlyAfterEnded allBidsUnsealed nonReentrant {
+    function fulfilHighestBid() external payable onlyAfterEnded onlyAfterBidsUnsealed nonReentrant {
         require(highestBid > 0, "Highest bid is zero");
         require(msg.sender == highestBidder, "Only the highest bidder can complete the payment.");
         require(block.number <= highestBidPaymentDeadlineBlock, "Payment deadline has passed.");
@@ -108,7 +108,7 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
     }
 
     /// @notice Allows non-winning bidders to reclaim their reserve price deposits after auction ends
-    function withdrawDeposit() external onlyAfterEnded allBidsUnsealed nonReentrant {
+    function withdrawDeposit() external onlyAfterEnded onlyAfterBidsUnsealed nonReentrant {
         require(msg.sender != highestBidder, "Highest bidder cannot claim the reserve.");
         uint256 depositAmount = depositedReservePrice[msg.sender];
         require(depositAmount > 0, "No reserve amount to claim.");
@@ -123,7 +123,7 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
         external
         onlyAuctioneer
         onlyAfterEnded
-        allBidsUnsealed
+        onlyAfterBidsUnsealed
         nonReentrant
     {
         require(block.number > highestBidPaymentDeadlineBlock, "Payment deadline has not passed.");
@@ -170,7 +170,7 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
             highestBidder = bid.bidder;
         }
 
-        emit RevealReceived(bidID, bid.bidder, unsealedAmount);
+        emit BidUnsealed(bidID, bid.bidder, unsealedAmount);
     }
 
     /// @notice Ends the auction and records the highest bid as final

@@ -5,7 +5,6 @@ import {Script, console} from "forge-std/Script.sol";
 import {SimpleAuction} from "../src/SimpleAuction.sol";
 
 contract SimpleAuctionScript is Script {
-    // todo we can use command line arguments
     SimpleAuction public simpleAuction;
     uint256 public durationBlocks = 10;
     uint256 public reservePrice = 0.1 ether;
@@ -23,6 +22,7 @@ contract SimpleAuctionScript is Script {
         console.log("Auction duration in blocks:", durationBlocks);
         console.log("Auction reserve price in wei:", reservePrice);
         console.log("Window for fulfilling highest bid in blocks", highestBidPaymentWindowBlocks);
+        console.log("Auction end block number", block.number + durationBlocks + highestBidPaymentWindowBlocks); 
 
         vm.stopBroadcast();
     }
