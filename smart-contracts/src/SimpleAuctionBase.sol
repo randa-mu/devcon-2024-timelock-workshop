@@ -91,7 +91,7 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
     function sealedBid(bytes calldata sealedAmount) internal virtual onlyWhileOngoing meetsExactReservePrice {
         // todo convert logic into pseudo code with numbered tasks for workshop
         // after unit tests
-        
+
         // Generate a unique bid ID based on the sealed amount
         uint256 bidID = generateBidID(sealedAmount);
         // Check that the bid ID does not already exist to enforce uniqueness
@@ -130,7 +130,7 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
     }
 
     /// @notice Allows non-winning bidders to reclaim their reserve price deposits after auction ends
-    function claimReservePriceDeposit() external onlyAfterEnded allBidsUnsealed nonReentrant {
+    function withdrawDeposit() external onlyAfterEnded allBidsUnsealed nonReentrant {
         require(msg.sender != highestBidder, "Highest bidder cannot claim the reserve.");
         uint256 depositAmount = depositedReservePrice[msg.sender];
         require(depositAmount > 0, "No reserve amount to claim.");
@@ -141,7 +141,7 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
     }
 
     /// @notice Allows auctioneer to claim forfeited reserve price if highest bidder fails to complete payment
-    function claimForfeitedReservePriceDeposit() external onlyAuctioneer onlyAfterEnded allBidsUnsealed nonReentrant {
+    function withdrawForfeitedDepositFromHighestBidder() external onlyAuctioneer onlyAfterEnded allBidsUnsealed nonReentrant {
         require(block.number > highestBidPaymentDeadlineBlock, "Payment deadline has not passed.");
         require(!highestBidPaid, "Payment has already been completed.");
 
