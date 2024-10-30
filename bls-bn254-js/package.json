@@ -1,0 +1,53 @@
+{
+  "name": "@randamu/bls-bn254-js",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist/*"],
+  "description": "Convenience wrappers for BLS operations on BN254",
+  "scripts": {
+    "build": "npm run build:js && npm run build:types",
+    "build:js": "esbuild ./src/index.ts --bundle --platform=node --target=node22 --outfile=dist/index.js",
+    "build:types": "tsc",
+    "bls:newkey": "ts-node scripts/newkey.ts",
+    "bls:sign": "ts-node scripts/sign.ts",
+    "bls:hash": "ts-node scripts/hash.ts",
+    "ibe:encrypt": "ts-node scripts/ibe-encrypt.ts",
+    "ibe:decrypt": "ts-node scripts/ibe-decrypt.ts",
+    "ci": "npm run build && npm run lint && npm run test",
+    "clean": "dist",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "test": "jest ./test/*.test.ts ./test/**/*.test.ts"
+  },
+  "author": "CluEleSsUK",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/randa-mu/marshmono/issues"
+  },
+  "homepage": "https://github.com/randa-mu/marshmono#readme",
+  "dependencies": {
+    "@noble/curves": "^1.6.0",
+    "asn1js": "^3.0.5",
+    "ethers": "^6.13.4",
+    "mcl-wasm": "^1.7.0",
+    "typescript": "^5.6.3",
+    "commander": "12.1.0"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@types/chai": "^4.3.1",
+    "@types/express": "^5.0.0",
+    "@types/node": "22.7.7",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.10.0",
+    "chai": "^5.1.1",
+    "esbuild": "0.24.0",
+    "eslint": "9.13.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "5.6.3",
+    "typescript-eslint": "8.10.0"
+  }
+}

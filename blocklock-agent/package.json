@@ -1,0 +1,52 @@
+{
+    "name": "blocklock-agent",
+    "version": "1.0.0",
+    "description": "Agent for uploading signature for blocklock to EVM chains",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+        "start": "npm run build && node ./index.cjs",
+        "test": "echo no tests",
+        "build": "npm run build:generate && npm run build:js",
+        "build:js": "esbuild src/index.ts --bundle --platform=node --target=node22 --outfile=index.cjs",
+        "build:generate": "mkdir -p src/generated && npx typechain --target ethers-v6 --out-dir src/generated '../smart-contracts/out/*.sol/*.json'",
+        "clean": "rm -rf generated",
+        "lint": "eslint src",
+        "lint:fix": "eslint src --fix"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/randa-mu/marshmono.git"
+    },
+    "keywords": [
+        "encryption",
+        "ibe",
+        "solidity"
+    ],
+    "author": "azixus",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/randa-mu/marshmono/issues"
+    },
+    "homepage": "https://github.com/randa-mu/marshmono#readme",
+    "dependencies": {
+        "@randamo/marshmallow-js": "file:../client-js",
+        "@randamu/bls-bn254-js": "file:../bls-bn254-js",
+        "@randamu/randomness-js": "file:../randomness-js",
+        "@typechain/ethers-v6": "^0.5.1",
+        "commander": "^12.1.0",
+        "ethers": "^6.13.4",
+        "mcl-wasm": "^1.7.0",
+        "smart-contracts": "file:../smart-contracts",
+        "ts-node": "^10.9.2",
+        "typechain": "^8.3.2",
+        "typescript": "^5.6.3"
+    },
+    "devDependencies": {
+        "@types/node": "^22.7.5",
+        "esbuild": "^0.24.0"
+    },
+    "engines": {
+        "node": ">=22.3.0"
+    }
+}

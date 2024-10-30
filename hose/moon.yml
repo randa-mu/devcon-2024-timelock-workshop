@@ -1,0 +1,27 @@
+language: 'typescript'
+
+tasks:
+  build:
+    command: 'npm run build'
+    inputs:
+      - 'src/**/*'
+      - 'tsconfig.json'
+      - 'package.json'
+    outputs:
+      - 'dist/index.js'
+
+  test:
+    command: 'npm run test'
+    inputs:
+      - 'src/**/*'
+      - 'test/**/*'
+      - 'tsconfig.json'
+      - 'package.json'
+    deps:
+      - build
+      - lint
+
+  lint:
+    command: 'npm run lint'
+    deps:
+      - build

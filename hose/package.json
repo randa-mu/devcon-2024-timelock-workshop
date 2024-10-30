@@ -1,0 +1,40 @@
+{
+  "name": "hose",
+  "description": "A token faucet for the furnace testnet",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "esbuild ./src/index.ts --bundle --platform=node --target=node22 --outfile=dist/index.js",
+    "ci": "npm run build && npm run lint && npm run test",
+    "clean": "rm -rf dist",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "start": "node --loader ts-node/esm src/index.ts",
+    "test": "jest ./test/*.test.ts"
+  },
+  "author": "CluEleSsUK",
+  "license": "(Apache-2.0 OR MIT)",
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@types/chai": "^4.3.1",
+    "@types/express": "^5.0.0",
+    "@types/node": "22.7.7",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.10.0",
+    "chai": "^5.1.1",
+    "esbuild": "0.24.0",
+    "eslint": "9.13.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "5.6.3",
+    "typescript-eslint": "8.10.0"
+  },
+  "engines": {
+    "node": ">= 22.0.0"
+  },
+  "dependencies": {
+    "ethers": "^6.13.4",
+    "express": "^4.21.1"
+  }
+}

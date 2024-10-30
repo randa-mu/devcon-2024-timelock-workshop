@@ -1,0 +1,35 @@
+language: 'typescript'
+
+dependsOn:
+  - bls-bn254-js
+  - smart-contracts
+
+tasks:
+  build:
+    command: 'npm run build'
+    inputs:
+      - 'src/**/*'
+      - 'tsconfig.json'
+      - 'package.json'
+    outputs:
+      - 'src/generated'
+      - 'index.js'
+    deps:
+      - smart-contracts:build
+      - bls-bn254-js:build
+
+  test:
+    command: 'npm run test'
+    inputs:
+      - 'src/**/*'
+      - 'test/**/*'
+      - 'tsconfig.json'
+      - 'package.json'
+    deps:
+      - build
+      - lint
+
+  lint:
+    command: 'npm run lint'
+    deps:
+      - build

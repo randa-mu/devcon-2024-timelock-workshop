@@ -3,13 +3,13 @@ pragma solidity 0.8.28;
 
 import {Test, console} from "forge-std/Test.sol";
 
-import {SimpleAuction} from "../src/SimpleAuction.sol";
-import {SimpleAuction} from "../src/SimpleAuction.sol";
-import {SignatureSchemeAddressProvider} from "../src/signature-schemes/SignatureSchemeAddressProvider.sol";
-import {SignatureSender} from "../src/signature-requests/SignatureSender.sol";
-import {BlocklockSender} from "../src/blocklock/BlocklockSender.sol";
-import {BlocklockSignatureScheme} from "../src/blocklock/BlocklockSignatureScheme.sol";
-import {BLS} from "../src/lib/BLS.sol";
+import {SimpleAuction} from "../../src/SimpleAuction.sol";
+import {SimpleAuction} from "../../src/SimpleAuction.sol";
+import {SignatureSchemeAddressProvider} from "../../src/signature-schemes/SignatureSchemeAddressProvider.sol";
+import {SignatureSender} from "../../src/signature-requests/SignatureSender.sol";
+import {BlocklockSender} from "../../src/blocklock/BlocklockSender.sol";
+import {BlocklockSignatureScheme} from "../../src/blocklock/BlocklockSignatureScheme.sol";
+import {BLS} from "../../src/lib/BLS.sol";
 
 contract SimpleAuctionTest is Test {
     SimpleAuction public auction;
