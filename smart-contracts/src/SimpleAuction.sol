@@ -31,7 +31,7 @@ contract SimpleAuction is SimpleAuctionBase {
         require(bidsById[bidID].bidID == 0, "Bid ID must be unique");
         // Create a new bid with the given parameters
         Bid memory newBid =
-            Bid({bidID: bidID, sealedAmount: sealedAmount, unsealedAmount: 0, bidder: msg.sender, revealed: false});
+            Bid({bidID: bidID, sealedAmount: sealedAmount, decryptionKey: hex"", unsealedAmount: 0, bidder: msg.sender, revealed: false});
         // Store the new bid in the bidsById and bidderToBidID mappings for tracking and retrieval
         bidsById[bidID] = newBid;
         bidderToBidID[msg.sender] = bidID;

@@ -10,7 +10,8 @@ import {IBlocklockReceiver} from "./interfaces/IBlocklockReceiver.sol";
 abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
     struct Bid {
         uint256 bidID; // Unique identifier for the bid
-        bytes sealedAmount; // Encrypted/sealed bid amount
+        bytes sealedAmount; // Encrypted / sealed bid amount
+        bytes decryptionKey; // The timelock decryption key used to unseal the sealed bid
         uint256 unsealedAmount; // Decrypted/unsealed bid amount, revealed after auction end
         address bidder; // Address of the bidder
         bool revealed; // Status of whether the bid has been revealed
@@ -41,12 +42,13 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
     mapping(address => uint256) public bidderToBidID; // Mapping of bidders to their bid IDs
 
     // ** Events **
-    event NewBid(uint256 bidID, address indexed bidder, bytes sealedAmount);
-    event AuctionEnded(address winner, uint256 amount);
-    event BidUnsealed(uint256 bidID, address bidder, uint256 unsealedAmount);
-    event HighestBidFulfilled(address bidder, uint256 amount);
-    event ReserveClaimed(address claimant, uint256 amount);
+    event NewBid(uint256 indexed bidID, address indexed bidder, bytes sealedAmount);
+    event AuctionEnded(address indexed winner, uint256 amount);
+    event BidUnsealed(uint256 indexed bidID, address bidder, uint256 unsealedAmount);
+    event HighestBidFulfilled(address indexed bidder, uint256 amount);
+    event ReserveClaimed(address indexed claimant, uint256 amount);
     event ForfeitedReserveClaimed(address auctioneer, uint256 amount);
+    event DecryptionKeyReceived(uint256 indexed bidID, bytes decryptionKey);
 
     // ** Modifiers **
     modifier onlyTimelockContract() {
@@ -161,13 +163,19 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
 
     /// @notice Decrypts the sealed bid amount after auction ends
     function receiveBlocklock(uint256 requestID, bytes calldata decryptionKey) external onlyAfterEnded onlyTimelockContract {
-        revealBid(requestID, abi.decode(decryptionKey, (uint256)));
+        // todo convert to task
+        require(bidsById[requestID].bidID != 0, "Bid ID does not exist.");
+        require(bidsById[requestID].decryptionKey.length == 0, "Bid decryption key already received from timelock contract.");
+        Bid storage bid = bidsById[requestID];
+        bid.decryptionKey = decryptionKey;
+        emit DecryptionKeyReceived(requestID, decryptionKey);
     }
 
     /// @notice Reveals the unsealed bid amount after auction ends
-    function revealBid(uint256 bidID, uint256 unsealedAmount) internal {
+    function revealBid(uint256 bidID, uint256 unsealedAmount) external {
         require(bidsById[bidID].bidID != 0, "Bid ID does not exist.");
         require(!bidsById[bidID].revealed, "Bid already revealed.");
+        require(bidsById[bidID].decryptionKey.length > 0, "Bid decryption key not received from timelock contract.");
 
         updateHighestBid(bidID, unsealedAmount);
     }
