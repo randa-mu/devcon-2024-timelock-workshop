@@ -90,7 +90,14 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
     /// @dev To be overridden by child contract to implement full bid sealing logic
     /// @param sealedAmount The encrypted bid amount
     /// @return The id of the bid
-    function sealedBid(bytes calldata sealedAmount) external payable virtual onlyWhileOngoing meetsExactReservePrice returns (uint256) {}
+    function sealedBid(bytes calldata sealedAmount)
+        external
+        payable
+        virtual
+        onlyWhileOngoing
+        meetsExactReservePrice
+        returns (uint256)
+    {}
 
     /// @notice Allows the highest bidder to complete payment after auction ends and all bids are revealed
     function fulfilHighestBid() external payable onlyAfterEnded onlyAfterBidsUnsealed nonReentrant {

@@ -36,7 +36,7 @@ contract SimpleAuctionTest is Test {
         vm.deal(bidder1, 1 ether); // Give bidder1 1 ether
         vm.prank(bidder1);
         auction.sealedBid{value: auction.reservePrice()}(abi.encodePacked(bidAmount)); // Place a sealed bid of bidAmount
-        
+
         assertEq(auction.totalBids(), 1, "Bid count should be 1");
     }
 
@@ -52,12 +52,12 @@ contract SimpleAuctionTest is Test {
 
         // Move to the auction end block to end the auction
         vm.roll(auction.auctionEndBlock() + 1);
-        
+
         // Reveal the bid
         auction.revealBid(bidID, bidAmount); // Reveal the bid
 
         SimpleAuction.Bid memory b = auction.getBidWithBidID(bidID);
-        
+
         assertEq(auction.highestBidder(), bidder1, "Highest bidder should be bidder1");
         assertEq(b.bidder, bidder1, "Bidder for bid ID 1 should be bidder1");
         assertEq(auction.highestBid(), bidAmount, "Highest bid should be 1000");
@@ -75,15 +75,15 @@ contract SimpleAuctionTest is Test {
 
         // Move to the auction end block to end the auction
         vm.roll(auction.auctionEndBlock() + 1);
-        
+
         // Reveal the bid
         auction.revealBid(bidID, bidAmount); // Reveal the bid
-        
+
         // Bidder1 fulfills the highest bid
         vm.startPrank(bidder1); // Set bidder1 as the sender
         auction.fulfilHighestBid{value: bidAmount - auction.reservePrice()}();
         vm.stopPrank();
-        
+
         assert(auction.highestBidPaid());
     }
 
@@ -103,10 +103,10 @@ contract SimpleAuctionTest is Test {
         vm.startPrank(bidder2);
         uint256 bidID2 = auction.sealedBid{value: auction.reservePrice()}(abi.encodePacked(bidAmount2)); // Place a sealed bid of bidAmount
         vm.stopPrank();
-        
+
         // Move to the auction end block to end the auction
         vm.roll(auction.auctionEndBlock() + 1);
-        
+
         // Reveal the bid
         auction.revealBid(bidID, bidAmount); // Reveal the bid
         auction.revealBid(bidID2, bidAmount2);
@@ -135,10 +135,10 @@ contract SimpleAuctionTest is Test {
 
         // Move to the auction end block to end the auction
         vm.roll(auction.auctionEndBlock() + 1);
-        
+
         // Reveal the bid
         auction.revealBid(bidID, bidAmount); // Reveal the bid
-        
+
         // Bidder1 fails to fulfill the highest bid payment within payment window
         vm.roll(block.number + highestBidPaymentWindowBlocks + 1); // Move past payment deadline
 
