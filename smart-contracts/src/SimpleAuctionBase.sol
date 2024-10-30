@@ -163,7 +163,6 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
 
     /// @notice Decrypts the sealed bid amount after auction ends
     function receiveBlocklock(uint256 requestID, bytes calldata decryptionKey) external onlyAfterEnded onlyTimelockContract {
-        // todo convert to task
         require(bidsById[requestID].bidID != 0, "Bid ID does not exist.");
         require(bidsById[requestID].decryptionKey.length == 0, "Bid decryption key already received from timelock contract.");
         Bid storage bid = bidsById[requestID];
@@ -230,7 +229,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
     /// @param sealedAmount The sealed (encrypted) bid amount
     /// @return A unique bid identifier
     function generateBidID(bytes calldata sealedAmount) internal returns (uint256) {
-        // todo convert into task for participants to use returned requestID from timelock contract
+        // todo convert into task to use returned requestID from timelock contract
         uint256 bidID = timelock.requestBlocklock(auctionEndBlock, sealedAmount);
         return bidID;
     }
