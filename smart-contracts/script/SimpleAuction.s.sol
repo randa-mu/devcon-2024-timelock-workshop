@@ -13,13 +13,13 @@ contract SimpleAuctionScript is Script {
     function run() public {
         vm.startBroadcast();
 
-        simpleAuction = new SimpleAuction(durationBlocks, reservePrice, highestBidPaymentWindowBlocks);
+        // simpleAuction = new SimpleAuction(durationBlocks, reservePrice, highestBidPaymentWindowBlocks);
 
-        console.log("Simple Auction contract deployed to:", address(simpleAuction));
-        console.log("Auction duration in blocks:", durationBlocks);
-        console.log("Auction end block number:", block.number + durationBlocks + highestBidPaymentWindowBlocks);
-        console.log("Auction reserve price in wei:", reservePrice);
-        console.log("Window for fulfilling highest bid in blocks post-auction:", highestBidPaymentWindowBlocks);
+        // console.log("Simple Auction contract deployed to:", address(simpleAuction));
+        // console.log("Auction duration in blocks:", durationBlocks);
+        // console.log("Auction end block number:", block.number + durationBlocks + highestBidPaymentWindowBlocks);
+        // console.log("Auction reserve price in wei:", reservePrice);
+        // console.log("Window for fulfilling highest bid in blocks post-auction:", highestBidPaymentWindowBlocks);
 
         vm.stopBroadcast();
     }

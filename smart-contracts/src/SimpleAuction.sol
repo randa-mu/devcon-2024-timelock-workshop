@@ -4,9 +4,12 @@ pragma solidity 0.8.28;
 import {SimpleAuctionBase} from "./SimpleAuctionBase.sol";
 
 contract SimpleAuction is SimpleAuctionBase {
-    constructor(uint256 durationBlocks, uint256 reservePrice, uint256 highestBidPaymentWindowBlocks)
-        SimpleAuctionBase(durationBlocks, reservePrice, highestBidPaymentWindowBlocks)
-    {}
+    constructor(
+        uint256 durationBlocks,
+        uint256 reservePrice,
+        uint256 highestBidPaymentWindowBlocks,
+        address timelockContract
+    ) SimpleAuctionBase(durationBlocks, reservePrice, highestBidPaymentWindowBlocks, timelockContract) {}
 
     /// @notice Places a sealed bid, with the bid amount encrypted in `sealedAmount`
     /// @notice Bidders need to deposit the exact reserve price before placing a sealed bid

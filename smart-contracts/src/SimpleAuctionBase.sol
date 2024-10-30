@@ -2,10 +2,12 @@
 pragma solidity 0.8.28;
 
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {IBlocklockSender} from "./interfaces/IBlocklockSender.sol";
+import {IBlocklockReceiver} from "./interfaces/IBlocklockReceiver.sol";
 
 /// @title SimpleAuctionBase - Abstract Base Contract for a Sealed Bid Auction
 /// @dev This contract manages the core logic of a sealed bid auction with a reserve price requirement.
-abstract contract SimpleAuctionBase is ReentrancyGuard {
+abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
     struct Bid {
         uint256 bidID; // Unique identifier for the bid
         bytes sealedAmount; // Encrypted/sealed bid amount
@@ -22,6 +24,7 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
     }
 
     // ** State Variables **
+    IBlocklockSender public timelock; // The timelock contract which we will be used to decrypt data at specific block
     AuctionState public auctionState; // Current state of the auction
     address public auctioneer; // Address of the auctioneer who initiates the auction
     uint256 public auctionEndBlock; // Block number when the auction ends
@@ -46,6 +49,11 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
     event ForfeitedReserveClaimed(address auctioneer, uint256 amount);
 
     // ** Modifiers **
+    modifier onlyTimelockContract() {
+        require(msg.sender == address(timelock), "Only timelock contract can call this.");
+        _;
+    }
+
     modifier onlyAuctioneer() {
         require(msg.sender == auctioneer, "Only auctioneer can call this.");
         _;
@@ -75,12 +83,18 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
     /// @param durationBlocks Number of blocks for which the auction will be active
     /// @param _reservePrice The minimum amount required as a reserve price for each bid
     /// @param highestBidPaymentWindowBlocks Number of blocks allowed for the highest bid payment after auction end
-    constructor(uint256 durationBlocks, uint256 _reservePrice, uint256 highestBidPaymentWindowBlocks) {
+    constructor(
+        uint256 durationBlocks,
+        uint256 _reservePrice,
+        uint256 highestBidPaymentWindowBlocks,
+        address timelockContract
+    ) {
         auctioneer = msg.sender;
         auctionEndBlock = block.number + durationBlocks;
         highestBidPaymentDeadlineBlock = auctionEndBlock + highestBidPaymentWindowBlocks;
         reservePrice = _reservePrice;
         auctionState = AuctionState.Ongoing;
+        timelock = IBlocklockSender(timelockContract);
     }
 
     // ** Setter Functions **
@@ -145,9 +159,13 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
         emit ForfeitedReserveClaimed(auctioneer, forfeitedAmount);
     }
 
+    /// @notice Decrypts the sealed bid amount after auction ends
+    function receiveBlocklock(uint256 requestID, bytes calldata decryptionKey) external onlyAfterEnded onlyTimelockContract {
+        revealBid(requestID, abi.decode(decryptionKey, (uint256)));
+    }
+
     /// @notice Reveals the unsealed bid amount after auction ends
-    function revealBid(uint256 bidID, uint256 unsealedAmount) external onlyAfterEnded {
-        // todo refactor function to be callable by timelock contract only with unsealed bid
+    function revealBid(uint256 bidID, uint256 unsealedAmount) internal {
         require(bidsById[bidID].bidID != 0, "Bid ID does not exist.");
         require(!bidsById[bidID].revealed, "Bid already revealed.");
 
@@ -200,14 +218,12 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
 
     // ** Internal Utilities **
 
-    uint256 internal id = 0;
-
     /// @notice Generates a unique ID for the bid based on the sealed amount
     /// @param sealedAmount The sealed (encrypted) bid amount
     /// @return A unique bid identifier
     function generateBidID(bytes calldata sealedAmount) internal returns (uint256) {
-        id += 1;
         // todo refactor function to return requestID from timelock contract
-        return id;
+        uint256 bidID = timelock.requestBlocklock(auctionEndBlock, sealedAmount);
+        return bidID;
     }
 }
