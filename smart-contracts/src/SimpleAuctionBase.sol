@@ -85,6 +85,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
     /// @param durationBlocks Number of blocks for which the auction will be active
     /// @param _reservePrice The minimum amount required as a reserve price for each bid
     /// @param highestBidPaymentWindowBlocks Number of blocks allowed for the highest bid payment after auction end
+    /// @param timelockContract The address of the timelock encryption smart contract
     constructor(
         uint256 durationBlocks,
         uint256 _reservePrice,
@@ -101,11 +102,27 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
 
     // ** Setter Functions **
 
-    /// @notice Places a sealed bid, with the bid amount encrypted in `sealedAmount`
-    /// @notice Bidders need to deposit the exact reserve price before placing a sealed bid
-    /// @dev To be overridden by child contract to implement full bid sealing logic
-    /// @param sealedAmount The encrypted bid amount
-    /// @return The id of the bid
+    /**
+     * @notice Allows participants to submit a sealed bid during the ongoing auction.
+     *
+     * @dev This function accepts a sealed bid, represented as an encrypted or hashed value,
+     *      to maintain bid confidentiality. The function requires the caller to send an
+     *      exact reserve price with the bid, which is held for deposit and refunded if
+     *      the bid is not the highest. This is a virtual function intended to be
+     *      overridden in a derived contract.
+     *
+     * Requirements:
+     * - `onlyWhileOngoing`: The auction must be in an open state, allowing bid submissions.
+     * - `meetsExactReservePrice`: Caller must send the reserve price as `msg.value` to ensure
+     *   the bid meets the minimum requirement.
+     *
+     * Returns:
+     * - A unique `uint256` bid ID to represent and retrieve the bid.
+     *
+     * @param sealedAmount A `bytes` value that represents the caller’s encrypted or hashed bid amount,
+     *        which conceals the actual bid until it is unsealed later.
+     * @return uint256 A unique identifier (`bidID`) generated for tracking the bid.
+     */
     function sealedBid(bytes calldata sealedAmount)
         external
         payable
@@ -115,7 +132,33 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
         returns (uint256)
     {}
 
-    /// @notice Allows the highest bidder to complete payment after auction ends and all bids are revealed
+    /**
+     * @notice Completes the highest bid payment and transfers funds to the auctioneer.
+     *
+     * @dev This function is called by the highest bidder to finalize the payment for their winning bid.
+     *      It can only be executed after the auction has ended, all bids have been unsealed,
+     *      and before the specified payment deadline block. The highest bidder must pay the exact
+     *      amount of the highest bid minus the reserve price. Reentrancy is prevented with the
+     *      `nonReentrant` modifier to secure fund transfer.
+     *
+     * Requirements:
+     * - `onlyAfterEnded`: The auction must have concluded.
+     * - `onlyAfterBidsUnsealed`: All bids must have been unsealed.
+     * - `nonReentrant`: Reentrancy protection is enabled.
+     * - `highestBid > 0`: There must be a valid highest bid amount.
+     * - `msg.sender == highestBidder`: Only the highest bidder can complete the payment.
+     * - `block.number <= highestBidPaymentDeadlineBlock`: The payment must be made before the deadline.
+     * - `!highestBidPaid`: Payment must not have been completed previously.
+     * - `msg.value == highestBid - reservePrice`: The payment amount must equal the highest bid minus the reserve price.
+     *
+     * Effects:
+     * - Marks `highestBidPaid` as true to indicate that the payment has been fulfilled.
+     * - Transfers the combined amount of `msg.value` and `reservePrice` to the auctioneer.
+     *
+     * Emits:
+     * - `HighestBidFulfilled`: Emitted when the highest bid is successfully paid and transferred to the auctioneer,
+     *   including `msg.sender` (the highest bidder) and the total amount transferred.
+     */
     function fulfilHighestBid() external payable onlyAfterEnded onlyAfterBidsUnsealed nonReentrant {
         require(highestBid > 0, "Highest bid is zero.");
         require(msg.sender == highestBidder, "Only the highest bidder can complete the payment.");
@@ -131,7 +174,29 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
         emit HighestBidFulfilled(msg.sender, msg.value + reservePrice);
     }
 
-    /// @notice Allows non-winning bidders to reclaim their reserve price deposits after auction ends
+    /**
+     * @notice Allows non-winning bidders to withdraw their reserve deposits after the auction ends.
+     *
+     * @dev This function enables bidders, except for the highest bidder, to reclaim their reserve
+     *      deposit after the auction has ended and all bids have been unsealed. The reserve amount
+     *      stored in `depositedReservePrice` is reset to zero before transferring funds to prevent
+     *      reentrancy risks. Reentrancy protection is enforced using the `nonReentrant` modifier.
+     *
+     * Requirements:
+     * - `onlyAfterEnded`: The auction must be concluded.
+     * - `onlyAfterBidsUnsealed`: All bids must be unsealed.
+     * - `nonReentrant`: Protects against reentrancy attacks.
+     * - `msg.sender != highestBidder`: Only non-winning bidders can claim their reserve deposit.
+     * - `depositedReservePrice[msg.sender] > 0`: The caller must have a positive reserve deposit amount.
+     *
+     * Effects:
+     * - Sets `depositedReservePrice[msg.sender]` to zero, indicating the deposit has been withdrawn.
+     * - Transfers the deposit amount to the caller's address.
+     *
+     * Emits:
+     * - `ReserveClaimed`: Emitted when a reserve deposit is successfully withdrawn, including the caller's
+     *   address (`msg.sender`) and the amount transferred (`depositAmount`).
+     */
     function withdrawDeposit() external onlyAfterEnded onlyAfterBidsUnsealed nonReentrant {
         require(msg.sender != highestBidder, "Highest bidder cannot claim the reserve.");
         uint256 depositAmount = depositedReservePrice[msg.sender];
@@ -142,7 +207,22 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
         emit ReserveClaimed(msg.sender, depositAmount);
     }
 
-    /// @notice Allows auctioneer to claim forfeited reserve price if highest bidder fails to complete payment
+    /**
+     * @notice Withdraws the forfeited reserve deposit of the highest bidder if they fail to pay on time.
+     *
+     * @dev This function can only be called by the auctioneer after the auction has ended,
+     *      all bids are unsealed, and the highest bid payment deadline has passed without payment.
+     *      Reentrancy is prevented with `nonReentrant` modifier.
+     *
+     * Requirements:
+     * - The caller must be the auctioneer.
+     * - The auction must be over, and bids must be unsealed.
+     * - The highest bid payment deadline must have passed.
+     * - `highestBidPaid` must be false (i.e., payment has not been completed).
+     *
+     * Emits:
+     * - `ForfeitedReserveClaimed`: Logs the auctioneer and forfeited reserve amount.
+     */
     function withdrawForfeitedDepositFromHighestBidder()
         external
         onlyAuctioneer
@@ -161,16 +241,49 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
         emit ForfeitedReserveClaimed(auctioneer, forfeitedAmount);
     }
 
-    /// @notice Decrypts the sealed bid amount after auction ends
-    function receiveBlocklock(uint256 requestID, bytes calldata decryptionKey) external onlyAfterEnded onlyTimelockContract {
+    /**
+     * @notice Receives and stores the decryption key for a bid from the timelock contract.
+     *
+     * @dev Called by the timelock contract after the auction ends to store the decryption key for a specific bid.
+     *
+     * Requirements:
+     * - The caller must be the defined timelock contract.
+     * - The auction must have ended or auction end block reached.
+     * - The bid ID must be valid and have no decryption key yet recorded.
+     *
+     * Emits:
+     * - `DecryptionKeyReceived`: Logs the `requestID` and the provided `decryptionKey`.
+     *
+     * @param requestID The unique identifier for the bid to associate the decryption key with.
+     * @param decryptionKey The bytes key used to unseal the bid.
+     */
+    function receiveBlocklock(uint256 requestID, bytes calldata decryptionKey)
+        external
+        onlyAfterEnded
+        onlyTimelockContract
+    {
         require(bidsById[requestID].bidID != 0, "Bid ID does not exist.");
-        require(bidsById[requestID].decryptionKey.length == 0, "Bid decryption key already received from timelock contract.");
+        require(
+            bidsById[requestID].decryptionKey.length == 0, "Bid decryption key already received from timelock contract."
+        );
         Bid storage bid = bidsById[requestID];
         bid.decryptionKey = decryptionKey;
         emit DecryptionKeyReceived(requestID, decryptionKey);
     }
 
-    /// @notice Reveals the unsealed bid amount after auction ends
+    /**
+     * @notice Reveals a sealed bid by setting its unsealed amount and updating the highest bid if applicable.
+     *
+     * @dev Allows a bidder to reveal their bid, provided the bid has a valid decryption key.
+     *
+     * Requirements:
+     * - The bid ID must exist.
+     * - The bid must not have been previously revealed.
+     * - The bid must have a decryption key.
+     *
+     * @param bidID The unique identifier for the bid to be revealed.
+     * @param unsealedAmount The actual bid amount to be revealed.
+     */
     function revealBid(uint256 bidID, uint256 unsealedAmount) external {
         require(bidsById[bidID].bidID != 0, "Bid ID does not exist.");
         require(!bidsById[bidID].revealed, "Bid already revealed.");
@@ -181,9 +294,14 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
 
     // ** Internal Functions **
 
-    /// @notice Updates the highest bid if the revealed bid is greater than the current highest
-    /// @param bidID The bid ID of the revealed bid
-    /// @param unsealedAmount The unsealed bid amount
+    /**
+     * @notice Updates the highest bid if the unsealed amount of the revealed bid exceeds the current highest bid.
+     *
+     * @dev Internal function called by `revealBid` to compare and update the highest bid if required.
+     *
+     * @param bidID The unique identifier of the revealed bid.
+     * @param unsealedAmount The actual bid amount to compare with the current highest bid.
+     */
     function updateHighestBid(uint256 bidID, uint256 unsealedAmount) internal {
         Bid storage bid = bidsById[bidID];
 
@@ -199,7 +317,14 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
         emit BidUnsealed(bidID, bid.bidder, unsealedAmount);
     }
 
-    /// @notice Ends the auction and records the highest bid as final
+    /**
+     * @notice Ends the auction, setting the auction state to "Ended" and emitting the `AuctionEnded` event.
+     *
+     * @dev Can only be called by the auctioneer once the auction end block has reached.
+     *
+     * Emits:
+     * - `AuctionEnded`: Logs the highest bidder and the highest bid amount.
+     */
     function endAuction() external onlyAuctioneer onlyAfterEnded {
         auctionState = AuctionState.Ended;
         emit AuctionEnded(highestBidder, highestBid);
@@ -207,17 +332,39 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
 
     // ** Getter Functions **
 
+    /**
+     * @notice Returns the highest bid amount.
+     *
+     * @return The current highest bid amount.
+     */
     function getHighestBid() external view returns (uint256) {
         return highestBid;
     }
 
+    /**
+     * @notice Returns the address of the highest bidder.
+     *
+     * @return The address of the current highest bidder.
+     */
     function getHighestBidder() external view returns (address) {
         return highestBidder;
     }
 
+    /**
+     * @notice Retrieves bid information associated with a specific bidder.
+     *
+     * @param bidder The address of the bidder.
+     * @return A `Bid` struct containing the bid details for the specified bidder.
+     */
     function getBidWithBidder(address bidder) external view returns (Bid memory) {
         return bidsById[bidderToBidID[bidder]];
     }
+    /**
+     * @notice Retrieves bid information for a given bid ID.
+     *
+     * @param bidID The unique identifier for the bid.
+     * @return A `Bid` struct containing the bid details for the specified bid ID.
+     */
 
     function getBidWithBidID(uint256 bidID) external view returns (Bid memory) {
         return bidsById[bidID];
@@ -225,9 +372,14 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
 
     // ** Internal Utilities **
 
-    /// @notice Generates a unique ID for the bid based on the sealed amount
-    /// @param sealedAmount The sealed (encrypted) bid amount
-    /// @return A unique bid identifier
+    /**
+     * @notice Generates a unique bid ID based on the provided sealed amount and requests a blocklock from the timelock contract.
+     *
+     * @dev Called internally during bid submission to create a bid ID that is locked until unsealing.
+     *
+     * @param sealedAmount The encrypted or hashed value of the bid amount.
+     * @return The unique identifier for the generated bid.
+     */
     function generateBidID(bytes calldata sealedAmount) internal returns (uint256) {
         // todo convert into task to use returned requestID from timelock contract
         uint256 bidID = timelock.requestBlocklock(auctionEndBlock, sealedAmount);
