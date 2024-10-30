@@ -94,7 +94,7 @@ abstract contract SimpleAuctionBase is ReentrancyGuard {
 
     /// @notice Allows the highest bidder to complete payment after auction ends and all bids are revealed
     function fulfilHighestBid() external payable onlyAfterEnded onlyAfterBidsUnsealed nonReentrant {
-        require(highestBid > 0, "Highest bid is zero");
+        require(highestBid > 0, "Highest bid is zero.");
         require(msg.sender == highestBidder, "Only the highest bidder can complete the payment.");
         require(block.number <= highestBidPaymentDeadlineBlock, "Payment deadline has passed.");
         require(!highestBidPaid, "Payment has already been completed.");
