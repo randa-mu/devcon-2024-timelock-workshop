@@ -113,15 +113,12 @@ contract BlocklockSender is IBlocklockSender, SignatureReceiverBase, AccessContr
             } else {
                 emit BlocklockCallbackSuccess(requests[i], signatureRequestID, r.blockHeight, r.ciphertext, signature);
             }
-            // todo review - if request callback fails, should it be deleted and treated as fulfilled?
-            // caller might not be contract implementing right interface
-            // or malicious contract that just reverts
             delete blocklockRequests[requests[i]];
         }
 
         // Delete from mapping
-        signaturesToBlocklock[signatureRequestID];
-        signatureRequests[r.blockHeight];
+        delete signaturesToBlocklock[signatureRequestID];
+        delete signatureRequests[r.blockHeight];
     }
 
     /**

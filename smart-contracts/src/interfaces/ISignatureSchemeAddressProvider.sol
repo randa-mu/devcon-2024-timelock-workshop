@@ -4,7 +4,6 @@ pragma solidity 0.8.28;
 interface ISignatureSchemeAddressProvider {
     /// Setters
 
-    // todo revisit this logic to determine allowing updates to existing scheme addresses
     /// @notice Adds support for a new signature scheme to the registry.
     /// @notice Only contract admin or governance can add.
     /// @param schemeID The name of the signature scheme (e.g., BN254, BLS12-381, TESS)

@@ -69,8 +69,6 @@ contract SimpleAuctionTest is Test {
         uint256 bidAmount = 0.5 ether;
         vm.deal(bidder1, 1 ether);
         vm.startPrank(bidder1);
-        // todo only .prank(addr) not working for some reason??
-        // vm.prank(bidder1);
         uint256 bidID = auction.sealedBid{value: auction.reservePrice()}(abi.encodePacked(bidAmount)); // Place a sealed bid of bidAmount
         vm.stopPrank();
 
@@ -79,7 +77,8 @@ contract SimpleAuctionTest is Test {
 
         // Receive the decryption key for the bid id from the timelock contract
         vm.startPrank(auctioneer);
-        bytes memory validSignature = hex"140bec1c035d7a6d407c4a823faeea31de69769db8db9c86aaf7a9682daa23bb2fd2f8ecfe15552b488ba3fd075eff3f9739c44b299b8d0851c9e93e740925ab";
+        bytes memory validSignature =
+            hex"140bec1c035d7a6d407c4a823faeea31de69769db8db9c86aaf7a9682daa23bb2fd2f8ecfe15552b488ba3fd075eff3f9739c44b299b8d0851c9e93e740925ab";
         sigSender.fulfilSignatureRequest(bidID, validSignature);
         vm.stopPrank();
 
@@ -98,8 +97,6 @@ contract SimpleAuctionTest is Test {
         uint256 bidAmount = 0.5 ether;
         vm.deal(bidder1, 1 ether);
         vm.startPrank(bidder1);
-        // todo only .prank(addr) not working for some reason??
-        // vm.prank(bidder1);
         uint256 bidID = auction.sealedBid{value: auction.reservePrice()}(abi.encodePacked(bidAmount)); // Place a sealed bid of bidAmount
         vm.stopPrank();
 
@@ -108,7 +105,8 @@ contract SimpleAuctionTest is Test {
 
         // Receive the decryption key for the bid id from the timelock contract
         vm.startPrank(auctioneer);
-        bytes memory validSignature = hex"140bec1c035d7a6d407c4a823faeea31de69769db8db9c86aaf7a9682daa23bb2fd2f8ecfe15552b488ba3fd075eff3f9739c44b299b8d0851c9e93e740925ab";
+        bytes memory validSignature =
+            hex"140bec1c035d7a6d407c4a823faeea31de69769db8db9c86aaf7a9682daa23bb2fd2f8ecfe15552b488ba3fd075eff3f9739c44b299b8d0851c9e93e740925ab";
         sigSender.fulfilSignatureRequest(bidID, validSignature);
         vm.stopPrank();
 
@@ -143,7 +141,8 @@ contract SimpleAuctionTest is Test {
 
         // Receive the decryption key for the bid ids from the timelock contract
         vm.startPrank(auctioneer);
-        bytes memory validSignature = hex"140bec1c035d7a6d407c4a823faeea31de69769db8db9c86aaf7a9682daa23bb2fd2f8ecfe15552b488ba3fd075eff3f9739c44b299b8d0851c9e93e740925ab";
+        bytes memory validSignature =
+            hex"140bec1c035d7a6d407c4a823faeea31de69769db8db9c86aaf7a9682daa23bb2fd2f8ecfe15552b488ba3fd075eff3f9739c44b299b8d0851c9e93e740925ab";
         sigSender.fulfilSignatureRequest(1, validSignature);
 
         // Reveal the bid
@@ -175,10 +174,11 @@ contract SimpleAuctionTest is Test {
 
         // Receive the decryption key for the bid id from the timelock contract
         vm.startPrank(auctioneer);
-        bytes memory validSignature = hex"140bec1c035d7a6d407c4a823faeea31de69769db8db9c86aaf7a9682daa23bb2fd2f8ecfe15552b488ba3fd075eff3f9739c44b299b8d0851c9e93e740925ab";
+        bytes memory validSignature =
+            hex"140bec1c035d7a6d407c4a823faeea31de69769db8db9c86aaf7a9682daa23bb2fd2f8ecfe15552b488ba3fd075eff3f9739c44b299b8d0851c9e93e740925ab";
         sigSender.fulfilSignatureRequest(bidID, validSignature);
         vm.stopPrank();
-        
+
         // Reveal the bid
         auction.revealBid(bidID, bidAmount); // Reveal the bid
 

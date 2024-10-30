@@ -89,15 +89,6 @@ contract SignatureSender is ISignatureSender, AccessControl, Multicall {
         return lastRequestID;
     }
 
-    // todo restricted to only owner for now.
-    // todo will we allow operators call this function themselves or some aggregator node???
-    // todo will we do some verification to check threshold requirement for signatures is met??
-    // todo will we do some verification to check if operator caller is part of committeeID specified in signature request??
-    // todo will committeeIDs be made public somehow or for efficiency, should we randomly allocate requests ourseleves to committees??
-    // todo use modifier for fulfiling signature requests to check if caller is operator
-    // registered for a scheme??
-    // todo we can also have another modifier to check if operator is part of a committeeID speficied
-    // in signature request
     /**
      * @dev See {ISignatureSender-fulfilSignatureRequest}.
      */
@@ -123,9 +114,6 @@ contract SignatureSender is ISignatureSender, AccessControl, Multicall {
         } else {
             emit SignatureRequestFulfilled(requestID);
         }
-        // todo review - if request callback fails, should it be deleted and treated as fulfilled?
-        // caller might not be contract implementing right interface
-        // or malicious contract that just reverts
         delete requestsInFlight[requestID];
     }
 

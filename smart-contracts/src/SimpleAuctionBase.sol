@@ -386,8 +386,3 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
         return bidID;
     }
 }
-// bid id 1 = blocklock id 1
-// bid id 2 = blocklock id 2
-// block number = auction end block number for timelock 
-// block number for bid id 1 = bid id 2
-// sig sender req 1
