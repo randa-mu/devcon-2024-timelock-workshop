@@ -222,7 +222,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
     /// @param sealedAmount The sealed (encrypted) bid amount
     /// @return A unique bid identifier
     function generateBidID(bytes calldata sealedAmount) internal returns (uint256) {
-        // todo refactor function to return requestID from timelock contract
+        // todo convert into task for participants to use returned requestID from timelock contract
         uint256 bidID = timelock.requestBlocklock(auctionEndBlock, sealedAmount);
         return bidID;
     }
