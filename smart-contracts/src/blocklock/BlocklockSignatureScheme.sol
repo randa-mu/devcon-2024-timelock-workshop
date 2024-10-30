@@ -8,7 +8,6 @@ contract BlocklockSignatureScheme is ISignatureScheme {
     using BLS for bytes;
 
     string public constant SCHEME_ID = "BN254-BLS-BLOCKLOCK";
-    // todo: replace by "BLOCKLOCK_BN254G1_XMD:KECCAK-256_SVDW_RO_H1_"
     bytes public constant DST = bytes("IBE_BN254G1_XMD:KECCAK-256_SVDW_RO_H1_");
 
     /**

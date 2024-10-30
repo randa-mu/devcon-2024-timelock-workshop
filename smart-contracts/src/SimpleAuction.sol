@@ -50,7 +50,6 @@ contract SimpleAuction is SimpleAuctionBase {
         meetsExactReservePrice
         returns (uint256)
     {
-        // todo convert `generate bid id with sealed amount input` part to task
         // Generate a unique bid ID based on the sealed amount
         uint256 bidID = generateBidID(sealedAmount);
         // Check that the bid ID does not already exist to enforce uniqueness

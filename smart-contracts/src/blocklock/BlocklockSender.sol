@@ -106,7 +106,7 @@ contract BlocklockSender is IBlocklockSender, SignatureReceiverBase, AccessContr
             r.signature = signature;
 
             (bool success,) = r.callback.call(
-                abi.encodeWithSelector(IBlocklockReceiver.receiveBlocklock.selector, signatureRequestID, signature)
+                abi.encodeWithSelector(IBlocklockReceiver.receiveBlocklock.selector, requests[i], signature)
             );
             if (!success) {
                 emit BlocklockCallbackFailed(requests[i], signatureRequestID, r.blockHeight, signature);

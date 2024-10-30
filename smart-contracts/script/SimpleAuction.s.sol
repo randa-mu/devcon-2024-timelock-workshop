@@ -2,6 +2,7 @@
 pragma solidity ^0.8.13;
 
 import {Script, console} from "forge-std/Script.sol";
+
 import {SimpleAuction} from "../src/SimpleAuction.sol";
 import {SignatureSchemeAddressProvider} from "../src/signature-schemes/SignatureSchemeAddressProvider.sol";
 import {SignatureSender} from "../src/signature-requests/SignatureSender.sol";
