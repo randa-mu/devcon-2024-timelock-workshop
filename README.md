@@ -42,7 +42,7 @@ Before participating in the workshop, ensure you have the following:
         - Use cases
 2. **Enhancing Security in DeFi with Timelock Encryption**
     - Overview of use cases in DeFi (e.g., securing auctions, sealed bids, delayed transactions, securing governance actions relating to lending parameters, securing staking reward distribution information, among others).
-3. **Hands-On Exercise: Using a Simple Auction DApp Secured by Timelock Encryption**
+3. **Hands-On Exercise: Simple Auction Smart Contract with Sealed Bids Secured by Timelock Encryption**
 4. **Q&A and Wrap-Up**
 
 ## Learning Objectives
