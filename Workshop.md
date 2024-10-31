@@ -35,23 +35,23 @@ Install Foundry, and ensure you have:
 ### Step 3: Start Timelock Agent
 The timelock agent deploys the necessary smart contracts to the Anvil network, monitors timelock encryption request events from these contracts, and fulfills requests by generating signatures over the ciphertexts in each request at a specified block number. These signatures, which serve as decryption keys for the ciphertexts, remain unknown until the designated block number is reached. This process establishes the core functionality of timelock encryption.
 
-1. Start the timelock agent in a new console window, separate from the Anvil window:
+1. Start the timelock agent in a new terminal window, separate from the Anvil window:
    ```bash
    cd blocklock-agent && npm run start
    ```
+   **Note**: If you get any `nonce` related errors, restart the Anvil local blockchain and retry starting the agent.
 
-### Step 4: Configure and Deploy Auction Contract
-
-1. Note the **Simple Auction Contract Deployment Parameters**:
-   - Contract Address: `0x78e6B135B2A7f63b281C80e2ff639Eed32E2a81b`
+   Upon deployment of the smart contracts, you will notice the following deployment deployment configurations for the Simple Auction smart contract as part of the logs in the timelock agent console:
+   - Contract Address: `0xa945472E43646254913578f0dc0adb0c73a5F584`
    - Configuration:
-     - Duration (blocks): `50`
-     - End Block Number: `56`
-     - Reserve Price: `0.1 ETH`
+     - Auction Duration (blocks): `50`
+     - Auction End Block Number: `56`
+     - Auction Reserve Price: `0.1 ETH`
      - Bid Fulfillment Window (post-auction, blocks): `5`
-   - Timelock Writer: running on `port 8080`
 
-### Step 5: Encrypt Bids for Sealed-Bid Auction
+We will run the next set of tasks in another terminal window.
+
+### Step 4: Encrypt Bids for Sealed-Bid Auction
 
 1. **Encrypt the bid amount for Bidder A (0.3 ETH)**:
    ```bash
@@ -59,101 +59,164 @@ The timelock agent deploys the necessary smart contracts to the Anvil network, m
    cd bls-bn254-js
    yarn ibe:encrypt --message 300000000000000000 --blocknumber 56
    ```
-   - This will generate the ciphertext to use for Bidder A’s sealed bid.
+   - This will generate the ciphertext to use for Bidder A’s sealed bid. Please make note of it.
 
 2. **Encrypt the bid amount for Bidder B (0.4 ETH)**:
    ```bash
+   cast to-wei 0.4   # Result: 400000000000000000
    yarn ibe:encrypt --message 400000000000000000 --blocknumber 56
    ```
-   - This generates the ciphertext for Bidder B, making Bidder B the highest bidder.
+   - This generates the ciphertext for Bidder B, making Bidder B the highest bidder. Please make note of it.
 
-### Step 6: Submit Sealed Bids to the Auction Contract
+### Step 5: Submit Sealed Bids to the Auction Contract
 
 1. **Bidder A submits sealed bid (0.3 ETH)**:
    ```bash
-   cast send 0x78e6B135B2A7f63b281C80e2ff639Eed32E2a81b "sealedBid(bytes)" \
-   <Ciphertext from Step 5 for Bidder A> \
+   cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "sealedBid(bytes)" \
+   <replace this with the Ciphertext from Step 4 for Bidder A> \
    --value 0.1ether \
-   --private-key 0x92db14e403b83dfe3df233f83dfa3a0d7096f21ca9b0d6d6b8d88b2b4ec1564e
+   --private-key 0xe46f7a0c8e6110e8386242cad3491bd38fb794a28dfa751e826a03c8818fe282
    ```
 
 2. **Bidder B submits sealed bid (0.4 ETH)**:
    ```bash
-   cast send 0x78e6B135B2A7f63b281C80e2ff639Eed32E2a81b "sealedBid(bytes)" \
-   <Ciphertext from Step 5 for Bidder B> \
+   cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "sealedBid(bytes)" \
+   <replace this with the Ciphertext from Step 4 for Bidder B> \
    --value 0.1ether \
-   --private-key 0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97
+   --private-key 0xd4153f5547461a9f34a6da4de803c651c19794f62375d559a888b0d7aac38b63
    ```
 
-### Step 7: Verify Submitted Sealed Bids
+### Step 6: Verify Submitted Sealed Bids
 
-1. Check the latest block number:
-   ```bash
-   cast block-number
-   ```
-2. **View Sealed Bids**:
-   - For **Bidder A**:
+1. **View Sealed Bids**:
+   - For **Bidder A** with bidID 1:
      ```bash
-     cast call 0x78e6B135B2A7f63b281C80e2ff639Eed32E2a81b "getBidWithBidID(uint256)" 1
+     cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getBidWithBidID(uint256)" 1
      ```
    - Decode the returned bytes to view the bid data.
    ```
    cast abi-decode "getBidWithBidID(uint256)(bytes,bytes,uint256,address,bool)" <place output from command above here>
    ```
+   This should return five outputs on separate lines. These are:
+      * bytes sealedAmount - the ciphertext representing the (timelock encrypted) sealed bid.
+      * bytes decryptionKey - the decryption key used to decrypt the sealedAmount.
+      * uint256 unsealedAmount - the unsealed bid amount.
+      * address bidder - the wallet address of the bidder.
+      * bool revealed - a boolean true or false indicating whether the bid has been unsealed or not.
 
-### Step 8: Skip to Auction End Block
-
-1. Run the following script to skip blocks to the auction end:
+   Based on the output for the decryptionKey being `0x`, we can see that the timelock agent has not yet passed the decryption key back to the smart contract. This is because the block number for decryption has not reached.
+   
+   We can repeat the step above to get the current on-chain bid data for **Bidder B** but changing the bidID to 2, i.e., 
    ```bash
-   chmod +x bls-bn254-js/scripts/anvil-skip-to-block.sh
-   ./bls-bn254-js/scripts/anvil-skip-to-block.sh 56
+   cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getBidWithBidID(uint256)" 2
    ```
 
+### Step 7: Skip to Auction End Block
+
+As per the above outputs, the smart contract has not received any decryption keys for the sealed bids. This is because the bids were encrypted with the auction ending block number which is `56` as in Step 3 and this block number has not reached or been mined on the local Anvil blockchain. Therefore, without the decryption keys, none of the bids can be unsealed by the auctioneer. 
+
+1. Check the current block number:
+   ```bash
+   cast block-number
+   ```
+
+   The current block number is still less than the auction ending block number which is `56` from Step 3. Since we are on a local blockchain, we can mine the number of blocks between the current block number and our target block number to skip to the auction ending block number. 
+
+2. Run the following to skip blocks to the block after the auction end:
+   ```bash
+   chmod +x scripts/anvil-skip-to-block.sh
+   ./scripts/anvil-skip-to-block.sh 57
+   ```
+   *Note:** We should still be in the `bls-bn254-js` directory on the terminal. The script is in `bls-bn254-js/scripts/anvil-skip-to-block.sh`.
+
 2. **Verify Fulfilled Timelock Requests**:
-   - You should see the logs in the agent console showing that the agent has now signed the ciphertexts from the two earlier sealed bid events:
+   - You should see the following logs in the timelock agent console showing that the agent has now signed the ciphertexts from the two earlier sealed bid events:
      ```
      fulfilling signature request 1
      fulfilled signature request
      ```
 
-### Step 9: End the Auction
+### Step 8: End the Auction
 
-1. Use the deployer private key to end the auction:
+1. Use the deployer (auctioneer) private key to end the auction:
    ```bash
-   cast send 0x78e6B135B2A7f63b281C80e2ff639Eed32E2a81b "endAuction()" \
-   --private-key 0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a
+   cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "endAuction()" \
+   --private-key 0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46
    ```
 
-### Step 10: Reveal Bids and Verify Data
+### Step 9: Reveal Bids and Verify Data
 
-1. **View Revealed Bid Data**:
-   - Retrieve and decode data for Bidder A to confirm `revealed` status and `unsealedAmount`:
+1. **View Bid Data and Get Decryption Key**:
+   - Retrieve and decode data for Bidder A to view the `decryptionKey` and check the `revealed` status and `unsealedAmount`:
      ```bash
-     cast call 0x78e6B135B2A7f63b281C80e2ff639Eed32E2a81b "getBidWithBidID(uint256)" 1
+     cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getBidWithBidID(uint256)" 1
      ```
+
+   - Decode the returned bytes to view the bid data.
+   ```
+   cast abi-decode "getBidWithBidID(uint256)(bytes,bytes,uint256,address,bool)" <place output from command above here>
+   ```
+   This should return five outputs on separate lines. These are:
+      * bytes sealedAmount - the ciphertext representing the (timelock encrypted) sealed bid.
+      * bytes decryptionKey - the decryption key used to decrypt the sealedAmount.
+      * uint256 unsealedAmount - the unsealed bid amount.
+      * address bidder - the wallet address of the bidder.
+      * bool revealed - a boolean true or false indicating whether the bid has been unsealed or not.
+
+   We can now see that the decryptionKey has been sent to the auction smart contract after the auction end block number was identified by the timelock agent. The decryptionKey is no longer an empty byte string `0x`. Using the ciphertext and decryption key from the output above, we can decrypt the sealed bid to reveal the bid amount and confirm that the amount is the same as the amounts we encrypted to ciphertexts earlier for each bidder - Bidder A and Bidder B.
 
 2. **Decrypt Bid Amount Using Signature**:
    ```bash
-   yarn ibe:decrypt --ciphertext <ciphertext> --signature <signature>
+   yarn ibe:decrypt --ciphertext <replace with ciphertext from decoded output> --signature <replace with signature or decryption key from decoded output>
    ```
 
-3. **Convert Decrypted Value to Ether**:
+   For Bidder A with Bid ID 1 we should see the following decrypted data in the console:
+   ```bash
+   Decrypted message as hex: 0x333030303030303030303030303030303030
+   Decrypted message as plaintext string: 300000000000000000
+   ```
+
+3. **Convert Decrypted Value from Wei to Ether**:
+   If we convert the decrypted value from wei to ether, we should get 0.3 ether which we encrypted as wei earlier for Bidder A in Step 4.
    ```bash
    cast from-wei 300000000000000000
    ```
+   We can repeat the decryption steps for Bidder B and confirm the decrypted amount.
 
-4. **Reveal Bid Amounts with Auctioneer Key**:
+4. **Reveal Bid Amounts on-chain with Auctioneer Key**:
+   Now the auctioneer can reveal the bid amounts in the smart contract and with the decryption keys, anyone can verify the revealed amounts are correct with the decryption keys which have only been made available after the auction ending block number.
+
+   Reveal bid amounts -
    - For **Bidder A**:
      ```bash
-     cast send 0x78e6B135B2A7f63b281C80e2ff639Eed32E2a81b "revealBid(uint256,uint256)" \
+     cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "revealBid(uint256,uint256)" \
      1 \
      300000000000000000 \
-     --private-key 0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a
+     --private-key 0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46
      ```
    - For **Bidder B**:
      ```bash
-     cast send 0x78e6B135B2A7f63b281C80e2ff639Eed32E2a81b "revealBid(uint256,uint256)" \
+     cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "revealBid(uint256,uint256)" \
      2 \
      400000000000000000 \
-     --private-key 0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a
+     --private-key 0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46
      ```
+
+5. **View Revealed Bid Data**:
+   - Retrieve and decode data for Bidder A to confirm `revealed` status and `unsealedAmount`:
+     ```bash
+     cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getBidWithBidID(uint256)" 1
+     ```
+
+   - Decode the returned bytes to view the bid data.
+   ```
+   cast abi-decode "getBidWithBidID(uint256)(bytes,bytes,uint256,address,bool)" <place output from command above here>
+   ```
+   This should return five outputs on separate lines. These are:
+      * bytes sealedAmount - the ciphertext representing the (timelock encrypted) sealed bid.
+      * bytes decryptionKey - the decryption key used to decrypt the sealedAmount.
+      * uint256 unsealedAmount - the unsealed bid amount.
+      * address bidder - the wallet address of the bidder.
+      * bool revealed - a boolean true or false indicating whether the bid has been unsealed or not.
+
+   We can now see that the `unsealedAmount` is the amount in Wei and the `revealed` flag in the bid data has been set to `true` for both bidders.

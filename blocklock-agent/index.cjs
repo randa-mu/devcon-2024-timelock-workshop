@@ -42325,6 +42325,7 @@ async function main() {
   rpc.on("block", async (blockHeight) => {
     const res = blocklockNumbers.get(BigInt(blockHeight));
     if (!res) {
+      console.log(`no requests for block ${blockHeight}`);
       return;
     }
     const { m, ids } = res;

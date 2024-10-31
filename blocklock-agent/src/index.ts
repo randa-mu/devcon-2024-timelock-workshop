@@ -109,12 +109,13 @@ async function main() {
         const res = blocklockNumbers.get(BigInt(blockHeight))
         if (!res) {
             // no requests for this block
+            console.log(`no timelock requests for block ${blockHeight}`)
             return
         }
 
         const { m, ids } = res
 
-        console.log(`creating a blocklock signature for block ${blockHeight}`)
+        console.log(`creating a timelock signature for block ${blockHeight}`)
         const signature = bls.sign(m, secretKey).signature
         const sig = bls.serialiseG1Point(signature)
         const sigBytes = AbiCoder.defaultAbiCoder().encode(["uint256", "uint256"], [sig[0], sig[1]])
