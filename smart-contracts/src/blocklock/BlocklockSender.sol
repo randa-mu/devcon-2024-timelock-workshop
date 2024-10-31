@@ -42,7 +42,11 @@ contract BlocklockSender is IBlocklockSender, SignatureReceiverBase, AccessContr
         bytes signature
     );
     event BlocklockCallbackFailed(
-        uint256 indexed requestID, uint256 indexed signatureRequestID, uint256 blockHeight, bytes ciphertext, bytes signature
+        uint256 indexed requestID,
+        uint256 indexed signatureRequestID,
+        uint256 blockHeight,
+        bytes ciphertext,
+        bytes signature
     );
 
     constructor(address _signatureSender) SignatureReceiverBase(_signatureSender) {}
