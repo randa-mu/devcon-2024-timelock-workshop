@@ -127,7 +127,7 @@ As per the above outputs, the smart contract has not received any decryption key
    chmod +x scripts/anvil-skip-to-block.sh
    ./scripts/anvil-skip-to-block.sh 57
    ```
-   *Note:** We should still be in the `bls-bn254-js` directory on the terminal. The script is in `bls-bn254-js/scripts/anvil-skip-to-block.sh`.
+   **Note:** We should still be in the `bls-bn254-js` directory on the terminal which houses the scripts, e.g., `bls-bn254-js/scripts/anvil-skip-to-block.sh`.
 
 2. **Verify Fulfilled Timelock Requests**:
    - You should see the following logs in the timelock agent console showing that the agent has now signed the ciphertexts from the two earlier sealed bid events:
