@@ -2,7 +2,7 @@ import { BaseContract, LogDescription, Provider, Signer, TransactionReceipt } fr
 import {
     type BlocklockSender,
     BlocklockSender__factory
-} from "smart-contracts/typechain-types"
+} from "./generated"
 import { encrypt_towards_identity_g1, Ciphertext, G2, decrypt_towards_identity_g1, G1, serializeCiphertext, deserializeCiphertext } from '@randamu/bls-bn254-js/src'
 
 export class Blocklock {

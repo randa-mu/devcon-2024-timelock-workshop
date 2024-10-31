@@ -16,7 +16,7 @@ import {
     SignatureSender__factory,
     SimpleAuction,
     SimpleAuction__factory
-} from "smart-contracts/typechain-types"
+} from "./generated"
 import { SignatureRequestedEvent } from "./generated/SignatureSender"
 
 const program = new Command()
