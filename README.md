@@ -61,7 +61,7 @@ Follow these steps to set up your local environment for the workshop:
     git clone https://github.com/randa-mu/devcon-2024-timelock-workshop.git
     ```
 
-Upon cloning the repository, please follow the steps for the hands-on exercise detailed [here](STEP_BY_STEP_GUIDE). 
+Upon cloning the repository, please follow the steps for the hands-on exercise detailed [here](STEP_BY_STEP_GUIDE.md). 
 
 
 ## Resources
