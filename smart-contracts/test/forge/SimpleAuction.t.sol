@@ -58,10 +58,22 @@ contract SimpleAuctionTest is Test {
         // Simulate bidding
         uint256 bidAmount = 1000;
         vm.deal(bidder1, 1 ether); // Give bidder1 1 ether
-        vm.prank(bidder1);
+        vm.startPrank(bidder1);
         auction.sealedBid{value: auction.reservePrice()}(abi.encodePacked(bidAmount)); // Place a sealed bid of bidAmount
-
         assertEq(auction.totalBids(), 1, "Bid count should be 1");
+        vm.stopPrank();
+    }
+
+    function testFail_BidReplacement() public {
+        // Simulate bidding
+        uint256 bidAmount = 1000;
+        vm.deal(bidder1, 1 ether); // Give bidder1 1 ether
+        vm.startPrank(bidder1);
+        auction.sealedBid{value: auction.reservePrice()}(abi.encodePacked(bidAmount)); // Place a sealed bid of bidAmount
+        assertEq(auction.totalBids(), 1, "Bid count should be 1");
+        // Bids cannot be overwritten
+        auction.sealedBid{value: auction.reservePrice()}(abi.encodePacked(bidAmount)); // Place a sealed bid of bidAmount
+        vm.stopPrank();
     }
 
     function test_RevealBid() public {

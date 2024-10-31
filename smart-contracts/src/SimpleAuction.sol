@@ -50,10 +50,11 @@ contract SimpleAuction is SimpleAuctionBase {
         meetsExactReservePrice
         returns (uint256)
     {
+        uint256 bidID = bidderToBidID[msg.sender];
         // Check that the bid ID does not already exist to enforce uniqueness
-        require(bidsById[bidID].bidID == 0, "Bid ID must be unique");
+        require(bidID == 0, "Bid ID must be unique.");
         // Generate a unique bid ID based on the sealed amount
-        uint256 bidID = generateBidID(sealedAmount);
+        bidID = generateBidID(sealedAmount);
         // Create a new bid with the given parameters
         Bid memory newBid = Bid({
             bidID: bidID,
