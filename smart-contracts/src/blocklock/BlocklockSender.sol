@@ -42,7 +42,7 @@ contract BlocklockSender is IBlocklockSender, SignatureReceiverBase, AccessContr
         bytes signature
     );
     event BlocklockCallbackFailed(
-        uint256 indexed requestID, uint256 indexed signatureRequestID, uint256 blockHeight, bytes signature
+        uint256 indexed requestID, uint256 indexed signatureRequestID, uint256 blockHeight, bytes ciphertext, bytes signature
     );
 
     constructor(address _signatureSender) SignatureReceiverBase(_signatureSender) {}
@@ -109,7 +109,7 @@ contract BlocklockSender is IBlocklockSender, SignatureReceiverBase, AccessContr
                 abi.encodeWithSelector(IBlocklockReceiver.receiveBlocklock.selector, requests[i], signature)
             );
             if (!success) {
-                emit BlocklockCallbackFailed(requests[i], signatureRequestID, r.blockHeight, signature);
+                emit BlocklockCallbackFailed(requests[i], signatureRequestID, r.blockHeight, r.ciphertext, signature);
             } else {
                 emit BlocklockCallbackSuccess(requests[i], signatureRequestID, r.blockHeight, r.ciphertext, signature);
             }

@@ -4,10 +4,10 @@
 ## Prerequisites
 
 Install Foundry, and ensure you have:
-* moon
-* npm version >= 10.9.0
-* node version >= 22.3.0
-* yarn
+* [moon](https://moonrepo.dev/docs/install)
+* [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) version >= 10.9.0
+* [node](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) version >= 22.3.0
+* [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
 
 
 ## Workshop Steps

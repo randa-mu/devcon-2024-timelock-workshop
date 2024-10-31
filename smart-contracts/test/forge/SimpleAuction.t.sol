@@ -48,7 +48,7 @@ contract SimpleAuctionTest is Test {
         vm.stopPrank();
     }
 
-    function test_DeploymentConfigurations() public {
+    function test_DeploymentConfigurations() public view {
         assertEq(auction.auctioneer(), auctioneer);
         assertGt(auction.auctionEndBlock(), block.number);
         assertEq(auction.highestBidPaymentDeadlineBlock(), auction.auctionEndBlock() + highestBidPaymentWindowBlocks);
