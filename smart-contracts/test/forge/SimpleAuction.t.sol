@@ -80,15 +80,17 @@ contract SimpleAuctionTest is Test {
         bytes memory validSignature =
             hex"140bec1c035d7a6d407c4a823faeea31de69769db8db9c86aaf7a9682daa23bb2fd2f8ecfe15552b488ba3fd075eff3f9739c44b299b8d0851c9e93e740925ab";
         sigSender.fulfilSignatureRequest(bidID, validSignature);
-        vm.stopPrank();
 
         // Reveal the bid
         auction.revealBid(bidID, bidAmount); // Reveal the bid
+        vm.stopPrank();
 
-        SimpleAuction.Bid memory b = auction.getBidWithBidID(bidID);
+        (,,, address bidderAddressWithBidID,) = auction.getBidWithBidID(bidID);
+        (,,, address bidderAddressWithBidder,) = auction.getBidWithBidder(bidder1);
 
         assertEq(auction.highestBidder(), bidder1, "Highest bidder should be bidder1");
-        assertEq(b.bidder, bidder1, "Bidder for bid ID 1 should be bidder1");
+        assertEq(bidderAddressWithBidID, bidder1, "Bidder for bid ID 1 should be bidder1");
+        assertEq(bidderAddressWithBidder, bidder1, "Bidder for bid ID 1 should be bidder 1");
         assertEq(auction.highestBid(), bidAmount, "Highest bid should be 1000");
     }
 
@@ -108,10 +110,10 @@ contract SimpleAuctionTest is Test {
         bytes memory validSignature =
             hex"140bec1c035d7a6d407c4a823faeea31de69769db8db9c86aaf7a9682daa23bb2fd2f8ecfe15552b488ba3fd075eff3f9739c44b299b8d0851c9e93e740925ab";
         sigSender.fulfilSignatureRequest(bidID, validSignature);
-        vm.stopPrank();
 
         // Reveal the bid
         auction.revealBid(bidID, bidAmount); // Reveal the bid
+        vm.stopPrank();
 
         // Bidder1 fulfills the highest bid
         vm.startPrank(bidder1); // Set bidder1 as the sender
@@ -149,6 +151,8 @@ contract SimpleAuctionTest is Test {
         auction.revealBid(bidID, bidAmount); // Reveal the bid
         auction.revealBid(bidID2, bidAmount2);
 
+        vm.stopPrank();
+
         // Bidder1 cannot withdraw their deposit
         vm.startPrank(bidder1); // Set bidder1 as the sender
         vm.expectRevert("Highest bidder cannot claim the reserve.");
@@ -177,10 +181,10 @@ contract SimpleAuctionTest is Test {
         bytes memory validSignature =
             hex"140bec1c035d7a6d407c4a823faeea31de69769db8db9c86aaf7a9682daa23bb2fd2f8ecfe15552b488ba3fd075eff3f9739c44b299b8d0851c9e93e740925ab";
         sigSender.fulfilSignatureRequest(bidID, validSignature);
-        vm.stopPrank();
 
         // Reveal the bid
         auction.revealBid(bidID, bidAmount); // Reveal the bid
+        vm.stopPrank();
 
         // Bidder1 fails to fulfill the highest bid payment within payment window
         vm.roll(block.number + highestBidPaymentWindowBlocks + 1); // Move past payment deadline

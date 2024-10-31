@@ -284,7 +284,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
      * @param bidID The unique identifier for the bid to be revealed.
      * @param unsealedAmount The actual bid amount to be revealed.
      */
-    function revealBid(uint256 bidID, uint256 unsealedAmount) external {
+    function revealBid(uint256 bidID, uint256 unsealedAmount) external onlyAuctioneer {
         require(bidsById[bidID].bidID != 0, "Bid ID does not exist.");
         require(!bidsById[bidID].revealed, "Bid already revealed.");
         require(bidsById[bidID].decryptionKey.length > 0, "Bid decryption key not received from timelock contract.");
@@ -354,20 +354,56 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
      * @notice Retrieves bid information associated with a specific bidder.
      *
      * @param bidder The address of the bidder.
-     * @return A `Bid` struct containing the bid details for the specified bidder.
+     * @return sealedAmount The sealed bid as bytes.
+     * @return decryptionKey The decryption key used to decrypt the ciphertext off-chain.
+     * @return unsealedAmount The unsealed ciphertext representing the sealed bid.
+     * @return _bidder The address of the bidder.
+     * @return revealed A boolean indicating if the sealed bid has been unsealed or revealed.
      */
-    function getBidWithBidder(address bidder) external view returns (Bid memory) {
-        return bidsById[bidderToBidID[bidder]];
+    function getBidWithBidder(address bidder)
+        external
+        view
+        returns (
+            bytes memory sealedAmount,
+            bytes memory decryptionKey,
+            uint256 unsealedAmount,
+            address _bidder,
+            bool revealed
+        )
+    {
+        sealedAmount = bidsById[bidderToBidID[bidder]].sealedAmount;
+        decryptionKey = bidsById[bidderToBidID[bidder]].decryptionKey;
+        unsealedAmount = bidsById[bidderToBidID[bidder]].unsealedAmount;
+        _bidder = bidsById[bidderToBidID[bidder]].bidder;
+        revealed = bidsById[bidderToBidID[bidder]].revealed;
     }
+
     /**
      * @notice Retrieves bid information for a given bid ID.
      *
      * @param bidID The unique identifier for the bid.
-     * @return A `Bid` struct containing the bid details for the specified bid ID.
+     * @return sealedAmount The sealed bid as bytes.
+     * @return decryptionKey The decryption key used to decrypt the ciphertext off-chain.
+     * @return unsealedAmount The unsealed ciphertext representing the sealed bid.
+     * @return bidder The address of the bidder.
+     * @return revealed A boolean indicating if the sealed bid has been unsealed or revealed.
      */
-
-    function getBidWithBidID(uint256 bidID) external view returns (Bid memory) {
-        return bidsById[bidID];
+    function getBidWithBidID(uint256 bidID)
+        external
+        view
+        returns (
+            bytes memory sealedAmount,
+            bytes memory decryptionKey,
+            uint256 unsealedAmount,
+            address bidder,
+            bool revealed
+        )
+    {
+        sealedAmount = bidsById[bidID].sealedAmount;
+        decryptionKey = bidsById[bidID].decryptionKey;
+        unsealedAmount = bidsById[bidID].unsealedAmount;
+        bidder = bidsById[bidID].bidder;
+        revealed = bidsById[bidID].revealed;
     }
 
     // ** Internal Utilities **
