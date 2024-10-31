@@ -98,11 +98,11 @@ We will run the next set of tasks in another terminal window.
    cast abi-decode "getBidWithBidID(uint256)(bytes,bytes,uint256,address,bool)" <place output from command above here>
    ```
    This should return five outputs on separate lines. These are:
-      * bytes sealedAmount - the ciphertext representing the (timelock encrypted) sealed bid.
-      * bytes decryptionKey - the decryption key used to decrypt the sealedAmount.
-      * uint256 unsealedAmount - the unsealed bid amount.
-      * address bidder - the wallet address of the bidder.
-      * bool revealed - a boolean true or false indicating whether the bid has been unsealed or not.
+      * `bytes sealedAmount` - the ciphertext representing the (timelock encrypted) sealed bid.
+      * `bytes decryptionKey` - the decryption key used to decrypt the sealedAmount.
+      * `uint256 unsealedAmount` - the unsealed bid amount.
+      * `address bidder` - the wallet address of the bidder.
+      * `bool revealed` - a boolean true or false indicating whether the bid has been unsealed or not.
 
    Based on the output for the decryptionKey being `0x`, we can see that the timelock agent has not yet passed the decryption key back to the smart contract. This is because the block number for decryption has not reached.
    
@@ -157,11 +157,11 @@ As per the above outputs, the smart contract has not received any decryption key
    cast abi-decode "getBidWithBidID(uint256)(bytes,bytes,uint256,address,bool)" <place output from command above here>
    ```
    This should return five outputs on separate lines. These are:
-      * bytes sealedAmount - the ciphertext representing the (timelock encrypted) sealed bid.
-      * bytes decryptionKey - the decryption key used to decrypt the sealedAmount.
-      * uint256 unsealedAmount - the unsealed bid amount.
-      * address bidder - the wallet address of the bidder.
-      * bool revealed - a boolean true or false indicating whether the bid has been unsealed or not.
+      * `bytes sealedAmount` - the ciphertext representing the (timelock encrypted) sealed bid.
+      * `bytes decryptionKey` - the decryption key used to decrypt the sealedAmount.
+      * `uint256 unsealedAmount` - the unsealed bid amount.
+      * `address bidder` - the wallet address of the bidder.
+      * `bool revealed` - a boolean true or false indicating whether the bid has been unsealed or not.
 
    We can now see that the decryptionKey has been sent to the auction smart contract after the auction end block number was identified by the timelock agent. The decryptionKey is no longer an empty byte string `0x`. Using the ciphertext and decryption key from the output above, we can decrypt the sealed bid to reveal the bid amount and confirm that the amount is the same as the amounts we encrypted to ciphertexts earlier for each bidder - Bidder A and Bidder B.
 
@@ -213,10 +213,10 @@ As per the above outputs, the smart contract has not received any decryption key
    cast abi-decode "getBidWithBidID(uint256)(bytes,bytes,uint256,address,bool)" <place output from command above here>
    ```
    This should return five outputs on separate lines. These are:
-      * bytes sealedAmount - the ciphertext representing the (timelock encrypted) sealed bid.
-      * bytes decryptionKey - the decryption key used to decrypt the sealedAmount.
-      * uint256 unsealedAmount - the unsealed bid amount.
-      * address bidder - the wallet address of the bidder.
-      * bool revealed - a boolean true or false indicating whether the bid has been unsealed or not.
+      * `bytes sealedAmount` - the ciphertext representing the (timelock encrypted) sealed bid.
+      * `bytes decryptionKey` - the decryption key used to decrypt the sealedAmount.
+      * `uint256 unsealedAmount` - the unsealed bid amount.
+      * `address bidder` - the wallet address of the bidder.
+      * `bool revealed` - a boolean true or false indicating whether the bid has been unsealed or not.
 
    We can now see that the `unsealedAmount` is the amount in Wei and the `revealed` flag in the bid data has been set to `true` for both bidders.
