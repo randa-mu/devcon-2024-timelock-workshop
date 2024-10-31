@@ -1,6 +1,6 @@
 import * as http from "node:http"
 import { Command, Option } from "commander"
-import { AbiCoder, AddressLike, getBytes, isHexString, toUtf8Bytes, Wallet, ContractTransactionResponse } from "ethers"
+import { ethers, AbiCoder, AddressLike, getBytes, isHexString, toUtf8Bytes, Wallet, ContractTransactionResponse } from "ethers"
 import { G1, G2 } from "mcl-wasm"
 import { BlsBn254 } from "@randamu/bls-bn254-js/src"
 import { type TypedContractEvent, TypedListener } from "./generated/common"
@@ -13,7 +13,9 @@ import {
     SignatureSchemeAddressProvider,
     SignatureSchemeAddressProvider__factory,
     SignatureSender,
-    SignatureSender__factory
+    SignatureSender__factory,
+    SimpleAuction,
+    SimpleAuction__factory
 } from "smart-contracts/typechain-types"
 import { SignatureRequestedEvent } from "./generated/SignatureSender"
 
@@ -48,8 +50,12 @@ const options = program
 
 
 const SCHEME_ID = "BN254-BLS-BLOCKLOCK";
-// todo: replace by "BLOCKLOCK_BN254G1_XMD:KECCAK-256_SVDW_RO_H1_"
 const DST = "IBE_BN254G1_XMD:KECCAK-256_SVDW_RO_H1_";
+// Auction contract configuration parameters
+const durationBlocks = 10; // blocks
+const reservePrice = 0.1; // ether
+const reservePriceInWei = ethers.parseEther(reservePrice.toString(10))
+const highestBidPaymentWindowBlocks = 5; // blocks
 
 async function main() {
     // set up all our plumbing
@@ -77,6 +83,10 @@ async function main() {
     const blocklockContract = await deployBlocklock(wallet, signatureSenderContractAddr)
     const blocklockContractAddr = await blocklockContract.getAddress()
     console.log(`blocklock contract deployed to ${blocklockContractAddr}`)
+
+    const auctionContract = await deployAuction(wallet, blocklockContractAddr)
+    const auctionContractAddr = await auctionContract.getAddress()
+    console.log(`auction contract deployed to ${auctionContractAddr}`)
 
     const blocklockNumbers = new Map()
     await signatureSenderContract.addListener("SignatureRequested", createSignatureListener(bls, blocklockNumbers))
@@ -214,6 +224,19 @@ async function deploySignatureSender(bls: BlsBn254, wallet: Wallet, blsPublicKey
  */
 async function deployBlocklock(wallet: Wallet, signatureSenderContractAddr: AddressLike): Promise<BlocklockSender> {
     const contract = await new BlocklockSender__factory(wallet).deploy(signatureSenderContractAddr)
+    return contract.waitForDeployment()
+}
+
+/**
+ * Deploy the auction contract
+ */
+async function deployAuction(wallet: Wallet, blocklockContractAddr: AddressLike): Promise<SimpleAuction> {
+    const contract = await new SimpleAuction__factory(wallet).deploy(
+        durationBlocks, 
+        reservePriceInWei, 
+        highestBidPaymentWindowBlocks,
+        blocklockContractAddr
+    )
     return contract.waitForDeployment()
 }
 
