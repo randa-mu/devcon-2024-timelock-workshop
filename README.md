@@ -42,7 +42,7 @@ Before participating in the workshop, ensure you have the following:
         - Use cases
 2. **Enhancing Security in DeFi with Timelock Encryption**
     - Overview of use cases in DeFi (e.g., securing auctions, sealed bids, delayed transactions, securing governance actions relating to lending parameters, securing staking reward distribution information, among others).
-3. **Hands-On Exercise: Using a DeFi Application Secured by Timelock Encryption**
+3. **Hands-On Exercise: Using a Simple Auction DApp Secured by Timelock Encryption**
 4. **Q&A and Wrap-Up**
 
 ## Learning Objectives
@@ -61,7 +61,7 @@ Follow these steps to set up your local environment for the workshop:
     git clone https://github.com/randa-mu/devcon-2024-timelock-workshop.git
     ```
 
-Upon cloning the repository, please follow the steps for the workshop detailed [here](Workshop.md). 
+Upon cloning the repository, please follow the steps for the hands-on exercise detailed [here](Workshop.md). 
 
 
 ## Resources
