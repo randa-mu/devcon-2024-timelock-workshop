@@ -28,13 +28,14 @@ Install Foundry, and ensure you have:
 
 1. Start the Anvil local blockchain with the following command:
    ```bash
-   anvil
+   chmod +x bls-bn254-js/scripts/anvil-start.sh
+   ./bls-bn254-js/scripts/anvil-start.sh
    ```
-2. **Note**: The deployer private key is located in `blocklock-agent/index.ts`.
 
-### Step 3: Start Blocklock Agent
+### Step 3: Start Timelock Agent
+The timelock agent deploys the necessary smart contracts to the Anvil network, monitors timelock encryption request events from these contracts, and fulfills requests by generating signatures over the ciphertexts in each request at a specified block number. These signatures, which serve as decryption keys for the ciphertexts, remain unknown until the designated block number is reached. This process establishes the core functionality of timelock encryption.
 
-1. Navigate to the `blocklock-agent` directory and start the agent:
+1. Start the timelock agent in a new console window, separate from the Anvil window:
    ```bash
    cd blocklock-agent && npm run start
    ```
@@ -104,8 +105,8 @@ Install Foundry, and ensure you have:
 
 1. Run the following script to skip blocks to the auction end:
    ```bash
-   chmod +x scripts/anvil-skip-to-block.sh
-   ./scripts/anvil-skip-to-block.sh 56
+   chmod +x bls-bn254-js/scripts/anvil-skip-to-block.sh
+   ./bls-bn254-js/scripts/anvil-skip-to-block.sh 56
    ```
 
 2. **Verify Fulfilled Timelock Requests**:

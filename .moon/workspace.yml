@@ -16,7 +16,5 @@ vcs:
 # and cannot reference projects located outside the workspace boundary.
 projects:
   bls-bn254-js: 'bls-bn254-js'
-  furnace: 'furnace'
-  hose: 'hose'
   smart-contracts: 'smart-contracts'
   blocklock-agent: 'blocklock-agent'

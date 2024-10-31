@@ -23,7 +23,7 @@ const program = new Command()
 
 const defaultPort = "8080"
 const defaultRPC = "http://localhost:8545"
-const defaultPrivateKey = "0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a"
+const defaultPrivateKey = "0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46"
 const defaultBlsKey = "0x58aabbe98959c4dcb96c44c53be7e3bb980791fc7a9e03445c4af612a45ac906"
 
 program
