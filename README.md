@@ -14,7 +14,7 @@ Welcome to the **DeFi Safety Workshop: Timelock Encryption**! This repository co
 
 ## About the Workshop
 
-In this workshop, we explore how to enhance the security of smart contracts and DeFi applications using **timelock encryption**. Timelock encryption allows for data to be encrypted and then automatically decrypted after a specified time period (or condition being met), which is useful for delaying access to sensitive data, securing transactions, and mitigating front-running attacks.
+In this workshop, we explore how the security of smart contracts and DeFi applications can be enhanced using **timelock encryption**. Timelock encryption allows for data to be encrypted and then decrypted only after a specified time period (or condition being met), which is useful for delaying access to sensitive data, securing transactions, and mitigating front-running attacks.
 
 Participants will:
 - Learn the fundamentals of timelock encryption and its applications in DeFi.
