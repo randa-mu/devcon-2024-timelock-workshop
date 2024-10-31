@@ -1,8 +1,7 @@
 # Developer Workshop: Secure Sealed-Bid Auction with Timelock Encryption
 
 
-## Prerequisites
-
+## Prerequisites
 
 Install Foundry, and ensure you have:
 * [moon](https://moonrepo.dev/docs/install)
