@@ -23,25 +23,25 @@ const program = new Command()
 
 const defaultPort = "8080"
 const defaultRPC = "http://localhost:8545"
-const defaultPrivateKey = "0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46"
+const defaultPrivateKey = "0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a"
 const defaultBlsKey = "0x58aabbe98959c4dcb96c44c53be7e3bb980791fc7a9e03445c4af612a45ac906"
 
 program
     .addOption(new Option("--port <port>", "The port to host the healthcheck on")
         .default(defaultPort)
-        .env("RANDOMNESS_PORT")
+        .env("TIMELOCK_PORT")
     )
     .addOption(new Option("--rpc-url <rpc-url>", "The websockets URL to connect to the blockchain from")
         .default(defaultRPC)
-        .env("RANDOMNESS_RPC_URL")
+        .env("TIMELOCK_RPC_URL")
     )
     .addOption(new Option("--private-key <private-key>", "The private key to use for execution")
         .default(defaultPrivateKey)
-        .env("RANDOMNESS_PRIVATE_KEY")
+        .env("TIMELOCK_PRIVATE_KEY")
     )
     .addOption(new Option("--bls-key <bls-key>", "The BLS private key to use for signing")
         .default(defaultBlsKey)
-        .env("RANDOMNESS_BLS_PRIVATE_KEY")
+        .env("TIMELOCK_BLS_PRIVATE_KEY")
     )
 
 const options = program
@@ -52,7 +52,7 @@ const options = program
 const SCHEME_ID = "BN254-BLS-BLOCKLOCK";
 const DST = "IBE_BN254G1_XMD:KECCAK-256_SVDW_RO_H1_";
 // Auction contract configuration parameters
-const durationBlocks = 10; // blocks
+const durationBlocks = 50; // blocks
 const reservePrice = 0.1; // ether
 const reservePriceInWei = ethers.parseEther(reservePrice.toString(10))
 const highestBidPaymentWindowBlocks = 5; // blocks
@@ -86,7 +86,12 @@ async function main() {
 
     const auctionContract = await deployAuction(wallet, blocklockContractAddr)
     const auctionContractAddr = await auctionContract.getAddress()
-    console.log(`auction contract deployed to ${auctionContractAddr}`)
+    console.log(`simple auction contract deployed to ${auctionContractAddr}`)
+    console.log("\nsimple auction contract configuration parameters");
+    console.log("Auction duration in blocks:", durationBlocks);
+    console.log("Auction end block number:", await auctionContract.auctionEndBlock());
+    console.log("Auction reserve price in ether:", reservePrice);
+    console.log("Window for fulfilling highest bid in blocks post-auction:", highestBidPaymentWindowBlocks);
 
     const blocklockNumbers = new Map()
     await signatureSenderContract.addListener("SignatureRequested", createSignatureListener(bls, blocklockNumbers))
@@ -95,7 +100,7 @@ async function main() {
     http.createServer((_, res) => {
         res.writeHead(200)
         res.end()
-    }).listen(port, "0.0.0.0", () => console.log(`randomness writer running on port ${port}`))
+    }).listen(port, "0.0.0.0", () => console.log(`timelock writer running on port ${port}`))
 
     // Triggered on each block to check if there was a blocklock request for that round
     // We may skip some blocks depending on the rpc.pollingInterval value
@@ -207,6 +212,7 @@ async function deployBlocklockScheme(wallet: Wallet, schemeProviderContract: Sig
     console.log("registering blocklock scheme")
     const tx = await schemeProviderContract.updateSignatureScheme(SCHEME_ID, await scheme.getAddress())
     await tx.wait(1)
+
     return scheme
 }
 

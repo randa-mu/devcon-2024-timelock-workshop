@@ -1,6 +1,5 @@
 import { decrypt_towards_identity_g1, deserializeCiphertext } from '../src'
-import { bn254 } from "../src/crypto/bn254"
-import { hexlify } from 'ethers'
+import { hexlify, getBytes } from 'ethers'
 import { Command } from 'commander'
 
 // Decrypt message with Identity-based Encryption (IBE)
@@ -23,10 +22,13 @@ const ciphertext: string = options.ciphertext
 const signature: string = options.signature
 
 async function main() {
-    const cipher = ciphertext
-    const deserializedCiphertext = deserializeCiphertext(Uint8Array.from(Buffer.from(cipher, 'hex')))
-    const signatureAsG1Point = bn254.ShortSignature.fromHex(Buffer.from(signature, 'hex'))
-    const message = await decrypt_towards_identity_g1(deserializedCiphertext, signatureAsG1Point)
+    const deserializedCiphertext = deserializeCiphertext(getBytes(ciphertext))
+    
+    // Decrypt the ciphertext with the provided signature
+    const x = BigInt('0x' + signature.slice(2, 66))
+    const y = BigInt('0x' + signature.slice(66, 130))
+
+    const message = decrypt_towards_identity_g1(deserializedCiphertext, {x, y})
     console.log("Decrypted message as hex:", hexlify(message))
     console.log("Decrypted message as plaintext string:", hexToString(hexlify(message)))
 }

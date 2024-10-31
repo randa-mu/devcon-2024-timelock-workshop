@@ -20,4 +20,3 @@ projects:
   hose: 'hose'
   smart-contracts: 'smart-contracts'
   blocklock-agent: 'blocklock-agent'
-  blocklock-js: 'blocklock-js'

@@ -215,8 +215,8 @@ var require_help = __commonJS({
           visibleCommands.push(helpCommand);
         }
         if (this.sortSubcommands) {
-          visibleCommands.sort((a, b3) => {
-            return a.name().localeCompare(b3.name());
+          visibleCommands.sort((a, b2) => {
+            return a.name().localeCompare(b2.name());
           });
         }
         return visibleCommands;
@@ -228,11 +228,11 @@ var require_help = __commonJS({
        * @param {Option} b
        * @returns {number}
        */
-      compareOptions(a, b3) {
+      compareOptions(a, b2) {
         const getSortKey = (option) => {
           return option.short ? option.short.replace(/^-/, "") : option.long.replace(/^--/, "");
         };
-        return getSortKey(a).localeCompare(getSortKey(b3));
+        return getSortKey(a).localeCompare(getSortKey(b2));
       }
       /**
        * Get an array of the visible options. Includes a placeholder for the implicit help option, if there is one.
@@ -500,10 +500,10 @@ var require_help = __commonJS({
         function formatList(textArray) {
           return textArray.join("\n").replace(/^/gm, " ".repeat(itemIndentWidth));
         }
-        let output5 = [`Usage: ${helper.commandUsage(cmd)}`, ""];
+        let output4 = [`Usage: ${helper.commandUsage(cmd)}`, ""];
         const commandDescription = helper.commandDescription(cmd);
         if (commandDescription.length > 0) {
-          output5 = output5.concat([
+          output4 = output4.concat([
             helper.wrap(commandDescription, helpWidth, 0),
             ""
           ]);
@@ -515,7 +515,7 @@ var require_help = __commonJS({
           );
         });
         if (argumentList.length > 0) {
-          output5 = output5.concat(["Arguments:", formatList(argumentList), ""]);
+          output4 = output4.concat(["Arguments:", formatList(argumentList), ""]);
         }
         const optionList = helper.visibleOptions(cmd).map((option) => {
           return formatItem(
@@ -524,7 +524,7 @@ var require_help = __commonJS({
           );
         });
         if (optionList.length > 0) {
-          output5 = output5.concat(["Options:", formatList(optionList), ""]);
+          output4 = output4.concat(["Options:", formatList(optionList), ""]);
         }
         if (this.showGlobalOptions) {
           const globalOptionList = helper.visibleGlobalOptions(cmd).map((option) => {
@@ -534,7 +534,7 @@ var require_help = __commonJS({
             );
           });
           if (globalOptionList.length > 0) {
-            output5 = output5.concat([
+            output4 = output4.concat([
               "Global Options:",
               formatList(globalOptionList),
               ""
@@ -548,9 +548,9 @@ var require_help = __commonJS({
           );
         });
         if (commandList.length > 0) {
-          output5 = output5.concat(["Commands:", formatList(commandList), ""]);
+          output4 = output4.concat(["Commands:", formatList(commandList), ""]);
         }
-        return output5.join("\n");
+        return output4.join("\n");
       }
       /**
        * Calculate the pad width from the maximum term length.
@@ -881,20 +881,20 @@ var require_option = __commonJS({
 var require_suggestSimilar = __commonJS({
   "node_modules/commander/lib/suggestSimilar.js"(exports2) {
     var maxDistance = 3;
-    function editDistance(a, b3) {
-      if (Math.abs(a.length - b3.length) > maxDistance)
-        return Math.max(a.length, b3.length);
+    function editDistance(a, b2) {
+      if (Math.abs(a.length - b2.length) > maxDistance)
+        return Math.max(a.length, b2.length);
       const d = [];
       for (let i = 0; i <= a.length; i++) {
         d[i] = [i];
       }
-      for (let j = 0; j <= b3.length; j++) {
+      for (let j = 0; j <= b2.length; j++) {
         d[0][j] = j;
       }
-      for (let j = 1; j <= b3.length; j++) {
+      for (let j = 1; j <= b2.length; j++) {
         for (let i = 1; i <= a.length; i++) {
           let cost = 1;
-          if (a[i - 1] === b3[j - 1]) {
+          if (a[i - 1] === b2[j - 1]) {
             cost = 0;
           } else {
             cost = 1;
@@ -907,12 +907,12 @@ var require_suggestSimilar = __commonJS({
             d[i - 1][j - 1] + cost
             // substitution
           );
-          if (i > 1 && j > 1 && a[i - 1] === b3[j - 2] && a[i - 2] === b3[j - 1]) {
+          if (i > 1 && j > 1 && a[i - 1] === b2[j - 2] && a[i - 2] === b2[j - 1]) {
             d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
           }
         }
       }
-      return d[a.length][b3.length];
+      return d[a.length][b2.length];
     }
     function suggestSimilar(word, candidates) {
       if (!candidates || candidates.length === 0) return "";
@@ -939,7 +939,7 @@ var require_suggestSimilar = __commonJS({
           }
         }
       });
-      similar.sort((a, b3) => a.localeCompare(b3));
+      similar.sort((a, b2) => a.localeCompare(b2));
       if (searchingOptions) {
         similar = similar.map((candidate) => `--${candidate}`);
       }
@@ -3143,7 +3143,7 @@ var require_buffer_util = __commonJS({
     "use strict";
     var { EMPTY_BUFFER } = require_constants();
     var FastBuffer = Buffer[Symbol.species];
-    function concat4(list, totalLength) {
+    function concat3(list, totalLength) {
       if (list.length === 0) return EMPTY_BUFFER;
       if (list.length === 1) return list[0];
       const target = Buffer.allocUnsafe(totalLength);
@@ -3158,14 +3158,14 @@ var require_buffer_util = __commonJS({
       }
       return target;
     }
-    function _mask(source, mask4, output5, offset, length) {
+    function _mask(source, mask3, output4, offset, length) {
       for (let i = 0; i < length; i++) {
-        output5[offset + i] = source[i] ^ mask4[i & 3];
+        output4[offset + i] = source[i] ^ mask3[i & 3];
       }
     }
-    function _unmask(buffer, mask4) {
+    function _unmask(buffer, mask3) {
       for (let i = 0; i < buffer.length; i++) {
-        buffer[i] ^= mask4[i & 3];
+        buffer[i] ^= mask3[i & 3];
       }
     }
     function toArrayBuffer(buf) {
@@ -3189,7 +3189,7 @@ var require_buffer_util = __commonJS({
       return buf;
     }
     module2.exports = {
-      concat: concat4,
+      concat: concat3,
       mask: _mask,
       toArrayBuffer,
       toBuffer,
@@ -3198,13 +3198,13 @@ var require_buffer_util = __commonJS({
     if (!process.env.WS_NO_BUFFER_UTIL) {
       try {
         const bufferUtil = require("bufferutil");
-        module2.exports.mask = function(source, mask4, output5, offset, length) {
-          if (length < 48) _mask(source, mask4, output5, offset, length);
-          else bufferUtil.mask(source, mask4, output5, offset, length);
+        module2.exports.mask = function(source, mask3, output4, offset, length) {
+          if (length < 48) _mask(source, mask3, output4, offset, length);
+          else bufferUtil.mask(source, mask3, output4, offset, length);
         };
-        module2.exports.unmask = function(buffer, mask4) {
-          if (buffer.length < 32) _unmask(buffer, mask4);
-          else bufferUtil.unmask(buffer, mask4);
+        module2.exports.unmask = function(buffer, mask3) {
+          if (buffer.length < 32) _unmask(buffer, mask3);
+          else bufferUtil.unmask(buffer, mask3);
         };
       } catch (e) {
       }
@@ -3849,7 +3849,7 @@ var require_receiver = __commonJS({
       kStatusCode,
       kWebSocket
     } = require_constants();
-    var { concat: concat4, toArrayBuffer, unmask } = require_buffer_util();
+    var { concat: concat3, toArrayBuffer, unmask } = require_buffer_util();
     var { isValidStatusCode, isValidUTF8 } = require_validation();
     var FastBuffer = Buffer[Symbol.species];
     var GET_INFO = 0;
@@ -3922,34 +3922,34 @@ var require_receiver = __commonJS({
        * @return {Buffer} The consumed bytes
        * @private
        */
-      consume(n3) {
-        this._bufferedBytes -= n3;
-        if (n3 === this._buffers[0].length) return this._buffers.shift();
-        if (n3 < this._buffers[0].length) {
+      consume(n2) {
+        this._bufferedBytes -= n2;
+        if (n2 === this._buffers[0].length) return this._buffers.shift();
+        if (n2 < this._buffers[0].length) {
           const buf = this._buffers[0];
           this._buffers[0] = new FastBuffer(
             buf.buffer,
-            buf.byteOffset + n3,
-            buf.length - n3
+            buf.byteOffset + n2,
+            buf.length - n2
           );
-          return new FastBuffer(buf.buffer, buf.byteOffset, n3);
+          return new FastBuffer(buf.buffer, buf.byteOffset, n2);
         }
-        const dst = Buffer.allocUnsafe(n3);
+        const dst = Buffer.allocUnsafe(n2);
         do {
           const buf = this._buffers[0];
-          const offset = dst.length - n3;
-          if (n3 >= buf.length) {
+          const offset = dst.length - n2;
+          if (n2 >= buf.length) {
             dst.set(this._buffers.shift(), offset);
           } else {
-            dst.set(new Uint8Array(buf.buffer, buf.byteOffset, n3), offset);
+            dst.set(new Uint8Array(buf.buffer, buf.byteOffset, n2), offset);
             this._buffers[0] = new FastBuffer(
               buf.buffer,
-              buf.byteOffset + n3,
-              buf.length - n3
+              buf.byteOffset + n2,
+              buf.length - n2
             );
           }
-          n3 -= buf.length;
-        } while (n3 > 0);
+          n2 -= buf.length;
+        } while (n2 > 0);
         return dst;
       }
       /**
@@ -4295,9 +4295,9 @@ var require_receiver = __commonJS({
         if (this._opcode === 2) {
           let data4;
           if (this._binaryType === "nodebuffer") {
-            data4 = concat4(fragments, messageLength);
+            data4 = concat3(fragments, messageLength);
           } else if (this._binaryType === "arraybuffer") {
-            data4 = toArrayBuffer(concat4(fragments, messageLength));
+            data4 = toArrayBuffer(concat3(fragments, messageLength));
           } else {
             data4 = fragments;
           }
@@ -4313,7 +4313,7 @@ var require_receiver = __commonJS({
             });
           }
         } else {
-          const buf = concat4(fragments, messageLength);
+          const buf = concat3(fragments, messageLength);
           if (!this._skipUTF8Validation && !isValidUTF8(buf)) {
             const error = this.createError(
               Error,
@@ -4486,14 +4486,14 @@ var require_sender = __commonJS({
        * @public
        */
       static frame(data4, options2) {
-        let mask4;
+        let mask3;
         let merge = false;
         let offset = 2;
         let skipMasking = false;
         if (options2.mask) {
-          mask4 = options2.maskBuffer || maskBuffer;
+          mask3 = options2.maskBuffer || maskBuffer;
           if (options2.generateMask) {
-            options2.generateMask(mask4);
+            options2.generateMask(mask3);
           } else {
             if (randomPoolPointer === RANDOM_POOL_SIZE) {
               if (randomPool === void 0) {
@@ -4502,56 +4502,56 @@ var require_sender = __commonJS({
               randomFillSync(randomPool, 0, RANDOM_POOL_SIZE);
               randomPoolPointer = 0;
             }
-            mask4[0] = randomPool[randomPoolPointer++];
-            mask4[1] = randomPool[randomPoolPointer++];
-            mask4[2] = randomPool[randomPoolPointer++];
-            mask4[3] = randomPool[randomPoolPointer++];
+            mask3[0] = randomPool[randomPoolPointer++];
+            mask3[1] = randomPool[randomPoolPointer++];
+            mask3[2] = randomPool[randomPoolPointer++];
+            mask3[3] = randomPool[randomPoolPointer++];
           }
-          skipMasking = (mask4[0] | mask4[1] | mask4[2] | mask4[3]) === 0;
+          skipMasking = (mask3[0] | mask3[1] | mask3[2] | mask3[3]) === 0;
           offset = 6;
         }
-        let dataLength4;
+        let dataLength3;
         if (typeof data4 === "string") {
           if ((!options2.mask || skipMasking) && options2[kByteLength] !== void 0) {
-            dataLength4 = options2[kByteLength];
+            dataLength3 = options2[kByteLength];
           } else {
             data4 = Buffer.from(data4);
-            dataLength4 = data4.length;
+            dataLength3 = data4.length;
           }
         } else {
-          dataLength4 = data4.length;
+          dataLength3 = data4.length;
           merge = options2.mask && options2.readOnly && !skipMasking;
         }
-        let payloadLength = dataLength4;
-        if (dataLength4 >= 65536) {
+        let payloadLength = dataLength3;
+        if (dataLength3 >= 65536) {
           offset += 8;
           payloadLength = 127;
-        } else if (dataLength4 > 125) {
+        } else if (dataLength3 > 125) {
           offset += 2;
           payloadLength = 126;
         }
-        const target = Buffer.allocUnsafe(merge ? dataLength4 + offset : offset);
+        const target = Buffer.allocUnsafe(merge ? dataLength3 + offset : offset);
         target[0] = options2.fin ? options2.opcode | 128 : options2.opcode;
         if (options2.rsv1) target[0] |= 64;
         target[1] = payloadLength;
         if (payloadLength === 126) {
-          target.writeUInt16BE(dataLength4, 2);
+          target.writeUInt16BE(dataLength3, 2);
         } else if (payloadLength === 127) {
           target[2] = target[3] = 0;
-          target.writeUIntBE(dataLength4, 4, 6);
+          target.writeUIntBE(dataLength3, 4, 6);
         }
         if (!options2.mask) return [target, data4];
         target[1] |= 128;
-        target[offset - 4] = mask4[0];
-        target[offset - 3] = mask4[1];
-        target[offset - 2] = mask4[2];
-        target[offset - 1] = mask4[3];
+        target[offset - 4] = mask3[0];
+        target[offset - 3] = mask3[1];
+        target[offset - 2] = mask3[2];
+        target[offset - 1] = mask3[3];
         if (skipMasking) return [target, data4];
         if (merge) {
-          applyMask(data4, mask4, target, offset, dataLength4);
+          applyMask(data4, mask3, target, offset, dataLength3);
           return [target];
         }
-        applyMask(data4, mask4, data4, 0, dataLength4);
+        applyMask(data4, mask3, data4, 0, dataLength3);
         return [target, data4];
       }
       /**
@@ -4563,7 +4563,7 @@ var require_sender = __commonJS({
        * @param {Function} [cb] Callback
        * @public
        */
-      close(code, data4, mask4, cb) {
+      close(code, data4, mask3, cb) {
         let buf;
         if (code === void 0) {
           buf = EMPTY_BUFFER;
@@ -4589,7 +4589,7 @@ var require_sender = __commonJS({
           [kByteLength]: buf.length,
           fin: true,
           generateMask: this._generateMask,
-          mask: mask4,
+          mask: mask3,
           maskBuffer: this._maskBuffer,
           opcode: 8,
           readOnly: false,
@@ -4609,7 +4609,7 @@ var require_sender = __commonJS({
        * @param {Function} [cb] Callback
        * @public
        */
-      ping(data4, mask4, cb) {
+      ping(data4, mask3, cb) {
         let byteLength;
         let readOnly;
         if (typeof data4 === "string") {
@@ -4627,7 +4627,7 @@ var require_sender = __commonJS({
           [kByteLength]: byteLength,
           fin: true,
           generateMask: this._generateMask,
-          mask: mask4,
+          mask: mask3,
           maskBuffer: this._maskBuffer,
           opcode: 9,
           readOnly,
@@ -4647,7 +4647,7 @@ var require_sender = __commonJS({
        * @param {Function} [cb] Callback
        * @public
        */
-      pong(data4, mask4, cb) {
+      pong(data4, mask3, cb) {
         let byteLength;
         let readOnly;
         if (typeof data4 === "string") {
@@ -4665,7 +4665,7 @@ var require_sender = __commonJS({
           [kByteLength]: byteLength,
           fin: true,
           generateMask: this._generateMask,
-          mask: mask4,
+          mask: mask3,
           maskBuffer: this._maskBuffer,
           opcode: 10,
           readOnly,
@@ -5515,24 +5515,24 @@ var require_websocket = __commonJS({
        * @param {Function} [cb] Callback which is executed when the ping is sent
        * @public
        */
-      ping(data4, mask4, cb) {
+      ping(data4, mask3, cb) {
         if (this.readyState === _WebSocket.CONNECTING) {
           throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
         }
         if (typeof data4 === "function") {
           cb = data4;
-          data4 = mask4 = void 0;
-        } else if (typeof mask4 === "function") {
-          cb = mask4;
-          mask4 = void 0;
+          data4 = mask3 = void 0;
+        } else if (typeof mask3 === "function") {
+          cb = mask3;
+          mask3 = void 0;
         }
         if (typeof data4 === "number") data4 = data4.toString();
         if (this.readyState !== _WebSocket.OPEN) {
           sendAfterClose(this, data4, cb);
           return;
         }
-        if (mask4 === void 0) mask4 = !this._isServer;
-        this._sender.ping(data4 || EMPTY_BUFFER, mask4, cb);
+        if (mask3 === void 0) mask3 = !this._isServer;
+        this._sender.ping(data4 || EMPTY_BUFFER, mask3, cb);
       }
       /**
        * Send a pong.
@@ -5542,24 +5542,24 @@ var require_websocket = __commonJS({
        * @param {Function} [cb] Callback which is executed when the pong is sent
        * @public
        */
-      pong(data4, mask4, cb) {
+      pong(data4, mask3, cb) {
         if (this.readyState === _WebSocket.CONNECTING) {
           throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
         }
         if (typeof data4 === "function") {
           cb = data4;
-          data4 = mask4 = void 0;
-        } else if (typeof mask4 === "function") {
-          cb = mask4;
-          mask4 = void 0;
+          data4 = mask3 = void 0;
+        } else if (typeof mask3 === "function") {
+          cb = mask3;
+          mask3 = void 0;
         }
         if (typeof data4 === "number") data4 = data4.toString();
         if (this.readyState !== _WebSocket.OPEN) {
           sendAfterClose(this, data4, cb);
           return;
         }
-        if (mask4 === void 0) mask4 = !this._isServer;
-        this._sender.pong(data4 || EMPTY_BUFFER, mask4, cb);
+        if (mask3 === void 0) mask3 = !this._isServer;
+        this._sender.pong(data4 || EMPTY_BUFFER, mask3, cb);
       }
       /**
        * Resume the socket.
@@ -6329,7 +6329,7 @@ var require_websocket_server = __commonJS({
         socket.on("error", socketOnError);
         const key = req.headers["sec-websocket-key"];
         const upgrade = req.headers.upgrade;
-        const version4 = +req.headers["sec-websocket-version"];
+        const version3 = +req.headers["sec-websocket-version"];
         if (req.method !== "GET") {
           const message = "Invalid HTTP method";
           abortHandshakeOrEmitwsClientError(this, req, socket, 405, message);
@@ -6345,7 +6345,7 @@ var require_websocket_server = __commonJS({
           abortHandshakeOrEmitwsClientError(this, req, socket, 400, message);
           return;
         }
-        if (version4 !== 8 && version4 !== 13) {
+        if (version3 !== 8 && version3 !== 13) {
           const message = "Missing or invalid Sec-WebSocket-Version header";
           abortHandshakeOrEmitwsClientError(this, req, socket, 400, message);
           return;
@@ -6387,7 +6387,7 @@ var require_websocket_server = __commonJS({
         }
         if (this.options.verifyClient) {
           const info = {
-            origin: req.headers[`${version4 === 8 ? "sec-websocket-origin" : "origin"}`],
+            origin: req.headers[`${version3 === 8 ? "sec-websocket-origin" : "origin"}`],
             secure: !!(req.socket.authorized || req.socket.encrypted),
             req
           };
@@ -6699,11 +6699,11 @@ var require_mcl_c = __commonJS({
             return new Uint8Array(buf.buffer, buf.byteOffset, buf.length);
           }
           var decoded = atob(s);
-          var bytes5 = new Uint8Array(decoded.length);
+          var bytes4 = new Uint8Array(decoded.length);
           for (var i = 0; i < decoded.length; ++i) {
-            bytes5[i] = decoded.charCodeAt(i);
+            bytes4[i] = decoded.charCodeAt(i);
           }
-          return bytes5;
+          return bytes4;
         }
         function tryParseAsDataURI(filename) {
           if (!isDataURI(filename)) {
@@ -6716,15 +6716,15 @@ var require_mcl_c = __commonJS({
         var EXITSTATUS;
         var HEAP8, HEAPU8, HEAP16, HEAPU16, HEAP32, HEAPU32, HEAPF32, HEAPF64;
         function updateMemoryViews() {
-          var b3 = wasmMemory.buffer;
-          Module2["HEAP8"] = HEAP8 = new Int8Array(b3);
-          Module2["HEAP16"] = HEAP16 = new Int16Array(b3);
-          Module2["HEAPU8"] = HEAPU8 = new Uint8Array(b3);
-          Module2["HEAPU16"] = HEAPU16 = new Uint16Array(b3);
-          Module2["HEAP32"] = HEAP32 = new Int32Array(b3);
-          Module2["HEAPU32"] = HEAPU32 = new Uint32Array(b3);
-          Module2["HEAPF32"] = HEAPF32 = new Float32Array(b3);
-          Module2["HEAPF64"] = HEAPF64 = new Float64Array(b3);
+          var b2 = wasmMemory.buffer;
+          Module2["HEAP8"] = HEAP8 = new Int8Array(b2);
+          Module2["HEAP16"] = HEAP16 = new Int16Array(b2);
+          Module2["HEAPU8"] = HEAPU8 = new Uint8Array(b2);
+          Module2["HEAPU16"] = HEAPU16 = new Uint16Array(b2);
+          Module2["HEAP32"] = HEAP32 = new Int32Array(b2);
+          Module2["HEAPU32"] = HEAPU32 = new Uint32Array(b2);
+          Module2["HEAPF32"] = HEAPF32 = new Float32Array(b2);
+          Module2["HEAPF64"] = HEAPF64 = new Float64Array(b2);
         }
         var __ATPRERUN__ = [];
         var __ATINIT__ = [];
@@ -6766,11 +6766,11 @@ var require_mcl_c = __commonJS({
         var runDependencies = 0;
         var runDependencyWatcher = null;
         var dependenciesFulfilled = null;
-        function addRunDependency(id4) {
+        function addRunDependency(id3) {
           runDependencies++;
           Module2["monitorRunDependencies"]?.(runDependencies);
         }
-        function removeRunDependency(id4) {
+        function removeRunDependency(id3) {
           runDependencies--;
           Module2["monitorRunDependencies"]?.(runDependencies);
           if (runDependencies == 0) {
@@ -6939,12 +6939,12 @@ var require_mcl_c = __commonJS({
           }
           if (!timeout_ms)
             return 0;
-          var id4 = setTimeout(() => {
+          var id3 = setTimeout(() => {
             delete timers[which];
             callUserCallback(() => __emscripten_timeout(which, _emscripten_get_now()));
           }, timeout_ms);
           timers[which] = {
-            id: id4,
+            id: id3,
             timeout_ms
           };
           return 0;
@@ -7249,9 +7249,9 @@ var require_mcl = __commonJS({
     var getRandomValues_1 = __importDefault(require_getRandomValues());
     var constants_1 = require_constants2();
     var createModule = require_mcl_c();
-    var ptrToAsciiStr = (pos, n3) => {
+    var ptrToAsciiStr = (pos, n2) => {
       let s = "";
-      for (let i = 0; i < n3; i++) {
+      for (let i = 0; i < n2; i++) {
         s += String.fromCharCode(exports2.mod.HEAP8[pos + i]);
       }
       return s;
@@ -7263,9 +7263,9 @@ var require_mcl = __commonJS({
       }
     };
     exports2.asciiStrToPtr = asciiStrToPtr;
-    var toHex2 = (a, start, n3) => {
+    var toHex2 = (a, start, n2) => {
       let s = "";
-      for (let i = 0; i < n3; i++) {
+      for (let i = 0; i < n2; i++) {
         s += ("0" + a[start + i].toString(16)).slice(-2);
       }
       return s;
@@ -7278,9 +7278,9 @@ var require_mcl = __commonJS({
     var fromHexStr = (s) => {
       if ((s.length & 1) !== 0)
         throw new Error(`fromHexStr:length must be even (${s.length})`);
-      const n3 = s.length / 2;
-      const a = new Uint8Array(n3);
-      for (let i = 0; i < n3; i++) {
+      const n2 = s.length / 2;
+      const a = new Uint8Array(n2);
+      for (let i = 0; i < n2; i++) {
         a[i] = parseInt(s.slice(i * 2, i * 2 + 2), 16);
       }
       return a;
@@ -7296,13 +7296,13 @@ var require_mcl = __commonJS({
           const stack = exports2.mod.stackSave();
           const maxBufSize = 4096;
           const pos = exports2.mod.stackAlloc(maxBufSize);
-          const n3 = func(pos, maxBufSize, x, ioMode);
-          if (n3 > 0) {
+          const n2 = func(pos, maxBufSize, x, ioMode);
+          if (n2 > 0) {
             let s = null;
             if (returnAsStr) {
-              s = (0, exports2.ptrToAsciiStr)(pos, n3);
+              s = (0, exports2.ptrToAsciiStr)(pos, n2);
             } else {
-              s = new Uint8Array(exports2.mod.HEAP8.subarray(pos, pos + n3));
+              s = new Uint8Array(exports2.mod.HEAP8.subarray(pos, pos + n2));
             }
             exports2.mod.stackRestore(stack);
             return s;
@@ -7449,10 +7449,10 @@ var require_mcl = __commonJS({
     exports2._showDebug = _showDebug;
     var initializeMcl = async (curveType = constants_1.CurveType.BN254) => {
       exports2.mod = await createModule({
-        cryptoGetRandomValues: (p, n3) => {
-          const a = new Uint8Array(n3);
+        cryptoGetRandomValues: (p, n2) => {
+          const a = new Uint8Array(n2);
           (0, getRandomValues_1.default)(a);
-          for (let i = 0; i < n3; i++) {
+          for (let i = 0; i < n2; i++) {
             exports2.mod.HEAP8[p + i] = a[i];
           }
         }
@@ -7584,13 +7584,13 @@ var require_value_types = __commonJS({
         return z;
       }
       /** @internal devide Uint32Array a into n and chose the idx-th */
-      _getSubArray(idx, n3) {
-        const d = this.a_.length / n3;
+      _getSubArray(idx, n2) {
+        const d = this.a_.length / n2;
         return new Uint32Array(new Uint32Array(this.a_.buffer, d * idx * 4, d));
       }
       /** @internal set array lhs to idx */
-      _setSubArray(lhs, idx, n3) {
-        const d = this.a_.length / n3;
+      _setSubArray(lhs, idx, n2) {
+        const d = this.a_.length / n2;
         this.a_.set(lhs.a_, d * idx);
       }
     };
@@ -8192,23 +8192,23 @@ var require_value_types = __commonJS({
       }
     }
     var _mulVec = (func, xVec, yVec, Cstr) => {
-      const n3 = xVec.length;
+      const n2 = xVec.length;
       const z = new Cstr();
       const stack = mcl_1.mod.stackSave();
       const zPos = z._salloc();
       const xPos = _sarrayAllocAndCopy(xVec);
       const yPos = _sarrayAllocAndCopy(yVec);
-      func(zPos, xPos, yPos, n3);
+      func(zPos, xPos, yPos, n2);
       z._save(zPos);
       mcl_1.mod.stackRestore(stack);
       return z;
     };
     var mulVec = (xVec, yVec) => {
-      const n3 = xVec.length;
-      if (n3 === 0)
+      const n2 = xVec.length;
+      if (n2 === 0)
         throw new Error("mulVec:zero array");
-      if (n3 !== yVec.length)
-        throw new Error(`err _mulVec bad length ${n3}, ${yVec.length}`);
+      if (n2 !== yVec.length)
+        throw new Error(`err _mulVec bad length ${n2}, ${yVec.length}`);
       if (xVec[0] instanceof G12 && yVec[0] instanceof Fr3) {
         return _mulVec(mcl_1.mod._mclBnG1_mulVec, xVec, yVec, G12);
       }
@@ -8219,16 +8219,16 @@ var require_value_types = __commonJS({
     };
     exports2.mulVec = mulVec;
     var _invVec = (func, yVec, xVec) => {
-      const n3 = xVec.length;
+      const n2 = xVec.length;
       const stack = mcl_1.mod.stackSave();
       const xPos = _sarrayAllocAndCopy(xVec);
-      func(xPos, xPos, n3);
+      func(xPos, xPos, n2);
       _saveArray(yVec, xPos);
       mcl_1.mod.stackRestore(stack);
     };
     var invVecInPlace = (xVec) => {
-      const n3 = xVec.length;
-      if (n3 === 0)
+      const n2 = xVec.length;
+      if (n2 === 0)
         return;
       if (xVec[0] instanceof Fr3) {
         _invVec(mcl_1.mod._mclBnFr_invVec, xVec, xVec);
@@ -8242,11 +8242,11 @@ var require_value_types = __commonJS({
     };
     exports2.invVecInPlace = invVecInPlace;
     var invVec = (xVec) => {
-      const n3 = xVec.length;
-      if (n3 === 0)
+      const n2 = xVec.length;
+      if (n2 === 0)
         return [];
       const cstr = xVec[0].constructor;
-      const yVec = Array.from({ length: n3 }, (_) => new cstr());
+      const yVec = Array.from({ length: n2 }, (_) => new cstr());
       if (xVec[0] instanceof Fr3) {
         _invVec(mcl_1.mod._mclBnFr_invVec, yVec, xVec);
         return yVec;
@@ -8259,8 +8259,8 @@ var require_value_types = __commonJS({
     };
     exports2.invVec = invVec;
     var normalizeVec = (xVec) => {
-      const n3 = xVec.length;
-      if (n3 === 0)
+      const n2 = xVec.length;
+      if (n2 === 0)
         return;
       if (xVec[0] instanceof G12) {
         _invVec(mcl_1.mod._mclBnG1_normalizeVec, xVec, xVec);
@@ -8433,12 +8433,12 @@ var require_value_types = __commonJS({
       throw new Error("finalExp:bad type");
     };
     exports2.finalExp = finalExp;
-    function _callShare(CstrT, func, vec, id4) {
+    function _callShare(CstrT, func, vec, id3) {
       const a = new CstrT();
       const stack = mcl_1.mod.stackSave();
       const pos = a._salloc();
       const vecPos = _sarrayAllocAndCopy(vec);
-      const idPos = id4._sallocAndCopy();
+      const idPos = id3._sallocAndCopy();
       func(pos, vecPos, vec.length, idPos);
       a._save(pos);
       mcl_1.mod.stackRestore(stack);
@@ -8460,16 +8460,16 @@ var require_value_types = __commonJS({
         throw new Error("callRecover");
       return a;
     }
-    var shareFr = (vec, id4) => {
-      return _callShare(Fr3, mcl_1.mod._mclBn_FrEvaluatePolynomial, vec, id4);
+    var shareFr = (vec, id3) => {
+      return _callShare(Fr3, mcl_1.mod._mclBn_FrEvaluatePolynomial, vec, id3);
     };
     exports2.shareFr = shareFr;
-    var shareG1 = (vec, id4) => {
-      return _callShare(G12, mcl_1.mod._mclBn_G1EvaluatePolynomial, vec, id4);
+    var shareG1 = (vec, id3) => {
+      return _callShare(G12, mcl_1.mod._mclBn_G1EvaluatePolynomial, vec, id3);
     };
     exports2.shareG1 = shareG1;
-    var shareG2 = (vec, id4) => {
-      return _callShare(G22, mcl_1.mod._mclBn_G2EvaluatePolynomial, vec, id4);
+    var shareG2 = (vec, id3) => {
+      return _callShare(G22, mcl_1.mod._mclBn_G2EvaluatePolynomial, vec, id3);
     };
     exports2.shareG2 = shareG2;
     var recoverFr = (idVec, yVec) => {
@@ -8631,9 +8631,9 @@ var require_build = __commonJS({
       static isArrayBufferView(data4) {
         return ArrayBuffer.isView(data4) || data4 && this.isArrayBuffer(data4.buffer);
       }
-      static isEqual(a, b3) {
+      static isEqual(a, b2) {
         const aView = _BufferSourceConverter.toUint8Array(a);
-        const bView = _BufferSourceConverter.toUint8Array(b3);
+        const bView = _BufferSourceConverter.toUint8Array(b2);
         if (aView.length !== bView.byteLength) {
           return false;
         }
@@ -8937,9 +8937,9 @@ var require_build = __commonJS({
         return false;
       }
       const b1 = new Uint8Array(bytes1);
-      const b22 = new Uint8Array(bytes22);
+      const b2 = new Uint8Array(bytes22);
       for (let i = 0; i < bytes1.byteLength; i++) {
-        if (b1[i] !== b22[i]) {
+        if (b1[i] !== b2[i]) {
           return false;
         }
       }
@@ -9160,7 +9160,7 @@ var require_utils = __commonJS({
       let i = 0;
       let flag1 = 0;
       let flag2 = 0;
-      let output5 = "";
+      let output4 = "";
       const template = useUrlTemplate ? base64UrlTemplate : base64Template;
       if (skipLeadingZeros) {
         let nonZeroPosition = 0;
@@ -9195,19 +9195,19 @@ var require_utils = __commonJS({
         }
         if (skipPadding) {
           if (enc3 === 64) {
-            output5 += `${template.charAt(enc1)}${template.charAt(enc2)}`;
+            output4 += `${template.charAt(enc1)}${template.charAt(enc2)}`;
           } else {
             if (enc4 === 64) {
-              output5 += `${template.charAt(enc1)}${template.charAt(enc2)}${template.charAt(enc3)}`;
+              output4 += `${template.charAt(enc1)}${template.charAt(enc2)}${template.charAt(enc3)}`;
             } else {
-              output5 += `${template.charAt(enc1)}${template.charAt(enc2)}${template.charAt(enc3)}${template.charAt(enc4)}`;
+              output4 += `${template.charAt(enc1)}${template.charAt(enc2)}${template.charAt(enc3)}${template.charAt(enc4)}`;
             }
           }
         } else {
-          output5 += `${template.charAt(enc1)}${template.charAt(enc2)}${template.charAt(enc3)}${template.charAt(enc4)}`;
+          output4 += `${template.charAt(enc1)}${template.charAt(enc2)}${template.charAt(enc3)}${template.charAt(enc4)}`;
         }
       }
-      return output5;
+      return output4;
     }
     function fromBase64(input, useUrlTemplate = false, cutTailZeros = false) {
       const template = useUrlTemplate ? base64UrlTemplate : base64Template;
@@ -9222,7 +9222,7 @@ var require_utils = __commonJS({
         return incoming === 64 ? 0 : incoming;
       }
       let i = 0;
-      let output5 = "";
+      let output4 = "";
       while (i < input.length) {
         const enc1 = indexOf(input.charAt(i++));
         const enc2 = i >= input.length ? 0 : indexOf(input.charAt(i++));
@@ -9231,30 +9231,30 @@ var require_utils = __commonJS({
         const chr1 = test(enc1) << 2 | test(enc2) >> 4;
         const chr2 = (test(enc2) & 15) << 4 | test(enc3) >> 2;
         const chr3 = (test(enc3) & 3) << 6 | test(enc4);
-        output5 += String.fromCharCode(chr1);
+        output4 += String.fromCharCode(chr1);
         if (enc3 !== 64) {
-          output5 += String.fromCharCode(chr2);
+          output4 += String.fromCharCode(chr2);
         }
         if (enc4 !== 64) {
-          output5 += String.fromCharCode(chr3);
+          output4 += String.fromCharCode(chr3);
         }
       }
       if (cutTailZeros) {
-        const outputLength = output5.length;
+        const outputLength = output4.length;
         let nonZeroStart = -1;
         for (let i2 = outputLength - 1; i2 >= 0; i2--) {
-          if (output5.charCodeAt(i2) !== 0) {
+          if (output4.charCodeAt(i2) !== 0) {
             nonZeroStart = i2;
             break;
           }
         }
         if (nonZeroStart !== -1) {
-          output5 = output5.slice(0, nonZeroStart + 1);
+          output4 = output4.slice(0, nonZeroStart + 1);
         } else {
-          output5 = "";
+          output4 = "";
         }
       }
-      return output5;
+      return output4;
     }
     function arrayBufferToString(buffer) {
       let resultString = "";
@@ -9315,12 +9315,12 @@ var require_build2 = __commonJS({
     var pvutils = require_utils();
     function _interopNamespace(e) {
       if (e && e.__esModule) return e;
-      var n3 = /* @__PURE__ */ Object.create(null);
+      var n2 = /* @__PURE__ */ Object.create(null);
       if (e) {
         Object.keys(e).forEach(function(k) {
           if (k !== "default") {
             var d = Object.getOwnPropertyDescriptor(e, k);
-            Object.defineProperty(n3, k, d.get ? d : {
+            Object.defineProperty(n2, k, d.get ? d : {
               enumerable: true,
               get: function() {
                 return e[k];
@@ -9329,8 +9329,8 @@ var require_build2 = __commonJS({
           }
         });
       }
-      n3["default"] = e;
-      return Object.freeze(n3);
+      n2["default"] = e;
+      return Object.freeze(n2);
     }
     var pvtsutils__namespace = /* @__PURE__ */ _interopNamespace(pvtsutils);
     var pvutils__namespace = /* @__PURE__ */ _interopNamespace(pvutils);
@@ -9339,7 +9339,7 @@ var require_build2 = __commonJS({
         throw new Error("BigInt is not defined. Your environment doesn't implement BigInt.");
       }
     }
-    function concat4(buffers) {
+    function concat3(buffers) {
       let outputLength = 0;
       let prevLength = 0;
       for (let i = 0; i < buffers.length; i++) {
@@ -9385,7 +9385,7 @@ var require_build2 = __commonJS({
         this.items.push(buf);
       }
       final() {
-        return concat4(this.items);
+        return concat3(this.items);
       }
     };
     var powers2 = [new Uint8Array([1])];
@@ -9531,9 +9531,9 @@ var require_build2 = __commonJS({
         if (this.tagNumber < 31 && !this.isHexOnly) {
           const retView2 = new Uint8Array(1);
           if (!sizeOnly) {
-            let number5 = this.tagNumber;
-            number5 &= 31;
-            firstOctet |= number5;
+            let number4 = this.tagNumber;
+            number4 &= 31;
+            firstOctet |= number4;
             retView2[0] = firstOctet;
           }
           return retView2.buffer;
@@ -10635,9 +10635,9 @@ ${values.join("\n")}` : `${blockName} :`;
         firstViewCopy = pvutils__namespace.utilConcatView(c, firstViewCopy);
       return firstViewCopy;
     }
-    function power2(n3) {
-      if (n3 >= powers2.length) {
-        for (let p = powers2.length; p <= n3; p++) {
+    function power2(n2) {
+      if (n2 >= powers2.length) {
+        for (let p = powers2.length; p <= n2; p++) {
           const c = new Uint8Array([0]);
           let digits = powers2[p - 1].slice(0);
           for (let i = digits.length - 1; i >= 0; i--) {
@@ -10650,10 +10650,10 @@ ${values.join("\n")}` : `${blockName} :`;
           powers2.push(digits);
         }
       }
-      return powers2[n3];
+      return powers2[n2];
     }
     function viewSub(first, second) {
-      let b3 = 0;
+      let b2 = 0;
       const firstView = new Uint8Array(first);
       const secondView = new Uint8Array(second);
       const firstViewCopy = firstView.slice(0);
@@ -10663,25 +10663,25 @@ ${values.join("\n")}` : `${blockName} :`;
       let value;
       let counter = 0;
       for (let i = secondViewCopyLength; i >= 0; i--, counter++) {
-        value = firstViewCopy[firstViewCopyLength - counter] - secondViewCopy[secondViewCopyLength - counter] - b3;
+        value = firstViewCopy[firstViewCopyLength - counter] - secondViewCopy[secondViewCopyLength - counter] - b2;
         switch (true) {
           case value < 0:
-            b3 = 1;
+            b2 = 1;
             firstViewCopy[firstViewCopyLength - counter] = value + 10;
             break;
           default:
-            b3 = 0;
+            b2 = 0;
             firstViewCopy[firstViewCopyLength - counter] = value;
         }
       }
-      if (b3 > 0) {
+      if (b2 > 0) {
         for (let i = firstViewCopyLength - secondViewCopyLength + 1; i >= 0; i--, counter++) {
-          value = firstViewCopy[firstViewCopyLength - counter] - b3;
+          value = firstViewCopy[firstViewCopyLength - counter] - b2;
           if (value < 0) {
-            b3 = 1;
+            b2 = 1;
             firstViewCopy[firstViewCopyLength - counter] = value + 10;
           } else {
-            b3 = 0;
+            b2 = 0;
             firstViewCopy[firstViewCopyLength - counter] = value;
             break;
           }
@@ -10938,11 +10938,11 @@ ${values.join("\n")}` : `${blockName} :`;
         while (bits.length % 7) {
           bits = "0" + bits;
         }
-        const bytes5 = new Uint8Array(bits.length / 7);
-        for (let i = 0; i < bytes5.length; i++) {
-          bytes5[i] = parseInt(bits.slice(i * 7, i * 7 + 7), 2) + (i + 1 < bytes5.length ? 128 : 0);
+        const bytes4 = new Uint8Array(bits.length / 7);
+        for (let i = 0; i < bytes4.length; i++) {
+          bytes4[i] = parseInt(bits.slice(i * 7, i * 7 + 7), 2) + (i + 1 < bytes4.length ? 128 : 0);
         }
-        this.fromBER(bytes5.buffer, 0, bytes5.length);
+        this.fromBER(bytes4.buffer, 0, bytes4.length);
       }
       toBER(sizeOnly) {
         if (this.isHexOnly) {
@@ -11039,7 +11039,7 @@ ${values.join("\n")}` : `${blockName} :`;
           }
           retBuffers.push(valueBuf);
         }
-        return concat4(retBuffers);
+        return concat3(retBuffers);
       }
       fromString(string) {
         this.value = [];
@@ -11268,7 +11268,7 @@ ${values.join("\n")}` : `${blockName} :`;
           }
           retBuffers.push(valueBuf);
         }
-        return concat4(retBuffers);
+        return concat3(retBuffers);
       }
       fromString(string) {
         this.value = [];
@@ -11741,8 +11741,8 @@ ${values.join("\n")}` : `${blockName} :`;
           timeString = inputString.substring(0, inputString.length - 1);
           isUTC = true;
         } else {
-          const number5 = new Number(inputString[inputString.length - 1]);
-          if (isNaN(number5.valueOf()))
+          const number4 = new Number(inputString[inputString.length - 1]);
+          if (isNaN(number4.valueOf()))
             throw new Error("Wrong input string for conversion");
           timeString = inputString;
         }
@@ -11764,15 +11764,15 @@ ${values.join("\n")}` : `${blockName} :`;
             timeString = timeString.substring(0, differencePosition);
             if (differenceString.length !== 2 && differenceString.length !== 4)
               throw new Error("Wrong input string for conversion");
-            let number5 = parseInt(differenceString.substring(0, 2), 10);
-            if (isNaN(number5.valueOf()))
+            let number4 = parseInt(differenceString.substring(0, 2), 10);
+            if (isNaN(number4.valueOf()))
               throw new Error("Wrong input string for conversion");
-            hourDifference = multiplier * number5;
+            hourDifference = multiplier * number4;
             if (differenceString.length === 4) {
-              number5 = parseInt(differenceString.substring(2, 4), 10);
-              if (isNaN(number5.valueOf()))
+              number4 = parseInt(differenceString.substring(2, 4), 10);
+              if (isNaN(number4.valueOf()))
                 throw new Error("Wrong input string for conversion");
-              minuteDifference = multiplier * number5;
+              minuteDifference = multiplier * number4;
             }
           }
         }
@@ -12808,10 +12808,10 @@ function isBytesLike(value) {
 }
 var HexCharacters = "0123456789abcdef";
 function hexlify(data4) {
-  const bytes5 = getBytes(data4);
+  const bytes4 = getBytes(data4);
   let result = "0x";
-  for (let i = 0; i < bytes5.length; i++) {
-    const v = bytes5[i];
+  for (let i = 0; i < bytes4.length; i++) {
+    const v = bytes4[i];
     result += HexCharacters[(v & 240) >> 4] + HexCharacters[v & 15];
   }
   return result;
@@ -12826,36 +12826,36 @@ function dataLength(data4) {
   return getBytes(data4).length;
 }
 function dataSlice(data4, start, end) {
-  const bytes5 = getBytes(data4);
-  if (end != null && end > bytes5.length) {
+  const bytes4 = getBytes(data4);
+  if (end != null && end > bytes4.length) {
     assert(false, "cannot slice beyond data bounds", "BUFFER_OVERRUN", {
-      buffer: bytes5,
-      length: bytes5.length,
+      buffer: bytes4,
+      length: bytes4.length,
       offset: end
     });
   }
-  return hexlify(bytes5.slice(start == null ? 0 : start, end == null ? bytes5.length : end));
+  return hexlify(bytes4.slice(start == null ? 0 : start, end == null ? bytes4.length : end));
 }
 function stripZerosLeft(data4) {
-  let bytes5 = hexlify(data4).substring(2);
-  while (bytes5.startsWith("00")) {
-    bytes5 = bytes5.substring(2);
+  let bytes4 = hexlify(data4).substring(2);
+  while (bytes4.startsWith("00")) {
+    bytes4 = bytes4.substring(2);
   }
-  return "0x" + bytes5;
+  return "0x" + bytes4;
 }
 function zeroPad(data4, length, left) {
-  const bytes5 = getBytes(data4);
-  assert(length >= bytes5.length, "padding exceeds data length", "BUFFER_OVERRUN", {
-    buffer: new Uint8Array(bytes5),
+  const bytes4 = getBytes(data4);
+  assert(length >= bytes4.length, "padding exceeds data length", "BUFFER_OVERRUN", {
+    buffer: new Uint8Array(bytes4),
     length,
     offset: length + 1
   });
   const result = new Uint8Array(length);
   result.fill(0);
   if (left) {
-    result.set(bytes5, length - bytes5.length);
+    result.set(bytes4, length - bytes4.length);
   } else {
-    result.set(bytes5, 0);
+    result.set(bytes4, 0);
   }
   return hexlify(result);
 }
@@ -12879,8 +12879,8 @@ function fromTwos(_value, _width) {
     value: _value
   });
   if (value >> width - BN_1) {
-    const mask4 = (BN_1 << width) - BN_1;
-    return -((~value & mask4) + BN_1);
+    const mask3 = (BN_1 << width) - BN_1;
+    return -((~value & mask3) + BN_1);
   }
   return value;
 }
@@ -12895,8 +12895,8 @@ function toTwos(_value, _width) {
       fault: "overflow",
       value: _value
     });
-    const mask4 = (BN_1 << width) - BN_1;
-    return (~value & mask4) + BN_1;
+    const mask3 = (BN_1 << width) - BN_1;
+    return (~value & mask3) + BN_1;
   } else {
     assert(value < limit, "too high", "NUMERIC_FAULT", {
       operation: "toTwos",
@@ -13043,15 +13043,15 @@ function getAlpha(letter) {
 var BN_02 = BigInt(0);
 var BN_58 = BigInt(58);
 function encodeBase58(_value) {
-  const bytes5 = getBytes(_value);
-  let value = toBigInt(bytes5);
+  const bytes4 = getBytes(_value);
+  let value = toBigInt(bytes4);
   let result = "";
   while (value) {
     result = Alphabet[Number(value % BN_58)] + result;
     value /= BN_58;
   }
-  for (let i = 0; i < bytes5.length; i++) {
-    if (bytes5[i]) {
+  for (let i = 0; i < bytes4.length; i++) {
+    if (bytes4[i]) {
       break;
     }
     result = Alphabet[0] + result;
@@ -13106,14 +13106,14 @@ var EventPayload = class {
 };
 
 // node_modules/ethers/lib.esm/utils/utf8.js
-function errorFunc(reason, offset, bytes5, output5, badCodepoint) {
-  assertArgument(false, `invalid codepoint at offset ${offset}; ${reason}`, "bytes", bytes5);
+function errorFunc(reason, offset, bytes4, output4, badCodepoint) {
+  assertArgument(false, `invalid codepoint at offset ${offset}; ${reason}`, "bytes", bytes4);
 }
-function ignoreFunc(reason, offset, bytes5, output5, badCodepoint) {
+function ignoreFunc(reason, offset, bytes4, output4, badCodepoint) {
   if (reason === "BAD_PREFIX" || reason === "UNEXPECTED_CONTINUE") {
     let i = 0;
-    for (let o = offset + 1; o < bytes5.length; o++) {
-      if (bytes5[o] >> 6 !== 2) {
+    for (let o = offset + 1; o < bytes4.length; o++) {
+      if (bytes4[o] >> 6 !== 2) {
         break;
       }
       i++;
@@ -13121,18 +13121,18 @@ function ignoreFunc(reason, offset, bytes5, output5, badCodepoint) {
     return i;
   }
   if (reason === "OVERRUN") {
-    return bytes5.length - offset - 1;
+    return bytes4.length - offset - 1;
   }
   return 0;
 }
-function replaceFunc(reason, offset, bytes5, output5, badCodepoint) {
+function replaceFunc(reason, offset, bytes4, output4, badCodepoint) {
   if (reason === "OVERLONG") {
     assertArgument(typeof badCodepoint === "number", "invalid bad code point for replacement", "badCodepoint", badCodepoint);
-    output5.push(badCodepoint);
+    output4.push(badCodepoint);
     return 0;
   }
-  output5.push(65533);
-  return ignoreFunc(reason, offset, bytes5, output5, badCodepoint);
+  output4.push(65533);
+  return ignoreFunc(reason, offset, bytes4, output4, badCodepoint);
 }
 var Utf8ErrorFuncs = Object.freeze({
   error: errorFunc,
@@ -13143,11 +13143,11 @@ function getUtf8CodePoints(_bytes, onError) {
   if (onError == null) {
     onError = Utf8ErrorFuncs.error;
   }
-  const bytes5 = getBytes(_bytes, "bytes");
+  const bytes4 = getBytes(_bytes, "bytes");
   const result = [];
   let i = 0;
-  while (i < bytes5.length) {
-    const c = bytes5[i++];
+  while (i < bytes4.length) {
+    const c = bytes4[i++];
     if (c >> 7 === 0) {
       result.push(c);
       continue;
@@ -13165,21 +13165,21 @@ function getUtf8CodePoints(_bytes, onError) {
       overlongMask = 65535;
     } else {
       if ((c & 192) === 128) {
-        i += onError("UNEXPECTED_CONTINUE", i - 1, bytes5, result);
+        i += onError("UNEXPECTED_CONTINUE", i - 1, bytes4, result);
       } else {
-        i += onError("BAD_PREFIX", i - 1, bytes5, result);
+        i += onError("BAD_PREFIX", i - 1, bytes4, result);
       }
       continue;
     }
-    if (i - 1 + extraLength >= bytes5.length) {
-      i += onError("OVERRUN", i - 1, bytes5, result);
+    if (i - 1 + extraLength >= bytes4.length) {
+      i += onError("OVERRUN", i - 1, bytes4, result);
       continue;
     }
     let res = c & (1 << 8 - extraLength - 1) - 1;
     for (let j = 0; j < extraLength; j++) {
-      let nextChar = bytes5[i];
+      let nextChar = bytes4[i];
       if ((nextChar & 192) != 128) {
-        i += onError("MISSING_CONTINUE", i, bytes5, result);
+        i += onError("MISSING_CONTINUE", i, bytes4, result);
         res = null;
         break;
       }
@@ -13191,15 +13191,15 @@ function getUtf8CodePoints(_bytes, onError) {
       continue;
     }
     if (res > 1114111) {
-      i += onError("OUT_OF_RANGE", i - 1 - extraLength, bytes5, result, res);
+      i += onError("OUT_OF_RANGE", i - 1 - extraLength, bytes4, result, res);
       continue;
     }
     if (res >= 55296 && res <= 57343) {
-      i += onError("UTF16_SURROGATE", i - 1 - extraLength, bytes5, result, res);
+      i += onError("UTF16_SURROGATE", i - 1 - extraLength, bytes4, result, res);
       continue;
     }
     if (res <= overlongMask) {
-      i += onError("OVERLONG", i - 1 - extraLength, bytes5, result, res);
+      i += onError("OVERLONG", i - 1 - extraLength, bytes4, result, res);
       continue;
     }
     result.push(res);
@@ -13246,8 +13246,8 @@ function _toUtf8String(codePoints) {
     return String.fromCharCode((codePoint >> 10 & 1023) + 55296, (codePoint & 1023) + 56320);
   }).join("");
 }
-function toUtf8String(bytes5, onError) {
-  return _toUtf8String(getUtf8CodePoints(bytes5, onError));
+function toUtf8String(bytes4, onError) {
+  return _toUtf8String(getUtf8CodePoints(bytes4, onError));
 }
 function toUtf8CodePoints(str, form) {
   return getUtf8CodePoints(toUtf8Bytes(str, form));
@@ -14430,17 +14430,17 @@ var FixedNumber = class _FixedNumber {
    *  both are equal.
    */
   cmp(other) {
-    let a = this.value, b3 = other.value;
+    let a = this.value, b2 = other.value;
     const delta = this.decimals - other.decimals;
     if (delta > 0) {
-      b3 *= getTens(delta);
+      b2 *= getTens(delta);
     } else if (delta < 0) {
       a *= getTens(-delta);
     }
-    if (a < b3) {
+    if (a < b2) {
       return -1;
     }
-    if (a > b3) {
+    if (a > b2) {
       return 1;
     }
     return 0;
@@ -14788,10 +14788,10 @@ function parseEther(ether) {
 
 // node_modules/ethers/lib.esm/utils/uuid.js
 function uuidV4(randomBytes7) {
-  const bytes5 = getBytes(randomBytes7, "randomBytes");
-  bytes5[6] = bytes5[6] & 15 | 64;
-  bytes5[8] = bytes5[8] & 63 | 128;
-  const value = hexlify(bytes5);
+  const bytes4 = getBytes(randomBytes7, "randomBytes");
+  bytes4[6] = bytes4[6] & 15 | 64;
+  bytes4[8] = bytes4[8] & 63 | 128;
+  const value = hexlify(bytes4);
   return [
     value.substring(2, 10),
     value.substring(10, 14),
@@ -15062,12 +15062,12 @@ function checkResultErrors(result) {
   return errors;
 }
 function getValue(value) {
-  let bytes5 = toBeArray(value);
-  assert(bytes5.length <= WordSize, "value out-of-bounds", "BUFFER_OVERRUN", { buffer: bytes5, length: WordSize, offset: bytes5.length });
-  if (bytes5.length !== WordSize) {
-    bytes5 = getBytesCopy(concat([Padding.slice(bytes5.length % WordSize), bytes5]));
+  let bytes4 = toBeArray(value);
+  assert(bytes4.length <= WordSize, "value out-of-bounds", "BUFFER_OVERRUN", { buffer: bytes4, length: WordSize, offset: bytes4.length });
+  if (bytes4.length !== WordSize) {
+    bytes4 = getBytesCopy(concat([Padding.slice(bytes4.length % WordSize), bytes4]));
   }
-  return bytes5;
+  return bytes4;
 }
 var Coder = class {
   // The coder name:
@@ -15119,12 +15119,12 @@ var Writer = class {
   }
   // Arrayish item; pad on the right to *nearest* WordSize
   writeBytes(value) {
-    let bytes5 = getBytesCopy(value);
-    const paddingOffset = bytes5.length % WordSize;
+    let bytes4 = getBytesCopy(value);
+    const paddingOffset = bytes4.length % WordSize;
     if (paddingOffset) {
-      bytes5 = getBytesCopy(concat([bytes5, Padding.slice(paddingOffset)]));
+      bytes4 = getBytesCopy(concat([bytes4, Padding.slice(paddingOffset)]));
     }
-    return this.#writeData(bytes5);
+    return this.#writeData(bytes4);
   }
   // Numeric item; pad on the left *to* WordSize
   writeValue(value) {
@@ -15210,10 +15210,10 @@ var Reader = class _Reader {
   }
   // Read bytes
   readBytes(length, loose) {
-    let bytes5 = this.#peekBytes(0, length, !!loose);
+    let bytes4 = this.#peekBytes(0, length, !!loose);
     this.#incrementBytesRead(length);
-    this.#offset += bytes5.length;
-    return bytes5.slice(0, length);
+    this.#offset += bytes4.length;
+    return bytes4.slice(0, length);
   }
   // Read a numeric values
   readValue() {
@@ -15251,15 +15251,15 @@ computeHmac.register = function(func) {
 Object.freeze(computeHmac);
 
 // node_modules/@noble/hashes/esm/_assert.js
-function number(n3) {
-  if (!Number.isSafeInteger(n3) || n3 < 0)
-    throw new Error(`Wrong positive integer: ${n3}`);
+function number(n2) {
+  if (!Number.isSafeInteger(n2) || n2 < 0)
+    throw new Error(`Wrong positive integer: ${n2}`);
 }
-function bytes(b3, ...lengths) {
-  if (!(b3 instanceof Uint8Array))
+function bytes(b2, ...lengths) {
+  if (!(b2 instanceof Uint8Array))
     throw new Error("Expected Uint8Array");
-  if (lengths.length > 0 && !lengths.includes(b3.length))
-    throw new Error(`Expected Uint8Array of length ${lengths}, not of length=${b3.length}`);
+  if (lengths.length > 0 && !lengths.includes(b2.length))
+    throw new Error(`Expected Uint8Array of length ${lengths}, not of length=${b2.length}`);
 }
 function hash(hash3) {
   if (typeof hash3 !== "function" || typeof hash3.create !== "function")
@@ -15284,10 +15284,10 @@ function output(out, instance) {
 // node_modules/@noble/hashes/esm/_u64.js
 var U32_MASK64 = /* @__PURE__ */ BigInt(2 ** 32 - 1);
 var _32n = /* @__PURE__ */ BigInt(32);
-function fromBig(n3, le = false) {
+function fromBig(n2, le = false) {
   if (le)
-    return { h: Number(n3 & U32_MASK64), l: Number(n3 >> _32n & U32_MASK64) };
-  return { h: Number(n3 >> _32n & U32_MASK64) | 0, l: Number(n3 & U32_MASK64) | 0 };
+    return { h: Number(n2 & U32_MASK64), l: Number(n2 >> _32n & U32_MASK64) };
+  return { h: Number(n2 >> _32n & U32_MASK64) | 0, l: Number(n2 & U32_MASK64) | 0 };
 }
 function split(lst, le = false) {
   let Ah = new Uint32Array(lst.length);
@@ -15520,9 +15520,9 @@ var Keccak = class _Keccak extends Hash {
       throw new Error("XOF is not possible for this instance");
     return this.writeInto(out);
   }
-  xof(bytes5) {
-    number(bytes5);
-    return this.xofInto(new Uint8Array(bytes5));
+  xof(bytes4) {
+    number(bytes4);
+    return this.xofInto(new Uint8Array(bytes4));
   }
   digestInto(out) {
     output(out, this);
@@ -15590,25 +15590,25 @@ keccak256.register = function(func) {
 Object.freeze(keccak256);
 
 // node_modules/@noble/hashes/esm/_sha2.js
-function setBigUint64(view, byteOffset, value, isLE5) {
+function setBigUint64(view, byteOffset, value, isLE4) {
   if (typeof view.setBigUint64 === "function")
-    return view.setBigUint64(byteOffset, value, isLE5);
-  const _32n5 = BigInt(32);
+    return view.setBigUint64(byteOffset, value, isLE4);
+  const _32n4 = BigInt(32);
   const _u32_max = BigInt(4294967295);
-  const wh = Number(value >> _32n5 & _u32_max);
+  const wh = Number(value >> _32n4 & _u32_max);
   const wl = Number(value & _u32_max);
-  const h = isLE5 ? 4 : 0;
-  const l = isLE5 ? 0 : 4;
-  view.setUint32(byteOffset + h, wh, isLE5);
-  view.setUint32(byteOffset + l, wl, isLE5);
+  const h = isLE4 ? 4 : 0;
+  const l = isLE4 ? 0 : 4;
+  view.setUint32(byteOffset + h, wh, isLE4);
+  view.setUint32(byteOffset + l, wl, isLE4);
 }
 var SHA2 = class extends Hash {
-  constructor(blockLen, outputLen, padOffset, isLE5) {
+  constructor(blockLen, outputLen, padOffset, isLE4) {
     super();
     this.blockLen = blockLen;
     this.outputLen = outputLen;
     this.padOffset = padOffset;
-    this.isLE = isLE5;
+    this.isLE = isLE4;
     this.finished = false;
     this.length = 0;
     this.pos = 0;
@@ -15645,7 +15645,7 @@ var SHA2 = class extends Hash {
     exists(this);
     output(out, this);
     this.finished = true;
-    const { buffer, view, blockLen, isLE: isLE5 } = this;
+    const { buffer, view, blockLen, isLE: isLE4 } = this;
     let { pos } = this;
     buffer[pos++] = 128;
     this.buffer.subarray(pos).fill(0);
@@ -15655,7 +15655,7 @@ var SHA2 = class extends Hash {
     }
     for (let i = pos; i < blockLen; i++)
       buffer[i] = 0;
-    setBigUint64(view, blockLen - 8, BigInt(this.length * 8), isLE5);
+    setBigUint64(view, blockLen - 8, BigInt(this.length * 8), isLE4);
     this.process(view, 0);
     const oview = createView(out);
     const len = this.outputLen;
@@ -15666,7 +15666,7 @@ var SHA2 = class extends Hash {
     if (outLen > state.length)
       throw new Error("_sha2: outputLen bigger than state");
     for (let i = 0; i < outLen; i++)
-      oview.setUint32(4 * i, state[i], isLE5);
+      oview.setUint32(4 * i, state[i], isLE4);
   }
   digest() {
     const { buffer, outputLen } = this;
@@ -15853,8 +15853,8 @@ randomBytes3.register = function(func) {
 Object.freeze(randomBytes3);
 
 // node_modules/@noble/hashes/esm/sha256.js
-var Chi = (a, b3, c) => a & b3 ^ ~a & c;
-var Maj = (a, b3, c) => a & b3 ^ a & c ^ b3 & c;
+var Chi = (a, b2, c) => a & b2 ^ ~a & c;
+var Maj = (a, b2, c) => a & b2 ^ a & c ^ b2 & c;
 var SHA256_K = /* @__PURE__ */ new Uint32Array([
   1116352408,
   1899447441,
@@ -16115,7 +16115,7 @@ function pbkdf22(hash3, password, salt, opts) {
 }
 
 // node_modules/@noble/hashes/esm/scrypt.js
-var rotl2 = (a, b3) => a << b3 | a >>> 32 - b3;
+var rotl2 = (a, b2) => a << b2 | a >>> 32 - b2;
 function XorAndSalsa(prev, pi, input, ii, out, oi) {
   let y00 = prev[pi++] ^ input[ii++], y01 = prev[pi++] ^ input[ii++];
   let y02 = prev[pi++] ^ input[ii++], y03 = prev[pi++] ^ input[ii++];
@@ -16404,12 +16404,12 @@ var _1n2 = BigInt(1);
 var _2n2 = BigInt(2);
 var u8a2 = (a) => a instanceof Uint8Array;
 var hexes = /* @__PURE__ */ Array.from({ length: 256 }, (_, i) => i.toString(16).padStart(2, "0"));
-function bytesToHex(bytes5) {
-  if (!u8a2(bytes5))
+function bytesToHex(bytes4) {
+  if (!u8a2(bytes4))
     throw new Error("Uint8Array expected");
   let hex2 = "";
-  for (let i = 0; i < bytes5.length; i++) {
-    hex2 += hexes[bytes5[i]];
+  for (let i = 0; i < bytes4.length; i++) {
+    hex2 += hexes[bytes4[i]];
   }
   return hex2;
 }
@@ -16439,22 +16439,22 @@ function hexToBytes(hex2) {
   }
   return array;
 }
-function bytesToNumberBE(bytes5) {
-  return hexToNumber(bytesToHex(bytes5));
+function bytesToNumberBE(bytes4) {
+  return hexToNumber(bytesToHex(bytes4));
 }
-function bytesToNumberLE(bytes5) {
-  if (!u8a2(bytes5))
+function bytesToNumberLE(bytes4) {
+  if (!u8a2(bytes4))
     throw new Error("Uint8Array expected");
-  return hexToNumber(bytesToHex(Uint8Array.from(bytes5).reverse()));
+  return hexToNumber(bytesToHex(Uint8Array.from(bytes4).reverse()));
 }
-function numberToBytesBE(n3, len) {
-  return hexToBytes(n3.toString(16).padStart(len * 2, "0"));
+function numberToBytesBE(n2, len) {
+  return hexToBytes(n2.toString(16).padStart(len * 2, "0"));
 }
-function numberToBytesLE(n3, len) {
-  return numberToBytesBE(n3, len).reverse();
+function numberToBytesLE(n2, len) {
+  return numberToBytesBE(n2, len).reverse();
 }
-function numberToVarBytesBE(n3) {
-  return hexToBytes(numberToHexUnpadded(n3));
+function numberToVarBytesBE(n2) {
+  return hexToBytes(numberToHexUnpadded(n2));
 }
 function ensureBytes(title, hex2, expectedLength) {
   let res;
@@ -16485,11 +16485,11 @@ function concatBytes2(...arrays) {
   });
   return r;
 }
-function equalBytes(b1, b22) {
-  if (b1.length !== b22.length)
+function equalBytes(b1, b2) {
+  if (b1.length !== b2.length)
     return false;
   for (let i = 0; i < b1.length; i++)
-    if (b1[i] !== b22[i])
+    if (b1[i] !== b2[i])
       return false;
   return true;
 }
@@ -16498,19 +16498,19 @@ function utf8ToBytes2(str) {
     throw new Error(`utf8ToBytes expected string, got ${typeof str}`);
   return new Uint8Array(new TextEncoder().encode(str));
 }
-function bitLen(n3) {
+function bitLen(n2) {
   let len;
-  for (len = 0; n3 > _0n2; n3 >>= _1n2, len += 1)
+  for (len = 0; n2 > _0n2; n2 >>= _1n2, len += 1)
     ;
   return len;
 }
-function bitGet(n3, pos) {
-  return n3 >> BigInt(pos) & _1n2;
+function bitGet(n2, pos) {
+  return n2 >> BigInt(pos) & _1n2;
 }
-var bitSet = (n3, pos, value) => {
-  return n3 | (value ? _1n2 : _0n2) << BigInt(pos);
+var bitSet = (n2, pos, value) => {
+  return n2 | (value ? _1n2 : _0n2) << BigInt(pos);
 };
-var bitMask = (n3) => (_2n2 << BigInt(n3 - 1)) - _1n2;
+var bitMask = (n2) => (_2n2 << BigInt(n2 - 1)) - _1n2;
 var u8n = (data4) => new Uint8Array(data4);
 var u8fr = (arr) => Uint8Array.from(arr);
 function createHmacDrbg(hashLen, qByteLen, hmacFn) {
@@ -16528,7 +16528,7 @@ function createHmacDrbg(hashLen, qByteLen, hmacFn) {
     k.fill(0);
     i = 0;
   };
-  const h = (...b3) => hmacFn(k, v, ...b3);
+  const h = (...b2) => hmacFn(k, v, ...b2);
   const reseed = (seed = u8n()) => {
     k = h(u8fr([0]), seed);
     v = h();
@@ -16537,7 +16537,7 @@ function createHmacDrbg(hashLen, qByteLen, hmacFn) {
     k = h(u8fr([1]), seed);
     v = h();
   };
-  const gen5 = () => {
+  const gen4 = () => {
     if (i++ >= 1e3)
       throw new Error("drbg: tried 1000 values");
     let len = 0;
@@ -16554,7 +16554,7 @@ function createHmacDrbg(hashLen, qByteLen, hmacFn) {
     reset();
     reseed(seed);
     let res = void 0;
-    while (!(res = pred(gen5())))
+    while (!(res = pred(gen4())))
       reseed();
     reset();
     return res;
@@ -16601,9 +16601,9 @@ var _5n = BigInt(5);
 var _8n = BigInt(8);
 var _9n = BigInt(9);
 var _16n = BigInt(16);
-function mod(a, b3) {
-  const result = a % b3;
-  return result >= _0n3 ? result : b3 + result;
+function mod(a, b2) {
+  const result = a % b2;
+  return result >= _0n3 ? result : b2 + result;
 }
 function pow(num, power, modulo) {
   if (modulo <= _0n3 || power < _0n3)
@@ -16627,21 +16627,21 @@ function pow2(x, power, modulo) {
   }
   return res;
 }
-function invert(number5, modulo) {
-  if (number5 === _0n3 || modulo <= _0n3) {
-    throw new Error(`invert: expected positive integers, got n=${number5} mod=${modulo}`);
+function invert(number4, modulo) {
+  if (number4 === _0n3 || modulo <= _0n3) {
+    throw new Error(`invert: expected positive integers, got n=${number4} mod=${modulo}`);
   }
-  let a = mod(number5, modulo);
-  let b3 = modulo;
+  let a = mod(number4, modulo);
+  let b2 = modulo;
   let x = _0n3, y = _1n3, u = _1n3, v = _0n3;
   while (a !== _0n3) {
-    const q = b3 / a;
-    const r = b3 % a;
+    const q = b2 / a;
+    const r = b2 % a;
     const m = x - u * q;
-    const n3 = y - v * q;
-    b3 = a, a = r, x = u, y = v, u = m, v = n3;
+    const n2 = y - v * q;
+    b2 = a, a = r, x = u, y = v, u = m, v = n2;
   }
-  const gcd = b3;
+  const gcd = b2;
   if (gcd !== _1n3)
     throw new Error("invert: does not exist");
   return mod(x, modulo);
@@ -16655,26 +16655,26 @@ function tonelliShanks(P) {
     ;
   if (S2 === 1) {
     const p1div4 = (P + _1n3) / _4n;
-    return function tonelliFast(Fp4, n3) {
-      const root = Fp4.pow(n3, p1div4);
-      if (!Fp4.eql(Fp4.sqr(root), n3))
+    return function tonelliFast(Fp4, n2) {
+      const root = Fp4.pow(n2, p1div4);
+      if (!Fp4.eql(Fp4.sqr(root), n2))
         throw new Error("Cannot find square root");
       return root;
     };
   }
   const Q1div2 = (Q + _1n3) / _2n3;
-  return function tonelliSlow(Fp4, n3) {
-    if (Fp4.pow(n3, legendreC) === Fp4.neg(Fp4.ONE))
+  return function tonelliSlow(Fp4, n2) {
+    if (Fp4.pow(n2, legendreC) === Fp4.neg(Fp4.ONE))
       throw new Error("Cannot find square root");
     let r = S2;
     let g = Fp4.pow(Fp4.mul(Fp4.ONE, Z), Q);
-    let x = Fp4.pow(n3, Q1div2);
-    let b3 = Fp4.pow(n3, Q);
-    while (!Fp4.eql(b3, Fp4.ONE)) {
-      if (Fp4.eql(b3, Fp4.ZERO))
+    let x = Fp4.pow(n2, Q1div2);
+    let b2 = Fp4.pow(n2, Q);
+    while (!Fp4.eql(b2, Fp4.ONE)) {
+      if (Fp4.eql(b2, Fp4.ZERO))
         return Fp4.ZERO;
       let m = 1;
-      for (let t2 = Fp4.sqr(b3); m < r; m++) {
+      for (let t2 = Fp4.sqr(b2); m < r; m++) {
         if (Fp4.eql(t2, Fp4.ONE))
           break;
         t2 = Fp4.sqr(t2);
@@ -16682,7 +16682,7 @@ function tonelliShanks(P) {
       const ge = Fp4.pow(g, _1n3 << BigInt(r - m - 1));
       g = Fp4.sqr(ge);
       x = Fp4.mul(x, ge);
-      b3 = Fp4.mul(b3, g);
+      b2 = Fp4.mul(b2, g);
       r = m;
     }
     return x;
@@ -16691,22 +16691,22 @@ function tonelliShanks(P) {
 function FpSqrt(P) {
   if (P % _4n === _3n) {
     const p1div4 = (P + _1n3) / _4n;
-    return function sqrt3mod4(Fp4, n3) {
-      const root = Fp4.pow(n3, p1div4);
-      if (!Fp4.eql(Fp4.sqr(root), n3))
+    return function sqrt3mod4(Fp4, n2) {
+      const root = Fp4.pow(n2, p1div4);
+      if (!Fp4.eql(Fp4.sqr(root), n2))
         throw new Error("Cannot find square root");
       return root;
     };
   }
   if (P % _8n === _5n) {
     const c1 = (P - _5n) / _8n;
-    return function sqrt5mod8(Fp4, n3) {
-      const n22 = Fp4.mul(n3, _2n3);
+    return function sqrt5mod8(Fp4, n2) {
+      const n22 = Fp4.mul(n2, _2n3);
       const v = Fp4.pow(n22, c1);
-      const nv = Fp4.mul(n3, v);
+      const nv = Fp4.mul(n2, v);
       const i = Fp4.mul(Fp4.mul(nv, _2n3), v);
       const root = Fp4.mul(nv, Fp4.sub(i, Fp4.ONE));
-      if (!Fp4.eql(Fp4.sqr(root), n3))
+      if (!Fp4.eql(Fp4.sqr(root), n2))
         throw new Error("Cannot find square root");
       return root;
     };
@@ -16781,12 +16781,12 @@ function FpInvertBatch(f2, nums) {
   }, inverted);
   return tmp;
 }
-function nLength(n3, nBitLength) {
-  const _nBitLength = nBitLength !== void 0 ? nBitLength : n3.toString(2).length;
+function nLength(n2, nBitLength) {
+  const _nBitLength = nBitLength !== void 0 ? nBitLength : n2.toString(2).length;
   const nByteLength = Math.ceil(_nBitLength / 8);
   return { nBitLength: _nBitLength, nByteLength };
 }
-function Field(ORDER, bitLen3, isLE5 = false, redef = {}) {
+function Field(ORDER, bitLen3, isLE4 = false, redef = {}) {
   if (ORDER <= _0n3)
     throw new Error(`Expected Field ORDER > 0, got ${ORDER}`);
   const { nBitLength: BITS, nByteLength: BYTES } = nLength(ORDER, bitLen3);
@@ -16822,16 +16822,16 @@ function Field(ORDER, bitLen3, isLE5 = false, redef = {}) {
     subN: (lhs, rhs) => lhs - rhs,
     mulN: (lhs, rhs) => lhs * rhs,
     inv: (num) => invert(num, ORDER),
-    sqrt: redef.sqrt || ((n3) => sqrtP(f2, n3)),
+    sqrt: redef.sqrt || ((n2) => sqrtP(f2, n2)),
     invertBatch: (lst) => FpInvertBatch(f2, lst),
     // TODO: do we really need constant cmov?
     // We don't have const-time bigints anyway, so probably will be not very useful
-    cmov: (a, b3, c) => c ? b3 : a,
-    toBytes: (num) => isLE5 ? numberToBytesLE(num, BYTES) : numberToBytesBE(num, BYTES),
-    fromBytes: (bytes5) => {
-      if (bytes5.length !== BYTES)
-        throw new Error(`Fp.fromBytes: expected ${BYTES}, got ${bytes5.length}`);
-      return isLE5 ? bytesToNumberLE(bytes5) : bytesToNumberBE(bytes5);
+    cmov: (a, b2, c) => c ? b2 : a,
+    toBytes: (num) => isLE4 ? numberToBytesLE(num, BYTES) : numberToBytesBE(num, BYTES),
+    fromBytes: (bytes4) => {
+      if (bytes4.length !== BYTES)
+        throw new Error(`Fp.fromBytes: expected ${BYTES}, got ${bytes4.length}`);
+      return isLE4 ? bytesToNumberLE(bytes4) : bytesToNumberBE(bytes4);
     }
   });
   return Object.freeze(f2);
@@ -16846,15 +16846,15 @@ function getMinHashLength(fieldOrder) {
   const length = getFieldBytesLength(fieldOrder);
   return length + Math.ceil(length / 2);
 }
-function mapHashToField(key, fieldOrder, isLE5 = false) {
+function mapHashToField(key, fieldOrder, isLE4 = false) {
   const len = key.length;
   const fieldLen = getFieldBytesLength(fieldOrder);
   const minLen = getMinHashLength(fieldOrder);
   if (len < 16 || len < minLen || len > 1024)
     throw new Error(`expected ${minLen}-1024 bytes of input, got ${len}`);
-  const num = isLE5 ? bytesToNumberBE(key) : bytesToNumberLE(key);
+  const num = isLE4 ? bytesToNumberBE(key) : bytesToNumberLE(key);
   const reduced = mod(num, fieldOrder - _1n3) + _1n3;
-  return isLE5 ? numberToBytesLE(reduced, fieldLen) : numberToBytesBE(reduced, fieldLen);
+  return isLE4 ? numberToBytesLE(reduced, fieldLen) : numberToBytesBE(reduced, fieldLen);
 }
 
 // node_modules/@noble/curves/esm/abstract/curve.js
@@ -16873,14 +16873,14 @@ function wNAF(c, bits) {
   return {
     constTimeNegate,
     // non-const time multiplication ladder
-    unsafeLadder(elm, n3) {
+    unsafeLadder(elm, n2) {
       let p = c.ZERO;
       let d = elm;
-      while (n3 > _0n4) {
-        if (n3 & _1n4)
+      while (n2 > _0n4) {
+        if (n2 & _1n4)
           p = p.add(d);
         d = d.double();
-        n3 >>= _1n4;
+        n2 >>= _1n4;
       }
       return p;
     },
@@ -16917,20 +16917,20 @@ function wNAF(c, bits) {
      * @param n scalar (we don't check here, but should be less than curve order)
      * @returns real and fake (for const-time) points
      */
-    wNAF(W, precomputes, n3) {
+    wNAF(W, precomputes, n2) {
       const { windows, windowSize } = opts(W);
       let p = c.ZERO;
       let f2 = c.BASE;
-      const mask4 = BigInt(2 ** W - 1);
+      const mask3 = BigInt(2 ** W - 1);
       const maxNumber = 2 ** W;
       const shiftBy = BigInt(W);
       for (let window2 = 0; window2 < windows; window2++) {
         const offset = window2 * windowSize;
-        let wbits = Number(n3 & mask4);
-        n3 >>= shiftBy;
+        let wbits = Number(n2 & mask3);
+        n2 >>= shiftBy;
         if (wbits > windowSize) {
           wbits -= maxNumber;
-          n3 += _1n4;
+          n2 += _1n4;
         }
         const offset1 = offset;
         const offset2 = offset + Math.abs(wbits) - 1;
@@ -16944,7 +16944,7 @@ function wNAF(c, bits) {
       }
       return { p, f: f2 };
     },
-    wNAFCached(P, precomputesMap, n3, transform) {
+    wNAFCached(P, precomputesMap, n2, transform) {
       const W = P._WINDOW_SIZE || 1;
       let comp = precomputesMap.get(P);
       if (!comp) {
@@ -16953,7 +16953,7 @@ function wNAF(c, bits) {
           precomputesMap.set(P, transform(comp));
         }
       }
-      return this.wNAF(W, comp, n3);
+      return this.wNAF(W, comp, n2);
     }
   };
 }
@@ -17062,21 +17062,21 @@ var _4n2 = BigInt(4);
 function weierstrassPoints(opts) {
   const CURVE = validatePointOpts(opts);
   const { Fp: Fp4 } = CURVE;
-  const toBytes5 = CURVE.toBytes || ((_c, point, _isCompressed) => {
+  const toBytes4 = CURVE.toBytes || ((_c, point, _isCompressed) => {
     const a = point.toAffine();
     return concatBytes2(Uint8Array.from([4]), Fp4.toBytes(a.x), Fp4.toBytes(a.y));
   });
-  const fromBytes = CURVE.fromBytes || ((bytes5) => {
-    const tail = bytes5.subarray(1);
+  const fromBytes = CURVE.fromBytes || ((bytes4) => {
+    const tail = bytes4.subarray(1);
     const x = Fp4.fromBytes(tail.subarray(0, Fp4.BYTES));
     const y = Fp4.fromBytes(tail.subarray(Fp4.BYTES, 2 * Fp4.BYTES));
     return { x, y };
   });
   function weierstrassEquation(x) {
-    const { a, b: b3 } = CURVE;
+    const { a, b: b2 } = CURVE;
     const x2 = Fp4.sqr(x);
     const x3 = Fp4.mul(x2, x);
-    return Fp4.add(Fp4.add(x3, Fp4.mul(x, a)), b3);
+    return Fp4.add(Fp4.add(x3, Fp4.mul(x, a)), b2);
   }
   if (!Fp4.eql(Fp4.sqr(CURVE.Gy), weierstrassEquation(CURVE.Gx)))
     throw new Error("bad generator point: equation left != right");
@@ -17088,7 +17088,7 @@ function weierstrassPoints(opts) {
       throw new Error("Expected valid bigint: 0 < bigint < curve.n");
   }
   function normPrivateKeyToScalar(key) {
-    const { allowedPrivateKeyLengths: lengths, nByteLength, wrapPrivateKey, n: n3 } = CURVE;
+    const { allowedPrivateKeyLengths: lengths, nByteLength, wrapPrivateKey, n: n2 } = CURVE;
     if (lengths && typeof key !== "bigint") {
       if (key instanceof Uint8Array)
         key = bytesToHex(key);
@@ -17103,7 +17103,7 @@ function weierstrassPoints(opts) {
       throw new Error(`private key must be ${nByteLength} bytes, hex or bigint, not ${typeof key}`);
     }
     if (wrapPrivateKey)
-      num = mod(num, n3);
+      num = mod(num, n2);
     assertGE(num);
     return num;
   }
@@ -17216,8 +17216,8 @@ function weierstrassPoints(opts) {
     // https://eprint.iacr.org/2015/1060, algorithm 3
     // Cost: 8M + 3S + 3*a + 2*b3 + 15add.
     double() {
-      const { a, b: b3 } = CURVE;
-      const b32 = Fp4.mul(b3, _3n2);
+      const { a, b: b2 } = CURVE;
+      const b3 = Fp4.mul(b2, _3n2);
       const { px: X1, py: Y1, pz: Z1 } = this;
       let X3 = Fp4.ZERO, Y3 = Fp4.ZERO, Z3 = Fp4.ZERO;
       let t0 = Fp4.mul(X1, X1);
@@ -17228,13 +17228,13 @@ function weierstrassPoints(opts) {
       Z3 = Fp4.mul(X1, Z1);
       Z3 = Fp4.add(Z3, Z3);
       X3 = Fp4.mul(a, Z3);
-      Y3 = Fp4.mul(b32, t2);
+      Y3 = Fp4.mul(b3, t2);
       Y3 = Fp4.add(X3, Y3);
       X3 = Fp4.sub(t1, Y3);
       Y3 = Fp4.add(t1, Y3);
       Y3 = Fp4.mul(X3, Y3);
       X3 = Fp4.mul(t3, X3);
-      Z3 = Fp4.mul(b32, Z3);
+      Z3 = Fp4.mul(b3, Z3);
       t2 = Fp4.mul(a, t2);
       t3 = Fp4.sub(t0, t2);
       t3 = Fp4.mul(a, t3);
@@ -17312,8 +17312,8 @@ function weierstrassPoints(opts) {
     is0() {
       return this.equals(Point2.ZERO);
     }
-    wNAF(n3) {
-      return wnaf.wNAFCached(this, pointPrecomputes2, n3, (comp) => {
+    wNAF(n2) {
+      return wnaf.wNAFCached(this, pointPrecomputes2, n2, (comp) => {
         const toInv = Fp4.invertBatch(comp.map((p) => p.pz));
         return comp.map((p, i) => p.toAffine(toInv[i])).map(Point2.fromAffine);
       });
@@ -17323,17 +17323,17 @@ function weierstrassPoints(opts) {
      * It's faster, but should only be used when you don't care about
      * an exposed private key e.g. sig verification, which works over *public* keys.
      */
-    multiplyUnsafe(n3) {
+    multiplyUnsafe(n2) {
       const I = Point2.ZERO;
-      if (n3 === _0n5)
+      if (n2 === _0n5)
         return I;
-      assertGE(n3);
-      if (n3 === _1n5)
+      assertGE(n2);
+      if (n2 === _1n5)
         return this;
       const { endo } = CURVE;
       if (!endo)
-        return wnaf.unsafeLadder(this, n3);
-      let { k1neg, k1, k2neg, k2 } = endo.splitScalar(n3);
+        return wnaf.unsafeLadder(this, n2);
+      let { k1neg, k1, k2neg, k2 } = endo.splitScalar(n2);
       let k1p = I;
       let k2p = I;
       let d = this;
@@ -17364,11 +17364,11 @@ function weierstrassPoints(opts) {
      */
     multiply(scalar) {
       assertGE(scalar);
-      let n3 = scalar;
+      let n2 = scalar;
       let point, fake;
       const { endo } = CURVE;
       if (endo) {
-        const { k1neg, k1, k2neg, k2 } = endo.splitScalar(n3);
+        const { k1neg, k1, k2neg, k2 } = endo.splitScalar(n2);
         let { p: k1p, f: f1p } = this.wNAF(k1);
         let { p: k2p, f: f2p } = this.wNAF(k2);
         k1p = wnaf.constTimeNegate(k1neg, k1p);
@@ -17377,7 +17377,7 @@ function weierstrassPoints(opts) {
         point = k1p.add(k2p);
         fake = f1p.add(f2p);
       } else {
-        const { p, f: f2 } = this.wNAF(n3);
+        const { p, f: f2 } = this.wNAF(n2);
         point = p;
         fake = f2;
       }
@@ -17389,10 +17389,10 @@ function weierstrassPoints(opts) {
      * The trick could be useful if both P and Q are not G (not in our case).
      * @returns non-zero affine point
      */
-    multiplyAndAddUnsafe(Q, a, b3) {
+    multiplyAndAddUnsafe(Q, a, b2) {
       const G = Point2.BASE;
       const mul2 = (P, a2) => a2 === _0n5 || a2 === _1n5 || !P.equals(G) ? P.multiplyUnsafe(a2) : P.multiply(a2);
-      const sum = mul2(this, a).add(mul2(Q, b3));
+      const sum = mul2(this, a).add(mul2(Q, b2));
       return sum.is0() ? void 0 : sum;
     }
     // Converts Projective point to affine (x, y) coordinates.
@@ -17430,7 +17430,7 @@ function weierstrassPoints(opts) {
     }
     toRawBytes(isCompressed = true) {
       this.assertValidity();
-      return toBytes5(Point2, this, isCompressed);
+      return toBytes4(Point2, this, isCompressed);
     }
     toHex(isCompressed = true) {
       return bytesToHex(this.toRawBytes(isCompressed));
@@ -17487,10 +17487,10 @@ function weierstrass(curveDef) {
         return cat(Uint8Array.from([4]), x, Fp4.toBytes(a.y));
       }
     },
-    fromBytes(bytes5) {
-      const len = bytes5.length;
-      const head = bytes5[0];
-      const tail = bytes5.subarray(1);
+    fromBytes(bytes4) {
+      const len = bytes4.length;
+      const head = bytes4[0];
+      const tail = bytes4.subarray(1);
       if (len === compressedLen && (head === 2 || head === 3)) {
         const x = bytesToNumberBE(tail);
         if (!isValidFieldElement(x))
@@ -17512,14 +17512,14 @@ function weierstrass(curveDef) {
     }
   });
   const numToNByteStr = (num) => bytesToHex(numberToBytesBE(num, CURVE.nByteLength));
-  function isBiggerThanHalfOrder(number5) {
+  function isBiggerThanHalfOrder(number4) {
     const HALF = CURVE_ORDER >> _1n5;
-    return number5 > HALF;
+    return number4 > HALF;
   }
   function normalizeS(s) {
     return isBiggerThanHalfOrder(s) ? modN(-s) : s;
   }
-  const slcNum = (b3, from, to) => bytesToNumberBE(b3.slice(from, to));
+  const slcNum = (b2, from, to) => bytesToNumberBE(b2.slice(from, to));
   class Signature3 {
     constructor(r, s, recovery) {
       this.r = r;
@@ -17641,16 +17641,16 @@ function weierstrass(curveDef) {
       throw new Error("first arg must be private key");
     if (!isProbPub(publicB))
       throw new Error("second arg must be public key");
-    const b3 = Point2.fromHex(publicB);
-    return b3.multiply(normPrivateKeyToScalar(privateA)).toRawBytes(isCompressed);
+    const b2 = Point2.fromHex(publicB);
+    return b2.multiply(normPrivateKeyToScalar(privateA)).toRawBytes(isCompressed);
   }
-  const bits2int = CURVE.bits2int || function(bytes5) {
-    const num = bytesToNumberBE(bytes5);
-    const delta = bytes5.length * 8 - CURVE.nBitLength;
+  const bits2int = CURVE.bits2int || function(bytes4) {
+    const num = bytesToNumberBE(bytes4);
+    const delta = bytes4.length * 8 - CURVE.nBitLength;
     return delta > 0 ? num >> BigInt(delta) : num;
   };
-  const bits2int_modN = CURVE.bits2int_modN || function(bytes5) {
-    return modN(bits2int(bytes5));
+  const bits2int_modN = CURVE.bits2int_modN || function(bytes4) {
+    return modN(bits2int(bytes4));
   };
   const ORDER_MASK = bitMask(CURVE.nBitLength);
   function int2octets(num) {
@@ -17785,24 +17785,24 @@ var secp256k1P = BigInt("0xfffffffffffffffffffffffffffffffffffffffffffffffffffff
 var secp256k1N = BigInt("0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141");
 var _1n6 = BigInt(1);
 var _2n5 = BigInt(2);
-var divNearest = (a, b3) => (a + b3 / _2n5) / b3;
+var divNearest = (a, b2) => (a + b2 / _2n5) / b2;
 function sqrtMod(y) {
   const P = secp256k1P;
   const _3n8 = BigInt(3), _6n2 = BigInt(6), _11n = BigInt(11), _22n = BigInt(22);
   const _23n = BigInt(23), _44n = BigInt(44), _88n = BigInt(88);
-  const b22 = y * y * y % P;
-  const b3 = b22 * b22 * y % P;
+  const b2 = y * y * y % P;
+  const b3 = b2 * b2 * y % P;
   const b6 = pow2(b3, _3n8, P) * b3 % P;
   const b9 = pow2(b6, _3n8, P) * b3 % P;
-  const b11 = pow2(b9, _2n5, P) * b22 % P;
-  const b222 = pow2(b11, _11n, P) * b11 % P;
-  const b44 = pow2(b222, _22n, P) * b222 % P;
+  const b11 = pow2(b9, _2n5, P) * b2 % P;
+  const b22 = pow2(b11, _11n, P) * b11 % P;
+  const b44 = pow2(b22, _22n, P) * b22 % P;
   const b88 = pow2(b44, _44n, P) * b44 % P;
   const b176 = pow2(b88, _88n, P) * b88 % P;
   const b220 = pow2(b176, _44n, P) * b44 % P;
   const b223 = pow2(b220, _3n8, P) * b3 % P;
-  const t1 = pow2(b223, _23n, P) * b222 % P;
-  const t2 = pow2(t1, _6n2, P) * b22 % P;
+  const t1 = pow2(b223, _23n, P) * b22 % P;
+  const t2 = pow2(t1, _6n2, P) * b2 % P;
   const root = pow2(t2, _2n5, P);
   if (!Fp.eql(Fp.sqr(root), y))
     throw new Error("Cannot find square root");
@@ -17828,22 +17828,22 @@ var secp256k1 = createCurve({
   endo: {
     beta: BigInt("0x7ae96a2b657c07106e64479eac3434e99cf0497512f58995c1396c28719501ee"),
     splitScalar: (k) => {
-      const n3 = secp256k1N;
+      const n2 = secp256k1N;
       const a1 = BigInt("0x3086d221a7d46bcde86c90e49284eb15");
       const b1 = -_1n6 * BigInt("0xe4437ed6010e88286f547fa90abfe4c3");
       const a2 = BigInt("0x114ca50f7a8e2f3f657c1108d9d44cfd8");
-      const b22 = a1;
+      const b2 = a1;
       const POW_2_128 = BigInt("0x100000000000000000000000000000000");
-      const c1 = divNearest(b22 * k, n3);
-      const c2 = divNearest(-b1 * k, n3);
-      let k1 = mod(k - c1 * a1 - c2 * a2, n3);
-      let k2 = mod(-c1 * b1 - c2 * b22, n3);
+      const c1 = divNearest(b2 * k, n2);
+      const c2 = divNearest(-b1 * k, n2);
+      let k1 = mod(k - c1 * a1 - c2 * a2, n2);
+      let k2 = mod(-c1 * b1 - c2 * b2, n2);
       const k1neg = k1 > POW_2_128;
       const k2neg = k2 > POW_2_128;
       if (k1neg)
-        k1 = n3 - k1;
+        k1 = n2 - k1;
       if (k2neg)
-        k2 = n3 - k2;
+        k2 = n2 - k2;
       if (k1 > POW_2_128 || k2 > POW_2_128) {
         throw new Error("splitScalar: Endomorphism failed, k=" + k);
       }
@@ -18099,19 +18099,19 @@ var Signature = class _Signature {
       return new _Signature(_guard3, ZeroHash, ZeroHash, 27);
     }
     if (typeof sig === "string") {
-      const bytes5 = getBytes(sig, "signature");
-      if (bytes5.length === 64) {
-        const r2 = hexlify(bytes5.slice(0, 32));
-        const s2 = bytes5.slice(32, 64);
+      const bytes4 = getBytes(sig, "signature");
+      if (bytes4.length === 64) {
+        const r2 = hexlify(bytes4.slice(0, 32));
+        const s2 = bytes4.slice(32, 64);
         const v2 = s2[0] & 128 ? 28 : 27;
         s2[0] &= 127;
         return new _Signature(_guard3, r2, hexlify(s2), v2);
       }
-      if (bytes5.length === 65) {
-        const r2 = hexlify(bytes5.slice(0, 32));
-        const s2 = bytes5.slice(32, 64);
+      if (bytes4.length === 65) {
+        const r2 = hexlify(bytes4.slice(0, 32));
+        const s2 = bytes4.slice(32, 64);
         assertError((s2[0] & 128) === 0, "non-canonical s");
-        const v2 = _Signature.getNormalizedV(bytes5[64]);
+        const v2 = _Signature.getNormalizedV(bytes4[64]);
         return new _Signature(_guard3, r2, hexlify(s2), v2);
       }
       assertError(false, "invalid raw signature length");
@@ -18128,9 +18128,9 @@ var Signature = class _Signature {
       }
       if (yParityAndS != null) {
         assertError(isHexString(yParityAndS, 32), "invalid yParityAndS");
-        const bytes5 = getBytes(yParityAndS);
-        bytes5[0] &= 127;
-        return hexlify(bytes5);
+        const bytes4 = getBytes(yParityAndS);
+        bytes4[0] &= 127;
+        return hexlify(bytes4);
       }
       assertError(false, "missing s");
     }(sig.s, sig.yParityAndS);
@@ -18269,18 +18269,18 @@ var SigningKey = class _SigningKey {
    *    //_result:
    */
   static computePublicKey(key, compressed) {
-    let bytes5 = getBytes(key, "key");
-    if (bytes5.length === 32) {
-      const pubKey = secp256k1.getPublicKey(bytes5, !!compressed);
+    let bytes4 = getBytes(key, "key");
+    if (bytes4.length === 32) {
+      const pubKey = secp256k1.getPublicKey(bytes4, !!compressed);
       return hexlify(pubKey);
     }
-    if (bytes5.length === 64) {
+    if (bytes4.length === 64) {
       const pub = new Uint8Array(65);
       pub[0] = 4;
-      pub.set(bytes5, 1);
-      bytes5 = pub;
+      pub.set(bytes4, 1);
+      bytes4 = pub;
     }
-    const point = secp256k1.ProjectivePoint.fromHex(bytes5);
+    const point = secp256k1.ProjectivePoint.fromHex(bytes4);
     return hexlify(point.toRawBytes(compressed));
   }
   /**
@@ -19646,10 +19646,10 @@ function id(value) {
 var COMPRESSED$1 = "AEEUdwmgDS8BxQKKAP4BOgDjATAAngDUAIMAoABoAOAAagCOAEQAhABMAHIAOwA9ACsANgAmAGIAHgAuACgAJwAXAC0AGgAjAB8ALwAUACkAEgAeAAkAGwARABkAFgA5ACgALQArADcAFQApABAAHgAiABAAGgAeABMAGAUhBe8BFxREN8sF2wC5AK5HAW8ArQkDzQCuhzc3NzcBP68NEfMABQdHBuw5BV8FYAA9MzkI9r4ZBg7QyQAWA9CeOwLNCjcCjqkChuA/lm+RAsXTAoP6ASfnEQDytQFJAjWVCkeXAOsA6godAB/cwdAUE0WlBCN/AQUCQRjFD/MRBjHxDQSJbw0jBzUAswBxme+tnIcAYwabAysG8QAjAEMMmxcDqgPKQyDXCMMxA7kUQwD3NXOrAKmFIAAfBC0D3x4BJQDBGdUFAhEgVD8JnwmQJiNWYUzrg0oAGwAUAB0AFnNcACkAFgBP9h3gPfsDOWDKneY2ChglX1UDYD30ABsAFAAdABZzIGRAnwDD8wAjAEEMzRbDqgMB2sAFYwXqAtCnAsS4AwpUJKRtFHsadUz9AMMVbwLpABM1NJEX0ZkCgYMBEyMAxRVvAukAEzUBUFAtmUwSAy4DBTER33EftQHfSwB5MxJ/AjkWKQLzL8E/cwBB6QH9LQDPDtO9ASNriQC5DQANAwCK21EFI91zHwCoL9kBqQcHBwcHKzUDowBvAQohPvU3fAQgHwCyAc8CKQMA5zMSezr7ULgFmDp/LzVQBgEGAi8FYQVgt8AFcTtlQhpCWEmfe5tmZ6IAExsDzQ8t+X8rBKtTAltbAn0jsy8Bl6utPWMDTR8Ei2kRANkDBrNHNysDBzECQWUAcwFpJ3kAiyUhAJ0BUb8AL3EfAbfNAz81KUsFWwF3YQZtAm0A+VEfAzEJDQBRSQCzAQBlAHsAM70GD/v3IZWHBwARKQAxALsjTwHZAeMPEzmXgIHwABIAGQA8AEUAQDt3gdvIEGcQZAkGTRFMdEIVEwK0D64L7REdDNkq09PgADSxB/MDWwfzA1sDWwfzB/MDWwfzA1sDWwNbA1scEvAi28gQZw9QBHUFlgWTBN4IiyZREYkHMAjaVBV0JhxPA00BBCMtSSQ7mzMTJUpMFE0LCAQ2SmyvfUADTzGzVP2QqgPTMlc5dAkGHnkSqAAyD3skNb1OhnpPcagKU0+2tYdJak5vAsY6sEAACikJm2/Dd1YGRRAfJ6kQ+ww3AbkBPw3xS9wE9QY/BM0fgRkdD9GVoAipLeEM8SbnLqWAXiP5KocF8Uv4POELUVFsD10LaQnnOmeBUgMlAREijwrhDT0IcRD3Cs1vDekRSQc9A9lJngCpBwULFR05FbkmFGKwCw05ewb/GvoLkyazEy17AAXXGiUGUQEtGwMA0y7rhbRaNVwgT2MGBwspI8sUrFAkDSlAu3hMGh8HGSWtApVDdEqLUToelyH6PEENai4XUYAH+TwJGVMLhTyiRq9FEhHWPpE9TCJNTDAEOYMsMyePCdMPiQy9fHYBXQklCbUMdRM1ERs3yQg9Bx0xlygnGQglRplgngT7owP3E9UDDwVDCUUHFwO5HDETMhUtBRGBKNsC9zbZLrcCk1aEARsFzw8pH+MQVEfkDu0InwJpA4cl7wAxFSUAGyKfCEdnAGOP3FMJLs8Iy2pwI3gDaxTrZRF3B5UOWwerHDcVwxzlcMxeD4YMKKezCV8BeQmdAWME5wgNNV+MpCBFZ1eLXBifIGVBQ14AAjUMaRWjRMGHfAKPD28SHwE5AXcHPQ0FAnsR8RFvEJkI74YINbkz/DopBFMhhyAVCisDU2zSCysm/Qz8bQGnEmYDEDRBd/Jnr2C6KBgBBx0yyUFkIfULlk/RDKAaxRhGVDIZ6AfDA/ca9yfuQVsGAwOnBxc6UTPyBMELbQiPCUMATQ6nGwfbGG4KdYzUATWPAbudA1uVhwJzkwY7Bw8Aaw+LBX3pACECqwinAAkA0wNbAD0CsQehAB0AiUUBQQMrMwEl6QKTA5cINc8BmTMB9y0EH8cMGQD7O25OAsO1AoBuZqYF4VwCkgJNOQFRKQQJUktVA7N15QDfAE8GF+NLARmvTs8e50cB43MvAMsA/wAJOQcJRQHRAfdxALsBYws1Caa3uQFR7S0AhwAZbwHbAo0A4QA5AIP1AVcAUQVd/QXXAlNNARU1HC9bZQG/AyMBNwERAH0Gz5GpzQsjBHEH1wIQHxXlAu8yB7kFAyLjE9FCyQK94lkAMhoKPAqrCqpgX2Q3CjV2PVQAEh+sPss/UgVVO1c7XDtXO1w7VztcO1c7XDtXO1wDm8Pmw+YKcF9JYe8Mqg3YRMw6TRPfYFVgNhPMLbsUxRXSJVoZQRrAJwkl6FUNDwgt12Y0CDA0eRfAAEMpbINFY4oeNApPHOtTlVT8LR8AtUumM7MNsBsZREQFS3XxYi4WEgomAmSFAmJGX1GzAV83JAKh+wJonAJmDQKfiDgfDwJmPwJmKgRyBIMDfxcDfpY5Cjl7GzmGOicnAmwhAjI6OA4CbcsCbbLzjgM3a0kvAWsA4gDlAE4JB5wMkQECD8YAEbkCdzMCdqZDAnlPRwJ4viFg30WyRvcCfEMCeswCfQ0CfPRIBEiBZygALxlJXEpfGRtK0ALRBQLQ0EsrA4hTA4fqRMmRNgLypV0HAwOyS9JMMSkH001QTbMCi0MCitzFHwshR2sJuwKOOwKOYESbhQKO3QKOYHxRuFM5AQ5S2FSJApP/ApMQAO0AIFUiVbNV1AosHymZijLleGpFPz0Cl6MC77ZYJawAXSkClpMCloCgAK1ZsFoNhVEAPwKWuQKWUlxIXNUCmc8CmWhczl0LHQKcnznGOqECnBoCn58CnryOACETNS4TAp31Ap6WALlBYThh8wKe1wKgcgGtAp6jIwKeUqljzGQrKS8CJ7MCJoICoP8CoFDbAqYzAqXSAqgDAIECp/ZogGi1AAdNaiBq1QKs5wKssgKtawKtBgJXIQJV4AKx5dsDH1JsmwKywRECsuwbbORtZ21MYwMl0QK2YD9DbpQDKUkCuGICuUsZArkue3A6cOUCvR0DLbYDMhUCvoxyBgMzdQK+HnMmc1MCw88CwwhzhnRPOUl05AM8qwEDPJ4DPcMCxYACxksCxhSNAshtVQLISALJUwLJMgJkoQLd1nh9ZXiyeSlL1AMYp2cGAmH4GfeVKHsPXpZevxUCz28Cz3AzT1fW9xejAMqxAs93AS3uA04Wfk8JAtwrAtuOAtJTA1JgA1NjAQUDVZCAjUMEzxrxZEl5A4LSg5EC2ssC2eKEFIRNp0ADhqkAMwNkEoZ1Xf0AWQLfaQLevHd7AuIz7RgB8zQrAfSfAfLWiwLr9wLpdH0DAur9AuroAP1LAb0C7o0C66CWrpcHAu5DA4XkmH1w5HGlAvMHAG0DjhqZlwL3FwORcgOSiwL3nAL53QL4apogmq+/O5siA52HAv7+AR8APZ8gAZ+3AwWRA6ZuA6bdANXJAwZuoYyiCQ0DDE0BEwEjB3EGZb1rCQC/BG/DFY8etxEAG3k9ACcDNxJRA42DAWcrJQCM8wAlAOanC6OVCLsGI6fJBgCvBRnDBvElRUYFFoAFcD9GSDNCKUK8X3kZX8QAls0FOgCQVCGbwTsuYDoZutcONxjOGJHJ/gVfBWAFXwVgBWsFYAVfBWAFXwVgBV8FYAVfBWBOHQjfjW8KCgoKbF7xMwTRA7kGN8PDAMMEr8MA70gxFroFTj5xPnhCR0K+X30/X/AAWBkzswCNBsxzzASm70aCRS4rDDMeLz49fnXfcsH5GcoscQFz13Y4HwVnBXLJycnACNdRYwgICAqEXoWTxgA7P4kACxbZBu21Kw0AjMsTAwkVAOVtJUUsJ1JCuULESUArXy9gPi9AKwnJRQYKTD9LPoA+iT54PnkCkULEUUpDX9NWV3JVEjQAc1w3A3IBE3YnX+g7QiMJb6MKaiszRCUuQrNCxDPMCcwEX9EWJzYREBEEBwIHKn6l33JCNVIfybPJtAltydPUCmhBZw/tEKsZAJOVJU1CLRuxbUHOQAo7P0s+eEJHHA8SJVRPdGM0NVrpvBoKhfUlM0JHHGUQUhEWO1xLSj8MO0ucNAqJIzVCRxv9EFsqKyA4OQgNj2nwZgp5ZNFgE2A1K3YHS2AhQQojJmC7DgpzGG1WYFUZCQYHZO9gHWCdYIVgu2BTYJlwFh8GvRbcXbG8YgtDHrMBwzPVyQonHQgkCyYBgQJ0Ajc4nVqIAwGSCsBPIgDsK3SWEtIVBa5N8gGjAo+kVwVIZwD/AEUSCDweX4ITrRQsJ8K3TwBXFDwEAB0TvzVcAtoTS20RIwDgVgZ9BBImYgA5AL4Coi8LFnezOkCnIQFjAY4KBAPh9RcGsgZSBsEAJctdsWIRu2kTkQstRw7DAcMBKgpPBGIGMDAwKCYnKTQaLg4AKRSVAFwCdl+YUZ0JdicFD3lPAdt1F9ZZKCGxuE3yBxkFVGcA/wBFEgiCBwAOLHQSjxOtQDg1z7deFRMAZ8QTAGtKb1ApIiPHADkAvgKiLy1DFtYCmBiDAlDDWNB0eo7fpaMO/aEVRRv0ATEQZBIODyMEAc8JQhCbDRgzFD4TAEMAu9YBCgCsAOkAm5I3ABwAYxvONnR+MhXJAxgKQyxL2+kkJhMbhQKDBMkSsvF0AD9BNQ6uQC7WqSQHwxEAEEIu1hkhAH2z4iQPwyJPHNWpdyYBRSpnJALzoBAEVPPsH20MxA0CCEQKRgAFyAtFAlMNwwjEDUQJRArELtapMg7DDZgJIw+TGukEIwvDFkMAqAtDEMMMBhioe+QAO3MMRAACrgnEBSPY9Q0FDnbSBoMAB8MSYxkSxAEJAPIJAAB8FWMOFtMc/HcXwxhDAC7DAvOowwAewwJdKDKHAAHDAALrFUQVwwAbwyvzpWMWv8wA/ABpAy++bcYDUKPD0KhDCwKmJ1MAAmMA5+UZwxAagwipBRL/eADfw6fDGOMCGsOjk3l6BwOpo4sAEsMOGxMAA5sAbcMOAAvDp0MJGkMDwgipnNIPAwfIqUMGAOGDAAPzABXDAAcDAAnDAGmTABrDAA7DChjDjnEWAwABYwAOcwAuUyYABsMAF8MIKQANUgC6wy4AA8MADqMq8wCyYgAcIwAB8wqpAAXOCx0V4wAHowBCwwEKAGnDAAuDAB3DAAjDCakABdIAbqcZ3QCZCCkABdIAAAFDAAfjAB2jCCkABqIACYMAGzMAbSMA5sOIAAhjAAhDABTDBAkpAAbSAOOTAAlDC6kOzPtnAAdDAG6kQFAATwAKwwwAA0MACbUDPwAHIwAZgwACE6cDAAojAApDAAoDp/MGwwAJIwADEwAQQwgAFEMAEXMAD5MADfMADcMAGRMOFiMAFUMAbqMWuwHDAMIAE0MLAGkzEgDhUwACQwAEWgAXgwUjAAbYABjDBSYBgzBaAEFNALcQBxUMegAwMngBrA0IZgJ0KxQHBREPd1N0ZzKRJwaIHAZqNT4DqQq8BwngAB4DAwt2AX56T1ocKQNXAh1GATQGC3tOxYNagkgAMQA5CQADAQEAWxLjAIOYNAEzAH7tFRk6TglSAF8NAAlYAQ+S1ACAQwQorQBiAN4dAJ1wPyeTANVzuQDX3AIeEMp9eyMgXiUAEdkBkJizKltbVVAaRMqRAAEAhyQ/SDEz6BmfVwB6ATEsOClKIRcDOF0E/832AFNt5AByAnkCRxGCOs94NjXdAwINGBonDBwPALW2AwICAgAAAAAAAAYDBQMDARrUAwAtAAAAAgEGBgYGBgYFBQUFBQUEBQYHCAkEBQUFBQQAAAICAAAAIgCNAJAAlT0A6gC7ANwApEQAwgCyAK0AqADuAKYA2gCjAOcBCAEDAMcAgQBiANIA1AEDAN4A8gCQAKkBMQDqAN8A3AsBCQ8yO9ra2tq8xuLT1tRJOB0BUgFcNU0BWgFpAWgBWwFMUUlLbhMBUxsNEAs6PhMOACcUKy0vMj5AQENDQ0RFFEYGJFdXV1dZWVhZL1pbXVxcI2NnZ2ZoZypsbnZ1eHh4eHh4enp6enp6enp6enp8fH18e2IARPIASQCaAHgAMgBm+ACOAFcAVwA3AnbvAIsABfj4AGQAk/IAnwBPAGIAZP//sACFAIUAaQBWALEAJAC2AIMCQAJDAPwA5wD+AP4A6AD/AOkA6QDoAOYALwJ7AVEBQAE+AVQBPgE+AT4BOQE4ATgBOAEcAVgXADEQCAEAUx8SHgsdHhYAjgCWAKYAUQBqIAIxAHYAbwCXAxUDJzIDIUlGTzEAkQJPAMcCVwKkAMAClgKWApYClgKWApYCiwKWApYClgKWApYClgKVApUCmAKgApcClgKWApQClAKUApQCkgKVAnUB1AKXAp8ClgKWApUeAIETBQD+DQOfAmECOh8BVBg9AuIZEjMbAU4/G1WZAXusRAFpYQEFA0FPAQYAmTEeIJdyADFoAHEANgCRA5zMk/C2jGINwjMWygIZCaXdfDILBCs5dAE7YnQBugDlhoiHhoiGiYqKhouOjIaNkI6Ij4qQipGGkoaThpSSlYaWhpeKmIaZhpqGm4aci52QnoqfhuIC4XTpAt90AIp0LHSoAIsAdHQEQwRABEIERQRDBEkERgRBBEcESQRIBEQERgRJAJ5udACrA490ALxuAQ10ANFZdHQA13QCFHQA/mJ0AP4BIQD+APwA/AD9APwDhGZ03ASMK23HAP4A/AD8AP0A/CR0dACRYnQA/gCRASEA/gCRAvQA/gCRA4RmdNwEjCttxyR0AP9idAEhAP4A/gD8APwA/QD8AP8A/AD8AP0A/AOEZnTcBIwrbcckdHQAkWJ0ASEA/gCRAP4AkQL0AP4AkQOEZnTcBIwrbcckdAJLAT50AlIBQXQCU8l0dAJfdHQDpgL0A6YDpgOnA6cDpwOnA4RmdNwEjCttxyR0dACRYnQBIQOmAJEDpgCRAvQDpgCRA4RmdNwEjCttxyR0BDh0AJEEOQCRDpU5dSgCADR03gV2CwArdAEFAM5iCnR0AF1iAAYcOgp0dACRCnQAXAEIwWZ0CnRmdHQAkWZ0CnRmdEXgAFF03gp0dEY0tlT2u3SOAQTwscwhjZZKrhYcBSfFp9XNbKiVDOD2b+cpe4/Z17mQnbtzzhaeQtE2GGj0IDNTjRUSyTxxw/RPHW/+vS7d1NfRt9z9QPZg4X7QFfhCnkvgNPIItOsC2eV6hPannZNHlZ9xrwZXIMOlu3jSoQSq78WEjwLjw1ELSlF1aBvfzwk5ZX7AUvQzjPQKbDuQ+sm4wNOp4A6AdVuRS0t1y/DZpg4R6m7FNjM9HgvW7Bi88zaMjOo6lM8wtBBdj8LP4ylv3zCXPhebMKJc066o9sF71oFW/8JXu86HJbwDID5lzw5GWLR/LhT0Qqnp2JQxNZNfcbLIzPy+YypqRm/lBmGmex+82+PisxUumSeJkALIT6rJezxMH+CTJmQtt5uwTVbL3ptmjDUQzlSIvWi8Tl7ng1NpuRn1Ng4n14Qc+3Iil7OwkvNWogLSPkn3pihIFytyIGmMhOe3n1tWsuMy9BdKyqF4Z3v2SgggTL9KVvMXPnCbRe+oOuFFP3HejBG/w9gvmfNYvg6JuWia2lcSSN1uIjBktzoIazOHPJZ7kKHPz8mRWVdW3lA8WGF9dQF6Bm673boov3BUWDU2JNcahR23GtfHKLOz/viZ+rYnZFaIznXO67CYEJ1fXuTRpZhYZkKe54xeoagkNGLs+NTZHE0rX45/XvQ2RGADX6vcAvdxIUBV27wxGm2zjZo4X3ILgAlrOFheuZ6wtsvaIj4yLY7qqawlliaIcrz2G+c3vscAnCkCuMzMmZvMfu9lLwTvfX+3cVSyPdN9ZwgDZhfjRgNJcLiJ67b9xx8JHswprbiE3v9UphotAPIgnXVIN5KmMc0piXhc6cChPnN+MRhG9adtdttQTTwSIpl8I4/j//d3sz1326qTBTpPRM/Hgh3kzqEXs8ZAk4ErQhNO8hzrQ0DLkWMA/N+91tn2MdOJnWC2FCZehkQrwzwbKOjhvZsbM95QoeL9skYyMf4srVPVJSgg7pOLUtr/n9eT99oe9nLtFRpjA9okV2Kj8h9k5HaC0oivRD8VyXkJ81tcd4fHNXPCfloIQasxsuO18/46dR2jgul/UIet2G0kRvnyONMKhHs6J26FEoqSqd+rfYjeEGwHWVDpX1fh1jBBcKGMqRepju9Y00mDVHC+Xdij/j44rKfvfjGinNs1jO/0F3jB83XCDINN/HB84axlP+3E/klktRo+vl3U/aiyMJbIodE1XSsDn6UAzIoMtUObY2+k/4gY/l+AkZJ5Sj2vQrkyLm3FoxjhDX+31UXBFf9XrAH31fFqoBmDEZvhvvpnZ87N+oZEu7U9O/nnk+QWj3x8uyoRbEnf+O5UMr9i0nHP38IF5AvzrBW8YWBUR0mIAzIvndQq9N3v/Jto3aPjPXUPl8ASdPPyAp7jENf8bk7VMM9ol9XGmlBmeDMuGqt+WzuL6CXAxXjIhCPM5vACchgMJ/8XBGLO/D1isVvGhwwHHr1DLaI5mn2Jr/b1pUD90uciDaS8cXNDzCWvNmT/PhQe5e8nTnnnkt8Ds/SIjibcum/fqDhKopxAY8AkSrPn+IGDEKOO+U3XOP6djFs2H5N9+orhOahiQk5KnEUWa+CzkVzhp8bMHRbg81qhjjXuIKbHjSLSIBKWqockGtKinY+z4/RdBUF6pcc3JmnlxVcNgrI4SEzKUZSwcD2QCyxzKve+gAmg6ZuSRkpPFa6mfThu7LJNu3H5K42uCpNvPAsoedolKV/LHe/eJ+BbaG5MG0NaSGVPRUmNFMFFSSpXEcXwbVh7UETOZZtoVNRGOIbbkig3McEtR68cG0RZAoJevWYo7Dg/lZ1CQzblWeUvVHmr8fY4Nqd9JJiH/zEX24mJviH60fAyFr0A3c4bC1j3yZU60VgJxXn8JgJXLUIsiBnmKmMYz+7yBQFBvqb2eYnuW59joZBf56/wXvWIR4R8wTmV80i1mZy+S4+BUES+hzjk0uXpC///z/IlqHZ1monzlXp8aCfhGKMti73FI1KbL1q6IKO4fuBuZ59gagjn5xU79muMpHXg6S+e+gDM/U9BKLHbl9l6o8czQKl4RUkJJiqftQG2i3BMg/TQlUYFkJDYBOOvAugYuzYSDnZbDDd/aSd9x0Oe6F+bJcHfl9+gp6L5/TgA+BdFFovbfCrQ40s5vMPw8866pNX8zyFGeFWdxIpPVp9Rg1UPOVFbFZrvaFq/YAzHQgqMWpahMYfqHpmwXfHL1/kpYmGuHFwT55mQu0dylfNuq2Oq0hTMCPwqfxnuBIPLXfci4Y1ANy+1CUipQxld/izVh16WyG2Q0CQQ9NqtAnx1HCHwDj7sYxOSB0wopZSnOzxQOcExmxrVTF2BkOthVpGfuhaGECfCJpJKpjnihY+xOT2QJxN61+9K6QSqtv2Shr82I3jgJrqBg0wELFZPjvHpvzTtaJnLK6Vb97Yn933koO/saN7fsjwNKzp4l2lJVx2orjCGzC/4ZL4zCver6aQYtC5sdoychuFE6ufOiog+VWi5UDkbmvmtah/3aArEBIi39s5ILUnlFLgilcGuz9CQshEY7fw2ouoILAYPVT/gyAIq3TFAIwVsl+ktkRz/qGfnCDGrm5gsl/l9QdvCWGsjPz3dU7XuqKfdUrr/6XIgjp4rey6AJBmCmUJMjITHVdFb5m1p+dLMCL8t55zD42cmftmLEJC0Da04YiRCVUBLLa8D071/N5UBNBXDh0LFsmhV/5B5ExOB4j3WVG/S3lfK5o+V6ELHvy6RR9n4ac+VsK4VE4yphPvV+kG9FegTBH4ZRXL2HytUHCduJazB/KykjfetYxOXTLws267aGOd+I+JhKP//+VnXmS90OD/jvLcVu0asyqcuYN1mSb6XTlCkqv1vigZPIYwNF/zpWcT1GR/6aEIRjkh0yhg4LXJfaGobYJTY4JI58KiAKgmmgAKWdl5nYCeLqavRJGQNuYuZtZFGx+IkI4w4NS2xwbetNMunOjBu/hmKCI/w7tfiiyUd//4rbTeWt4izBY8YvGIN6vyKYmP/8X8wHKCeN+WRcKM70+tXKNGyevU9H2Dg5BsljnTf8YbsJ1TmMs74Ce2XlHisleguhyeg44rQOHZuw/6HTkhnnurK2d62q6yS7210SsAIaR+jXMQA+svkrLpsUY+F30Uw89uOdGAR6vo4FIME0EfVVeHTu6eKicfhSqOeXJhbftcd08sWEnNUL1C9fnprTgd83IMut8onVUF0hvqzZfHduPjbjwEXIcoYmy+P6tcJZHmeOv6VrvEdkHDJecjHuHeWANe79VG662qTjA/HCvumVv3qL+LrOcpqGps2ZGwQdFJ7PU4iuyRlBrwfO+xnPyr47s2cXVbWzAyznDiBGjCM3ksxjjqM62GE9C8f5U38kB3VjtabKp/nRdvMESPGDG90bWRLAt1Qk5DyLuazRR1YzdC1c+hZXvAWV8xA72S4A8B67vjVhbba3MMop293FeEXpe7zItMWrJG/LOH9ByOXmYnNJfjmfuX9KbrpgLOba4nZ+fl8Gbdv/ihv+6wFGKHCYrVwmhFC0J3V2bn2tIB1wCc1CST3d3X2OyxhguXcs4sm679UngzofuSeBewMFJboIQHbUh/m2JhW2hG9DIvG2t7yZIzKBTz9wBtnNC+2pCRYhSIuQ1j8xsz5VvqnyUIthvuoyyu7fNIrg/KQUVmGQaqkqZk/Vx5b33/gsEs8yX7SC1J+NV4icz6bvIE7C5G6McBaI8rVg56q5QBJWxn/87Q1sPK4+sQa8fLU5gXo4paaq4cOcQ4wR0VBHPGjKh+UlPCbA1nLXyEUX45qZ8J7/Ln4FPJE2TdzD0Z8MLSNQiykMMmSyOCiFfy84Rq60emYB2vD09KjYwsoIpeDcBDTElBbXxND72yhd9pC/1CMid/5HUMvAL27OtcIJDzNKpRPNqPOpyt2aPGz9QWIs9hQ9LiX5s8m9hjTUu/f7MyIatjjd+tSfQ3ufZxPpmJhTaBtZtKLUcfOCUqADuO+QoH8B9v6U+P0HV1GLQmtoNFTb3s74ivZgjES0qfK+8RdGgBbcCMSy8eBvh98+et1KIFqSe1KQPyXULBMTsIYnysIwiZBJYdI20vseV+wuJkcqGemehKjaAb9L57xZm3g2zX0bZ2xk/fU+bCo7TlnbW7JuF1YdURo/2Gw7VclDG1W7LOtas2LX4upifZ/23rzpsnY/ALfRgrcWP5hYmV9VxVOQA1fZvp9F2UNU+7d7xRyVm5wiLp3/0dlV7vdw1PMiZrbDAYzIVqEjRY2YU03sJhPnlwIPcZUG5ltL6S8XCxU1eYS5cjr34veBmXAvy7yN4ZjArIG0dfD/5UpBNlX1ZPoxJOwyqRi3wQWtOzd4oNKh0LkoTm8cwqgIfKhqqGOhwo71I+zXnMemTv2B2AUzABWyFztGgGULjDDzWYwJUVBTjKCn5K2QGMK1CQT7SzziOjo+BhAmqBjzuc3xYym2eedGeOIRJVyTwDw37iCMe4g5Vbnsb5ZBdxOAnMT7HU4DHpxWGuQ7GeiY30Cpbvzss55+5Km1YsbD5ea3NI9QNYIXol5apgSu9dZ8f8xS5dtHpido5BclDuLWY4lhik0tbJa07yJhH0BOyEut/GRbYTS6RfiTYWGMCkNpfSHi7HvdiTglEVHKZXaVhezH4kkXiIvKopYAlPusftpE4a5IZwvw1x/eLvoDIh/zpo9FiQInsTb2SAkKHV42XYBjpJDg4374XiVb3ws4qM0s9eSQ5HzsMU4OZJKuopFjBM+dAZEl8RUMx5uU2N486Kr141tVsGQfGjORYMCJAMsxELeNT4RmWjRcpdTGBwcx6XN9drWqPmJzcrGrH4+DRc7+n1w3kPZwu0BkNr6hQrqgo7JTB9A5kdJ/H7P4cWBMwsmuixAzJB3yrQpnGIq90lxAXLzDCdn1LPibsRt7rHNjgQBklRgPZ8vTbjXdgXrTWQsK5MdrXXQVPp0Rinq3frzZKJ0qD6Qhc40VzAraUXlob1gvkhK3vpmHgI6FRlQZNx6eRqkp0zy4AQlX813fAPtL3jMRaitGFFjo0zmErloC+h+YYdVQ6k4F/epxAoF0BmqEoKNTt6j4vQZNQ2BoqF9Vj53TOIoNmDiu9Xp15RkIgQIGcoLpfoIbenzpGUAtqFJp5W+LLnx38jHeECTJ/navKY1NWfN0sY1T8/pB8kIH3DU3DX+u6W3YwpypBMYOhbSxGjq84RZ84fWJow8pyHqn4S/9J15EcCMsXqrfwyd9mhiu3+rEo9pPpoJkdZqHjra4NvzFwuThNKy6hao/SlLw3ZADUcUp3w3SRVfW2rhl80zOgTYnKE0Hs2qp1J6H3xqPqIkvUDRMFDYyRbsFI3M9MEyovPk8rlw7/0a81cDVLmBsR2ze2pBuKb23fbeZC0uXoIvDppfTwIDxk1Oq2dGesGc+oJXWJLGkOha3CX+DUnzgAp9HGH9RsPZN63Hn4RMA5eSVhPHO+9RcRb/IOgtW31V1Q5IPGtoxPjC+MEJbVlIMYADd9aHYWUIQKopuPOHmoqSkubnAKnzgKHqgIOfW5RdAgotN6BN+O2ZYHkuemLnvQ8U9THVrS1RtLmKbcC7PeeDsYznvqzeg6VCNwmr0Yyx1wnLjyT84BZz3EJyCptD3yeueAyDWIs0L2qs/VQ3HUyqfrja0V1LdDzqAikeWuV4sc7RLIB69jEIBjCkyZedoUHqCrOvShVzyd73OdrJW0hPOuQv2qOoHDc9xVb6Yu6uq3Xqp2ZaH46A7lzevbxQEmfrzvAYSJuZ4WDk1Hz3QX1LVdiUK0EvlAGAYlG3Md30r7dcPN63yqBCIj25prpvZP0nI4+EgWoFG95V596CurXpKRBGRjQlHCvy5Ib/iW8nZJWwrET3mgd6mEhfP4KCuaLjopWs7h+MdXFdIv8dHQJgg1xi1eYqB0uDYjxwVmri0Sv5XKut/onqapC+FQiC2C1lvYJ9MVco6yDYsS3AANUfMtvtbYI2hfwZatiSsnoUeMZd34GVjkMMKA+XnjJpXgRW2SHTZplVowPmJsvXy6w3cfO1AK2dvtZEKTkC/TY9LFiKHCG0DnrMQdGm2lzlBHM9iEYynH2UcVMhUEjsc0oDBTgo2ZSQ1gzkAHeWeBXYFjYLuuf8yzTCy7/RFR81WDjXMbq2BOH5dURnxo6oivmxL3cKzKInlZkD31nvpHB9Kk7GfcfE1t+1V64b9LtgeJGlpRFxQCAqWJ5DoY77ski8gsOEOr2uywZaoO/NGa0X0y1pNQHBi3b2SUGNpcZxDT7rLbBf1FSnQ8guxGW3W+36BW0gBje4DOz6Ba6SVk0xiKgt+q2JOFyr4SYfnu+Ic1QZYIuwHBrgzr6UvOcSCzPTOo7D6IC4ISeS7zkl4h+2VoeHpnG/uWR3+ysNgPcOIXQbv0n4mr3BwQcdKJxgPSeyuP/z1Jjg4e9nUvoXegqQVIE30EHx5GHv+FAVUNTowYDJgyFhf5IvlYmEqRif6+WN1MkEJmDcQITx9FX23a4mxy1AQRsOHO/+eImX9l8EMJI3oPWzVXxSOeHU1dUWYr2uAA7AMb+vAEZSbU3qob9ibCyXeypEMpZ6863o6QPqlqGHZkuWABSTVNd4cOh9hv3qEpSx2Zy/DJMP6cItEmiBJ5PFqQnDEIt3NrA3COlOSgz43D7gpNFNJ5MBh4oFzhDPiglC2ypsNU4ISywY2erkyb1NC3Qh/IfWj0eDgZI4/ln8WPfBsT3meTjq1Uqt1E7Zl/qftqkx6aM9KueMCekSnMrcHj1CqTWWzEzPsZGcDe3Ue4Ws+XFYVxNbOFF8ezkvQGR6ZOtOLU2lQEnMBStx47vE6Pb7AYMBRj2OOfZXfisjJnpTfSNjo6sZ6qSvNxZNmDeS7Gk3yYyCk1HtKN2UnhMIjOXUzAqDv90lx9O/q/AT1ZMnit5XQe9wmQxnE/WSH0CqZ9/2Hy+Sfmpeg8RwsHI5Z8kC8H293m/LHVVM/BA7HaTJYg5Enk7M/xWpq0192ACfBai2LA/qrCjCr6Dh1BIMzMXINBmX96MJ5Hn2nxln/RXPFhwHxUmSV0EV2V0jm86/dxxuYSU1W7sVkEbN9EzkG0QFwPhyHKyb3t+Fj5WoUUTErcazE/N6EW6Lvp0d//SDPj7EV9UdJN+Amnf3Wwk3A0SlJ9Z00yvXZ7n3z70G47Hfsow8Wq1JXcfwnA+Yxa5mFsgV464KKP4T31wqIgzFPd3eCe3j5ory5fBF2hgCFyVFrLzI9eetNXvM7oQqyFgDo4CTp/hDV9NMX9JDHQ/nyHTLvZLNLF6ftn2OxjGm8+PqOwhxnPHWipkE/8wbtyri80Sr7pMNkQGMfo4ZYK9OcCC4ESVFFbLMIvlxSoRqWie0wxqnLfcLSXMSpMMQEJYDVObYsXIQNv4TGNwjq1kvT1UOkicTrG3IaBZ3XdScS3u8sgeZPVpOLkbiF940FjbCeNRINNvDbd01EPBrTCPpm12m43ze1bBB59Ia6Ovhnur/Nvx3IxwSWol+3H2qfCJR8df6aQf4v6WiONxkK+IqT4pKQrZK/LplgDI/PJZbOep8dtbV7oCr6CgfpWa8NczOkPx81iSHbsNhVSJBOtrLIMrL31LK9TqHqAbAHe0RLmmV806kRLDLNEhUEJfm9u0sxpkL93Zgd6rw+tqBfTMi59xqXHLXSHwSbSBl0EK0+loECOPtrl+/nsaFe197di4yUgoe4jKoAJDXc6DGDjrQOoFDWZJ9HXwt8xDrQP+7aRwWKWI1GF8s8O4KzxWBBcwnl3vnl1Oez3oh6Ea1vjR7/z7DDTrFtqU2W/KAEzAuXDNZ7MY73MF216dzdSbWmUp4lcm7keJfWaMHgut9x5C9mj66Z0lJ+yhsjVvyiWrfk1lzPOTdhG15Y7gQlXtacvI7qv/XNSscDwqkgwHT/gUsD5yB7LdRRvJxQGYINn9hTpodKFVSTPrtGvyQw+HlRFXIkodErAGu9Iy1YpfSPc3jkFh5CX3lPxv7aqjE/JAfTIpEjGb/H7MO0e2vsViSW1qa/Lmi4/n4DEI3g7lYrcanspDfEpKkdV1OjSLOy0BCUqVoECaB55vs06rXl4jqmLsPsFM/7vYJ0vrBhDCm/00A/H81l1uekJ/6Lml3Hb9+NKiLqATJmDpyzfYZFHumEjC662L0Bwkxi7E9U4cQA0XMVDuMYAIeLMPgQaMVOd8fmt5SflFIfuBoszeAw7ow5gXPE2Y/yBc/7jExARUf/BxIHQBF5Sn3i61w4z5xJdCyO1F1X3+3ax+JSvMeZ7S6QSKp1Fp/sjYz6Z+VgCZzibGeEoujryfMulH7Rai5kAft9ebcW50DyJr2uo2z97mTWIu45YsSnNSMrrNUuG1XsYBtD9TDYzQffKB87vWbkM4EbPAFgoBV4GQS+vtFDUqOFAoi1nTtmIOvg38N4hT2Sn8r8clmBCXspBlMBYTnrqFJGBT3wZOzAyJDre9dHH7+x7qaaKDOB4UQALD5ecS0DE4obubQEiuJZ0EpBVpLuYcce8Aa4PYd/V4DLDAJBYKQPCWTcrEaZ5HYbJi11Gd6hjGom1ii18VHYnG28NKpkz2UKVPxlhYSp8uZr367iOmoy7zsxehW9wzcy2zG0a80PBMCRQMb32hnaHeOR8fnNDzZhaNYhkOdDsBUZ3loDMa1YP0uS0cjUP3b/6DBlqmZOeNABDsLl5BI5QJups8uxAuWJdkUB/pO6Zax6tsg7fN5mjjDgMGngO+DPcKqiHIDbFIGudxtPTIyDi9SFMKBDcfdGQRv41q1AqmxgkVfJMnP8w/Bc7N9/TR6C7mGObFqFkIEom8sKi2xYqJLTCHK7cxzaZvqODo22c3wisBCP4HeAgcRbNPAsBkNRhSmD48dHupdBRw4mIvtS5oeF6zeT1KMCyhMnmhpkFAGWnGscoNkwvQ8ZM5lE/vgTHFYL99OuNxdFBxTEDd5v2qLR8y9WkXsWgG6kZNndFG+pO/UAkOCipqIhL3hq7cRSdrCq7YhUsTocEcnaFa6nVkhnSeRYUA1YO0z5itF9Sly3VlxYDw239TJJH6f3EUfYO5lb7bcFcz8Bp7Oo8QmnsUHOz/fagVUBtKEw1iT88j+aKkv8cscKNkMxjYr8344D1kFoZ7/td1W6LCNYN594301tUGRmFjAzeRg5vyoM1F6+bJZ/Q54jN/k8SFd3DxPTYaAUsivsBfgTn7Mx8H2SpPt4GOdYRnEJOH6jHM2p6SgB0gzIRq6fHxGMmSmqaPCmlfwxiuloaVIitLGN8wie2CDWhkzLoCJcODh7KIOAqbHEvXdUxaS4TTTs07Clzj/6GmVs9kiZDerMxEnhUB6QQPlcfqkG9882RqHoLiHGBoHfQuXIsAG8GTAtao2KVwRnvvam8jo1e312GQAKWEa4sUVEAMG4G6ckcONDwRcg1e2D3+ohXgY4UAWF8wHKQMrSnzCgfFpsxh+aHXMGtPQroQasRY4U6UdG0rz1Vjbka0MekOGRZQEvqQFlxseFor8zWFgHek3v29+WqN6gaK5gZOTOMZzpQIC1201LkMCXild3vWXSc5UX9xcFYfbRPzGFa1FDcPfPB/jUEq/FeGt419CI3YmBlVoHsa4KdcwQP5ZSwHHhFJ7/Ph/Rap/4vmG91eDwPP0lDfCDRCLszTqfzM71xpmiKi2HwS4WlqvGNwtvwF5Dqpn6KTq8ax00UMPkxDcZrEEEsIvHiUXXEphdb4GB4FymlPwBz4Gperqq5pW7TQ6/yNRhW8VT5NhuP0udlxo4gILq5ZxAZk8ZGh3g4CqxJlPKY7AQxupfUcVpWT5VItp1+30UqoyP4wWsRo3olRRgkWZZ2ZN6VC3OZFeXB8NbnUrSdikNptD1QiGuKkr8EmSR/AK9Rw+FF3s5uwuPbvHGiPeFOViltMK7AUaOsq9+x9cndk3iJEE5LKZRlWJbKOZweROzmPNVPkjE3K/TyA57Rs68TkZ3MR8akKpm7cFjnjPd/DdkWjgYoKHSr5Wu5ssoBYU4acRs5g2DHxUmdq8VXOXRbunD8QN0LhgkssgahcdoYsNvuXGUK/KXD/7oFb+VGdhqIn02veuM5bLudJOc2Ky0GMaG4W/xWBxIJcL7yliJOXOpx0AkBqUgzlDczmLT4iILXDxxtRR1oZa2JWFgiAb43obrJnG/TZC2KSK2wqOzRZTXavZZFMb1f3bXvVaNaK828w9TO610gk8JNf3gMfETzXXsbcvRGCG9JWQZ6+cDPqc4466Yo2RcKH+PILeKOqtnlbInR3MmBeGG3FH10yzkybuqEC2HSQwpA0An7d9+73BkDUTm30bZmoP/RGbgFN+GrCOfADgqr0WbI1a1okpFms8iHYw9hm0zUvlEMivBRxModrbJJ+9/p3jUdQQ9BCtQdxnOGrT5dzRUmw0593/mbRSdBg0nRvRZM5/E16m7ZHmDEtWhwvfdZCZ8J8M12W0yRMszXamWfQTwIZ4ayYktrnscQuWr8idp3PjT2eF/jmtdhIfcpMnb+IfZY2FebW6UY/AK3jP4u3Tu4zE4qlnQgLFbM19EBIsNf7KhjdbqQ/D6yiDb+NlEi2SKD+ivXVUK8ib0oBo366gXkR8ZxGjpJIDcEgZPa9TcYe0TIbiPl/rPUQDu3XBJ9X/GNq3FAUsKsll57DzaGMrjcT+gctp+9MLYXCq+sqP81eVQ0r9lt+gcQfZbACRbEjvlMskztZG8gbC8Qn9tt26Q7y7nDrbZq/LEz7kR6Jc6pg3N9rVX8Y5MJrGlML9p9lU4jbTkKqCveeZUJjHB03m2KRKR2TytoFkTXOLg7keU1s1lrPMQJpoOKLuAAC+y1HlJucU6ysB5hsXhvSPPLq5J7JtnqHKZ4vYjC4Vy8153QY+6780xDuGARsGbOs1WqzH0QS765rnSKEbbKlkO8oI/VDwUd0is13tKpqILu1mDJFNy/iJAWcvDgjxvusIT+PGz3ST/J9r9Mtfd0jpaGeiLYIqXc7DiHSS8TcjFVksi66PEkxW1z6ujbLLUGNNYnzOWpH8BZGK4bCK7iR+MbIv8ncDAz1u4StN3vTTzewr9IQjk9wxFxn+6N1ddKs0vffJiS08N3a4G1SVrlZ97Q/M+8G9fe5AP6d9/Qq4WRnORVhofPIKEdCr3llspUfE0oKIIYoByBRPh+bX1HLS3JWGJRhIvE1aW4NTd8ePi4Z+kXb+Z8snYfSNcqijhAgVsx4RCM54cXUiYkjeBmmC4ajOHrChoELscJJC7+9jjMjw5BagZKlgRMiSNYz7h7vvZIoQqbtQmspc0cUk1G/73iXtSpROl5wtLgQi0mW2Ex8i3WULhcggx6E1LMVHUsdc9GHI1PH3U2Ko0PyGdn9KdVOLm7FPBui0i9a0HpA60MsewVE4z8CAt5d401Gv6zXlIT5Ybit1VIA0FCs7wtvYreru1fUyW3oLAZ/+aTnZrOcYRNVA8spoRtlRoWflsRClFcgzkqiHOrf0/SVw+EpVaFlJ0g4Kxq1MMOmiQdpMNpte8lMMQqm6cIFXlnGbfJllysKDi+0JJMotkqgIxOSQgU9dn/lWkeVf8nUm3iwX2Nl3WDw9i6AUK3vBAbZZrcJpDQ/N64AVwjT07Jef30GSSmtNu2WlW7YoyW2FlWfZFQUwk867EdLYKk9VG6JgEnBiBxkY7LMo4YLQJJlAo9l/oTvJkSARDF/XtyAzM8O2t3eT/iXa6wDN3WewNmQHdPfsxChU/KtLG2Mn8i4ZqKdSlIaBZadxJmRzVS/o4yA65RTSViq60oa395Lqw0pzY4SipwE0SXXsKV+GZraGSkr/RW08wPRvqvSUkYBMA9lPx4m24az+IHmCbXA+0faxTRE9wuGeO06DIXa6QlKJ3puIyiuAVfPr736vzo2pBirS+Vxel3TMm3JKhz9o2ZoRvaFVpIkykb0Hcm4oHFBMcNSNj7/4GJt43ogonY2Vg4nsDQIWxAcorpXACzgBqQPjYsE/VUpXpwNManEru4NwMCFPkXvMoqvoeLN3qyu/N1eWEHttMD65v19l/0kH2mR35iv/FI+yjoHJ9gPMz67af3Mq/BoWXqu3rphiWMXVkmnPSEkpGpUI2h1MThideGFEOK6YZHPwYzMBvpNC7+ZHxPb7epfefGyIB4JzO9DTNEYnDLVVHdQyvOEVefrk6Uv5kTQYVYWWdqrdcIl7yljwwIWdfQ/y+2QB3eR/qxYObuYyB4gTbo2in4PzarU1sO9nETkmj9/AoxDA+JM3GMqQtJR4jtduHtnoCLxd1gQUscHRB/MoRYIEsP2pDZ9KvHgtlk1iTbWWbHhohwFEYX7y51fUV2nuUmnoUcqnWIQAAgl9LTVX+Bc0QGNEhChxHR4YjfE51PUdGfsSFE6ck7BL3/hTf9jLq4G1IafINxOLKeAtO7quulYvH5YOBc+zX7CrMgWnW47/jfRsWnJjYYoE7xMfWV2HN2iyIqLI";
 var FENCED = /* @__PURE__ */ new Map([[8217, "apostrophe"], [8260, "fraction slash"], [12539, "middle dot"]]);
 var NSM_MAX = 4;
-function decode_arithmetic(bytes5) {
+function decode_arithmetic(bytes4) {
   let pos = 0;
   function u16() {
-    return bytes5[pos++] << 8 | bytes5[pos++];
+    return bytes4[pos++] << 8 | bytes4[pos++];
   }
   let symbol_count = u16();
   let total = 1;
@@ -19664,7 +19664,7 @@ function decode_arithmetic(bytes5) {
   let read_buffer = 0;
   function read_bit() {
     if (read_width == 0) {
-      read_buffer = read_buffer << 8 | bytes5[pos++];
+      read_buffer = read_buffer << 8 | bytes4[pos++];
       read_width = 8;
     }
     return read_buffer >> --read_width & 1;
@@ -19694,29 +19694,29 @@ function decode_arithmetic(bytes5) {
     if (start == 0) break;
     symbols.push(start);
     let a = low + Math.floor(range * acc[start] / total);
-    let b3 = low + Math.floor(range * acc[start + 1] / total) - 1;
-    while (((a ^ b3) & HALF) == 0) {
+    let b2 = low + Math.floor(range * acc[start + 1] / total) - 1;
+    while (((a ^ b2) & HALF) == 0) {
       register = register << 1 & MASK | read_bit();
       a = a << 1 & MASK;
-      b3 = b3 << 1 & MASK | 1;
+      b2 = b2 << 1 & MASK | 1;
     }
-    while (a & ~b3 & QRTR) {
+    while (a & ~b2 & QRTR) {
       register = register & HALF | register << 1 & MASK >>> 1 | read_bit();
       a = a << 1 ^ HALF;
-      b3 = (b3 ^ HALF) << 1 | HALF | 1;
+      b2 = (b2 ^ HALF) << 1 | HALF | 1;
     }
     low = a;
-    range = 1 + b3 - a;
+    range = 1 + b2 - a;
   }
   let offset = symbol_count - 4;
   return symbols.map((x) => {
     switch (x - offset) {
       case 3:
-        return offset + 65792 + (bytes5[pos_payload++] << 16 | bytes5[pos_payload++] << 8 | bytes5[pos_payload++]);
+        return offset + 65792 + (bytes4[pos_payload++] << 16 | bytes4[pos_payload++] << 8 | bytes4[pos_payload++]);
       case 2:
-        return offset + 256 + (bytes5[pos_payload++] << 8 | bytes5[pos_payload++]);
+        return offset + 256 + (bytes4[pos_payload++] << 8 | bytes4[pos_payload++]);
       case 1:
-        return offset + bytes5[pos_payload++];
+        return offset + bytes4[pos_payload++];
       default:
         return x - 1;
     }
@@ -19732,9 +19732,9 @@ function read_compressed_payload(s) {
 function unsafe_atob(s) {
   let lookup = [];
   [..."ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"].forEach((c, i) => lookup[c.charCodeAt(0)] = i);
-  let n3 = s.length;
-  let ret = new Uint8Array(6 * n3 >> 3);
-  for (let i = 0, pos = 0, width = 0, carry = 0; i < n3; i++) {
+  let n2 = s.length;
+  let ret = new Uint8Array(6 * n2 >> 3);
+  for (let i = 0, pos = 0, width = 0, carry = 0; i < n2; i++) {
     carry = carry << 6 | lookup[s.charCodeAt(i)];
     width += 6;
     if (width >= 8) {
@@ -19746,22 +19746,22 @@ function unsafe_atob(s) {
 function signed(i) {
   return i & 1 ? ~i >> 1 : i >> 1;
 }
-function read_deltas(n3, next) {
-  let v = Array(n3);
-  for (let i = 0, x = 0; i < n3; i++) v[i] = x += signed(next());
+function read_deltas(n2, next) {
+  let v = Array(n2);
+  for (let i = 0, x = 0; i < n2; i++) v[i] = x += signed(next());
   return v;
 }
 function read_sorted(next, prev = 0) {
   let ret = [];
   while (true) {
     let x = next();
-    let n3 = next();
-    if (!n3) break;
+    let n2 = next();
+    if (!n2) break;
     prev += x;
-    for (let i = 0; i < n3; i++) {
+    for (let i = 0; i < n2; i++) {
       ret.push(prev + i);
     }
-    prev += n3 + 1;
+    prev += n2 + 1;
   }
   return ret;
 }
@@ -19794,10 +19794,10 @@ function read_array_while(next) {
   }
   return v;
 }
-function read_transposed(n3, w, next) {
-  let m = Array(n3).fill().map(() => []);
+function read_transposed(n2, w, next) {
+  let m = Array(n2).fill().map(() => []);
   for (let i = 0; i < w; i++) {
-    read_deltas(n3, next).forEach((x, j) => m[j].push(x));
+    read_deltas(n2, next).forEach((x, j) => m[j].push(x));
   }
   return m;
 }
@@ -19815,8 +19815,8 @@ function read_linear_table(w, next) {
   });
 }
 function read_replacement_table(w, next) {
-  let n3 = 1 + next();
-  let m = read_transposed(n3, 1 + w, next);
+  let n2 = 1 + next();
+  let m = read_transposed(n2, 1 + w, next);
   return m.map((v) => [v[0], v.slice(1)]);
 }
 function read_trie(next) {
@@ -19868,10 +19868,10 @@ function str_from_cps(cps) {
   }
   return buf.join("");
 }
-function compare_arrays(a, b3) {
-  let n3 = a.length;
-  let c = n3 - b3.length;
-  for (let i = 0; c == 0 && i < n3; i++) c = a[i] - b3[i];
+function compare_arrays(a, b2) {
+  let n2 = a.length;
+  let c = n2 - b2.length;
+  for (let i = 0; c == 0 && i < n2; i++) c = a[i] - b2[i];
   return c;
 }
 var COMPRESSED = "AEUDTAHBCFQATQDRADAAcgAgADQAFAAsABQAHwAOACQADQARAAoAFwAHABIACAAPAAUACwAFAAwABAAQAAMABwAEAAoABQAIAAIACgABAAQAFAALAAIACwABAAIAAQAHAAMAAwAEAAsADAAMAAwACgANAA0AAwAKAAkABAAdAAYAZwDSAdsDJgC0CkMB8xhZAqfoC190UGcThgBurwf7PT09Pb09AjgJum8OjDllxHYUKXAPxzq6tABAxgK8ysUvWAgMPT09PT09PSs6LT2HcgWXWwFLoSMEEEl5RFVMKvO0XQ8ExDdJMnIgsj26PTQyy8FfEQ8AY8IPAGcEbwRwBHEEcgRzBHQEdQR2BHcEeAR6BHsEfAR+BIAEgfndBQoBYgULAWIFDAFiBNcE2ATZBRAFEQUvBdALFAsVDPcNBw13DYcOMA4xDjMB4BllHI0B2grbAMDpHLkQ7QHVAPRNQQFnGRUEg0yEB2uaJF8AJpIBpob5AERSMAKNoAXqaQLUBMCzEiACnwRZEkkVsS7tANAsBG0RuAQLEPABv9HICTUBXigPZwRBApMDOwAamhtaABqEAY8KvKx3LQ4ArAB8UhwEBAVSagD8AEFZADkBIadVj2UMUgx5Il4ANQC9AxIB1BlbEPMAs30CGxlXAhwZKQIECBc6EbsCoxngzv7UzRQA8M0BawL6ZwkN7wABAD33OQRcsgLJCjMCjqUChtw/km+NAsXPAoP2BT84PwURAK0RAvptb6cApQS/OMMey5HJS84UdxpxTPkCogVFITaTOwERAK5pAvkNBOVyA7q3BKlOJSALAgUIBRcEdASpBXqzABXFSWZOawLCOqw//AolCZdvv3dSBkEQGyelEPcMMwG1ATsN7UvYBPEGOwTJH30ZGQ/NlZwIpS3dDO0m4y6hgFoj9SqDBe1L9DzdC01RaA9ZC2UJ4zpjgU4DIQENIosK3Q05CG0Q8wrJaw3lEUUHOQPVSZoApQcBCxEdNRW1JhBirAsJOXcG+xr2C48mrxMpevwF0xohBk0BKRr/AM8u54WwWjFcHE9fBgMLJSPHFKhQIA0lQLd4SBobBxUlqQKRQ3BKh1E2HpMh9jw9DWYuE1F8B/U8BRlPC4E8nkarRQ4R0j6NPUgiSUwsBDV/LC8niwnPD4UMuXxyAVkJIQmxDHETMREXN8UIOQcZLZckJxUIIUaVYJoE958D8xPRAwsFPwlBBxMDtRwtEy4VKQUNgSTXAvM21S6zAo9WgAEXBcsPJR/fEFBH4A7pCJsCZQODJesALRUhABcimwhDYwBfj9hTBS7LCMdqbCN0A2cU52ERcweRDlcHpxwzFb8c4XDIXguGCCijrwlbAXUJmQFfBOMICTVbjKAgQWdTi1gYmyBhQT9d/AIxDGUVn0S9h3gCiw9rEhsBNQFzBzkNAQJ3Ee0RaxCVCOuGBDW1M/g6JQRPIYMgEQonA09szgsnJvkM+GkBoxJiAww0PXfuZ6tgtiQX/QcZMsVBYCHxC5JPzQycGsEYQlQuGeQHvwPzGvMn6kFXBf8DowMTOk0z7gS9C2kIiwk/AEkOoxcH1xhqCnGM0AExiwG3mQNXkYMCb48GNwcLAGcLhwV55QAdAqcIowAFAM8DVwA5Aq0HnQAZAIVBAT0DJy8BIeUCjwOTCDHLAZUvAfMpBBvDDBUA9zduSgLDsQKAamaiBd1YAo4CSTUBTSUEBU5HUQOvceEA2wBLBhPfRwEVq0rLGuNDAd9vKwDHAPsABTUHBUEBzQHzbQC3AV8LMQmis7UBTekpAIMAFWsB1wKJAN0ANQB/8QFTAE0FWfkF0wJPSQERMRgrV2EBuwMfATMBDQB5BsuNpckHHwRtB9MCEBsV4QLvLge1AQMi3xPNQsUCvd5VoWACZIECYkJbTa9bNyACofcCaJgCZgkCn4Q4GwsCZjsCZiYEbgR/A38TA36SOQY5dxc5gjojIwJsHQIyNjgKAm3HAm2u74ozZ0UrAWcA3gDhAEoFB5gMjQD+C8IADbUCdy8CdqI/AnlLQwJ4uh1c20WuRtcCfD8CesgCfQkCfPAFWQUgSABIfWMkAoFtAoAAAoAFAn+uSVhKWxUXSswC0QEC0MxLJwOITwOH5kTFkTIC8qFdAwMDrkvOTC0lA89NTE2vAos/AorYwRsHHUNnBbcCjjcCjlxAl4ECjtkCjlx4UbRTNQpS1FSFApP7ApMMAOkAHFUeVa9V0AYsGymVhjLheGZFOzkCl58C77JYIagAWSUClo8ClnycAKlZrFoJgU0AOwKWtQKWTlxEXNECmcsCmWRcyl0HGQKcmznCOp0CnBYCn5sCnriKAB0PMSoPAp3xAp6SALU9YTRh7wKe0wKgbgGpAp6fHwKeTqVjyGQnJSsCJ68CJn4CoPsCoEwCot0CocQCpi8Cpc4Cp/8AfQKn8mh8aLEAA0lqHGrRAqzjAqyuAq1nAq0CAlcdAlXcArHh1wMfTmyXArK9DQKy6Bds4G1jbUhfAyXNArZcOz9ukAMpRQK4XgK5RxUCuSp3cDZw4QK9GQK72nCWAzIRAr6IcgIDM3ECvhpzInNPAsPLAsMEc4J0SzVFdOADPKcDPJoDPb8CxXwCxkcCxhCJAshpUQLIRALJTwLJLgJknQLd0nh5YXiueSVL0AMYo2cCAmH0GfOVJHsLXpJeuxECz2sCz2wvS1PS8xOfAMatAs9zASnqA04SfksFAtwnAtuKAtJPA1JcA1NfAQEDVYyAiT8AyxbtYEWCHILTgs6DjQLaxwLZ3oQQhEmnPAOGpQAvA2QOhnFZ+QBVAt9lAt64c3cC4i/tFAHzMCcB9JsB8tKHAuvzAulweQLq+QLq5AD5RwG5Au6JAuuclqqXAwLuPwOF4Jh5cOBxoQLzAwBpA44WmZMC9xMDkW4DkocC95gC+dkC+GaaHJqruzebHgOdgwL++gEbADmfHJ+zAwWNA6ZqA6bZANHFAwZqoYiiBQkDDEkCwAA/AwDhQRdTARHzA2sHl2cFAJMtK7evvdsBiZkUfxEEOQH7KQUhDp0JnwCS/SlXxQL3AZ0AtwW5AG8LbUEuFCaNLgFDAYD8AbUmAHUDDgRtACwCFgyhAAAKAj0CagPdA34EkQEgRQUhfAoABQBEABMANhICdwEABdUDa+8KxQIA9wqfJ7+xt+UBkSFBQgHpFH8RNMCJAAQAGwBaAkUChIsABjpTOpSNbQC4Oo860ACNOME63AClAOgAywE6gTo7Ofw5+Tt2iTpbO56JOm85GAFWATMBbAUvNV01njWtNWY1dTW2NcU1gjWRNdI14TWeNa017jX9NbI1wTYCNhE1xjXVNhY2JzXeNe02LjY9Ni41LSE2OjY9Njw2yTcIBJA8VzY4Nt03IDcPNsogN4k3MAoEsDxnNiQ3GTdsOo03IULUQwdC4EMLHA8PCZsobShRVQYA6X8A6bABFCnXAukBowC9BbcAbwNzBL8MDAMMAQgDAAkKCwsLCQoGBAVVBI/DvwDz9b29kaUCb0QtsRTNLt4eGBcSHAMZFhYZEhYEARAEBUEcQRxBHEEcQRxBHEEaQRxBHEFCSTxBPElISUhBNkM2QTYbNklISVmBVIgBFLWZAu0BhQCjBcEAbykBvwGJAaQcEZ0ePCklMAAhMvAIMAL54gC7Bm8EescjzQMpARQpKgDUABavAj626xQAJP0A3etzuf4NNRA7efy2Z9NQrCnC0OSyANz5BBIbJ5IFDR6miIavYS6tprjjmuKebxm5C74Q225X1pkaYYPb6f1DK4k3xMEBb9S2WMjEibTNWhsRJIA+vwNVEiXTE5iXs/wezV66oFLfp9NZGYW+Gk19J2+bCT6Ye2w6LDYdgzKMUabk595eLBCXANz9HUpWbATq9vqXVx9XDg+Pc9Xp4+bsS005SVM/BJBM4687WUuf+Uj9dEi8aDNaPxtpbDxcG1THTImUMZq4UCaaNYpsVqraNyKLJXDYsFZ/5jl7bLRtO88t7P3xZaAxhb5OdPMXqsSkp1WCieG8jXm1U99+blvLlXzPCS+M93VnJCiK+09LfaSaBAVBomyDgJua8dfUzR7ga34IvR2Nvj+A9heJ6lsl1KG4NkI1032Cnff1m1wof2B9oHJK4bi6JkEdSqeNeiuo6QoZZincoc73/TH9SXF8sCE7XyuYyW8WSgbGFCjPV0ihLKhdPs08Tx82fYAkLLc4I2wdl4apY7GU5lHRFzRWJep7Ww3wbeA3qmd59/86P4xuNaqDpygXt6M85glSBHOCGgJDnt+pN9bK7HApMguX6+06RZNjzVmcZJ+wcUrJ9//bpRNxNuKpNl9uFds+S9tdx7LaM5ZkIrPj6nIU9mnbFtVbs9s/uLgl8MVczAwet+iOEzzBlYW7RCMgE6gyNLeq6+1tIx4dpgZnd0DksJS5f+JNDpwwcPNXaaVspq1fbQajOrJgK0ofKtJ1Ne90L6VO4MOl5S886p7u6xo7OLjG8TGL+HU1JXGJgppg4nNbNJ5nlzSpuPYy21JUEcUA94PoFiZfjZue+QnyQ80ekOuZVkxx4g+cvhJfHgNl4hy1/a6+RKcKlar/J29y//EztlbVPHVUeQ1zX86eQVAjR/M3dA9w4W8LfaXp4EgM85wOWasli837PzVMOnsLzR+k3o75/lRPAJSE1xAKQzEi5v10ke+VBvRt1cwQRMd+U5mLCTGVd6XiZtgBG5cDi0w22GKcVNvHiu5LQbZEDVtz0onn7k5+heuKXVsZtSzilkLRAUmjMXEMB3J9YC50XBxPiz53SC+EhnPl9WsKCv92SM/OFFIMJZYfl0WW8tIO3UxYcwdMAj7FSmgrsZ2aAZO03BOhP1bNNZItyXYQFTpC3SG1VuPDqH9GkiCDmE+JwxyIVSO5siDErAOpEXFgjy6PQtOVDj+s6e1r8heWVvmZnTciuf4EiNZzCAd7SOMhXERIOlsHIMG399i9aLTy3m2hRLZjJVDNLS53iGIK11dPqQt0zBDyg6qc7YqkDm2M5Ve6dCWCaCbTXX2rToaIgz6+zh4lYUi/+6nqcFMAkQJKHYLK0wYk5N9szV6xihDbDDFr45lN1K4aCXBq/FitPSud9gLt5ZVn+ZqGX7cwm2z5EGMgfFpIFyhGGuDPmso6TItTMwny+7uPnLCf4W6goFQFV0oQSsc9VfMmVLcLr6ZetDZbaSFTLqnSO/bIPjA3/zAUoqgGFAEQS4IhuMzEp2I3jJzbzkk/IEmyax+rhZTwd6f+CGtwPixu8IvzACquPWPREu9ZvGkUzpRwvRRuaNN6cr0W1wWits9ICdYJ7ltbgMiSL3sTPeufgNcVqMVWFkCPDH4jG2jA0XcVgQj62Cb29v9f/z/+2KbYvIv/zzjpQAPkliaVDzNrW57TZ/ZOyZD0nlfMmAIBIAGAI0D3k/mdN4xr9v85ZbZbbqfH2jGd5hUqNZWwl5SPfoGmfElmazUIeNL1j/mkF7VNAzTq4jNt8JoQ11NQOcmhprXoxSxfRGJ9LDEOAQ+dmxAQH90iti9e2u/MoeuaGcDTHoC+xsmEeWmxEKefQuIzHbpw5Tc5cEocboAD09oipWQhtTO1wivf/O+DRe2rpl/E9wlrzBorjJsOeG1B/XPW4EaJEFdNlECEZga5ZoGRHXgYouGRuVkm8tDESiEyFNo+3s5M5puSdTyUL2llnINVHEt91XUNW4ewdMgJ4boJfEyt/iY5WXqbA+A2Fkt5Z0lutiWhe9nZIyIUjyXDC3UsaG1t+eNx6z4W/OYoTB7A6x+dNSTOi9AInctbESqm5gvOLww7OWXPrmHwVZasrl4eD113pm+JtT7JVOvnCXqdzzdTRHgJ0PiGTFYW5Gvt9R9LD6Lzfs0v/TZZHSmyVNq7viIHE6DBK7Qp07Iz55EM8SYtQvZf/obBniTWi5C2/ovHfw4VndkE5XYdjOhCMRjDeOEfXeN/CwfGduiUIfsoFeUxXeQXba7c7972XNv8w+dTjjUM0QeNAReW+J014dKAD/McQYXT7c0GQPIkn3Ll6R7gGjuiQoZD0TEeEqQpKoZ15g/0OPQI17QiSv9AUROa/V/TQN3dvLArec3RrsYlvBm1b8LWzltdugsC50lNKYLEp2a+ZZYqPejULRlOJh5zj/LVMyTDvwKhMxxwuDkxJ1QpoNI0OTWLom4Z71SNzI9TV1iXJrIu9Wcnd+MCaAw8o1jSXd94YU/1gnkrC9BUEOtQvEIQ7g0i6h+KL2JKk8Ydl7HruvgWMSAmNe+LshGhV4qnWHhO9/RIPQzY1tHRj2VqOyNsDpK0cww+56AdDC4gsWwY0XxoucIWIqs/GcwnWqlaT0KPr8mbK5U94/301i1WLt4YINTVvCFBrFZbIbY8eycOdeJ2teD5IfPLCRg7jjcFTwlMFNl9zdh/o3E/hHPwj7BWg0MU09pPrBLbrCgm54A6H+I6v27+jL5gkjWg/iYdks9jbfVP5y/n0dlgWEMlKasl7JvFZd56LfybW1eeaVO0gxTfXZwD8G4SI116yx7UKVRgui6Ya1YpixqXeNLc8IxtAwCU5IhwQgn+NqHnRaDv61CxKhOq4pOX7M6pkA+Pmpd4j1vn6ACUALoLLc4vpXci8VidLxzm7qFBe7s+quuJs6ETYmnpgS3LwSZxPIltgBDXz8M1k/W2ySNv2f9/NPhxLGK2D21dkHeSGmenRT3Yqcdl0m/h3OYr8V+lXNYGf8aCCpd4bWjE4QIPj7vUKN4Nrfs7ML6Y2OyS830JCnofg/k7lpFpt4SqZc5HGg1HCOrHvOdC8bP6FGDbE/VV0mX4IakzbdS/op+Kt3G24/8QbBV7y86sGSQ/vZzU8FXs7u6jIvwchsEP2BpIhW3G8uWNwa3HmjfH/ZjhhCWvluAcF+nMf14ClKg5hGgtPLJ98ueNAkc5Hs2WZlk2QHvfreCK1CCGO6nMZVSb99VM/ajr8WHTte9JSmkXq/i/U943HEbdzW6Re/S88dKgg8pGOLlAeNiqrcLkUR3/aClFpMXcOUP3rmETcWSfMXZE3TUOi8i+fqRnTYLflVx/Vb/6GJ7eIRZUA6k3RYR3iFSK9c4iDdNwJuZL2FKz/IK5VimcNWEqdXjSoxSgmF0UPlDoUlNrPcM7ftmA8Y9gKiqKEHuWN+AZRIwtVSxye2Kf8rM3lhJ5XcBXU9n4v0Oy1RU2M+4qM8AQPVwse8ErNSob5oFPWxuqZnVzo1qB/IBxkM3EVUKFUUlO3e51259GgNcJbCmlvrdjtoTW7rChm1wyCKzpCTwozUUEOIcWLneRLgMXh+SjGSFkAllzbGS5HK7LlfCMRNRDSvbQPjcXaenNYxCvu2Qyznz6StuxVj66SgI0T8B6/sfHAJYZaZ78thjOSIFumNWLQbeZixDCCC+v0YBtkxiBB3jefHqZ/dFHU+crbj6OvS1x/JDD7vlm7zOVPwpUC01nhxZuY/63E7g";
@@ -19906,13 +19906,13 @@ function init$1() {
   RECOMP = /* @__PURE__ */ new Map();
   for (let [cp, cps] of read_mapped(r)) {
     if (!EXCLUSIONS.has(cp) && cps.length == 2) {
-      let [a, b3] = cps;
+      let [a, b2] = cps;
       let bucket = RECOMP.get(a);
       if (!bucket) {
         bucket = /* @__PURE__ */ new Map();
         RECOMP.set(a, bucket);
       }
-      bucket.set(b3, cp);
+      bucket.set(b2, cp);
     }
     DECOMP.set(cp, cps.reverse());
   }
@@ -19920,15 +19920,15 @@ function init$1() {
 function is_hangul(cp) {
   return cp >= S0 && cp < S1;
 }
-function compose_pair(a, b3) {
-  if (a >= L0 && a < L1 && b3 >= V0 && b3 < V1) {
-    return S0 + (a - L0) * N_COUNT + (b3 - V0) * T_COUNT;
-  } else if (is_hangul(a) && b3 > T0 && b3 < T1 && (a - S0) % T_COUNT == 0) {
-    return a + (b3 - T0);
+function compose_pair(a, b2) {
+  if (a >= L0 && a < L1 && b2 >= V0 && b2 < V1) {
+    return S0 + (a - L0) * N_COUNT + (b2 - V0) * T_COUNT;
+  } else if (is_hangul(a) && b2 > T0 && b2 < T1 && (a - S0) % T_COUNT == 0) {
+    return a + (b2 - T0);
   } else {
     let recomp = RECOMP.get(a);
     if (recomp) {
-      recomp = recomp.get(b3);
+      recomp = recomp.get(b2);
       if (recomp) {
         return recomp;
       }
@@ -20104,7 +20104,7 @@ function init() {
   });
   WHOLE_VALID = read_sorted_set();
   WHOLE_MAP = /* @__PURE__ */ new Map();
-  let wholes = read_sorted_array().concat(Array_from(WHOLE_VALID)).sort((a, b3) => a - b3);
+  let wholes = read_sorted_array().concat(Array_from(WHOLE_VALID)).sort((a, b2) => a - b2);
   wholes.forEach((cp, i) => {
     let d = r();
     let w = wholes[i] = d ? wholes[i - d] : { V: [], M: /* @__PURE__ */ new Map() };
@@ -20193,9 +20193,9 @@ function check_fenced(cps) {
   let cp = cps[0];
   let prev = FENCED.get(cp);
   if (prev) throw error_placement(`leading ${prev}`);
-  let n3 = cps.length;
+  let n2 = cps.length;
   let last = -1;
-  for (let i = 1; i < n3; i++) {
+  for (let i = 1; i < n2; i++) {
     cp = cps[i];
     let match = FENCED.get(cp);
     if (match) {
@@ -20204,7 +20204,7 @@ function check_fenced(cps) {
       prev = match;
     }
   }
-  if (last == n3) throw error_placement(`trailing ${prev}`);
+  if (last == n2) throw error_placement(`trailing ${prev}`);
 }
 function safe_str_from_cps(cps, max = Infinity, quoter = quote_cp) {
   let buf = [];
@@ -20214,8 +20214,8 @@ function safe_str_from_cps(cps, max = Infinity, quoter = quote_cp) {
     cps = [...cps.slice(0, max), 8230, ...cps.slice(-max)];
   }
   let prev = 0;
-  let n3 = cps.length;
-  for (let i = 0; i < n3; i++) {
+  let n2 = cps.length;
+  for (let i = 0; i < n2; i++) {
     let cp = cps[i];
     if (should_escape(cp)) {
       buf.push(str_from_cps(cps.slice(prev, i)));
@@ -20223,7 +20223,7 @@ function safe_str_from_cps(cps, max = Infinity, quoter = quote_cp) {
       prev = i + 1;
     }
   }
-  buf.push(str_from_cps(cps.slice(prev, n3)));
+  buf.push(str_from_cps(cps.slice(prev, n2)));
   return buf.join("");
 }
 function is_combining_mark(cp) {
@@ -20327,13 +20327,13 @@ function determine_group(unique) {
   }
   return groups;
 }
-function flatten(split6) {
-  return split6.map(({ input, error, output: output5 }) => {
+function flatten(split5) {
+  return split5.map(({ input, error, output: output4 }) => {
     if (error) {
       let msg = error.message;
-      throw new Error(split6.length == 1 ? msg : `Invalid label ${bidi_qq(safe_str_from_cps(input, 63))}: ${msg}`);
+      throw new Error(split5.length == 1 ? msg : `Invalid label ${bidi_qq(safe_str_from_cps(input, 63))}: ${msg}`);
     }
-    return str_from_cps(output5);
+    return str_from_cps(output4);
   }).join(STOP_CH);
 }
 function error_disallowed(cp) {
@@ -20435,21 +20435,21 @@ function checkComponent(comp) {
   return comp;
 }
 function ensNameSplit(name) {
-  const bytes5 = toUtf8Bytes(ensNormalize(name));
+  const bytes4 = toUtf8Bytes(ensNormalize(name));
   const comps = [];
   if (name.length === 0) {
     return comps;
   }
   let last = 0;
-  for (let i = 0; i < bytes5.length; i++) {
-    const d = bytes5[i];
+  for (let i = 0; i < bytes4.length; i++) {
+    const d = bytes4[i];
     if (d === 46) {
-      comps.push(checkComponent(bytes5.slice(last, i)));
+      comps.push(checkComponent(bytes4.slice(last, i)));
       last = i + 1;
     }
   }
-  assertArgument(last < bytes5.length, "invalid ENS name; empty component", "name", name);
-  comps.push(checkComponent(bytes5.slice(last)));
+  assertArgument(last < bytes4.length, "invalid ENS name; empty component", "name", name);
+  comps.push(checkComponent(bytes4.slice(last)));
   return comps;
 }
 function ensNormalize(name) {
@@ -20484,10 +20484,10 @@ function dnsEncode(name, _maxLength) {
   assertArgument(length <= 255, "DNS encoded label cannot exceed 255", "length", length);
   return hexlify(concat(ensNameSplit(name).map((comp) => {
     assertArgument(comp.length <= length, `label ${JSON.stringify(name)} exceeds ${length} bytes`, "name", name);
-    const bytes5 = new Uint8Array(comp.length + 1);
-    bytes5.set(comp, 1);
-    bytes5[0] = bytes5.length - 1;
-    return bytes5;
+    const bytes4 = new Uint8Array(comp.length + 1);
+    bytes4.set(comp, 1);
+    bytes4[0] = bytes4.length - 1;
+    return bytes4;
   }))) + "00";
 }
 
@@ -20520,7 +20520,7 @@ function accessListify(value) {
     }, {});
     return accessSetify(addr, Object.keys(storageKeys).sort());
   });
-  result.sort((a, b3) => a.address.localeCompare(b3.address));
+  result.sort((a, b2) => a.address.localeCompare(b2.address));
   return result;
 }
 
@@ -20546,8 +20546,8 @@ var BN_282 = BigInt(28);
 var BN_352 = BigInt(35);
 var BN_MAX_UINT = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 var BLOB_SIZE = 4096 * 32;
-function getVersionedHash(version4, hash3) {
-  let versioned = version4.toString(16);
+function getVersionedHash(version3, hash3) {
+  let versioned = version3.toString(16);
   while (versioned.length < 2) {
     versioned = "0" + versioned;
   }
@@ -20840,9 +20840,9 @@ function _serializeEip4844(tx, sig, blobs) {
         "0x03",
         encodeRlp([
           fields,
-          blobs.map((b3) => b3.data),
-          blobs.map((b3) => b3.commitment),
-          blobs.map((b3) => b3.proof)
+          blobs.map((b2) => b2.data),
+          blobs.map((b2) => b2.commitment),
+          blobs.map((b2) => b2.proof)
         ])
       ]);
     }
@@ -21122,7 +21122,7 @@ var Transaction = class _Transaction {
     if (this.#blobs == null) {
       return null;
     }
-    return this.#blobs.map((b3) => Object.assign({}, b3));
+    return this.#blobs.map((b2) => Object.assign({}, b2));
   }
   set blobs(_blobs) {
     if (_blobs == null) {
@@ -21574,12 +21574,12 @@ var BN_08 = BigInt(0);
 var BN_15 = BigInt(1);
 var BN_MAX_UINT2562 = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 function hexPadRight(value) {
-  const bytes5 = getBytes(value);
-  const padOffset = bytes5.length % 32;
+  const bytes4 = getBytes(value);
+  const padOffset = bytes4.length % 32;
   if (padOffset) {
-    return concat([bytes5, padding.slice(padOffset)]);
+    return concat([bytes4, padding.slice(padOffset)]);
   }
-  return hexlify(bytes5);
+  return hexlify(bytes4);
 }
 var hexTrue = toBeHex(BN_15, 32);
 var hexFalse = toBeHex(BN_08, 32);
@@ -21622,9 +21622,9 @@ var domainChecks = {
     assertArgument(false, `invalid domain value "verifyingContract"`, "domain.verifyingContract", value);
   },
   salt: function(value) {
-    const bytes5 = getBytes(value, "domain.salt");
-    assertArgument(bytes5.length === 32, `invalid domain value "salt"`, "domain.salt", value);
-    return hexlify(bytes5);
+    const bytes4 = getBytes(value, "domain.salt");
+    assertArgument(bytes4.length === 32, `invalid domain value "salt"`, "domain.salt", value);
+    return hexlify(bytes4);
   }
 };
 function getBaseEncoder(type) {
@@ -21649,8 +21649,8 @@ function getBaseEncoder(type) {
       const width = parseInt(match[1]);
       assertArgument(width !== 0 && width <= 32 && match[1] === String(width), "invalid bytes width", "type", type);
       return function(value) {
-        const bytes5 = getBytes(value);
-        assertArgument(bytes5.length === width, `invalid length for ${type}`, "value", value);
+        const bytes4 = getBytes(value);
+        assertArgument(bytes4.length === width, `invalid length for ${type}`, "value", value);
         return hexPadRight(value);
       };
     }
@@ -21758,7 +21758,7 @@ var TypedDataEncoder = class _TypedDataEncoder {
         links.get(name).add(baseType);
       }
     }
-    const primaryTypes = Array.from(parents.keys()).filter((n3) => parents.get(n3).length === 0);
+    const primaryTypes = Array.from(parents.keys()).filter((n2) => parents.get(n2).length === 0);
     assertArgument(primaryTypes.length !== 0, "missing primary type", "types", _types);
     assertArgument(primaryTypes.length === 1, `ambiguous primary types or unused types: ${primaryTypes.map((t) => JSON.stringify(t)).join(", ")}`, "types", _types);
     defineProperties(this, { primaryType: primaryTypes[0] });
@@ -21928,8 +21928,8 @@ var TypedDataEncoder = class _TypedDataEncoder {
       assertArgument(type, `invalid typed-data domain key: ${JSON.stringify(name)}`, "domain", domain);
       domainFields.push({ name, type });
     }
-    domainFields.sort((a, b3) => {
-      return domainFieldNames.indexOf(a.name) - domainFieldNames.indexOf(b3.name);
+    domainFields.sort((a, b2) => {
+      return domainFieldNames.indexOf(a.name) - domainFieldNames.indexOf(b2.name);
     });
     return _TypedDataEncoder.hashStruct("EIP712Domain", { EIP712Domain: domainFields }, domain);
   }
@@ -22173,7 +22173,7 @@ var TokenString = class _TokenString {
 };
 function lex(text) {
   const tokens = [];
-  const throwError3 = (message) => {
+  const throwError2 = (message) => {
     const token = offset < text.length ? JSON.stringify(text[offset]) : "$EOI";
     throw new Error(`invalid token ${token} at ${offset}: ${message}`);
   };
@@ -22199,7 +22199,7 @@ function lex(text) {
         commas.push(tokens.length - 1);
       } else if (type == "CLOSE_PAREN") {
         if (brackets.length === 0) {
-          throwError3("no matching open bracket");
+          throwError2("no matching open bracket");
         }
         token.match = brackets.pop();
         tokens[token.match].match = tokens.length - 1;
@@ -23308,16 +23308,16 @@ function getBuiltinCallException(action, tx, data4, abiCoder) {
   let revert = null;
   if (data4) {
     message = "execution reverted";
-    const bytes5 = getBytes(data4);
+    const bytes4 = getBytes(data4);
     data4 = hexlify(data4);
-    if (bytes5.length === 0) {
+    if (bytes4.length === 0) {
       message += " (no data present; likely require(false) occurred";
       reason = "require(false)";
-    } else if (bytes5.length % 32 !== 4) {
+    } else if (bytes4.length % 32 !== 4) {
       message += " (could not decode reason; invalid data length)";
-    } else if (hexlify(bytes5.slice(0, 4)) === "0x08c379a0") {
+    } else if (hexlify(bytes4.slice(0, 4)) === "0x08c379a0") {
       try {
-        reason = abiCoder.decode(["string"], bytes5.slice(4))[0];
+        reason = abiCoder.decode(["string"], bytes4.slice(4))[0];
         revert = {
           signature: "Error(string)",
           name: "Error",
@@ -23327,9 +23327,9 @@ function getBuiltinCallException(action, tx, data4, abiCoder) {
       } catch (error) {
         message += " (could not decode reason; invalid string data)";
       }
-    } else if (hexlify(bytes5.slice(0, 4)) === "0x4e487b71") {
+    } else if (hexlify(bytes4.slice(0, 4)) === "0x4e487b71") {
       try {
-        const code = Number(abiCoder.decode(["uint256"], bytes5.slice(4))[0]);
+        const code = Number(abiCoder.decode(["uint256"], bytes4.slice(4))[0]);
         revert = {
           signature: "Panic(uint256)",
           name: "Panic",
@@ -23457,11 +23457,11 @@ var AbiCoder = class _AbiCoder {
 
 // node_modules/ethers/lib.esm/abi/bytes32.js
 function encodeBytes32String(text) {
-  const bytes5 = toUtf8Bytes(text);
-  if (bytes5.length > 31) {
+  const bytes4 = toUtf8Bytes(text);
+  if (bytes4.length > 31) {
     throw new Error("bytes32 string must be less than 32 bytes");
   }
-  return zeroPadBytes(bytes5, 32);
+  return zeroPadBytes(bytes4, 32);
 }
 function decodeBytes32String(_bytes) {
   const data4 = getBytes(_bytes, "bytes");
@@ -23878,7 +23878,7 @@ var Interface = class _Interface {
    */
   forEachFunction(callback) {
     const names2 = Array.from(this.#functions.keys());
-    names2.sort((a, b3) => a.localeCompare(b3));
+    names2.sort((a, b2) => a.localeCompare(b2));
     for (let i = 0; i < names2.length; i++) {
       const name = names2[i];
       callback(this.#functions.get(name), i);
@@ -23976,7 +23976,7 @@ var Interface = class _Interface {
    */
   forEachEvent(callback) {
     const names2 = Array.from(this.#events.keys());
-    names2.sort((a, b3) => a.localeCompare(b3));
+    names2.sort((a, b2) => a.localeCompare(b2));
     for (let i = 0; i < names2.length; i++) {
       const name = names2[i];
       callback(this.#events.get(name), i);
@@ -24047,7 +24047,7 @@ var Interface = class _Interface {
    */
   forEachError(callback) {
     const names2 = Array.from(this.#errors.keys());
-    names2.sort((a, b3) => a.localeCompare(b3));
+    names2.sort((a, b2) => a.localeCompare(b2));
     for (let i = 0; i < names2.length; i++) {
       const name = names2[i];
       callback(this.#errors.get(name), i);
@@ -24180,16 +24180,16 @@ var Interface = class _Interface {
       fragment = f2;
     }
     let message = "invalid length for result data";
-    const bytes5 = getBytesCopy(data4);
-    if (bytes5.length % 32 === 0) {
+    const bytes4 = getBytesCopy(data4);
+    if (bytes4.length % 32 === 0) {
       try {
-        return this.#abiCoder.decode(fragment.outputs, bytes5);
+        return this.#abiCoder.decode(fragment.outputs, bytes4);
       } catch (error) {
         message = "could not decode result data";
       }
     }
     assert(false, message, "BAD_DATA", {
-      value: hexlify(bytes5),
+      value: hexlify(bytes4),
       info: { method: fragment.name, signature: fragment.format() }
     });
   }
@@ -24596,11 +24596,11 @@ function copyRequest(req) {
     result.kzg = req.kzg;
   }
   if ("blobs" in req && req.blobs) {
-    result.blobs = req.blobs.map((b3) => {
-      if (isBytesLike(b3)) {
-        return hexlify(b3);
+    result.blobs = req.blobs.map((b2) => {
+      if (isBytesLike(b2)) {
+        return hexlify(b2);
       }
-      return Object.assign({}, b3);
+      return Object.assign({}, b2);
     });
   }
   return result;
@@ -24772,7 +24772,7 @@ var Block = class {
    *  Returns a JSON-friendly value.
    */
   toJSON() {
-    const { baseFeePerGas, difficulty, extraData, gasLimit, gasUsed, hash: hash3, miner, prevRandao, nonce, number: number5, parentHash, parentBeaconBlockRoot, stateRoot, receiptsRoot, timestamp, transactions } = this;
+    const { baseFeePerGas, difficulty, extraData, gasLimit, gasUsed, hash: hash3, miner, prevRandao, nonce, number: number4, parentHash, parentBeaconBlockRoot, stateRoot, receiptsRoot, timestamp, transactions } = this;
     return {
       _type: "Block",
       baseFeePerGas: toJson(baseFeePerGas),
@@ -24786,7 +24786,7 @@ var Block = class {
       miner,
       prevRandao,
       nonce,
-      number: number5,
+      number: number4,
       parentHash,
       timestamp,
       parentBeaconBlockRoot,
@@ -26885,17 +26885,17 @@ var ContractFactory = class _ContractFactory {
   /**
    *  Create a new **ContractFactory** from the standard Solidity JSON output.
    */
-  static fromSolidity(output5, runner) {
-    assertArgument(output5 != null, "bad compiler output", "output", output5);
-    if (typeof output5 === "string") {
-      output5 = JSON.parse(output5);
+  static fromSolidity(output4, runner) {
+    assertArgument(output4 != null, "bad compiler output", "output", output4);
+    if (typeof output4 === "string") {
+      output4 = JSON.parse(output4);
     }
-    const abi = output5.abi;
+    const abi = output4.abi;
     let bytecode = "";
-    if (output5.bytecode) {
-      bytecode = output5.bytecode;
-    } else if (output5.evm && output5.evm.bytecode) {
-      bytecode = output5.evm.bytecode;
+    if (output4.bytecode) {
+      bytecode = output4.bytecode;
+    } else if (output4.evm && output4.evm.bytecode) {
+      bytecode = output4.evm.bytecode;
     }
     return new this(abi, bytecode, runner);
   }
@@ -27229,9 +27229,9 @@ var EnsResolver = class _EnsResolver {
               try {
                 linkage.push({ type: "!metadata", value: response.bodyText });
               } catch (error2) {
-                const bytes5 = response.body;
-                if (bytes5) {
-                  linkage.push({ type: "!metadata", value: hexlify(bytes5) });
+                const bytes4 = response.body;
+                if (bytes4) {
+                  linkage.push({ type: "!metadata", value: hexlify(bytes4) });
                 }
                 return { url: null, linkage };
               }
@@ -28056,11 +28056,11 @@ var PollingBlockSubscriber = class {
         return;
       }
       if (blockNumber !== this.#blockNumber) {
-        for (let b3 = this.#blockNumber + 1; b3 <= blockNumber; b3++) {
+        for (let b2 = this.#blockNumber + 1; b2 <= blockNumber; b2++) {
           if (this.#poller == null) {
             return;
           }
-          await this.#provider.emit("block", b3);
+          await this.#provider.emit("block", b2);
         }
         this.#blockNumber = blockNumber;
       }
@@ -28649,7 +28649,7 @@ var AbstractProvider = class {
       if (this.#lastBlockNumber >= 0) {
         return toQuantity(this.#lastBlockNumber + blockTag);
       }
-      return this.getBlockNumber().then((b3) => toQuantity(b3 + blockTag));
+      return this.getBlockNumber().then((b2) => toQuantity(b2 + blockTag));
     }
     assertArgument(false, "invalid blockTag", "blockTag", blockTag);
   }
@@ -29469,9 +29469,9 @@ var AbstractProvider = class {
 };
 function _parseString(result, start) {
   try {
-    const bytes5 = _parseBytes(result, start);
-    if (bytes5) {
-      return toUtf8String(bytes5);
+    const bytes4 = _parseBytes(result, start);
+    if (bytes4) {
+      return toUtf8String(bytes4);
     }
   } catch (error) {
   }
@@ -30137,8 +30137,8 @@ var JsonRpcApiProvider = class extends AbstractProvider {
             break;
           }
           batch.push(payloads.shift());
-          const bytes5 = JSON.stringify(batch.map((p) => p.payload));
-          if (bytes5.length > this.#options.batchMaxSize) {
+          const bytes4 = JSON.stringify(batch.map((p) => p.payload));
+          if (bytes4.length > this.#options.batchMaxSize) {
             payloads.unshift(batch.pop());
             break;
           }
@@ -30587,12 +30587,12 @@ var JsonRpcApiProvider = class extends AbstractProvider {
     if (this.destroyed) {
       return Promise.reject(makeError("provider destroyed; cancelled request", "UNSUPPORTED_OPERATION", { operation: method }));
     }
-    const id4 = this.#nextId++;
+    const id3 = this.#nextId++;
     const promise = new Promise((resolve, reject) => {
       this.#payloads.push({
         resolve,
         reject,
-        payload: { method, params, id: id4, jsonrpc: "2.0" }
+        payload: { method, params, id: id3, jsonrpc: "2.0" }
       });
     });
     this.#scheduleDrain();
@@ -31191,10 +31191,10 @@ var EtherscanProvider = class extends AbstractProvider {
    *  If %%post%%, the request is made as a POST request.
    */
   async fetch(module2, params, post) {
-    const id4 = nextId++;
+    const id3 = nextId++;
     const url = post ? this.getPostUrl() : this.getUrl(module2, params);
     const payload = post ? this.getPostData(module2, params) : null;
-    this.emit("debug", { action: "sendRequest", id: id4, url, payload });
+    this.emit("debug", { action: "sendRequest", id: id3, url, payload });
     const request = new FetchRequest(url);
     request.setThrottleParams({ slotInterval: 1e3 });
     request.retryFunc = (req, resp, attempt) => {
@@ -31208,12 +31208,12 @@ var EtherscanProvider = class extends AbstractProvider {
       const throttle = (typeof result2.result === "string" ? result2.result : "").toLowerCase().indexOf("rate limit") >= 0;
       if (module2 === "proxy") {
         if (result2 && result2.status == 0 && result2.message == "NOTOK" && throttle) {
-          this.emit("debug", { action: "receiveError", id: id4, reason: "proxy-NOTOK", error: result2 });
+          this.emit("debug", { action: "receiveError", id: id3, reason: "proxy-NOTOK", error: result2 });
           response2.throwThrottleError(result2.result, THROTTLE);
         }
       } else {
         if (throttle) {
-          this.emit("debug", { action: "receiveError", id: id4, reason: "null result", error: result2.result });
+          this.emit("debug", { action: "receiveError", id: id3, reason: "null result", error: result2.result });
           response2.throwThrottleError(result2.result, THROTTLE);
         }
       }
@@ -31227,35 +31227,35 @@ var EtherscanProvider = class extends AbstractProvider {
     try {
       response.assertOk();
     } catch (error) {
-      this.emit("debug", { action: "receiveError", id: id4, error, reason: "assertOk" });
+      this.emit("debug", { action: "receiveError", id: id3, error, reason: "assertOk" });
       assert(false, "response error", "SERVER_ERROR", { request, response });
     }
     if (!response.hasBody()) {
-      this.emit("debug", { action: "receiveError", id: id4, error: "missing body", reason: "null body" });
+      this.emit("debug", { action: "receiveError", id: id3, error: "missing body", reason: "null body" });
       assert(false, "missing response", "SERVER_ERROR", { request, response });
     }
     const result = JSON.parse(toUtf8String(response.body));
     if (module2 === "proxy") {
       if (result.jsonrpc != "2.0") {
-        this.emit("debug", { action: "receiveError", id: id4, result, reason: "invalid JSON-RPC" });
+        this.emit("debug", { action: "receiveError", id: id3, result, reason: "invalid JSON-RPC" });
         assert(false, "invalid JSON-RPC response (missing jsonrpc='2.0')", "SERVER_ERROR", { request, response, info: { result } });
       }
       if (result.error) {
-        this.emit("debug", { action: "receiveError", id: id4, result, reason: "JSON-RPC error" });
+        this.emit("debug", { action: "receiveError", id: id3, result, reason: "JSON-RPC error" });
         assert(false, "error response", "SERVER_ERROR", { request, response, info: { result } });
       }
-      this.emit("debug", { action: "receiveRequest", id: id4, result });
+      this.emit("debug", { action: "receiveRequest", id: id3, result });
       return result.result;
     } else {
       if (result.status == 0 && (result.message === "No records found" || result.message === "No transactions found")) {
-        this.emit("debug", { action: "receiveRequest", id: id4, result });
+        this.emit("debug", { action: "receiveRequest", id: id3, result });
         return result.result;
       }
       if (result.status != 1 || typeof result.message === "string" && !result.message.match(/^OK/)) {
-        this.emit("debug", { action: "receiveError", id: id4, result });
+        this.emit("debug", { action: "receiveError", id: id3, result });
         assert(false, "error response", "SERVER_ERROR", { request, response, info: { result } });
       }
-      this.emit("debug", { action: "receiveRequest", id: id4, result });
+      this.emit("debug", { action: "receiveRequest", id: id3, result });
       return result.result;
     }
   }
@@ -32273,7 +32273,7 @@ function getMedian(quorum, results) {
     }
     return void 0;
   }
-  values.sort((a, b3) => a < b3 ? -1 : b3 > a ? 1 : 0);
+  values.sort((a, b2) => a < b2 ? -1 : b2 > a ? 1 : 0);
   const mid = Math.floor(values.length / 2);
   if (values.length % 2) {
     return values[mid];
@@ -32430,7 +32430,7 @@ var FallbackProvider = class extends AbstractProvider {
     const configs = Array.from(running).map((r) => r.config);
     const allConfigs = this.#configs.slice();
     shuffle(allConfigs);
-    allConfigs.sort((a, b3) => a.priority - b3.priority);
+    allConfigs.sort((a, b2) => a.priority - b2.priority);
     for (const config of allConfigs) {
       if (config._lastFatalError) {
         continue;
@@ -32624,7 +32624,7 @@ var FallbackProvider = class extends AbstractProvider {
         if (isError(result3, "INSUFFICIENT_FUNDS")) {
           throw result3;
         }
-        const waiting = broadcasts.filter((b3, i) => results[i] == null);
+        const waiting = broadcasts.filter((b2, i) => results[i] == null);
         if (waiting.length === 0) {
           break;
         }
@@ -33491,10 +33491,10 @@ var U1 = [0, 235474187, 470948374, 303765277, 941896748, 908933415, 607530554, 7
 var U2 = [0, 185469197, 370938394, 487725847, 741876788, 657861945, 975451694, 824852259, 1483753576, 1400783205, 1315723890, 1164071807, 1950903388, 2135319889, 1649704518, 1767536459, 2967507152, 3152976349, 2801566410, 2918353863, 2631447780, 2547432937, 2328143614, 2177544179, 3901806776, 3818836405, 4270639778, 4118987695, 3299409036, 3483825537, 3535072918, 3652904859, 2077965243, 1893020342, 1841768865, 1724457132, 1474502543, 1559041666, 1107234197, 1257309336, 598438867, 681933534, 901210569, 1052338372, 261314535, 77422314, 428819965, 310463728, 3409685355, 3224740454, 3710368113, 3593056380, 3875770207, 3960309330, 4045380933, 4195456072, 2471224067, 2554718734, 2237133081, 2388260884, 3212035895, 3028143674, 2842678573, 2724322336, 4138563181, 4255350624, 3769721975, 3955191162, 3667219033, 3516619604, 3431546947, 3347532110, 2933734917, 2782082824, 3099667487, 3016697106, 2196052529, 2313884476, 2499348523, 2683765030, 1179510461, 1296297904, 1347548327, 1533017514, 1786102409, 1635502980, 2087309459, 2003294622, 507358933, 355706840, 136428751, 53458370, 839224033, 957055980, 605657339, 790073846, 2373340630, 2256028891, 2607439820, 2422494913, 2706270690, 2856345839, 3075636216, 3160175349, 3573941694, 3725069491, 3273267108, 3356761769, 4181598602, 4063242375, 4011996048, 3828103837, 1033297158, 915985419, 730517276, 545572369, 296679730, 446754879, 129166120, 213705253, 1709610350, 1860738147, 1945798516, 2029293177, 1239331162, 1120974935, 1606591296, 1422699085, 4148292826, 4233094615, 3781033664, 3931371469, 3682191598, 3497509347, 3446004468, 3328955385, 2939266226, 2755636671, 3106780840, 2988687269, 2198438022, 2282195339, 2501218972, 2652609425, 1201765386, 1286567175, 1371368976, 1521706781, 1805211710, 1620529459, 2105887268, 1988838185, 533804130, 350174575, 164439672, 46346101, 870912086, 954669403, 636813900, 788204353, 2358957921, 2274680428, 2592523643, 2441661558, 2695033685, 2880240216, 3065962831, 3182487618, 3572145929, 3756299780, 3270937875, 3388507166, 4174560061, 4091327024, 4006521127, 3854606378, 1014646705, 930369212, 711349675, 560487590, 272786309, 457992840, 106852767, 223377554, 1678381017, 1862534868, 1914052035, 2031621326, 1211247597, 1128014560, 1580087799, 1428173050, 32283319, 182621114, 401639597, 486441376, 768917123, 651868046, 1003007129, 818324884, 1503449823, 1385356242, 1333838021, 1150208456, 1973745387, 2125135846, 1673061617, 1756818940, 2970356327, 3120694122, 2802849917, 2887651696, 2637442643, 2520393566, 2334669897, 2149987652, 3917234703, 3799141122, 4284502037, 4100872472, 3309594171, 3460984630, 3545789473, 3629546796, 2050466060, 1899603969, 1814803222, 1730525723, 1443857720, 1560382517, 1075025698, 1260232239, 575138148, 692707433, 878443390, 1062597235, 243256656, 91341917, 409198410, 325965383, 3403100636, 3252238545, 3704300486, 3620022987, 3874428392, 3990953189, 4042459122, 4227665663, 2460449204, 2578018489, 2226875310, 2411029155, 3198115200, 3046200461, 2827177882, 2743944855];
 var U3 = [0, 218828297, 437656594, 387781147, 875313188, 958871085, 775562294, 590424639, 1750626376, 1699970625, 1917742170, 2135253587, 1551124588, 1367295589, 1180849278, 1265195639, 3501252752, 3720081049, 3399941250, 3350065803, 3835484340, 3919042237, 4270507174, 4085369519, 3102249176, 3051593425, 2734591178, 2952102595, 2361698556, 2177869557, 2530391278, 2614737639, 3145456443, 3060847922, 2708326185, 2892417312, 2404901663, 2187128086, 2504130317, 2555048196, 3542330227, 3727205754, 3375740769, 3292445032, 3876557655, 3926170974, 4246310725, 4027744588, 1808481195, 1723872674, 1910319033, 2094410160, 1608975247, 1391201670, 1173430173, 1224348052, 59984867, 244860394, 428169201, 344873464, 935293895, 984907214, 766078933, 547512796, 1844882806, 1627235199, 2011214180, 2062270317, 1507497298, 1423022939, 1137477952, 1321699145, 95345982, 145085239, 532201772, 313773861, 830661914, 1015671571, 731183368, 648017665, 3175501286, 2957853679, 2807058932, 2858115069, 2305455554, 2220981195, 2474404304, 2658625497, 3575528878, 3625268135, 3473416636, 3254988725, 3778151818, 3963161475, 4213447064, 4130281361, 3599595085, 3683022916, 3432737375, 3247465558, 3802222185, 4020912224, 4172763771, 4122762354, 3201631749, 3017672716, 2764249623, 2848461854, 2331590177, 2280796200, 2431590963, 2648976442, 104699613, 188127444, 472615631, 287343814, 840019705, 1058709744, 671593195, 621591778, 1852171925, 1668212892, 1953757831, 2037970062, 1514790577, 1463996600, 1080017571, 1297403050, 3673637356, 3623636965, 3235995134, 3454686199, 4007360968, 3822090177, 4107101658, 4190530515, 2997825956, 3215212461, 2830708150, 2779915199, 2256734592, 2340947849, 2627016082, 2443058075, 172466556, 122466165, 273792366, 492483431, 1047239e3, 861968209, 612205898, 695634755, 1646252340, 1863638845, 2013908262, 1963115311, 1446242576, 1530455833, 1277555970, 1093597963, 1636604631, 1820824798, 2073724613, 1989249228, 1436590835, 1487645946, 1337376481, 1119727848, 164948639, 81781910, 331544205, 516552836, 1039717051, 821288114, 669961897, 719700128, 2973530695, 3157750862, 2871682645, 2787207260, 2232435299, 2283490410, 2667994737, 2450346104, 3647212047, 3564045318, 3279033885, 3464042516, 3980931627, 3762502690, 4150144569, 4199882800, 3070356634, 3121275539, 2904027272, 2686254721, 2200818878, 2384911031, 2570832044, 2486224549, 3747192018, 3528626907, 3310321856, 3359936201, 3950355702, 3867060991, 4049844452, 4234721005, 1739656202, 1790575107, 2108100632, 1890328081, 1402811438, 1586903591, 1233856572, 1149249077, 266959938, 48394827, 369057872, 418672217, 1002783846, 919489135, 567498868, 752375421, 209336225, 24197544, 376187827, 459744698, 945164165, 895287692, 574624663, 793451934, 1679968233, 1764313568, 2117360635, 1933530610, 1343127501, 1560637892, 1243112415, 1192455638, 3704280881, 3519142200, 3336358691, 3419915562, 3907448597, 3857572124, 4075877127, 4294704398, 3029510009, 3113855344, 2927934315, 2744104290, 2159976285, 2377486676, 2594734927, 2544078150];
 var U4 = [0, 151849742, 303699484, 454499602, 607398968, 758720310, 908999204, 1059270954, 1214797936, 1097159550, 1517440620, 1400849762, 1817998408, 1699839814, 2118541908, 2001430874, 2429595872, 2581445614, 2194319100, 2345119218, 3034881240, 3186202582, 2801699524, 2951971274, 3635996816, 3518358430, 3399679628, 3283088770, 4237083816, 4118925222, 4002861748, 3885750714, 1002142683, 850817237, 698445255, 548169417, 529487843, 377642221, 227885567, 77089521, 1943217067, 2061379749, 1640576439, 1757691577, 1474760595, 1592394909, 1174215055, 1290801793, 2875968315, 2724642869, 3111247143, 2960971305, 2405426947, 2253581325, 2638606623, 2487810577, 3808662347, 3926825029, 4044981591, 4162096729, 3342319475, 3459953789, 3576539503, 3693126241, 1986918061, 2137062819, 1685577905, 1836772287, 1381620373, 1532285339, 1078185097, 1229899655, 1040559837, 923313619, 740276417, 621982671, 439452389, 322734571, 137073913, 19308535, 3871163981, 4021308739, 4104605777, 4255800159, 3263785589, 3414450555, 3499326569, 3651041127, 2933202493, 2815956275, 3167684641, 3049390895, 2330014213, 2213296395, 2566595609, 2448830231, 1305906550, 1155237496, 1607244650, 1455525988, 1776460110, 1626319424, 2079897426, 1928707164, 96392454, 213114376, 396673818, 514443284, 562755902, 679998e3, 865136418, 983426092, 3708173718, 3557504664, 3474729866, 3323011204, 4180808110, 4030667424, 3945269170, 3794078908, 2507040230, 2623762152, 2272556026, 2390325492, 2975484382, 3092726480, 2738905026, 2857194700, 3973773121, 3856137295, 4274053469, 4157467219, 3371096953, 3252932727, 3673476453, 3556361835, 2763173681, 2915017791, 3064510765, 3215307299, 2156299017, 2307622919, 2459735317, 2610011675, 2081048481, 1963412655, 1846563261, 1729977011, 1480485785, 1362321559, 1243905413, 1126790795, 878845905, 1030690015, 645401037, 796197571, 274084841, 425408743, 38544885, 188821243, 3613494426, 3731654548, 3313212038, 3430322568, 4082475170, 4200115116, 3780097726, 3896688048, 2668221674, 2516901860, 2366882550, 2216610296, 3141400786, 2989552604, 2837966542, 2687165888, 1202797690, 1320957812, 1437280870, 1554391400, 1669664834, 1787304780, 1906247262, 2022837584, 265905162, 114585348, 499347990, 349075736, 736970802, 585122620, 972512814, 821712160, 2595684844, 2478443234, 2293045232, 2174754046, 3196267988, 3079546586, 2895723464, 2777952454, 3537852828, 3687994002, 3234156416, 3385345166, 4142626212, 4293295786, 3841024952, 3992742070, 174567692, 57326082, 410887952, 292596766, 777231668, 660510266, 1011452712, 893681702, 1108339068, 1258480242, 1343618912, 1494807662, 1715193156, 1865862730, 1948373848, 2100090966, 2701949495, 2818666809, 3004591147, 3122358053, 2235061775, 2352307457, 2535604243, 2653899549, 3915653703, 3764988233, 4219352155, 4067639125, 3444575871, 3294430577, 3746175075, 3594982253, 836553431, 953270745, 600235211, 718002117, 367585007, 484830689, 133361907, 251657213, 2041877159, 1891211689, 1806599355, 1654886325, 1568718495, 1418573201, 1335535747, 1184342925];
-function convertToInt32(bytes5) {
+function convertToInt32(bytes4) {
   const result = [];
-  for (let i = 0; i < bytes5.length; i += 4) {
-    result.push(bytes5[i] << 24 | bytes5[i + 1] << 16 | bytes5[i + 2] << 8 | bytes5[i + 3]);
+  for (let i = 0; i < bytes4.length; i += 4) {
+    result.push(bytes4[i] << 24 | bytes4[i + 1] << 16 | bytes4[i + 2] << 8 | bytes4[i + 3]);
   }
   return result;
 }
@@ -33903,8 +33903,8 @@ var defaultPath = "m/44'/60'/0'/0/0";
 function isKeystoreJson(json) {
   try {
     const data4 = JSON.parse(json);
-    const version4 = data4.version != null ? parseInt(data4.version) : 0;
-    if (version4 === 3) {
+    const version3 = data4.version != null ? parseInt(data4.version) : 0;
+    if (version3 === 3) {
       return true;
     }
   } catch (error) {
@@ -33937,8 +33937,8 @@ function getAccount(data4, _key) {
     assertArgument(getAddress(check) === address, "keystore address/privateKey mismatch", "address", data4.address);
   }
   const account = { address, privateKey };
-  const version4 = spelunk(data4, "x-ethers.version:string");
-  if (version4 === "0.1") {
+  const version3 = spelunk(data4, "x-ethers.version:string");
+  if (version3 === "0.1") {
     const mnemonicKey = key.slice(32, 64);
     const mnemonicCiphertext = spelunk(data4, "x-ethers.mnemonicCiphertext:data!");
     const mnemonicIv = spelunk(data4, "x-ethers.mnemonicCounter:data!");
@@ -34134,8 +34134,8 @@ function zpad2(value, length) {
 function encodeBase58Check(_value) {
   const value = getBytes(_value);
   const check = dataSlice(sha2562(sha2562(value)), 0, 4);
-  const bytes5 = concat([value, check]);
-  return encodeBase58(bytes5);
+  const bytes4 = concat([value, check]);
+  return encodeBase58(bytes4);
 }
 var _guard6 = {};
 function ser_I(index, chainCode, publicKey, privateKey) {
@@ -34354,14 +34354,14 @@ var HDNodeWallet = class _HDNodeWallet extends BaseWallet {
    *  or full HD Node ([[HDNodeWallet) respectively.
    */
   static fromExtendedKey(extendedKey) {
-    const bytes5 = toBeArray(decodeBase58(extendedKey));
-    assertArgument(bytes5.length === 82 || encodeBase58Check(bytes5.slice(0, 78)) === extendedKey, "invalid extended key", "extendedKey", "[ REDACTED ]");
-    const depth = bytes5[4];
-    const parentFingerprint = hexlify(bytes5.slice(5, 9));
-    const index = parseInt(hexlify(bytes5.slice(9, 13)).substring(2), 16);
-    const chainCode = hexlify(bytes5.slice(13, 45));
-    const key = bytes5.slice(45, 78);
-    switch (hexlify(bytes5.slice(0, 4))) {
+    const bytes4 = toBeArray(decodeBase58(extendedKey));
+    assertArgument(bytes4.length === 82 || encodeBase58Check(bytes4.slice(0, 78)) === extendedKey, "invalid extended key", "extendedKey", "[ REDACTED ]");
+    const depth = bytes4[4];
+    const parentFingerprint = hexlify(bytes4.slice(5, 9));
+    const index = parseInt(hexlify(bytes4.slice(9, 13)).substring(2), 16);
+    const chainCode = hexlify(bytes4.slice(13, 45));
+    const key = bytes4.slice(45, 78);
+    switch (hexlify(bytes4.slice(0, 4))) {
       // Public Key
       case "0x0488b21e":
       case "0x043587cf": {
@@ -34708,7 +34708,7 @@ var Wallet = class _Wallet extends BaseWallet {
 // node_modules/ethers/lib.esm/wordlists/bit-reader.js
 var Base64 = ")!@#$%^&*(ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_";
 function decodeBits(width, data4) {
-  const maxValue4 = (1 << width) - 1;
+  const maxValue3 = (1 << width) - 1;
   const result = [];
   let accum = 0, bits = 0, flood = 0;
   for (let i = 0; i < data4.length; i++) {
@@ -34719,7 +34719,7 @@ function decodeBits(width, data4) {
       accum &= (1 << bits - width) - 1;
       bits -= width;
       if (value === 0) {
-        flood += maxValue4;
+        flood += maxValue3;
       } else {
         result.push(value + flood);
         flood = 0;
@@ -34916,13 +34916,13 @@ function loadWords() {
     }
     return result;
   }
-  function sortJapanese(a, b3) {
+  function sortJapanese(a, b2) {
     a = normalize(a);
-    b3 = normalize(b3);
-    if (a < b3) {
+    b2 = normalize(b2);
+    if (a < b2) {
       return -1;
     }
-    if (a > b3) {
+    if (a > b2) {
       return 1;
     }
     return 0;
@@ -35146,7 +35146,7 @@ function loadWords3(locale) {
   let deltaOffset = 0;
   for (let i = 0; i < 2048; i++) {
     const s = style.indexOf(data3[i * 3]);
-    const bytes5 = [
+    const bytes4 = [
       228 + (s >> 2),
       128 + codes2.indexOf(data3[i * 3 + 1]),
       128 + codes2.indexOf(data3[i * 3 + 2])
@@ -35154,10 +35154,10 @@ function loadWords3(locale) {
     if (locale === "zh_tw") {
       const common = s % 4;
       for (let i2 = common; i2 < 3; i2++) {
-        bytes5[i2] = codes2.indexOf(deltaData[deltaOffset++]) + (i2 == 0 ? 228 : 128);
+        bytes4[i2] = codes2.indexOf(deltaData[deltaOffset++]) + (i2 == 0 ? 228 : 128);
       }
     }
-    wordlist9.push(toUtf8String(new Uint8Array(bytes5)));
+    wordlist9.push(toUtf8String(new Uint8Array(bytes4)));
   }
   const checksum7 = id(wordlist9.join("\n") + "\n");
   if (checksum7 !== Checks[locale]) {
@@ -35408,10 +35408,10 @@ function isHexString2(value, length) {
 }
 var HexCharacters2 = "0123456789abcdef";
 function hexlify2(data4) {
-  const bytes5 = getBytes2(data4);
+  const bytes4 = getBytes2(data4);
   let result = "0x";
-  for (let i = 0; i < bytes5.length; i++) {
-    const v = bytes5[i];
+  for (let i = 0; i < bytes4.length; i++) {
+    const v = bytes4[i];
     result += HexCharacters2[(v & 240) >> 4] + HexCharacters2[v & 15];
   }
   return result;
@@ -35426,29 +35426,29 @@ function dataLength2(data4) {
   return getBytes2(data4).length;
 }
 function dataSlice2(data4, start, end) {
-  const bytes5 = getBytes2(data4);
-  if (end != null && end > bytes5.length) {
+  const bytes4 = getBytes2(data4);
+  if (end != null && end > bytes4.length) {
     assert2(false, "cannot slice beyond data bounds", "BUFFER_OVERRUN", {
-      buffer: bytes5,
-      length: bytes5.length,
+      buffer: bytes4,
+      length: bytes4.length,
       offset: end
     });
   }
-  return hexlify2(bytes5.slice(start == null ? 0 : start, end == null ? bytes5.length : end));
+  return hexlify2(bytes4.slice(start == null ? 0 : start, end == null ? bytes4.length : end));
 }
 function zeroPad2(data4, length, left) {
-  const bytes5 = getBytes2(data4);
-  assert2(length >= bytes5.length, "padding exceeds data length", "BUFFER_OVERRUN", {
-    buffer: new Uint8Array(bytes5),
+  const bytes4 = getBytes2(data4);
+  assert2(length >= bytes4.length, "padding exceeds data length", "BUFFER_OVERRUN", {
+    buffer: new Uint8Array(bytes4),
     length,
     offset: length + 1
   });
   const result = new Uint8Array(length);
   result.fill(0);
   if (left) {
-    result.set(bytes5, length - bytes5.length);
+    result.set(bytes4, length - bytes4.length);
   } else {
-    result.set(bytes5, 0);
+    result.set(bytes4, 0);
   }
   return hexlify2(result);
 }
@@ -35474,8 +35474,8 @@ function toTwos2(_value, _width) {
       fault: "overflow",
       value: _value
     });
-    const mask4 = (BN_17 << width) - BN_17;
-    return (~value & mask4) + BN_17;
+    const mask3 = (BN_17 << width) - BN_17;
+    return (~value & mask3) + BN_17;
   } else {
     assert2(value < limit, "too high", "NUMERIC_FAULT", {
       operation: "toTwos",
@@ -35556,14 +35556,14 @@ function toBeArray2(_value) {
 }
 
 // ../bls-bn254-js/node_modules/ethers/lib.esm/utils/utf8.js
-function errorFunc2(reason, offset, bytes5, output5, badCodepoint) {
-  assertArgument2(false, `invalid codepoint at offset ${offset}; ${reason}`, "bytes", bytes5);
+function errorFunc2(reason, offset, bytes4, output4, badCodepoint) {
+  assertArgument2(false, `invalid codepoint at offset ${offset}; ${reason}`, "bytes", bytes4);
 }
-function ignoreFunc2(reason, offset, bytes5, output5, badCodepoint) {
+function ignoreFunc2(reason, offset, bytes4, output4, badCodepoint) {
   if (reason === "BAD_PREFIX" || reason === "UNEXPECTED_CONTINUE") {
     let i = 0;
-    for (let o = offset + 1; o < bytes5.length; o++) {
-      if (bytes5[o] >> 6 !== 2) {
+    for (let o = offset + 1; o < bytes4.length; o++) {
+      if (bytes4[o] >> 6 !== 2) {
         break;
       }
       i++;
@@ -35571,18 +35571,18 @@ function ignoreFunc2(reason, offset, bytes5, output5, badCodepoint) {
     return i;
   }
   if (reason === "OVERRUN") {
-    return bytes5.length - offset - 1;
+    return bytes4.length - offset - 1;
   }
   return 0;
 }
-function replaceFunc2(reason, offset, bytes5, output5, badCodepoint) {
+function replaceFunc2(reason, offset, bytes4, output4, badCodepoint) {
   if (reason === "OVERLONG") {
     assertArgument2(typeof badCodepoint === "number", "invalid bad code point for replacement", "badCodepoint", badCodepoint);
-    output5.push(badCodepoint);
+    output4.push(badCodepoint);
     return 0;
   }
-  output5.push(65533);
-  return ignoreFunc2(reason, offset, bytes5, output5, badCodepoint);
+  output4.push(65533);
+  return ignoreFunc2(reason, offset, bytes4, output4, badCodepoint);
 }
 var Utf8ErrorFuncs2 = Object.freeze({
   error: errorFunc2,
@@ -35625,15 +35625,15 @@ function toUtf8Bytes2(str, form) {
 var import_crypto24 = require("crypto");
 
 // ../bls-bn254-js/node_modules/ethers/node_modules/@noble/hashes/esm/_assert.js
-function number2(n3) {
-  if (!Number.isSafeInteger(n3) || n3 < 0)
-    throw new Error(`Wrong positive integer: ${n3}`);
+function number2(n2) {
+  if (!Number.isSafeInteger(n2) || n2 < 0)
+    throw new Error(`Wrong positive integer: ${n2}`);
 }
-function bytes2(b3, ...lengths) {
-  if (!(b3 instanceof Uint8Array))
+function bytes2(b2, ...lengths) {
+  if (!(b2 instanceof Uint8Array))
     throw new Error("Expected Uint8Array");
-  if (lengths.length > 0 && !lengths.includes(b3.length))
-    throw new Error(`Expected Uint8Array of length ${lengths}, not of length=${b3.length}`);
+  if (lengths.length > 0 && !lengths.includes(b2.length))
+    throw new Error(`Expected Uint8Array of length ${lengths}, not of length=${b2.length}`);
 }
 function exists2(instance, checkFinished = true) {
   if (instance.destroyed)
@@ -35652,10 +35652,10 @@ function output2(out, instance) {
 // ../bls-bn254-js/node_modules/ethers/node_modules/@noble/hashes/esm/_u64.js
 var U32_MASK642 = /* @__PURE__ */ BigInt(2 ** 32 - 1);
 var _32n2 = /* @__PURE__ */ BigInt(32);
-function fromBig2(n3, le = false) {
+function fromBig2(n2, le = false) {
   if (le)
-    return { h: Number(n3 & U32_MASK642), l: Number(n3 >> _32n2 & U32_MASK642) };
-  return { h: Number(n3 >> _32n2 & U32_MASK642) | 0, l: Number(n3 & U32_MASK642) | 0 };
+    return { h: Number(n2 & U32_MASK642), l: Number(n2 >> _32n2 & U32_MASK642) };
+  return { h: Number(n2 >> _32n2 & U32_MASK642) | 0, l: Number(n2 & U32_MASK642) | 0 };
 }
 function split3(lst, le = false) {
   let Ah = new Uint32Array(lst.length);
@@ -35846,9 +35846,9 @@ var Keccak2 = class _Keccak extends Hash2 {
       throw new Error("XOF is not possible for this instance");
     return this.writeInto(out);
   }
-  xof(bytes5) {
-    number2(bytes5);
-    return this.xofInto(new Uint8Array(bytes5));
+  xof(bytes4) {
+    number2(bytes4);
+    return this.xofInto(new Uint8Array(bytes4));
   }
   digestInto(out) {
     output2(out, this);
@@ -36336,20 +36336,20 @@ var BlsBn254 = class _BlsBn254 {
   neg(x) {
     return mod2(-x, _BlsBn254.FIELD_ORDER);
   }
-  mul(a, b3) {
-    return mod2(a * b3, _BlsBn254.FIELD_ORDER);
+  mul(a, b2) {
+    return mod2(a * b2, _BlsBn254.FIELD_ORDER);
   }
-  add(a, b3) {
-    return mod2(a + b3, _BlsBn254.FIELD_ORDER);
+  add(a, b2) {
+    return mod2(a + b2, _BlsBn254.FIELD_ORDER);
   }
-  sub(a, b3) {
-    return mod2(a - b3, _BlsBn254.FIELD_ORDER);
+  sub(a, b2) {
+    return mod2(a - b2, _BlsBn254.FIELD_ORDER);
   }
-  exp(x, n3) {
+  exp(x, n2) {
     const mul2 = this.mul.bind(this);
     let result = 1n;
     let base = mod2(x, _BlsBn254.FIELD_ORDER);
-    let e_prime = n3;
+    let e_prime = n2;
     while (e_prime > 0) {
       if (mod2(e_prime, 2n) == 1n) {
         result = mul2(result, base);
@@ -36405,17 +36405,17 @@ var BlsBn254 = class _BlsBn254 {
     return out;
   }
 };
-function mod2(a, b3) {
-  return (a % b3 + b3) % b3;
+function mod2(a, b2) {
+  return (a % b2 + b2) % b2;
 }
-function toHex(n3) {
-  return "0x" + n3.toString(16).padStart(64, "0");
+function toHex(n2) {
+  return "0x" + n2.toString(16).padStart(64, "0");
 }
-function createFp2(a, b3) {
+function createFp2(a, b2) {
   const fp2_a = new mcl.Fp();
   const fp2_b = new mcl.Fp();
   fp2_a.setStr(a);
-  fp2_b.setStr(b3);
+  fp2_b.setStr(b2);
   const fp2 = new mcl.Fp2();
   fp2.set_a(fp2_a);
   fp2.set_b(fp2_b);
@@ -36426,18 +36426,18 @@ function createFp2(a, b3) {
 var asn1js = __toESM(require_build2());
 
 // ../bls-bn254-js/node_modules/@noble/hashes/esm/_assert.js
-function number3(n3) {
-  if (!Number.isSafeInteger(n3) || n3 < 0)
-    throw new Error(`positive integer expected, not ${n3}`);
+function number3(n2) {
+  if (!Number.isSafeInteger(n2) || n2 < 0)
+    throw new Error(`positive integer expected, not ${n2}`);
 }
 function isBytes(a) {
   return a instanceof Uint8Array || a != null && typeof a === "object" && a.constructor.name === "Uint8Array";
 }
-function bytes3(b3, ...lengths) {
-  if (!isBytes(b3))
+function bytes3(b2, ...lengths) {
+  if (!isBytes(b2))
     throw new Error("Uint8Array expected");
-  if (lengths.length > 0 && !lengths.includes(b3.length))
-    throw new Error(`Uint8Array expected of length ${lengths}, not of length=${b3.length}`);
+  if (lengths.length > 0 && !lengths.includes(b2.length))
+    throw new Error(`Uint8Array expected of length ${lengths}, not of length=${b2.length}`);
 }
 function hash2(h) {
   if (typeof h !== "function" || typeof h.create !== "function")
@@ -36534,27 +36534,27 @@ function randomBytes6(bytesLength = 32) {
 }
 
 // ../bls-bn254-js/node_modules/@noble/hashes/esm/_md.js
-function setBigUint642(view, byteOffset, value, isLE5) {
+function setBigUint642(view, byteOffset, value, isLE4) {
   if (typeof view.setBigUint64 === "function")
-    return view.setBigUint64(byteOffset, value, isLE5);
-  const _32n5 = BigInt(32);
+    return view.setBigUint64(byteOffset, value, isLE4);
+  const _32n4 = BigInt(32);
   const _u32_max = BigInt(4294967295);
-  const wh = Number(value >> _32n5 & _u32_max);
+  const wh = Number(value >> _32n4 & _u32_max);
   const wl = Number(value & _u32_max);
-  const h = isLE5 ? 4 : 0;
-  const l = isLE5 ? 0 : 4;
-  view.setUint32(byteOffset + h, wh, isLE5);
-  view.setUint32(byteOffset + l, wl, isLE5);
+  const h = isLE4 ? 4 : 0;
+  const l = isLE4 ? 0 : 4;
+  view.setUint32(byteOffset + h, wh, isLE4);
+  view.setUint32(byteOffset + l, wl, isLE4);
 }
-var Chi2 = (a, b3, c) => a & b3 ^ ~a & c;
-var Maj2 = (a, b3, c) => a & b3 ^ a & c ^ b3 & c;
+var Chi2 = (a, b2, c) => a & b2 ^ ~a & c;
+var Maj2 = (a, b2, c) => a & b2 ^ a & c ^ b2 & c;
 var HashMD = class extends Hash3 {
-  constructor(blockLen, outputLen, padOffset, isLE5) {
+  constructor(blockLen, outputLen, padOffset, isLE4) {
     super();
     this.blockLen = blockLen;
     this.outputLen = outputLen;
     this.padOffset = padOffset;
-    this.isLE = isLE5;
+    this.isLE = isLE4;
     this.finished = false;
     this.length = 0;
     this.pos = 0;
@@ -36591,7 +36591,7 @@ var HashMD = class extends Hash3 {
     exists3(this);
     output3(out, this);
     this.finished = true;
-    const { buffer, view, blockLen, isLE: isLE5 } = this;
+    const { buffer, view, blockLen, isLE: isLE4 } = this;
     let { pos } = this;
     buffer[pos++] = 128;
     this.buffer.subarray(pos).fill(0);
@@ -36601,7 +36601,7 @@ var HashMD = class extends Hash3 {
     }
     for (let i = pos; i < blockLen; i++)
       buffer[i] = 0;
-    setBigUint642(view, blockLen - 8, BigInt(this.length * 8), isLE5);
+    setBigUint642(view, blockLen - 8, BigInt(this.length * 8), isLE4);
     this.process(view, 0);
     const oview = createView2(out);
     const len = this.outputLen;
@@ -36612,7 +36612,7 @@ var HashMD = class extends Hash3 {
     if (outLen > state.length)
       throw new Error("_sha2: outputLen bigger than state");
     for (let i = 0; i < outLen; i++)
-      oview.setUint32(4 * i, state[i], isLE5);
+      oview.setUint32(4 * i, state[i], isLE4);
   }
   digest() {
     const { buffer, outputLen } = this;
@@ -36895,11 +36895,11 @@ function abool(title, value) {
     throw new Error(`${title} must be valid boolean, got "${value}".`);
 }
 var hexes2 = /* @__PURE__ */ Array.from({ length: 256 }, (_, i) => i.toString(16).padStart(2, "0"));
-function bytesToHex2(bytes5) {
-  abytes(bytes5);
+function bytesToHex2(bytes4) {
+  abytes(bytes4);
   let hex2 = "";
-  for (let i = 0; i < bytes5.length; i++) {
-    hex2 += hexes2[bytes5[i]];
+  for (let i = 0; i < bytes4.length; i++) {
+    hex2 += hexes2[bytes4[i]];
   }
   return hex2;
 }
@@ -36932,30 +36932,30 @@ function hexToBytes2(hex2) {
   const array = new Uint8Array(al);
   for (let ai = 0, hi = 0; ai < al; ai++, hi += 2) {
     const n1 = asciiToBase16(hex2.charCodeAt(hi));
-    const n22 = asciiToBase16(hex2.charCodeAt(hi + 1));
-    if (n1 === void 0 || n22 === void 0) {
+    const n2 = asciiToBase16(hex2.charCodeAt(hi + 1));
+    if (n1 === void 0 || n2 === void 0) {
       const char = hex2[hi] + hex2[hi + 1];
       throw new Error('hex string expected, got non-hex character "' + char + '" at index ' + hi);
     }
-    array[ai] = n1 * 16 + n22;
+    array[ai] = n1 * 16 + n2;
   }
   return array;
 }
-function bytesToNumberBE2(bytes5) {
-  return hexToNumber2(bytesToHex2(bytes5));
+function bytesToNumberBE2(bytes4) {
+  return hexToNumber2(bytesToHex2(bytes4));
 }
-function bytesToNumberLE2(bytes5) {
-  abytes(bytes5);
-  return hexToNumber2(bytesToHex2(Uint8Array.from(bytes5).reverse()));
+function bytesToNumberLE2(bytes4) {
+  abytes(bytes4);
+  return hexToNumber2(bytesToHex2(Uint8Array.from(bytes4).reverse()));
 }
-function numberToBytesBE2(n3, len) {
-  return hexToBytes2(n3.toString(16).padStart(len * 2, "0"));
+function numberToBytesBE2(n2, len) {
+  return hexToBytes2(n2.toString(16).padStart(len * 2, "0"));
 }
-function numberToBytesLE2(n3, len) {
-  return numberToBytesBE2(n3, len).reverse();
+function numberToBytesLE2(n2, len) {
+  return numberToBytesBE2(n2, len).reverse();
 }
-function numberToVarBytesBE2(n3) {
-  return hexToBytes2(numberToHexUnpadded2(n3));
+function numberToVarBytesBE2(n2) {
+  return hexToBytes2(numberToHexUnpadded2(n2));
 }
 function ensureBytes2(title, hex2, expectedLength) {
   let res;
@@ -36990,12 +36990,12 @@ function concatBytes4(...arrays) {
   }
   return res;
 }
-function equalBytes2(a, b3) {
-  if (a.length !== b3.length)
+function equalBytes2(a, b2) {
+  if (a.length !== b2.length)
     return false;
   let diff = 0;
   for (let i = 0; i < a.length; i++)
-    diff |= a[i] ^ b3[i];
+    diff |= a[i] ^ b2[i];
   return diff === 0;
 }
 function utf8ToBytes5(str) {
@@ -37003,27 +37003,27 @@ function utf8ToBytes5(str) {
     throw new Error(`utf8ToBytes expected string, got ${typeof str}`);
   return new Uint8Array(new TextEncoder().encode(str));
 }
-var isPosBig = (n3) => typeof n3 === "bigint" && _0n8 <= n3;
-function inRange(n3, min, max) {
-  return isPosBig(n3) && isPosBig(min) && isPosBig(max) && min <= n3 && n3 < max;
+var isPosBig = (n2) => typeof n2 === "bigint" && _0n8 <= n2;
+function inRange(n2, min, max) {
+  return isPosBig(n2) && isPosBig(min) && isPosBig(max) && min <= n2 && n2 < max;
 }
-function aInRange(title, n3, min, max) {
-  if (!inRange(n3, min, max))
-    throw new Error(`expected valid ${title}: ${min} <= n < ${max}, got ${typeof n3} ${n3}`);
+function aInRange(title, n2, min, max) {
+  if (!inRange(n2, min, max))
+    throw new Error(`expected valid ${title}: ${min} <= n < ${max}, got ${typeof n2} ${n2}`);
 }
-function bitLen2(n3) {
+function bitLen2(n2) {
   let len;
-  for (len = 0; n3 > _0n8; n3 >>= _1n8, len += 1)
+  for (len = 0; n2 > _0n8; n2 >>= _1n8, len += 1)
     ;
   return len;
 }
-function bitGet2(n3, pos) {
-  return n3 >> BigInt(pos) & _1n8;
+function bitGet2(n2, pos) {
+  return n2 >> BigInt(pos) & _1n8;
 }
-function bitSet2(n3, pos, value) {
-  return n3 | (value ? _1n8 : _0n8) << BigInt(pos);
+function bitSet2(n2, pos, value) {
+  return n2 | (value ? _1n8 : _0n8) << BigInt(pos);
 }
-var bitMask2 = (n3) => (_2n7 << BigInt(n3 - 1)) - _1n8;
+var bitMask2 = (n2) => (_2n7 << BigInt(n2 - 1)) - _1n8;
 var u8n2 = (data4) => new Uint8Array(data4);
 var u8fr2 = (arr) => Uint8Array.from(arr);
 function createHmacDrbg2(hashLen, qByteLen, hmacFn) {
@@ -37041,7 +37041,7 @@ function createHmacDrbg2(hashLen, qByteLen, hmacFn) {
     k.fill(0);
     i = 0;
   };
-  const h = (...b3) => hmacFn(k, v, ...b3);
+  const h = (...b2) => hmacFn(k, v, ...b2);
   const reseed = (seed = u8n2()) => {
     k = h(u8fr2([0]), seed);
     v = h();
@@ -37050,7 +37050,7 @@ function createHmacDrbg2(hashLen, qByteLen, hmacFn) {
     k = h(u8fr2([1]), seed);
     v = h();
   };
-  const gen5 = () => {
+  const gen4 = () => {
     if (i++ >= 1e3)
       throw new Error("drbg: tried 1000 values");
     let len = 0;
@@ -37067,7 +37067,7 @@ function createHmacDrbg2(hashLen, qByteLen, hmacFn) {
     reset();
     reseed(seed);
     let res = void 0;
-    while (!(res = pred(gen5())))
+    while (!(res = pred(gen4())))
       reseed();
     reset();
     return res;
@@ -37128,9 +37128,9 @@ var _5n2 = BigInt(5);
 var _8n2 = BigInt(8);
 var _9n2 = BigInt(9);
 var _16n2 = BigInt(16);
-function mod3(a, b3) {
-  const result = a % b3;
-  return result >= _0n9 ? result : b3 + result;
+function mod3(a, b2) {
+  const result = a % b2;
+  return result >= _0n9 ? result : b2 + result;
 }
 function pow3(num, power, modulo) {
   if (modulo <= _0n9 || power < _0n9)
@@ -37146,21 +37146,21 @@ function pow3(num, power, modulo) {
   }
   return res;
 }
-function invert2(number5, modulo) {
-  if (number5 === _0n9 || modulo <= _0n9) {
-    throw new Error(`invert: expected positive integers, got n=${number5} mod=${modulo}`);
+function invert2(number4, modulo) {
+  if (number4 === _0n9 || modulo <= _0n9) {
+    throw new Error(`invert: expected positive integers, got n=${number4} mod=${modulo}`);
   }
-  let a = mod3(number5, modulo);
-  let b3 = modulo;
+  let a = mod3(number4, modulo);
+  let b2 = modulo;
   let x = _0n9, y = _1n9, u = _1n9, v = _0n9;
   while (a !== _0n9) {
-    const q = b3 / a;
-    const r = b3 % a;
+    const q = b2 / a;
+    const r = b2 % a;
     const m = x - u * q;
-    const n3 = y - v * q;
-    b3 = a, a = r, x = u, y = v, u = m, v = n3;
+    const n2 = y - v * q;
+    b2 = a, a = r, x = u, y = v, u = m, v = n2;
   }
-  const gcd = b3;
+  const gcd = b2;
   if (gcd !== _1n9)
     throw new Error("invert: does not exist");
   return mod3(x, modulo);
@@ -37174,26 +37174,26 @@ function tonelliShanks2(P) {
     ;
   if (S2 === 1) {
     const p1div4 = (P + _1n9) / _4n3;
-    return function tonelliFast(Fp4, n3) {
-      const root = Fp4.pow(n3, p1div4);
-      if (!Fp4.eql(Fp4.sqr(root), n3))
+    return function tonelliFast(Fp4, n2) {
+      const root = Fp4.pow(n2, p1div4);
+      if (!Fp4.eql(Fp4.sqr(root), n2))
         throw new Error("Cannot find square root");
       return root;
     };
   }
   const Q1div2 = (Q + _1n9) / _2n8;
-  return function tonelliSlow(Fp4, n3) {
-    if (Fp4.pow(n3, legendreC) === Fp4.neg(Fp4.ONE))
+  return function tonelliSlow(Fp4, n2) {
+    if (Fp4.pow(n2, legendreC) === Fp4.neg(Fp4.ONE))
       throw new Error("Cannot find square root");
     let r = S2;
     let g = Fp4.pow(Fp4.mul(Fp4.ONE, Z), Q);
-    let x = Fp4.pow(n3, Q1div2);
-    let b3 = Fp4.pow(n3, Q);
-    while (!Fp4.eql(b3, Fp4.ONE)) {
-      if (Fp4.eql(b3, Fp4.ZERO))
+    let x = Fp4.pow(n2, Q1div2);
+    let b2 = Fp4.pow(n2, Q);
+    while (!Fp4.eql(b2, Fp4.ONE)) {
+      if (Fp4.eql(b2, Fp4.ZERO))
         return Fp4.ZERO;
       let m = 1;
-      for (let t2 = Fp4.sqr(b3); m < r; m++) {
+      for (let t2 = Fp4.sqr(b2); m < r; m++) {
         if (Fp4.eql(t2, Fp4.ONE))
           break;
         t2 = Fp4.sqr(t2);
@@ -37201,7 +37201,7 @@ function tonelliShanks2(P) {
       const ge = Fp4.pow(g, _1n9 << BigInt(r - m - 1));
       g = Fp4.sqr(ge);
       x = Fp4.mul(x, ge);
-      b3 = Fp4.mul(b3, g);
+      b2 = Fp4.mul(b2, g);
       r = m;
     }
     return x;
@@ -37210,22 +37210,22 @@ function tonelliShanks2(P) {
 function FpSqrt2(P) {
   if (P % _4n3 === _3n3) {
     const p1div4 = (P + _1n9) / _4n3;
-    return function sqrt3mod4(Fp4, n3) {
-      const root = Fp4.pow(n3, p1div4);
-      if (!Fp4.eql(Fp4.sqr(root), n3))
+    return function sqrt3mod4(Fp4, n2) {
+      const root = Fp4.pow(n2, p1div4);
+      if (!Fp4.eql(Fp4.sqr(root), n2))
         throw new Error("Cannot find square root");
       return root;
     };
   }
   if (P % _8n2 === _5n2) {
     const c1 = (P - _5n2) / _8n2;
-    return function sqrt5mod8(Fp4, n3) {
-      const n22 = Fp4.mul(n3, _2n8);
+    return function sqrt5mod8(Fp4, n2) {
+      const n22 = Fp4.mul(n2, _2n8);
       const v = Fp4.pow(n22, c1);
-      const nv = Fp4.mul(n3, v);
+      const nv = Fp4.mul(n2, v);
       const i = Fp4.mul(Fp4.mul(nv, _2n8), v);
       const root = Fp4.mul(nv, Fp4.sub(i, Fp4.ONE));
-      if (!Fp4.eql(Fp4.sqr(root), n3))
+      if (!Fp4.eql(Fp4.sqr(root), n2))
         throw new Error("Cannot find square root");
       return root;
     };
@@ -37311,12 +37311,12 @@ function FpIsSquare(f2) {
     return f2.eql(p, f2.ZERO) || f2.eql(p, f2.ONE);
   };
 }
-function nLength2(n3, nBitLength) {
-  const _nBitLength = nBitLength !== void 0 ? nBitLength : n3.toString(2).length;
+function nLength2(n2, nBitLength) {
+  const _nBitLength = nBitLength !== void 0 ? nBitLength : n2.toString(2).length;
   const nByteLength = Math.ceil(_nBitLength / 8);
   return { nBitLength: _nBitLength, nByteLength };
 }
-function Field2(ORDER, bitLen3, isLE5 = false, redef = {}) {
+function Field2(ORDER, bitLen3, isLE4 = false, redef = {}) {
   if (ORDER <= _0n9)
     throw new Error(`Expected Field ORDER > 0, got ${ORDER}`);
   const { nBitLength: BITS, nByteLength: BYTES } = nLength2(ORDER, bitLen3);
@@ -37352,16 +37352,16 @@ function Field2(ORDER, bitLen3, isLE5 = false, redef = {}) {
     subN: (lhs, rhs) => lhs - rhs,
     mulN: (lhs, rhs) => lhs * rhs,
     inv: (num) => invert2(num, ORDER),
-    sqrt: redef.sqrt || ((n3) => sqrtP(f2, n3)),
+    sqrt: redef.sqrt || ((n2) => sqrtP(f2, n2)),
     invertBatch: (lst) => FpInvertBatch2(f2, lst),
     // TODO: do we really need constant cmov?
     // We don't have const-time bigints anyway, so probably will be not very useful
-    cmov: (a, b3, c) => c ? b3 : a,
-    toBytes: (num) => isLE5 ? numberToBytesLE2(num, BYTES) : numberToBytesBE2(num, BYTES),
-    fromBytes: (bytes5) => {
-      if (bytes5.length !== BYTES)
-        throw new Error(`Fp.fromBytes: expected ${BYTES}, got ${bytes5.length}`);
-      return isLE5 ? bytesToNumberLE2(bytes5) : bytesToNumberBE2(bytes5);
+    cmov: (a, b2, c) => c ? b2 : a,
+    toBytes: (num) => isLE4 ? numberToBytesLE2(num, BYTES) : numberToBytesBE2(num, BYTES),
+    fromBytes: (bytes4) => {
+      if (bytes4.length !== BYTES)
+        throw new Error(`Fp.fromBytes: expected ${BYTES}, got ${bytes4.length}`);
+      return isLE4 ? bytesToNumberLE2(bytes4) : bytesToNumberBE2(bytes4);
     }
   });
   return Object.freeze(f2);
@@ -37376,15 +37376,15 @@ function getMinHashLength2(fieldOrder) {
   const length = getFieldBytesLength2(fieldOrder);
   return length + Math.ceil(length / 2);
 }
-function mapHashToField2(key, fieldOrder, isLE5 = false) {
+function mapHashToField2(key, fieldOrder, isLE4 = false) {
   const len = key.length;
   const fieldLen = getFieldBytesLength2(fieldOrder);
   const minLen = getMinHashLength2(fieldOrder);
   if (len < 16 || len < minLen || len > 1024)
     throw new Error(`expected ${minLen}-1024 bytes of input, got ${len}`);
-  const num = isLE5 ? bytesToNumberBE2(key) : bytesToNumberLE2(key);
+  const num = isLE4 ? bytesToNumberBE2(key) : bytesToNumberLE2(key);
   const reduced = mod3(num, fieldOrder - _1n9) + _1n9;
-  return isLE5 ? numberToBytesLE2(reduced, fieldLen) : numberToBytesBE2(reduced, fieldLen);
+  return isLE4 ? numberToBytesLE2(reduced, fieldLen) : numberToBytesBE2(reduced, fieldLen);
 }
 
 // ../bls-bn254-js/node_modules/@noble/curves/esm/abstract/curve.js
@@ -37410,14 +37410,14 @@ function wNAF2(c, bits) {
   return {
     constTimeNegate,
     // non-const time multiplication ladder
-    unsafeLadder(elm, n3) {
+    unsafeLadder(elm, n2) {
       let p = c.ZERO;
       let d = elm;
-      while (n3 > _0n10) {
-        if (n3 & _1n10)
+      while (n2 > _0n10) {
+        if (n2 & _1n10)
           p = p.add(d);
         d = d.double();
-        n3 >>= _1n10;
+        n2 >>= _1n10;
       }
       return p;
     },
@@ -37454,20 +37454,20 @@ function wNAF2(c, bits) {
      * @param n scalar (we don't check here, but should be less than curve order)
      * @returns real and fake (for const-time) points
      */
-    wNAF(W, precomputes, n3) {
+    wNAF(W, precomputes, n2) {
       const { windows, windowSize } = opts(W);
       let p = c.ZERO;
       let f2 = c.BASE;
-      const mask4 = BigInt(2 ** W - 1);
+      const mask3 = BigInt(2 ** W - 1);
       const maxNumber = 2 ** W;
       const shiftBy = BigInt(W);
       for (let window2 = 0; window2 < windows; window2++) {
         const offset = window2 * windowSize;
-        let wbits = Number(n3 & mask4);
-        n3 >>= shiftBy;
+        let wbits = Number(n2 & mask3);
+        n2 >>= shiftBy;
         if (wbits > windowSize) {
           wbits -= maxNumber;
-          n3 += _1n10;
+          n2 += _1n10;
         }
         const offset1 = offset;
         const offset2 = offset + Math.abs(wbits) - 1;
@@ -37481,7 +37481,7 @@ function wNAF2(c, bits) {
       }
       return { p, f: f2 };
     },
-    wNAFCached(P, n3, transform) {
+    wNAFCached(P, n2, transform) {
       const W = pointWindowSizes.get(P) || 1;
       let comp = pointPrecomputes.get(P);
       if (!comp) {
@@ -37489,7 +37489,7 @@ function wNAF2(c, bits) {
         if (W !== 1)
           pointPrecomputes.set(P, transform(comp));
       }
-      return this.wNAF(W, comp, n3);
+      return this.wNAF(W, comp, n2);
     },
     // We calculate precomputes for elliptic curve point multiplication
     // using windowed method. This specifies window size and
@@ -37634,8 +37634,8 @@ var DER2 = {
           throw new E("tlv.decode: length bytes not complete");
         if (lengthBytes[0] === 0)
           throw new E("tlv.decode(long): zero leftmost byte");
-        for (const b3 of lengthBytes)
-          length = length << 8 | b3;
+        for (const b2 of lengthBytes)
+          length = length << 8 | b2;
         pos += lenLen;
         if (length < 128)
           throw new E("tlv.decode(long): not minimal encoding");
@@ -37699,21 +37699,21 @@ function weierstrassPoints2(opts) {
   const CURVE = validatePointOpts2(opts);
   const { Fp: Fp4 } = CURVE;
   const Fn = Field2(CURVE.n, CURVE.nBitLength);
-  const toBytes5 = CURVE.toBytes || ((_c, point, _isCompressed) => {
+  const toBytes4 = CURVE.toBytes || ((_c, point, _isCompressed) => {
     const a = point.toAffine();
     return concatBytes4(Uint8Array.from([4]), Fp4.toBytes(a.x), Fp4.toBytes(a.y));
   });
-  const fromBytes = CURVE.fromBytes || ((bytes5) => {
-    const tail = bytes5.subarray(1);
+  const fromBytes = CURVE.fromBytes || ((bytes4) => {
+    const tail = bytes4.subarray(1);
     const x = Fp4.fromBytes(tail.subarray(0, Fp4.BYTES));
     const y = Fp4.fromBytes(tail.subarray(Fp4.BYTES, 2 * Fp4.BYTES));
     return { x, y };
   });
   function weierstrassEquation(x) {
-    const { a, b: b3 } = CURVE;
+    const { a, b: b2 } = CURVE;
     const x2 = Fp4.sqr(x);
     const x3 = Fp4.mul(x2, x);
-    return Fp4.add(Fp4.add(x3, Fp4.mul(x, a)), b3);
+    return Fp4.add(Fp4.add(x3, Fp4.mul(x, a)), b2);
   }
   if (!Fp4.eql(Fp4.sqr(CURVE.Gy), weierstrassEquation(CURVE.Gx)))
     throw new Error("bad generator point: equation left != right");
@@ -37872,8 +37872,8 @@ function weierstrassPoints2(opts) {
     // https://eprint.iacr.org/2015/1060, algorithm 3
     // Cost: 8M + 3S + 3*a + 2*b3 + 15add.
     double() {
-      const { a, b: b3 } = CURVE;
-      const b32 = Fp4.mul(b3, _3n4);
+      const { a, b: b2 } = CURVE;
+      const b3 = Fp4.mul(b2, _3n4);
       const { px: X1, py: Y1, pz: Z1 } = this;
       let X3 = Fp4.ZERO, Y3 = Fp4.ZERO, Z3 = Fp4.ZERO;
       let t0 = Fp4.mul(X1, X1);
@@ -37884,13 +37884,13 @@ function weierstrassPoints2(opts) {
       Z3 = Fp4.mul(X1, Z1);
       Z3 = Fp4.add(Z3, Z3);
       X3 = Fp4.mul(a, Z3);
-      Y3 = Fp4.mul(b32, t2);
+      Y3 = Fp4.mul(b3, t2);
       Y3 = Fp4.add(X3, Y3);
       X3 = Fp4.sub(t1, Y3);
       Y3 = Fp4.add(t1, Y3);
       Y3 = Fp4.mul(X3, Y3);
       X3 = Fp4.mul(t3, X3);
-      Z3 = Fp4.mul(b32, Z3);
+      Z3 = Fp4.mul(b3, Z3);
       t2 = Fp4.mul(a, t2);
       t3 = Fp4.sub(t0, t2);
       t3 = Fp4.mul(a, t3);
@@ -37968,8 +37968,8 @@ function weierstrassPoints2(opts) {
     is0() {
       return this.equals(Point2.ZERO);
     }
-    wNAF(n3) {
-      return wnaf.wNAFCached(this, n3, Point2.normalizeZ);
+    wNAF(n2) {
+      return wnaf.wNAFCached(this, n2, Point2.normalizeZ);
     }
     /**
      * Non-constant-time multiplication. Uses double-and-add algorithm.
@@ -38041,10 +38041,10 @@ function weierstrassPoints2(opts) {
      * The trick could be useful if both P and Q are not G (not in our case).
      * @returns non-zero affine point
      */
-    multiplyAndAddUnsafe(Q, a, b3) {
+    multiplyAndAddUnsafe(Q, a, b2) {
       const G = Point2.BASE;
       const mul2 = (P, a2) => a2 === _0n11 || a2 === _1n11 || !P.equals(G) ? P.multiplyUnsafe(a2) : P.multiply(a2);
-      const sum = mul2(this, a).add(mul2(Q, b3));
+      const sum = mul2(this, a).add(mul2(Q, b2));
       return sum.is0() ? void 0 : sum;
     }
     // Converts Projective point to affine (x, y) coordinates.
@@ -38072,7 +38072,7 @@ function weierstrassPoints2(opts) {
     toRawBytes(isCompressed = true) {
       abool("isCompressed", isCompressed);
       this.assertValidity();
-      return toBytes5(Point2, this, isCompressed);
+      return toBytes4(Point2, this, isCompressed);
     }
     toHex(isCompressed = true) {
       abool("isCompressed", isCompressed);
@@ -38128,10 +38128,10 @@ function weierstrass2(curveDef) {
         return cat(Uint8Array.from([4]), x, Fp4.toBytes(a.y));
       }
     },
-    fromBytes(bytes5) {
-      const len = bytes5.length;
-      const head = bytes5[0];
-      const tail = bytes5.subarray(1);
+    fromBytes(bytes4) {
+      const len = bytes4.length;
+      const head = bytes4[0];
+      const tail = bytes4.subarray(1);
       if (len === compressedLen && (head === 2 || head === 3)) {
         const x = bytesToNumberBE2(tail);
         if (!inRange(x, _1n11, Fp4.ORDER))
@@ -38159,14 +38159,14 @@ function weierstrass2(curveDef) {
     }
   });
   const numToNByteStr = (num) => bytesToHex2(numberToBytesBE2(num, CURVE.nByteLength));
-  function isBiggerThanHalfOrder(number5) {
+  function isBiggerThanHalfOrder(number4) {
     const HALF = CURVE_ORDER >> _1n11;
-    return number5 > HALF;
+    return number4 > HALF;
   }
   function normalizeS(s) {
     return isBiggerThanHalfOrder(s) ? modN(-s) : s;
   }
-  const slcNum = (b3, from, to) => bytesToNumberBE2(b3.slice(from, to));
+  const slcNum = (b2, from, to) => bytesToNumberBE2(b2.slice(from, to));
   class Signature3 {
     constructor(r, s, recovery) {
       this.r = r;
@@ -38286,16 +38286,16 @@ function weierstrass2(curveDef) {
       throw new Error("first arg must be private key");
     if (!isProbPub(publicB))
       throw new Error("second arg must be public key");
-    const b3 = Point2.fromHex(publicB);
-    return b3.multiply(normPrivateKeyToScalar(privateA)).toRawBytes(isCompressed);
+    const b2 = Point2.fromHex(publicB);
+    return b2.multiply(normPrivateKeyToScalar(privateA)).toRawBytes(isCompressed);
   }
-  const bits2int = CURVE.bits2int || function(bytes5) {
-    const num = bytesToNumberBE2(bytes5);
-    const delta = bytes5.length * 8 - CURVE.nBitLength;
+  const bits2int = CURVE.bits2int || function(bytes4) {
+    const num = bytesToNumberBE2(bytes4);
+    const delta = bytes4.length * 8 - CURVE.nBitLength;
     return delta > 0 ? num >> BigInt(delta) : num;
   };
-  const bits2int_modN = CURVE.bits2int_modN || function(bytes5) {
-    return modN(bits2int(bytes5));
+  const bits2int_modN = CURVE.bits2int_modN || function(bytes4) {
+    return modN(bits2int(bytes4));
   };
   const ORDER_MASK = bitMask2(CURVE.nBitLength);
   function int2octets(num) {
@@ -38435,10 +38435,10 @@ function i2osp(value, length) {
   }
   return new Uint8Array(res);
 }
-function strxor(a, b3) {
+function strxor(a, b2) {
   const arr = new Uint8Array(a.length);
   for (let i = 0; i < a.length; i++) {
-    arr[i] = a[i] ^ b3[i];
+    arr[i] = a[i] ^ b2[i];
   }
   return arr;
 }
@@ -38459,14 +38459,14 @@ function expand_message_xmd(msg, DST2, lenInBytes, H) {
   const DST_prime = concatBytes4(DST2, i2osp(DST2.length, 1));
   const Z_pad = i2osp(0, r_in_bytes);
   const l_i_b_str = i2osp(lenInBytes, 2);
-  const b3 = new Array(ell);
+  const b2 = new Array(ell);
   const b_0 = H(concatBytes4(Z_pad, msg, l_i_b_str, i2osp(0, 1), DST_prime));
-  b3[0] = H(concatBytes4(b_0, i2osp(1, 1), DST_prime));
+  b2[0] = H(concatBytes4(b_0, i2osp(1, 1), DST_prime));
   for (let i = 1; i <= ell; i++) {
-    const args = [strxor(b_0, b3[i - 1]), i2osp(i + 1, 1), DST_prime];
-    b3[i] = H(concatBytes4(...args));
+    const args = [strxor(b_0, b2[i - 1]), i2osp(i + 1, 1), DST_prime];
+    b2[i] = H(concatBytes4(...args));
   }
-  const pseudo_random_bytes = concatBytes4(...b3);
+  const pseudo_random_bytes = concatBytes4(...b2);
   return pseudo_random_bytes.slice(0, lenInBytes);
 }
 function expand_message_xof(msg, DST2, lenInBytes, k, H) {
@@ -38919,14 +38919,14 @@ function tower12(opts) {
   };
   const Fp2Square = ({ c0, c1 }) => {
     const a = Fp4.add(c0, c1);
-    const b3 = Fp4.sub(c0, c1);
+    const b2 = Fp4.sub(c0, c1);
     const c = Fp4.add(c0, c0);
-    return { c0: Fp4.mul(a, b3), c1: Fp4.mul(c, c1) };
+    return { c0: Fp4.mul(a, b2), c1: Fp4.mul(c, c1) };
   };
   const Fp2fromBigTuple = (tuple) => {
     if (tuple.length !== 2)
       throw new Error("Invalid tuple");
-    const fps = tuple.map((n3) => Fp4.create(n3));
+    const fps = tuple.map((n2) => Fp4.create(n2));
     return { c0: fps[0], c1: fps[1] };
   };
   const FP2_ORDER = ORDER * ORDER;
@@ -38958,9 +38958,9 @@ function tower12(opts) {
     sqrN: Fp2Square,
     // Why inversion for bigint inside Fp instead of Fp2? it is even used in that context?
     div: (lhs, rhs) => Fp24.mul(lhs, typeof rhs === "bigint" ? Fp4.inv(Fp4.create(rhs)) : Fp24.inv(rhs)),
-    inv: ({ c0: a, c1: b3 }) => {
-      const factor = Fp4.inv(Fp4.create(a * a + b3 * b3));
-      return { c0: Fp4.mul(factor, Fp4.create(a)), c1: Fp4.mul(factor, Fp4.create(-b3)) };
+    inv: ({ c0: a, c1: b2 }) => {
+      const factor = Fp4.inv(Fp4.create(a * a + b2 * b2));
+      return { c0: Fp4.mul(factor, Fp4.create(a)), c1: Fp4.mul(factor, Fp4.create(-b2)) };
     },
     sqrt: (num) => {
       if (opts.Fp2sqrt)
@@ -38998,10 +38998,10 @@ function tower12(opts) {
       return BigInt(sign_0 || zero_0 && sign_1) == _1n13;
     },
     // Bytes util
-    fromBytes(b3) {
-      if (b3.length !== Fp24.BYTES)
-        throw new Error(`fromBytes wrong length=${b3.length}`);
-      return { c0: Fp4.fromBytes(b3.subarray(0, Fp4.BYTES)), c1: Fp4.fromBytes(b3.subarray(Fp4.BYTES)) };
+    fromBytes(b2) {
+      if (b2.length !== Fp24.BYTES)
+        throw new Error(`fromBytes wrong length=${b2.length}`);
+      return { c0: Fp4.fromBytes(b2.subarray(0, Fp4.BYTES)), c1: Fp4.fromBytes(b2.subarray(Fp4.BYTES)) };
     },
     toBytes: ({ c0, c1 }) => concatBytes4(Fp4.toBytes(c0), Fp4.toBytes(c1)),
     cmov: ({ c0, c1 }, { c0: r0, c1: r1 }, c) => ({
@@ -39100,13 +39100,13 @@ function tower12(opts) {
       return { c0: Fp24.mul(t4, t0), c1: Fp24.mul(t4, t1), c2: Fp24.mul(t4, t2) };
     },
     // Bytes utils
-    fromBytes: (b3) => {
-      if (b3.length !== Fp62.BYTES)
-        throw new Error(`fromBytes wrong length=${b3.length}`);
+    fromBytes: (b2) => {
+      if (b2.length !== Fp62.BYTES)
+        throw new Error(`fromBytes wrong length=${b2.length}`);
       return {
-        c0: Fp24.fromBytes(b3.subarray(0, Fp24.BYTES)),
-        c1: Fp24.fromBytes(b3.subarray(Fp24.BYTES, 2 * Fp24.BYTES)),
-        c2: Fp24.fromBytes(b3.subarray(2 * Fp24.BYTES))
+        c0: Fp24.fromBytes(b2.subarray(0, Fp24.BYTES)),
+        c1: Fp24.fromBytes(b2.subarray(Fp24.BYTES, 2 * Fp24.BYTES)),
+        c2: Fp24.fromBytes(b2.subarray(2 * Fp24.BYTES))
       };
     },
     toBytes: ({ c0, c1, c2 }) => concatBytes4(Fp24.toBytes(c0), Fp24.toBytes(c1), Fp24.toBytes(c2)),
@@ -39185,13 +39185,13 @@ function tower12(opts) {
       c1: Fp62.add(ab, ab)
     };
   };
-  function Fp4Square2(a, b3) {
+  function Fp4Square2(a, b2) {
     const a2 = Fp24.sqr(a);
-    const b22 = Fp24.sqr(b3);
+    const b22 = Fp24.sqr(b2);
     return {
       first: Fp24.add(Fp24.mulByNonresidue(b22), a2),
       // b² * Nonresidue + a²
-      second: Fp24.sub(Fp24.sub(Fp24.sqr(Fp24.add(a, b3)), a2), b22)
+      second: Fp24.sub(Fp24.sub(Fp24.sqr(Fp24.add(a, b2)), a2), b22)
       // (a + b)² - a² - b²
     };
   }
@@ -39227,12 +39227,12 @@ function tower12(opts) {
     mulN: Fp12Multiply,
     sqrN: Fp12Square,
     // Bytes utils
-    fromBytes: (b3) => {
-      if (b3.length !== Fp122.BYTES)
-        throw new Error(`fromBytes wrong length=${b3.length}`);
+    fromBytes: (b2) => {
+      if (b2.length !== Fp122.BYTES)
+        throw new Error(`fromBytes wrong length=${b2.length}`);
       return {
-        c0: Fp62.fromBytes(b3.subarray(0, Fp62.BYTES)),
-        c1: Fp62.fromBytes(b3.subarray(Fp62.BYTES))
+        c0: Fp62.fromBytes(b2.subarray(0, Fp62.BYTES)),
+        c1: Fp62.fromBytes(b2.subarray(Fp62.BYTES))
       };
     },
     toBytes: ({ c0, c1 }) => concatBytes4(Fp62.toBytes(c0), Fp62.toBytes(c1)),
@@ -39286,11 +39286,11 @@ function tower12(opts) {
         c1: Fp24.mul(c0.c1, o0),
         c2: Fp24.mul(c0.c2, o0)
       });
-      const b3 = Fp62.mul01(c1, o3, o4);
+      const b2 = Fp62.mul01(c1, o3, o4);
       const e = Fp62.mul01(Fp62.add(c0, c1), Fp24.add(o0, o3), o4);
       return {
-        c0: Fp62.add(Fp62.mulByNonresidue(b3), a),
-        c1: Fp62.sub(e, Fp62.add(a, b3))
+        c0: Fp62.add(Fp62.mulByNonresidue(b2), a),
+        c1: Fp62.sub(e, Fp62.add(a, b2))
       };
     },
     // A cyclotomic group is a subgroup of Fp^n defined by
@@ -39350,11 +39350,11 @@ var { Fp: Fp3, Fp2: Fp23, Fp6, Fp4Square, Fp12 } = tower12({
       })
     };
   },
-  Fp12cyclotomicExp(num, n3) {
+  Fp12cyclotomicExp(num, n2) {
     let z = Fp12.ONE;
     for (let i = BN_X_LEN - 1; i >= 0; i--) {
       z = Fp12._cyclotomicSquare(z);
-      if (bitGet2(n3, i))
+      if (bitGet2(n2, i))
         z = Fp12.mul(z, num);
     }
     return z;
@@ -39466,10 +39466,10 @@ var bn254_weierstrass = weierstrass2({
 // ../bls-bn254-js/node_modules/@noble/hashes/esm/_u64.js
 var U32_MASK643 = /* @__PURE__ */ BigInt(2 ** 32 - 1);
 var _32n3 = /* @__PURE__ */ BigInt(32);
-function fromBig3(n3, le = false) {
+function fromBig3(n2, le = false) {
   if (le)
-    return { h: Number(n3 & U32_MASK643), l: Number(n3 >> _32n3 & U32_MASK643) };
-  return { h: Number(n3 >> _32n3 & U32_MASK643) | 0, l: Number(n3 & U32_MASK643) | 0 };
+    return { h: Number(n2 & U32_MASK643), l: Number(n2 >> _32n3 & U32_MASK643) };
+  return { h: Number(n2 >> _32n3 & U32_MASK643) | 0, l: Number(n2 & U32_MASK643) | 0 };
 }
 function split4(lst, le = false) {
   let Ah = new Uint32Array(lst.length);
@@ -39624,9 +39624,9 @@ var Keccak3 = class _Keccak extends Hash3 {
       throw new Error("XOF is not possible for this instance");
     return this.writeInto(out);
   }
-  xof(bytes5) {
-    number3(bytes5);
-    return this.xofInto(new Uint8Array(bytes5));
+  xof(bytes4) {
+    number3(bytes4);
+    return this.xofInto(new Uint8Array(bytes4));
   }
   digestInto(out) {
     output3(out, this);
@@ -39850,8426 +39850,579 @@ async function createProviderWithRetry(url, maxRetries = 20, retryDelay = 1e3) {
   }
 }
 
-// ../smart-contracts/node_modules/ethers/lib.esm/_version.js
-var version3 = "6.13.4";
-
-// ../smart-contracts/node_modules/ethers/lib.esm/utils/properties.js
-function checkType3(value, type, name) {
-  const types = type.split("|").map((t) => t.trim());
-  for (let i = 0; i < types.length; i++) {
-    switch (type) {
-      case "any":
-        return;
-      case "bigint":
-      case "boolean":
-      case "number":
-      case "string":
-        if (typeof value === type) {
-          return;
-        }
-    }
-  }
-  const error = new Error(`invalid value for type ${type}`);
-  error.code = "INVALID_ARGUMENT";
-  error.argument = `value.${name}`;
-  error.value = value;
-  throw error;
-}
-async function resolveProperties3(value) {
-  const keys = Object.keys(value);
-  const results = await Promise.all(keys.map((k) => Promise.resolve(value[k])));
-  return results.reduce((accum, v, index) => {
-    accum[keys[index]] = v;
-    return accum;
-  }, {});
-}
-function defineProperties3(target, values, types) {
-  for (let key in values) {
-    let value = values[key];
-    const type = types ? types[key] : null;
-    if (type) {
-      checkType3(value, type, key);
-    }
-    Object.defineProperty(target, key, { enumerable: true, value, writable: false });
-  }
-}
-
-// ../smart-contracts/node_modules/ethers/lib.esm/utils/errors.js
-function stringify4(value) {
-  if (value == null) {
-    return "null";
-  }
-  if (Array.isArray(value)) {
-    return "[ " + value.map(stringify4).join(", ") + " ]";
-  }
-  if (value instanceof Uint8Array) {
-    const HEX = "0123456789abcdef";
-    let result = "0x";
-    for (let i = 0; i < value.length; i++) {
-      result += HEX[value[i] >> 4];
-      result += HEX[value[i] & 15];
-    }
-    return result;
-  }
-  if (typeof value === "object" && typeof value.toJSON === "function") {
-    return stringify4(value.toJSON());
-  }
-  switch (typeof value) {
-    case "boolean":
-    case "symbol":
-      return value.toString();
-    case "bigint":
-      return BigInt(value).toString();
-    case "number":
-      return value.toString();
-    case "string":
-      return JSON.stringify(value);
-    case "object": {
-      const keys = Object.keys(value);
-      keys.sort();
-      return "{ " + keys.map((k) => `${stringify4(k)}: ${stringify4(value[k])}`).join(", ") + " }";
-    }
-  }
-  return `[ COULD NOT SERIALIZE ]`;
-}
-function isError3(error, code) {
-  return error && error.code === code;
-}
-function isCallException3(error) {
-  return isError3(error, "CALL_EXCEPTION");
-}
-function makeError3(message, code, info) {
-  let shortMessage = message;
-  {
-    const details = [];
-    if (info) {
-      if ("message" in info || "code" in info || "name" in info) {
-        throw new Error(`value will overwrite populated values: ${stringify4(info)}`);
-      }
-      for (const key in info) {
-        if (key === "shortMessage") {
-          continue;
-        }
-        const value = info[key];
-        details.push(key + "=" + stringify4(value));
-      }
-    }
-    details.push(`code=${code}`);
-    details.push(`version=${version3}`);
-    if (details.length) {
-      message += " (" + details.join(", ") + ")";
-    }
-  }
-  let error;
-  switch (code) {
-    case "INVALID_ARGUMENT":
-      error = new TypeError(message);
-      break;
-    case "NUMERIC_FAULT":
-    case "BUFFER_OVERRUN":
-      error = new RangeError(message);
-      break;
-    default:
-      error = new Error(message);
-  }
-  defineProperties3(error, { code });
-  if (info) {
-    Object.assign(error, info);
-  }
-  if (error.shortMessage == null) {
-    defineProperties3(error, { shortMessage });
-  }
-  return error;
-}
-function assert3(check, message, code, info) {
-  if (!check) {
-    throw makeError3(message, code, info);
-  }
-}
-function assertArgument3(check, message, name, value) {
-  assert3(check, message, "INVALID_ARGUMENT", { argument: name, value });
-}
-function assertArgumentCount3(count, expectedCount, message) {
-  if (message == null) {
-    message = "";
-  }
-  if (message) {
-    message = ": " + message;
-  }
-  assert3(count >= expectedCount, "missing arguemnt" + message, "MISSING_ARGUMENT", {
-    count,
-    expectedCount
-  });
-  assert3(count <= expectedCount, "too many arguments" + message, "UNEXPECTED_ARGUMENT", {
-    count,
-    expectedCount
-  });
-}
-var _normalizeForms3 = ["NFD", "NFC", "NFKD", "NFKC"].reduce((accum, form) => {
-  try {
-    if ("test".normalize(form) !== "test") {
-      throw new Error("bad");
-    }
-    ;
-    if (form === "NFD") {
-      const check = String.fromCharCode(233).normalize("NFD");
-      const expected = String.fromCharCode(101, 769);
-      if (check !== expected) {
-        throw new Error("broken");
-      }
-    }
-    accum.push(form);
-  } catch (error) {
-  }
-  return accum;
-}, []);
-function assertNormalize3(form) {
-  assert3(_normalizeForms3.indexOf(form) >= 0, "platform missing String.prototype.normalize", "UNSUPPORTED_OPERATION", {
-    operation: "String.prototype.normalize",
-    info: { form }
-  });
-}
-function assertPrivate3(givenGuard, guard, className) {
-  if (className == null) {
-    className = "";
-  }
-  if (givenGuard !== guard) {
-    let method = className, operation = "new";
-    if (className) {
-      method += ".";
-      operation += " " + className;
-    }
-    assert3(false, `private constructor; use ${method}from* methods`, "UNSUPPORTED_OPERATION", {
-      operation
-    });
-  }
-}
-
-// ../smart-contracts/node_modules/ethers/lib.esm/utils/data.js
-function _getBytes3(value, name, copy4) {
-  if (value instanceof Uint8Array) {
-    if (copy4) {
-      return new Uint8Array(value);
-    }
-    return value;
-  }
-  if (typeof value === "string" && value.match(/^0x(?:[0-9a-f][0-9a-f])*$/i)) {
-    const result = new Uint8Array((value.length - 2) / 2);
-    let offset = 2;
-    for (let i = 0; i < result.length; i++) {
-      result[i] = parseInt(value.substring(offset, offset + 2), 16);
-      offset += 2;
-    }
-    return result;
-  }
-  assertArgument3(false, "invalid BytesLike value", name || "value", value);
-}
-function getBytes3(value, name) {
-  return _getBytes3(value, name, false);
-}
-function getBytesCopy3(value, name) {
-  return _getBytes3(value, name, true);
-}
-function isHexString3(value, length) {
-  if (typeof value !== "string" || !value.match(/^0x[0-9A-Fa-f]*$/)) {
-    return false;
-  }
-  if (typeof length === "number" && value.length !== 2 + 2 * length) {
-    return false;
-  }
-  if (length === true && value.length % 2 !== 0) {
-    return false;
-  }
-  return true;
-}
-function isBytesLike3(value) {
-  return isHexString3(value, true) || value instanceof Uint8Array;
-}
-var HexCharacters3 = "0123456789abcdef";
-function hexlify3(data4) {
-  const bytes5 = getBytes3(data4);
-  let result = "0x";
-  for (let i = 0; i < bytes5.length; i++) {
-    const v = bytes5[i];
-    result += HexCharacters3[(v & 240) >> 4] + HexCharacters3[v & 15];
-  }
-  return result;
-}
-function concat3(datas) {
-  return "0x" + datas.map((d) => hexlify3(d).substring(2)).join("");
-}
-function dataSlice3(data4, start, end) {
-  const bytes5 = getBytes3(data4);
-  if (end != null && end > bytes5.length) {
-    assert3(false, "cannot slice beyond data bounds", "BUFFER_OVERRUN", {
-      buffer: bytes5,
-      length: bytes5.length,
-      offset: end
-    });
-  }
-  return hexlify3(bytes5.slice(start == null ? 0 : start, end == null ? bytes5.length : end));
-}
-function zeroPad3(data4, length, left) {
-  const bytes5 = getBytes3(data4);
-  assert3(length >= bytes5.length, "padding exceeds data length", "BUFFER_OVERRUN", {
-    buffer: new Uint8Array(bytes5),
-    length,
-    offset: length + 1
-  });
-  const result = new Uint8Array(length);
-  result.fill(0);
-  if (left) {
-    result.set(bytes5, length - bytes5.length);
-  } else {
-    result.set(bytes5, 0);
-  }
-  return hexlify3(result);
-}
-function zeroPadValue3(data4, length) {
-  return zeroPad3(data4, length, true);
-}
-function zeroPadBytes3(data4, length) {
-  return zeroPad3(data4, length, false);
-}
-
-// ../smart-contracts/node_modules/ethers/lib.esm/utils/maths.js
-var BN_014 = BigInt(0);
-var BN_18 = BigInt(1);
-var maxValue3 = 9007199254740991;
-function fromTwos3(_value, _width) {
-  const value = getUint3(_value, "value");
-  const width = BigInt(getNumber3(_width, "width"));
-  assert3(value >> width === BN_014, "overflow", "NUMERIC_FAULT", {
-    operation: "fromTwos",
-    fault: "overflow",
-    value: _value
-  });
-  if (value >> width - BN_18) {
-    const mask4 = (BN_18 << width) - BN_18;
-    return -((~value & mask4) + BN_18);
-  }
-  return value;
-}
-function toTwos3(_value, _width) {
-  let value = getBigInt3(_value, "value");
-  const width = BigInt(getNumber3(_width, "width"));
-  const limit = BN_18 << width - BN_18;
-  if (value < BN_014) {
-    value = -value;
-    assert3(value <= limit, "too low", "NUMERIC_FAULT", {
-      operation: "toTwos",
-      fault: "overflow",
-      value: _value
-    });
-    const mask4 = (BN_18 << width) - BN_18;
-    return (~value & mask4) + BN_18;
-  } else {
-    assert3(value < limit, "too high", "NUMERIC_FAULT", {
-      operation: "toTwos",
-      fault: "overflow",
-      value: _value
-    });
-  }
-  return value;
-}
-function mask3(_value, _bits) {
-  const value = getUint3(_value, "value");
-  const bits = BigInt(getNumber3(_bits, "bits"));
-  return value & (BN_18 << bits) - BN_18;
-}
-function getBigInt3(value, name) {
-  switch (typeof value) {
-    case "bigint":
-      return value;
-    case "number":
-      assertArgument3(Number.isInteger(value), "underflow", name || "value", value);
-      assertArgument3(value >= -maxValue3 && value <= maxValue3, "overflow", name || "value", value);
-      return BigInt(value);
-    case "string":
-      try {
-        if (value === "") {
-          throw new Error("empty string");
-        }
-        if (value[0] === "-" && value[1] !== "-") {
-          return -BigInt(value.substring(1));
-        }
-        return BigInt(value);
-      } catch (e) {
-        assertArgument3(false, `invalid BigNumberish string: ${e.message}`, name || "value", value);
-      }
-  }
-  assertArgument3(false, "invalid BigNumberish value", name || "value", value);
-}
-function getUint3(value, name) {
-  const result = getBigInt3(value, name);
-  assert3(result >= BN_014, "unsigned value cannot be negative", "NUMERIC_FAULT", {
-    fault: "overflow",
-    operation: "getUint",
-    value
-  });
-  return result;
-}
-var Nibbles3 = "0123456789abcdef";
-function toBigInt3(value) {
-  if (value instanceof Uint8Array) {
-    let result = "0x0";
-    for (const v of value) {
-      result += Nibbles3[v >> 4];
-      result += Nibbles3[v & 15];
-    }
-    return BigInt(result);
-  }
-  return getBigInt3(value);
-}
-function getNumber3(value, name) {
-  switch (typeof value) {
-    case "bigint":
-      assertArgument3(value >= -maxValue3 && value <= maxValue3, "overflow", name || "value", value);
-      return Number(value);
-    case "number":
-      assertArgument3(Number.isInteger(value), "underflow", name || "value", value);
-      assertArgument3(value >= -maxValue3 && value <= maxValue3, "overflow", name || "value", value);
-      return value;
-    case "string":
-      try {
-        if (value === "") {
-          throw new Error("empty string");
-        }
-        return getNumber3(BigInt(value), name);
-      } catch (e) {
-        assertArgument3(false, `invalid numeric string: ${e.message}`, name || "value", value);
-      }
-  }
-  assertArgument3(false, "invalid numeric value", name || "value", value);
-}
-function toNumber3(value) {
-  return getNumber3(toBigInt3(value));
-}
-function toBeHex3(_value, _width) {
-  const value = getUint3(_value, "value");
-  let result = value.toString(16);
-  if (_width == null) {
-    if (result.length % 2) {
-      result = "0" + result;
-    }
-  } else {
-    const width = getNumber3(_width, "width");
-    assert3(width * 2 >= result.length, `value exceeds width (${width} bytes)`, "NUMERIC_FAULT", {
-      operation: "toBeHex",
-      fault: "overflow",
-      value: _value
-    });
-    while (result.length < width * 2) {
-      result = "0" + result;
-    }
-  }
-  return "0x" + result;
-}
-function toBeArray3(_value) {
-  const value = getUint3(_value, "value");
-  if (value === BN_014) {
-    return new Uint8Array([]);
-  }
-  let hex2 = value.toString(16);
-  if (hex2.length % 2) {
-    hex2 = "0" + hex2;
-  }
-  const result = new Uint8Array(hex2.length / 2);
-  for (let i = 0; i < result.length; i++) {
-    const offset = i * 2;
-    result[i] = parseInt(hex2.substring(offset, offset + 2), 16);
-  }
-  return result;
-}
-
-// ../smart-contracts/node_modules/ethers/lib.esm/utils/events.js
-var EventPayload3 = class {
-  /**
-   *  The event filter.
-   */
-  filter;
-  /**
-   *  The **EventEmitterable**.
-   */
-  emitter;
-  #listener;
-  /**
-   *  Create a new **EventPayload** for %%emitter%% with
-   *  the %%listener%% and for %%filter%%.
-   */
-  constructor(emitter, listener, filter) {
-    this.#listener = listener;
-    defineProperties3(this, { emitter, filter });
-  }
-  /**
-   *  Unregister the triggered listener for future events.
-   */
-  async removeListener() {
-    if (this.#listener == null) {
-      return;
-    }
-    await this.emitter.off(this.filter, this.#listener);
-  }
-};
-
-// ../smart-contracts/node_modules/ethers/lib.esm/utils/utf8.js
-function errorFunc3(reason, offset, bytes5, output5, badCodepoint) {
-  assertArgument3(false, `invalid codepoint at offset ${offset}; ${reason}`, "bytes", bytes5);
-}
-function ignoreFunc3(reason, offset, bytes5, output5, badCodepoint) {
-  if (reason === "BAD_PREFIX" || reason === "UNEXPECTED_CONTINUE") {
-    let i = 0;
-    for (let o = offset + 1; o < bytes5.length; o++) {
-      if (bytes5[o] >> 6 !== 2) {
-        break;
-      }
-      i++;
-    }
-    return i;
-  }
-  if (reason === "OVERRUN") {
-    return bytes5.length - offset - 1;
-  }
-  return 0;
-}
-function replaceFunc3(reason, offset, bytes5, output5, badCodepoint) {
-  if (reason === "OVERLONG") {
-    assertArgument3(typeof badCodepoint === "number", "invalid bad code point for replacement", "badCodepoint", badCodepoint);
-    output5.push(badCodepoint);
-    return 0;
-  }
-  output5.push(65533);
-  return ignoreFunc3(reason, offset, bytes5, output5, badCodepoint);
-}
-var Utf8ErrorFuncs3 = Object.freeze({
-  error: errorFunc3,
-  ignore: ignoreFunc3,
-  replace: replaceFunc3
-});
-function getUtf8CodePoints2(_bytes, onError) {
-  if (onError == null) {
-    onError = Utf8ErrorFuncs3.error;
-  }
-  const bytes5 = getBytes3(_bytes, "bytes");
-  const result = [];
-  let i = 0;
-  while (i < bytes5.length) {
-    const c = bytes5[i++];
-    if (c >> 7 === 0) {
-      result.push(c);
-      continue;
-    }
-    let extraLength = null;
-    let overlongMask = null;
-    if ((c & 224) === 192) {
-      extraLength = 1;
-      overlongMask = 127;
-    } else if ((c & 240) === 224) {
-      extraLength = 2;
-      overlongMask = 2047;
-    } else if ((c & 248) === 240) {
-      extraLength = 3;
-      overlongMask = 65535;
-    } else {
-      if ((c & 192) === 128) {
-        i += onError("UNEXPECTED_CONTINUE", i - 1, bytes5, result);
-      } else {
-        i += onError("BAD_PREFIX", i - 1, bytes5, result);
-      }
-      continue;
-    }
-    if (i - 1 + extraLength >= bytes5.length) {
-      i += onError("OVERRUN", i - 1, bytes5, result);
-      continue;
-    }
-    let res = c & (1 << 8 - extraLength - 1) - 1;
-    for (let j = 0; j < extraLength; j++) {
-      let nextChar = bytes5[i];
-      if ((nextChar & 192) != 128) {
-        i += onError("MISSING_CONTINUE", i, bytes5, result);
-        res = null;
-        break;
-      }
-      ;
-      res = res << 6 | nextChar & 63;
-      i++;
-    }
-    if (res === null) {
-      continue;
-    }
-    if (res > 1114111) {
-      i += onError("OUT_OF_RANGE", i - 1 - extraLength, bytes5, result, res);
-      continue;
-    }
-    if (res >= 55296 && res <= 57343) {
-      i += onError("UTF16_SURROGATE", i - 1 - extraLength, bytes5, result, res);
-      continue;
-    }
-    if (res <= overlongMask) {
-      i += onError("OVERLONG", i - 1 - extraLength, bytes5, result, res);
-      continue;
-    }
-    result.push(res);
-  }
-  return result;
-}
-function toUtf8Bytes3(str, form) {
-  assertArgument3(typeof str === "string", "invalid string value", "str", str);
-  if (form != null) {
-    assertNormalize3(form);
-    str = str.normalize(form);
-  }
-  let result = [];
-  for (let i = 0; i < str.length; i++) {
-    const c = str.charCodeAt(i);
-    if (c < 128) {
-      result.push(c);
-    } else if (c < 2048) {
-      result.push(c >> 6 | 192);
-      result.push(c & 63 | 128);
-    } else if ((c & 64512) == 55296) {
-      i++;
-      const c2 = str.charCodeAt(i);
-      assertArgument3(i < str.length && (c2 & 64512) === 56320, "invalid surrogate pair", "str", str);
-      const pair = 65536 + ((c & 1023) << 10) + (c2 & 1023);
-      result.push(pair >> 18 | 240);
-      result.push(pair >> 12 & 63 | 128);
-      result.push(pair >> 6 & 63 | 128);
-      result.push(pair & 63 | 128);
-    } else {
-      result.push(c >> 12 | 224);
-      result.push(c >> 6 & 63 | 128);
-      result.push(c & 63 | 128);
-    }
-  }
-  return new Uint8Array(result);
-}
-function _toUtf8String2(codePoints) {
-  return codePoints.map((codePoint) => {
-    if (codePoint <= 65535) {
-      return String.fromCharCode(codePoint);
-    }
-    codePoint -= 65536;
-    return String.fromCharCode((codePoint >> 10 & 1023) + 55296, (codePoint & 1023) + 56320);
-  }).join("");
-}
-function toUtf8String3(bytes5, onError) {
-  return _toUtf8String2(getUtf8CodePoints2(bytes5, onError));
-}
-
-// ../smart-contracts/node_modules/ethers/lib.esm/utils/rlp-encode.js
-function arrayifyInteger2(value) {
-  const result = [];
-  while (value) {
-    result.unshift(value & 255);
-    value >>= 8;
-  }
-  return result;
-}
-function _encode2(object2) {
-  if (Array.isArray(object2)) {
-    let payload = [];
-    object2.forEach(function(child) {
-      payload = payload.concat(_encode2(child));
-    });
-    if (payload.length <= 55) {
-      payload.unshift(192 + payload.length);
-      return payload;
-    }
-    const length2 = arrayifyInteger2(payload.length);
-    length2.unshift(247 + length2.length);
-    return length2.concat(payload);
-  }
-  const data4 = Array.prototype.slice.call(getBytes3(object2, "object"));
-  if (data4.length === 1 && data4[0] <= 127) {
-    return data4;
-  } else if (data4.length <= 55) {
-    data4.unshift(128 + data4.length);
-    return data4;
-  }
-  const length = arrayifyInteger2(data4.length);
-  length.unshift(183 + length.length);
-  return length.concat(data4);
-}
-var nibbles2 = "0123456789abcdef";
-function encodeRlp3(object2) {
-  let result = "0x";
-  for (const v of _encode2(object2)) {
-    result += nibbles2[v >> 4];
-    result += nibbles2[v & 15];
-  }
-  return result;
-}
-
-// ../smart-contracts/node_modules/ethers/lib.esm/abi/coders/abstract-coder.js
-var WordSize2 = 32;
-var Padding2 = new Uint8Array(WordSize2);
-var passProperties3 = ["then"];
-var _guard7 = {};
-var resultNames2 = /* @__PURE__ */ new WeakMap();
-function getNames2(result) {
-  return resultNames2.get(result);
-}
-function setNames2(result, names2) {
-  resultNames2.set(result, names2);
-}
-function throwError2(name, error) {
-  const wrapped = new Error(`deferred error during ABI decoding triggered accessing ${name}`);
-  wrapped.error = error;
-  throw wrapped;
-}
-function toObject2(names2, items, deep) {
-  if (names2.indexOf(null) >= 0) {
-    return items.map((item, index) => {
-      if (item instanceof Result2) {
-        return toObject2(getNames2(item), item, deep);
-      }
-      return item;
-    });
-  }
-  return names2.reduce((accum, name, index) => {
-    let item = items.getValue(name);
-    if (!(name in accum)) {
-      if (deep && item instanceof Result2) {
-        item = toObject2(getNames2(item), item, deep);
-      }
-      accum[name] = item;
-    }
-    return accum;
-  }, {});
-}
-var Result2 = class _Result extends Array {
-  // No longer used; but cannot be removed as it will remove the
-  // #private field from the .d.ts which may break backwards
-  // compatibility
-  #names;
-  /**
-   *  @private
-   */
-  constructor(...args) {
-    const guard = args[0];
-    let items = args[1];
-    let names2 = (args[2] || []).slice();
-    let wrap = true;
-    if (guard !== _guard7) {
-      items = args;
-      names2 = [];
-      wrap = false;
-    }
-    super(items.length);
-    items.forEach((item, index) => {
-      this[index] = item;
-    });
-    const nameCounts = names2.reduce((accum, name) => {
-      if (typeof name === "string") {
-        accum.set(name, (accum.get(name) || 0) + 1);
-      }
-      return accum;
-    }, /* @__PURE__ */ new Map());
-    setNames2(this, Object.freeze(items.map((item, index) => {
-      const name = names2[index];
-      if (name != null && nameCounts.get(name) === 1) {
-        return name;
-      }
-      return null;
-    })));
-    this.#names = [];
-    if (this.#names == null) {
-      void this.#names;
-    }
-    if (!wrap) {
-      return;
-    }
-    Object.freeze(this);
-    const proxy = new Proxy(this, {
-      get: (target, prop, receiver) => {
-        if (typeof prop === "string") {
-          if (prop.match(/^[0-9]+$/)) {
-            const index = getNumber3(prop, "%index");
-            if (index < 0 || index >= this.length) {
-              throw new RangeError("out of result range");
-            }
-            const item = target[index];
-            if (item instanceof Error) {
-              throwError2(`index ${index}`, item);
-            }
-            return item;
-          }
-          if (passProperties3.indexOf(prop) >= 0) {
-            return Reflect.get(target, prop, receiver);
-          }
-          const value = target[prop];
-          if (value instanceof Function) {
-            return function(...args2) {
-              return value.apply(this === receiver ? target : this, args2);
-            };
-          } else if (!(prop in target)) {
-            return target.getValue.apply(this === receiver ? target : this, [prop]);
-          }
-        }
-        return Reflect.get(target, prop, receiver);
-      }
-    });
-    setNames2(proxy, getNames2(this));
-    return proxy;
-  }
-  /**
-   *  Returns the Result as a normal Array. If %%deep%%, any children
-   *  which are Result objects are also converted to a normal Array.
-   *
-   *  This will throw if there are any outstanding deferred
-   *  errors.
-   */
-  toArray(deep) {
-    const result = [];
-    this.forEach((item, index) => {
-      if (item instanceof Error) {
-        throwError2(`index ${index}`, item);
-      }
-      if (deep && item instanceof _Result) {
-        item = item.toArray(deep);
-      }
-      result.push(item);
-    });
-    return result;
-  }
-  /**
-   *  Returns the Result as an Object with each name-value pair. If
-   *  %%deep%%, any children which are Result objects are also
-   *  converted to an Object.
-   *
-   *  This will throw if any value is unnamed, or if there are
-   *  any outstanding deferred errors.
-   */
-  toObject(deep) {
-    const names2 = getNames2(this);
-    return names2.reduce((accum, name, index) => {
-      assert3(name != null, `value at index ${index} unnamed`, "UNSUPPORTED_OPERATION", {
-        operation: "toObject()"
-      });
-      return toObject2(names2, this, deep);
-    }, {});
-  }
-  /**
-   *  @_ignore
-   */
-  slice(start, end) {
-    if (start == null) {
-      start = 0;
-    }
-    if (start < 0) {
-      start += this.length;
-      if (start < 0) {
-        start = 0;
-      }
-    }
-    if (end == null) {
-      end = this.length;
-    }
-    if (end < 0) {
-      end += this.length;
-      if (end < 0) {
-        end = 0;
-      }
-    }
-    if (end > this.length) {
-      end = this.length;
-    }
-    const _names = getNames2(this);
-    const result = [], names2 = [];
-    for (let i = start; i < end; i++) {
-      result.push(this[i]);
-      names2.push(_names[i]);
-    }
-    return new _Result(_guard7, result, names2);
-  }
-  /**
-   *  @_ignore
-   */
-  filter(callback, thisArg) {
-    const _names = getNames2(this);
-    const result = [], names2 = [];
-    for (let i = 0; i < this.length; i++) {
-      const item = this[i];
-      if (item instanceof Error) {
-        throwError2(`index ${i}`, item);
-      }
-      if (callback.call(thisArg, item, i, this)) {
-        result.push(item);
-        names2.push(_names[i]);
-      }
-    }
-    return new _Result(_guard7, result, names2);
-  }
-  /**
-   *  @_ignore
-   */
-  map(callback, thisArg) {
-    const result = [];
-    for (let i = 0; i < this.length; i++) {
-      const item = this[i];
-      if (item instanceof Error) {
-        throwError2(`index ${i}`, item);
-      }
-      result.push(callback.call(thisArg, item, i, this));
-    }
-    return result;
-  }
-  /**
-   *  Returns the value for %%name%%.
-   *
-   *  Since it is possible to have a key whose name conflicts with
-   *  a method on a [[Result]] or its superclass Array, or any
-   *  JavaScript keyword, this ensures all named values are still
-   *  accessible by name.
-   */
-  getValue(name) {
-    const index = getNames2(this).indexOf(name);
-    if (index === -1) {
-      return void 0;
-    }
-    const value = this[index];
-    if (value instanceof Error) {
-      throwError2(`property ${JSON.stringify(name)}`, value.error);
-    }
-    return value;
-  }
-  /**
-   *  Creates a new [[Result]] for %%items%% with each entry
-   *  also accessible by its corresponding name in %%keys%%.
-   */
-  static fromItems(items, keys) {
-    return new _Result(_guard7, items, keys);
-  }
-};
-function getValue3(value) {
-  let bytes5 = toBeArray3(value);
-  assert3(bytes5.length <= WordSize2, "value out-of-bounds", "BUFFER_OVERRUN", { buffer: bytes5, length: WordSize2, offset: bytes5.length });
-  if (bytes5.length !== WordSize2) {
-    bytes5 = getBytesCopy3(concat3([Padding2.slice(bytes5.length % WordSize2), bytes5]));
-  }
-  return bytes5;
-}
-var Coder2 = class {
-  // The coder name:
-  //   - address, uint256, tuple, array, etc.
-  name;
-  // The fully expanded type, including composite types:
-  //   - address, uint256, tuple(address,bytes), uint256[3][4][],  etc.
-  type;
-  // The localName bound in the signature, in this example it is "baz":
-  //   - tuple(address foo, uint bar) baz
-  localName;
-  // Whether this type is dynamic:
-  //  - Dynamic: bytes, string, address[], tuple(boolean[]), etc.
-  //  - Not Dynamic: address, uint256, boolean[3], tuple(address, uint8)
-  dynamic;
-  constructor(name, type, localName, dynamic) {
-    defineProperties3(this, { name, type, localName, dynamic }, {
-      name: "string",
-      type: "string",
-      localName: "string",
-      dynamic: "boolean"
-    });
-  }
-  _throwError(message, value) {
-    assertArgument3(false, message, this.localName, value);
-  }
-};
-var Writer2 = class {
-  // An array of WordSize lengthed objects to concatenation
-  #data;
-  #dataLength;
-  constructor() {
-    this.#data = [];
-    this.#dataLength = 0;
-  }
-  get data() {
-    return concat3(this.#data);
-  }
-  get length() {
-    return this.#dataLength;
-  }
-  #writeData(data4) {
-    this.#data.push(data4);
-    this.#dataLength += data4.length;
-    return data4.length;
-  }
-  appendWriter(writer) {
-    return this.#writeData(getBytesCopy3(writer.data));
-  }
-  // Arrayish item; pad on the right to *nearest* WordSize
-  writeBytes(value) {
-    let bytes5 = getBytesCopy3(value);
-    const paddingOffset = bytes5.length % WordSize2;
-    if (paddingOffset) {
-      bytes5 = getBytesCopy3(concat3([bytes5, Padding2.slice(paddingOffset)]));
-    }
-    return this.#writeData(bytes5);
-  }
-  // Numeric item; pad on the left *to* WordSize
-  writeValue(value) {
-    return this.#writeData(getValue3(value));
-  }
-  // Inserts a numeric place-holder, returning a callback that can
-  // be used to asjust the value later
-  writeUpdatableValue() {
-    const offset = this.#data.length;
-    this.#data.push(Padding2);
-    this.#dataLength += WordSize2;
-    return (value) => {
-      this.#data[offset] = getValue3(value);
-    };
-  }
-};
-var Reader2 = class _Reader {
-  // Allows incomplete unpadded data to be read; otherwise an error
-  // is raised if attempting to overrun the buffer. This is required
-  // to deal with an old Solidity bug, in which event data for
-  // external (not public thoguh) was tightly packed.
-  allowLoose;
-  #data;
-  #offset;
-  #bytesRead;
-  #parent;
-  #maxInflation;
-  constructor(data4, allowLoose, maxInflation) {
-    defineProperties3(this, { allowLoose: !!allowLoose });
-    this.#data = getBytesCopy3(data4);
-    this.#bytesRead = 0;
-    this.#parent = null;
-    this.#maxInflation = maxInflation != null ? maxInflation : 1024;
-    this.#offset = 0;
-  }
-  get data() {
-    return hexlify3(this.#data);
-  }
-  get dataLength() {
-    return this.#data.length;
-  }
-  get consumed() {
-    return this.#offset;
-  }
-  get bytes() {
-    return new Uint8Array(this.#data);
-  }
-  #incrementBytesRead(count) {
-    if (this.#parent) {
-      return this.#parent.#incrementBytesRead(count);
-    }
-    this.#bytesRead += count;
-    assert3(this.#maxInflation < 1 || this.#bytesRead <= this.#maxInflation * this.dataLength, `compressed ABI data exceeds inflation ratio of ${this.#maxInflation} ( see: https://github.com/ethers-io/ethers.js/issues/4537 )`, "BUFFER_OVERRUN", {
-      buffer: getBytesCopy3(this.#data),
-      offset: this.#offset,
-      length: count,
-      info: {
-        bytesRead: this.#bytesRead,
-        dataLength: this.dataLength
-      }
-    });
-  }
-  #peekBytes(offset, length, loose) {
-    let alignedLength = Math.ceil(length / WordSize2) * WordSize2;
-    if (this.#offset + alignedLength > this.#data.length) {
-      if (this.allowLoose && loose && this.#offset + length <= this.#data.length) {
-        alignedLength = length;
-      } else {
-        assert3(false, "data out-of-bounds", "BUFFER_OVERRUN", {
-          buffer: getBytesCopy3(this.#data),
-          length: this.#data.length,
-          offset: this.#offset + alignedLength
-        });
-      }
-    }
-    return this.#data.slice(this.#offset, this.#offset + alignedLength);
-  }
-  // Create a sub-reader with the same underlying data, but offset
-  subReader(offset) {
-    const reader = new _Reader(this.#data.slice(this.#offset + offset), this.allowLoose, this.#maxInflation);
-    reader.#parent = this;
-    return reader;
-  }
-  // Read bytes
-  readBytes(length, loose) {
-    let bytes5 = this.#peekBytes(0, length, !!loose);
-    this.#incrementBytesRead(length);
-    this.#offset += bytes5.length;
-    return bytes5.slice(0, length);
-  }
-  // Read a numeric values
-  readValue() {
-    return toBigInt3(this.readBytes(WordSize2));
-  }
-  readIndex() {
-    return toNumber3(this.readBytes(WordSize2));
-  }
-};
-
-// ../smart-contracts/node_modules/ethers/node_modules/@noble/hashes/esm/_assert.js
-function number4(n3) {
-  if (!Number.isSafeInteger(n3) || n3 < 0)
-    throw new Error(`Wrong positive integer: ${n3}`);
-}
-function bytes4(b3, ...lengths) {
-  if (!(b3 instanceof Uint8Array))
-    throw new Error("Expected Uint8Array");
-  if (lengths.length > 0 && !lengths.includes(b3.length))
-    throw new Error(`Expected Uint8Array of length ${lengths}, not of length=${b3.length}`);
-}
-function exists4(instance, checkFinished = true) {
-  if (instance.destroyed)
-    throw new Error("Hash instance has been destroyed");
-  if (checkFinished && instance.finished)
-    throw new Error("Hash#digest() has already been called");
-}
-function output4(out, instance) {
-  bytes4(out);
-  const min = instance.outputLen;
-  if (out.length < min) {
-    throw new Error(`digestInto() expects output buffer of length at least ${min}`);
-  }
-}
-
-// ../smart-contracts/node_modules/ethers/node_modules/@noble/hashes/esm/_u64.js
-var U32_MASK644 = /* @__PURE__ */ BigInt(2 ** 32 - 1);
-var _32n4 = /* @__PURE__ */ BigInt(32);
-function fromBig4(n3, le = false) {
-  if (le)
-    return { h: Number(n3 & U32_MASK644), l: Number(n3 >> _32n4 & U32_MASK644) };
-  return { h: Number(n3 >> _32n4 & U32_MASK644) | 0, l: Number(n3 & U32_MASK644) | 0 };
-}
-function split5(lst, le = false) {
-  let Ah = new Uint32Array(lst.length);
-  let Al = new Uint32Array(lst.length);
-  for (let i = 0; i < lst.length; i++) {
-    const { h, l } = fromBig4(lst[i], le);
-    [Ah[i], Al[i]] = [h, l];
-  }
-  return [Ah, Al];
-}
-var rotlSH4 = (h, l, s) => h << s | l >>> 32 - s;
-var rotlSL4 = (h, l, s) => l << s | h >>> 32 - s;
-var rotlBH4 = (h, l, s) => l << s - 32 | h >>> 64 - s;
-var rotlBL4 = (h, l, s) => h << s - 32 | l >>> 64 - s;
-
-// ../smart-contracts/node_modules/ethers/node_modules/@noble/hashes/esm/utils.js
-var u8a4 = (a) => a instanceof Uint8Array;
-var u324 = (arr) => new Uint32Array(arr.buffer, arr.byteOffset, Math.floor(arr.byteLength / 4));
-var isLE4 = new Uint8Array(new Uint32Array([287454020]).buffer)[0] === 68;
-if (!isLE4)
-  throw new Error("Non little-endian hardware is not supported");
-function utf8ToBytes6(str) {
-  if (typeof str !== "string")
-    throw new Error(`utf8ToBytes expected string, got ${typeof str}`);
-  return new Uint8Array(new TextEncoder().encode(str));
-}
-function toBytes4(data4) {
-  if (typeof data4 === "string")
-    data4 = utf8ToBytes6(data4);
-  if (!u8a4(data4))
-    throw new Error(`expected Uint8Array, got ${typeof data4}`);
-  return data4;
-}
-var Hash4 = class {
-  // Safe version that clones internal state
-  clone() {
-    return this._cloneInto();
-  }
-};
-var toStr4 = {}.toString;
-function wrapConstructor4(hashCons) {
-  const hashC = (msg) => hashCons().update(toBytes4(msg)).digest();
-  const tmp = hashCons();
-  hashC.outputLen = tmp.outputLen;
-  hashC.blockLen = tmp.blockLen;
-  hashC.create = () => hashCons();
-  return hashC;
-}
-function wrapXOFConstructorWithOpts4(hashCons) {
-  const hashC = (msg, opts) => hashCons(opts).update(toBytes4(msg)).digest();
-  const tmp = hashCons({});
-  hashC.outputLen = tmp.outputLen;
-  hashC.blockLen = tmp.blockLen;
-  hashC.create = (opts) => hashCons(opts);
-  return hashC;
-}
-
-// ../smart-contracts/node_modules/ethers/node_modules/@noble/hashes/esm/sha3.js
-var [SHA3_PI4, SHA3_ROTL4, _SHA3_IOTA4] = [[], [], []];
-var _0n15 = /* @__PURE__ */ BigInt(0);
-var _1n16 = /* @__PURE__ */ BigInt(1);
-var _2n14 = /* @__PURE__ */ BigInt(2);
-var _7n4 = /* @__PURE__ */ BigInt(7);
-var _256n4 = /* @__PURE__ */ BigInt(256);
-var _0x71n4 = /* @__PURE__ */ BigInt(113);
-for (let round = 0, R = _1n16, x = 1, y = 0; round < 24; round++) {
-  [x, y] = [y, (2 * x + 3 * y) % 5];
-  SHA3_PI4.push(2 * (5 * y + x));
-  SHA3_ROTL4.push((round + 1) * (round + 2) / 2 % 64);
-  let t = _0n15;
-  for (let j = 0; j < 7; j++) {
-    R = (R << _1n16 ^ (R >> _7n4) * _0x71n4) % _256n4;
-    if (R & _2n14)
-      t ^= _1n16 << (_1n16 << /* @__PURE__ */ BigInt(j)) - _1n16;
-  }
-  _SHA3_IOTA4.push(t);
-}
-var [SHA3_IOTA_H4, SHA3_IOTA_L4] = /* @__PURE__ */ split5(_SHA3_IOTA4, true);
-var rotlH4 = (h, l, s) => s > 32 ? rotlBH4(h, l, s) : rotlSH4(h, l, s);
-var rotlL4 = (h, l, s) => s > 32 ? rotlBL4(h, l, s) : rotlSL4(h, l, s);
-function keccakP4(s, rounds = 24) {
-  const B = new Uint32Array(5 * 2);
-  for (let round = 24 - rounds; round < 24; round++) {
-    for (let x = 0; x < 10; x++)
-      B[x] = s[x] ^ s[x + 10] ^ s[x + 20] ^ s[x + 30] ^ s[x + 40];
-    for (let x = 0; x < 10; x += 2) {
-      const idx1 = (x + 8) % 10;
-      const idx0 = (x + 2) % 10;
-      const B0 = B[idx0];
-      const B1 = B[idx0 + 1];
-      const Th = rotlH4(B0, B1, 1) ^ B[idx1];
-      const Tl = rotlL4(B0, B1, 1) ^ B[idx1 + 1];
-      for (let y = 0; y < 50; y += 10) {
-        s[x + y] ^= Th;
-        s[x + y + 1] ^= Tl;
-      }
-    }
-    let curH = s[2];
-    let curL = s[3];
-    for (let t = 0; t < 24; t++) {
-      const shift = SHA3_ROTL4[t];
-      const Th = rotlH4(curH, curL, shift);
-      const Tl = rotlL4(curH, curL, shift);
-      const PI = SHA3_PI4[t];
-      curH = s[PI];
-      curL = s[PI + 1];
-      s[PI] = Th;
-      s[PI + 1] = Tl;
-    }
-    for (let y = 0; y < 50; y += 10) {
-      for (let x = 0; x < 10; x++)
-        B[x] = s[y + x];
-      for (let x = 0; x < 10; x++)
-        s[y + x] ^= ~B[(x + 2) % 10] & B[(x + 4) % 10];
-    }
-    s[0] ^= SHA3_IOTA_H4[round];
-    s[1] ^= SHA3_IOTA_L4[round];
-  }
-  B.fill(0);
-}
-var Keccak4 = class _Keccak extends Hash4 {
-  // NOTE: we accept arguments in bytes instead of bits here.
-  constructor(blockLen, suffix, outputLen, enableXOF = false, rounds = 24) {
-    super();
-    this.blockLen = blockLen;
-    this.suffix = suffix;
-    this.outputLen = outputLen;
-    this.enableXOF = enableXOF;
-    this.rounds = rounds;
-    this.pos = 0;
-    this.posOut = 0;
-    this.finished = false;
-    this.destroyed = false;
-    number4(outputLen);
-    if (0 >= this.blockLen || this.blockLen >= 200)
-      throw new Error("Sha3 supports only keccak-f1600 function");
-    this.state = new Uint8Array(200);
-    this.state32 = u324(this.state);
-  }
-  keccak() {
-    keccakP4(this.state32, this.rounds);
-    this.posOut = 0;
-    this.pos = 0;
-  }
-  update(data4) {
-    exists4(this);
-    const { blockLen, state } = this;
-    data4 = toBytes4(data4);
-    const len = data4.length;
-    for (let pos = 0; pos < len; ) {
-      const take = Math.min(blockLen - this.pos, len - pos);
-      for (let i = 0; i < take; i++)
-        state[this.pos++] ^= data4[pos++];
-      if (this.pos === blockLen)
-        this.keccak();
-    }
-    return this;
-  }
-  finish() {
-    if (this.finished)
-      return;
-    this.finished = true;
-    const { state, suffix, pos, blockLen } = this;
-    state[pos] ^= suffix;
-    if ((suffix & 128) !== 0 && pos === blockLen - 1)
-      this.keccak();
-    state[blockLen - 1] ^= 128;
-    this.keccak();
-  }
-  writeInto(out) {
-    exists4(this, false);
-    bytes4(out);
-    this.finish();
-    const bufferOut = this.state;
-    const { blockLen } = this;
-    for (let pos = 0, len = out.length; pos < len; ) {
-      if (this.posOut >= blockLen)
-        this.keccak();
-      const take = Math.min(blockLen - this.posOut, len - pos);
-      out.set(bufferOut.subarray(this.posOut, this.posOut + take), pos);
-      this.posOut += take;
-      pos += take;
-    }
-    return out;
-  }
-  xofInto(out) {
-    if (!this.enableXOF)
-      throw new Error("XOF is not possible for this instance");
-    return this.writeInto(out);
-  }
-  xof(bytes5) {
-    number4(bytes5);
-    return this.xofInto(new Uint8Array(bytes5));
-  }
-  digestInto(out) {
-    output4(out, this);
-    if (this.finished)
-      throw new Error("digest() was already called");
-    this.writeInto(out);
-    this.destroy();
-    return out;
-  }
-  digest() {
-    return this.digestInto(new Uint8Array(this.outputLen));
-  }
-  destroy() {
-    this.destroyed = true;
-    this.state.fill(0);
-  }
-  _cloneInto(to) {
-    const { blockLen, suffix, outputLen, rounds, enableXOF } = this;
-    to || (to = new _Keccak(blockLen, suffix, outputLen, enableXOF, rounds));
-    to.state32.set(this.state32);
-    to.pos = this.pos;
-    to.posOut = this.posOut;
-    to.finished = this.finished;
-    to.rounds = rounds;
-    to.suffix = suffix;
-    to.outputLen = outputLen;
-    to.enableXOF = enableXOF;
-    to.destroyed = this.destroyed;
-    return to;
-  }
-};
-var gen4 = (suffix, blockLen, outputLen) => wrapConstructor4(() => new Keccak4(blockLen, suffix, outputLen));
-var sha3_2244 = /* @__PURE__ */ gen4(6, 144, 224 / 8);
-var sha3_2564 = /* @__PURE__ */ gen4(6, 136, 256 / 8);
-var sha3_3844 = /* @__PURE__ */ gen4(6, 104, 384 / 8);
-var sha3_5124 = /* @__PURE__ */ gen4(6, 72, 512 / 8);
-var keccak_2244 = /* @__PURE__ */ gen4(1, 144, 224 / 8);
-var keccak_2564 = /* @__PURE__ */ gen4(1, 136, 256 / 8);
-var keccak_3844 = /* @__PURE__ */ gen4(1, 104, 384 / 8);
-var keccak_5124 = /* @__PURE__ */ gen4(1, 72, 512 / 8);
-var genShake4 = (suffix, blockLen, outputLen) => wrapXOFConstructorWithOpts4((opts = {}) => new Keccak4(blockLen, suffix, opts.dkLen === void 0 ? outputLen : opts.dkLen, true));
-var shake1284 = /* @__PURE__ */ genShake4(31, 168, 128 / 8);
-var shake2564 = /* @__PURE__ */ genShake4(31, 136, 256 / 8);
-
-// ../smart-contracts/node_modules/ethers/lib.esm/crypto/keccak.js
-var locked9 = false;
-var _keccak2563 = function(data4) {
-  return keccak_2564(data4);
-};
-var __keccak2563 = _keccak2563;
-function keccak2563(_data) {
-  const data4 = getBytes3(_data, "data");
-  return hexlify3(__keccak2563(data4));
-}
-keccak2563._ = _keccak2563;
-keccak2563.lock = function() {
-  locked9 = true;
-};
-keccak2563.register = function(func) {
-  if (locked9) {
-    throw new TypeError("keccak256 is locked");
-  }
-  __keccak2563 = func;
-};
-Object.freeze(keccak2563);
-
-// ../smart-contracts/node_modules/ethers/lib.esm/address/address.js
-var BN_015 = BigInt(0);
-var BN_363 = BigInt(36);
-function getChecksumAddress3(address) {
-  address = address.toLowerCase();
-  const chars = address.substring(2).split("");
-  const expanded = new Uint8Array(40);
-  for (let i = 0; i < 40; i++) {
-    expanded[i] = chars[i].charCodeAt(0);
-  }
-  const hashed = getBytes3(keccak2563(expanded));
-  for (let i = 0; i < 40; i += 2) {
-    if (hashed[i >> 1] >> 4 >= 8) {
-      chars[i] = chars[i].toUpperCase();
-    }
-    if ((hashed[i >> 1] & 15) >= 8) {
-      chars[i + 1] = chars[i + 1].toUpperCase();
-    }
-  }
-  return "0x" + chars.join("");
-}
-var ibanLookup3 = {};
-for (let i = 0; i < 10; i++) {
-  ibanLookup3[String(i)] = String(i);
-}
-for (let i = 0; i < 26; i++) {
-  ibanLookup3[String.fromCharCode(65 + i)] = String(10 + i);
-}
-var safeDigits3 = 15;
-function ibanChecksum3(address) {
-  address = address.toUpperCase();
-  address = address.substring(4) + address.substring(0, 2) + "00";
-  let expanded = address.split("").map((c) => {
-    return ibanLookup3[c];
-  }).join("");
-  while (expanded.length >= safeDigits3) {
-    let block = expanded.substring(0, safeDigits3);
-    expanded = parseInt(block, 10) % 97 + expanded.substring(block.length);
-  }
-  let checksum7 = String(98 - parseInt(expanded, 10) % 97);
-  while (checksum7.length < 2) {
-    checksum7 = "0" + checksum7;
-  }
-  return checksum7;
-}
-var Base363 = function() {
-  ;
-  const result = {};
-  for (let i = 0; i < 36; i++) {
-    const key = "0123456789abcdefghijklmnopqrstuvwxyz"[i];
-    result[key] = BigInt(i);
-  }
-  return result;
-}();
-function fromBase363(value) {
-  value = value.toLowerCase();
-  let result = BN_015;
-  for (let i = 0; i < value.length; i++) {
-    result = result * BN_363 + Base363[value[i]];
-  }
-  return result;
-}
-function getAddress3(address) {
-  assertArgument3(typeof address === "string", "invalid address", "address", address);
-  if (address.match(/^(0x)?[0-9a-fA-F]{40}$/)) {
-    if (!address.startsWith("0x")) {
-      address = "0x" + address;
-    }
-    const result = getChecksumAddress3(address);
-    assertArgument3(!address.match(/([A-F].*[a-f])|([a-f].*[A-F])/) || result === address, "bad address checksum", "address", address);
-    return result;
-  }
-  if (address.match(/^XE[0-9]{2}[0-9A-Za-z]{30,31}$/)) {
-    assertArgument3(address.substring(2, 4) === ibanChecksum3(address), "bad icap checksum", "address", address);
-    let result = fromBase363(address.substring(4)).toString(16);
-    while (result.length < 40) {
-      result = "0" + result;
-    }
-    return getChecksumAddress3("0x" + result);
-  }
-  assertArgument3(false, "invalid address", "address", address);
-}
-
-// ../smart-contracts/node_modules/ethers/lib.esm/address/contract-address.js
-function getCreateAddress2(tx) {
-  const from = getAddress3(tx.from);
-  const nonce = getBigInt3(tx.nonce, "tx.nonce");
-  let nonceHex = nonce.toString(16);
-  if (nonceHex === "0") {
-    nonceHex = "0x";
-  } else if (nonceHex.length % 2) {
-    nonceHex = "0x0" + nonceHex;
-  } else {
-    nonceHex = "0x" + nonceHex;
-  }
-  return getAddress3(dataSlice3(keccak2563(encodeRlp3([from, nonceHex])), 12));
-}
-
-// ../smart-contracts/node_modules/ethers/lib.esm/address/checks.js
-function isAddressable2(value) {
-  return value && typeof value.getAddress === "function";
-}
-async function checkAddress2(target, promise) {
-  const result = await promise;
-  if (result == null || result === "0x0000000000000000000000000000000000000000") {
-    assert3(typeof target !== "string", "unconfigured name", "UNCONFIGURED_NAME", { value: target });
-    assertArgument3(false, "invalid AddressLike value; did not resolve to a value address", "target", target);
-  }
-  return getAddress3(result);
-}
-function resolveAddress2(target, resolver) {
-  if (typeof target === "string") {
-    if (target.match(/^0x[0-9a-f]{40}$/i)) {
-      return getAddress3(target);
-    }
-    assert3(resolver != null, "ENS resolution requires a provider", "UNSUPPORTED_OPERATION", { operation: "resolveName" });
-    return checkAddress2(target, resolver.resolveName(target));
-  } else if (isAddressable2(target)) {
-    return checkAddress2(target, target.getAddress());
-  } else if (target && typeof target.then === "function") {
-    return checkAddress2(target, target);
-  }
-  assertArgument3(false, "unsupported addressable value", "target", target);
-}
-
-// ../smart-contracts/node_modules/ethers/lib.esm/abi/typed.js
-var _gaurd2 = {};
-function n2(value, width) {
-  let signed2 = false;
-  if (width < 0) {
-    signed2 = true;
-    width *= -1;
-  }
-  return new Typed2(_gaurd2, `${signed2 ? "" : "u"}int${width}`, value, { signed: signed2, width });
-}
-function b2(value, size) {
-  return new Typed2(_gaurd2, `bytes${size ? size : ""}`, value, { size });
-}
-var _typedSymbol2 = Symbol.for("_ethers_typed");
-var Typed2 = class _Typed {
-  /**
-   *  The type, as a Solidity-compatible type.
-   */
-  type;
-  /**
-   *  The actual value.
-   */
-  value;
-  #options;
-  /**
-   *  @_ignore:
-   */
-  _typedSymbol;
-  /**
-   *  @_ignore:
-   */
-  constructor(gaurd, type, value, options2) {
-    if (options2 == null) {
-      options2 = null;
-    }
-    assertPrivate3(_gaurd2, gaurd, "Typed");
-    defineProperties3(this, { _typedSymbol: _typedSymbol2, type, value });
-    this.#options = options2;
-    this.format();
-  }
-  /**
-   *  Format the type as a Human-Readable type.
-   */
-  format() {
-    if (this.type === "array") {
-      throw new Error("");
-    } else if (this.type === "dynamicArray") {
-      throw new Error("");
-    } else if (this.type === "tuple") {
-      return `tuple(${this.value.map((v) => v.format()).join(",")})`;
-    }
-    return this.type;
-  }
-  /**
-   *  The default value returned by this type.
-   */
-  defaultValue() {
-    return 0;
-  }
-  /**
-   *  The minimum value for numeric types.
-   */
-  minValue() {
-    return 0;
-  }
-  /**
-   *  The maximum value for numeric types.
-   */
-  maxValue() {
-    return 0;
-  }
-  /**
-   *  Returns ``true`` and provides a type guard is this is a [[TypedBigInt]].
-   */
-  isBigInt() {
-    return !!this.type.match(/^u?int[0-9]+$/);
-  }
-  /**
-   *  Returns ``true`` and provides a type guard is this is a [[TypedData]].
-   */
-  isData() {
-    return this.type.startsWith("bytes");
-  }
-  /**
-   *  Returns ``true`` and provides a type guard is this is a [[TypedString]].
-   */
-  isString() {
-    return this.type === "string";
-  }
-  /**
-   *  Returns the tuple name, if this is a tuple. Throws otherwise.
-   */
-  get tupleName() {
-    if (this.type !== "tuple") {
-      throw TypeError("not a tuple");
-    }
-    return this.#options;
-  }
-  // Returns the length of this type as an array
-  // - `null` indicates the length is unforced, it could be dynamic
-  // - `-1` indicates the length is dynamic
-  // - any other value indicates it is a static array and is its length
-  /**
-   *  Returns the length of the array type or ``-1`` if it is dynamic.
-   *
-   *  Throws if the type is not an array.
-   */
-  get arrayLength() {
-    if (this.type !== "array") {
-      throw TypeError("not an array");
-    }
-    if (this.#options === true) {
-      return -1;
-    }
-    if (this.#options === false) {
-      return this.value.length;
-    }
-    return null;
-  }
-  /**
-   *  Returns a new **Typed** of %%type%% with the %%value%%.
-   */
-  static from(type, value) {
-    return new _Typed(_gaurd2, type, value);
-  }
-  /**
-   *  Return a new ``uint8`` type for %%v%%.
-   */
-  static uint8(v) {
-    return n2(v, 8);
-  }
-  /**
-   *  Return a new ``uint16`` type for %%v%%.
-   */
-  static uint16(v) {
-    return n2(v, 16);
-  }
-  /**
-   *  Return a new ``uint24`` type for %%v%%.
-   */
-  static uint24(v) {
-    return n2(v, 24);
-  }
-  /**
-   *  Return a new ``uint32`` type for %%v%%.
-   */
-  static uint32(v) {
-    return n2(v, 32);
-  }
-  /**
-   *  Return a new ``uint40`` type for %%v%%.
-   */
-  static uint40(v) {
-    return n2(v, 40);
-  }
-  /**
-   *  Return a new ``uint48`` type for %%v%%.
-   */
-  static uint48(v) {
-    return n2(v, 48);
-  }
-  /**
-   *  Return a new ``uint56`` type for %%v%%.
-   */
-  static uint56(v) {
-    return n2(v, 56);
-  }
-  /**
-   *  Return a new ``uint64`` type for %%v%%.
-   */
-  static uint64(v) {
-    return n2(v, 64);
-  }
-  /**
-   *  Return a new ``uint72`` type for %%v%%.
-   */
-  static uint72(v) {
-    return n2(v, 72);
-  }
-  /**
-   *  Return a new ``uint80`` type for %%v%%.
-   */
-  static uint80(v) {
-    return n2(v, 80);
-  }
-  /**
-   *  Return a new ``uint88`` type for %%v%%.
-   */
-  static uint88(v) {
-    return n2(v, 88);
-  }
-  /**
-   *  Return a new ``uint96`` type for %%v%%.
-   */
-  static uint96(v) {
-    return n2(v, 96);
-  }
-  /**
-   *  Return a new ``uint104`` type for %%v%%.
-   */
-  static uint104(v) {
-    return n2(v, 104);
-  }
-  /**
-   *  Return a new ``uint112`` type for %%v%%.
-   */
-  static uint112(v) {
-    return n2(v, 112);
-  }
-  /**
-   *  Return a new ``uint120`` type for %%v%%.
-   */
-  static uint120(v) {
-    return n2(v, 120);
-  }
-  /**
-   *  Return a new ``uint128`` type for %%v%%.
-   */
-  static uint128(v) {
-    return n2(v, 128);
-  }
-  /**
-   *  Return a new ``uint136`` type for %%v%%.
-   */
-  static uint136(v) {
-    return n2(v, 136);
-  }
-  /**
-   *  Return a new ``uint144`` type for %%v%%.
-   */
-  static uint144(v) {
-    return n2(v, 144);
-  }
-  /**
-   *  Return a new ``uint152`` type for %%v%%.
-   */
-  static uint152(v) {
-    return n2(v, 152);
-  }
-  /**
-   *  Return a new ``uint160`` type for %%v%%.
-   */
-  static uint160(v) {
-    return n2(v, 160);
-  }
-  /**
-   *  Return a new ``uint168`` type for %%v%%.
-   */
-  static uint168(v) {
-    return n2(v, 168);
-  }
-  /**
-   *  Return a new ``uint176`` type for %%v%%.
-   */
-  static uint176(v) {
-    return n2(v, 176);
-  }
-  /**
-   *  Return a new ``uint184`` type for %%v%%.
-   */
-  static uint184(v) {
-    return n2(v, 184);
-  }
-  /**
-   *  Return a new ``uint192`` type for %%v%%.
-   */
-  static uint192(v) {
-    return n2(v, 192);
-  }
-  /**
-   *  Return a new ``uint200`` type for %%v%%.
-   */
-  static uint200(v) {
-    return n2(v, 200);
-  }
-  /**
-   *  Return a new ``uint208`` type for %%v%%.
-   */
-  static uint208(v) {
-    return n2(v, 208);
-  }
-  /**
-   *  Return a new ``uint216`` type for %%v%%.
-   */
-  static uint216(v) {
-    return n2(v, 216);
-  }
-  /**
-   *  Return a new ``uint224`` type for %%v%%.
-   */
-  static uint224(v) {
-    return n2(v, 224);
-  }
-  /**
-   *  Return a new ``uint232`` type for %%v%%.
-   */
-  static uint232(v) {
-    return n2(v, 232);
-  }
-  /**
-   *  Return a new ``uint240`` type for %%v%%.
-   */
-  static uint240(v) {
-    return n2(v, 240);
-  }
-  /**
-   *  Return a new ``uint248`` type for %%v%%.
-   */
-  static uint248(v) {
-    return n2(v, 248);
-  }
-  /**
-   *  Return a new ``uint256`` type for %%v%%.
-   */
-  static uint256(v) {
-    return n2(v, 256);
-  }
-  /**
-   *  Return a new ``uint256`` type for %%v%%.
-   */
-  static uint(v) {
-    return n2(v, 256);
-  }
-  /**
-   *  Return a new ``int8`` type for %%v%%.
-   */
-  static int8(v) {
-    return n2(v, -8);
-  }
-  /**
-   *  Return a new ``int16`` type for %%v%%.
-   */
-  static int16(v) {
-    return n2(v, -16);
-  }
-  /**
-   *  Return a new ``int24`` type for %%v%%.
-   */
-  static int24(v) {
-    return n2(v, -24);
-  }
-  /**
-   *  Return a new ``int32`` type for %%v%%.
-   */
-  static int32(v) {
-    return n2(v, -32);
-  }
-  /**
-   *  Return a new ``int40`` type for %%v%%.
-   */
-  static int40(v) {
-    return n2(v, -40);
-  }
-  /**
-   *  Return a new ``int48`` type for %%v%%.
-   */
-  static int48(v) {
-    return n2(v, -48);
-  }
-  /**
-   *  Return a new ``int56`` type for %%v%%.
-   */
-  static int56(v) {
-    return n2(v, -56);
-  }
-  /**
-   *  Return a new ``int64`` type for %%v%%.
-   */
-  static int64(v) {
-    return n2(v, -64);
-  }
-  /**
-   *  Return a new ``int72`` type for %%v%%.
-   */
-  static int72(v) {
-    return n2(v, -72);
-  }
-  /**
-   *  Return a new ``int80`` type for %%v%%.
-   */
-  static int80(v) {
-    return n2(v, -80);
-  }
-  /**
-   *  Return a new ``int88`` type for %%v%%.
-   */
-  static int88(v) {
-    return n2(v, -88);
-  }
-  /**
-   *  Return a new ``int96`` type for %%v%%.
-   */
-  static int96(v) {
-    return n2(v, -96);
-  }
-  /**
-   *  Return a new ``int104`` type for %%v%%.
-   */
-  static int104(v) {
-    return n2(v, -104);
-  }
-  /**
-   *  Return a new ``int112`` type for %%v%%.
-   */
-  static int112(v) {
-    return n2(v, -112);
-  }
-  /**
-   *  Return a new ``int120`` type for %%v%%.
-   */
-  static int120(v) {
-    return n2(v, -120);
-  }
-  /**
-   *  Return a new ``int128`` type for %%v%%.
-   */
-  static int128(v) {
-    return n2(v, -128);
-  }
-  /**
-   *  Return a new ``int136`` type for %%v%%.
-   */
-  static int136(v) {
-    return n2(v, -136);
-  }
-  /**
-   *  Return a new ``int144`` type for %%v%%.
-   */
-  static int144(v) {
-    return n2(v, -144);
-  }
-  /**
-   *  Return a new ``int52`` type for %%v%%.
-   */
-  static int152(v) {
-    return n2(v, -152);
-  }
-  /**
-   *  Return a new ``int160`` type for %%v%%.
-   */
-  static int160(v) {
-    return n2(v, -160);
-  }
-  /**
-   *  Return a new ``int168`` type for %%v%%.
-   */
-  static int168(v) {
-    return n2(v, -168);
-  }
-  /**
-   *  Return a new ``int176`` type for %%v%%.
-   */
-  static int176(v) {
-    return n2(v, -176);
-  }
-  /**
-   *  Return a new ``int184`` type for %%v%%.
-   */
-  static int184(v) {
-    return n2(v, -184);
-  }
-  /**
-   *  Return a new ``int92`` type for %%v%%.
-   */
-  static int192(v) {
-    return n2(v, -192);
-  }
-  /**
-   *  Return a new ``int200`` type for %%v%%.
-   */
-  static int200(v) {
-    return n2(v, -200);
-  }
-  /**
-   *  Return a new ``int208`` type for %%v%%.
-   */
-  static int208(v) {
-    return n2(v, -208);
-  }
-  /**
-   *  Return a new ``int216`` type for %%v%%.
-   */
-  static int216(v) {
-    return n2(v, -216);
-  }
-  /**
-   *  Return a new ``int224`` type for %%v%%.
-   */
-  static int224(v) {
-    return n2(v, -224);
-  }
-  /**
-   *  Return a new ``int232`` type for %%v%%.
-   */
-  static int232(v) {
-    return n2(v, -232);
-  }
-  /**
-   *  Return a new ``int240`` type for %%v%%.
-   */
-  static int240(v) {
-    return n2(v, -240);
-  }
-  /**
-   *  Return a new ``int248`` type for %%v%%.
-   */
-  static int248(v) {
-    return n2(v, -248);
-  }
-  /**
-   *  Return a new ``int256`` type for %%v%%.
-   */
-  static int256(v) {
-    return n2(v, -256);
-  }
-  /**
-   *  Return a new ``int256`` type for %%v%%.
-   */
-  static int(v) {
-    return n2(v, -256);
-  }
-  /**
-   *  Return a new ``bytes1`` type for %%v%%.
-   */
-  static bytes1(v) {
-    return b2(v, 1);
-  }
-  /**
-   *  Return a new ``bytes2`` type for %%v%%.
-   */
-  static bytes2(v) {
-    return b2(v, 2);
-  }
-  /**
-   *  Return a new ``bytes3`` type for %%v%%.
-   */
-  static bytes3(v) {
-    return b2(v, 3);
-  }
-  /**
-   *  Return a new ``bytes4`` type for %%v%%.
-   */
-  static bytes4(v) {
-    return b2(v, 4);
-  }
-  /**
-   *  Return a new ``bytes5`` type for %%v%%.
-   */
-  static bytes5(v) {
-    return b2(v, 5);
-  }
-  /**
-   *  Return a new ``bytes6`` type for %%v%%.
-   */
-  static bytes6(v) {
-    return b2(v, 6);
-  }
-  /**
-   *  Return a new ``bytes7`` type for %%v%%.
-   */
-  static bytes7(v) {
-    return b2(v, 7);
-  }
-  /**
-   *  Return a new ``bytes8`` type for %%v%%.
-   */
-  static bytes8(v) {
-    return b2(v, 8);
-  }
-  /**
-   *  Return a new ``bytes9`` type for %%v%%.
-   */
-  static bytes9(v) {
-    return b2(v, 9);
-  }
-  /**
-   *  Return a new ``bytes10`` type for %%v%%.
-   */
-  static bytes10(v) {
-    return b2(v, 10);
-  }
-  /**
-   *  Return a new ``bytes11`` type for %%v%%.
-   */
-  static bytes11(v) {
-    return b2(v, 11);
-  }
-  /**
-   *  Return a new ``bytes12`` type for %%v%%.
-   */
-  static bytes12(v) {
-    return b2(v, 12);
-  }
-  /**
-   *  Return a new ``bytes13`` type for %%v%%.
-   */
-  static bytes13(v) {
-    return b2(v, 13);
-  }
-  /**
-   *  Return a new ``bytes14`` type for %%v%%.
-   */
-  static bytes14(v) {
-    return b2(v, 14);
-  }
-  /**
-   *  Return a new ``bytes15`` type for %%v%%.
-   */
-  static bytes15(v) {
-    return b2(v, 15);
-  }
-  /**
-   *  Return a new ``bytes16`` type for %%v%%.
-   */
-  static bytes16(v) {
-    return b2(v, 16);
-  }
-  /**
-   *  Return a new ``bytes17`` type for %%v%%.
-   */
-  static bytes17(v) {
-    return b2(v, 17);
-  }
-  /**
-   *  Return a new ``bytes18`` type for %%v%%.
-   */
-  static bytes18(v) {
-    return b2(v, 18);
-  }
-  /**
-   *  Return a new ``bytes19`` type for %%v%%.
-   */
-  static bytes19(v) {
-    return b2(v, 19);
-  }
-  /**
-   *  Return a new ``bytes20`` type for %%v%%.
-   */
-  static bytes20(v) {
-    return b2(v, 20);
-  }
-  /**
-   *  Return a new ``bytes21`` type for %%v%%.
-   */
-  static bytes21(v) {
-    return b2(v, 21);
-  }
-  /**
-   *  Return a new ``bytes22`` type for %%v%%.
-   */
-  static bytes22(v) {
-    return b2(v, 22);
-  }
-  /**
-   *  Return a new ``bytes23`` type for %%v%%.
-   */
-  static bytes23(v) {
-    return b2(v, 23);
-  }
-  /**
-   *  Return a new ``bytes24`` type for %%v%%.
-   */
-  static bytes24(v) {
-    return b2(v, 24);
-  }
-  /**
-   *  Return a new ``bytes25`` type for %%v%%.
-   */
-  static bytes25(v) {
-    return b2(v, 25);
-  }
-  /**
-   *  Return a new ``bytes26`` type for %%v%%.
-   */
-  static bytes26(v) {
-    return b2(v, 26);
-  }
-  /**
-   *  Return a new ``bytes27`` type for %%v%%.
-   */
-  static bytes27(v) {
-    return b2(v, 27);
-  }
-  /**
-   *  Return a new ``bytes28`` type for %%v%%.
-   */
-  static bytes28(v) {
-    return b2(v, 28);
-  }
-  /**
-   *  Return a new ``bytes29`` type for %%v%%.
-   */
-  static bytes29(v) {
-    return b2(v, 29);
-  }
-  /**
-   *  Return a new ``bytes30`` type for %%v%%.
-   */
-  static bytes30(v) {
-    return b2(v, 30);
-  }
-  /**
-   *  Return a new ``bytes31`` type for %%v%%.
-   */
-  static bytes31(v) {
-    return b2(v, 31);
-  }
-  /**
-   *  Return a new ``bytes32`` type for %%v%%.
-   */
-  static bytes32(v) {
-    return b2(v, 32);
-  }
-  /**
-   *  Return a new ``address`` type for %%v%%.
-   */
-  static address(v) {
-    return new _Typed(_gaurd2, "address", v);
-  }
-  /**
-   *  Return a new ``bool`` type for %%v%%.
-   */
-  static bool(v) {
-    return new _Typed(_gaurd2, "bool", !!v);
-  }
-  /**
-   *  Return a new ``bytes`` type for %%v%%.
-   */
-  static bytes(v) {
-    return new _Typed(_gaurd2, "bytes", v);
-  }
-  /**
-   *  Return a new ``string`` type for %%v%%.
-   */
-  static string(v) {
-    return new _Typed(_gaurd2, "string", v);
-  }
-  /**
-   *  Return a new ``array`` type for %%v%%, allowing %%dynamic%% length.
-   */
-  static array(v, dynamic) {
-    throw new Error("not implemented yet");
-    return new _Typed(_gaurd2, "array", v, dynamic);
-  }
-  /**
-   *  Return a new ``tuple`` type for %%v%%, with the optional %%name%%.
-   */
-  static tuple(v, name) {
-    throw new Error("not implemented yet");
-    return new _Typed(_gaurd2, "tuple", v, name);
-  }
-  /**
-   *  Return a new ``uint8`` type for %%v%%.
-   */
-  static overrides(v) {
-    return new _Typed(_gaurd2, "overrides", Object.assign({}, v));
-  }
-  /**
-   *  Returns true only if %%value%% is a [[Typed]] instance.
-   */
-  static isTyped(value) {
-    return value && typeof value === "object" && "_typedSymbol" in value && value._typedSymbol === _typedSymbol2;
-  }
-  /**
-   *  If the value is a [[Typed]] instance, validates the underlying value
-   *  and returns it, otherwise returns value directly.
-   *
-   *  This is useful for functions that with to accept either a [[Typed]]
-   *  object or values.
-   */
-  static dereference(value, type) {
-    if (_Typed.isTyped(value)) {
-      if (value.type !== type) {
-        throw new Error(`invalid type: expecetd ${type}, got ${value.type}`);
-      }
-      return value.value;
-    }
-    return value;
-  }
-};
-
-// ../smart-contracts/node_modules/ethers/lib.esm/abi/coders/address.js
-var AddressCoder2 = class extends Coder2 {
-  constructor(localName) {
-    super("address", "address", localName, false);
-  }
-  defaultValue() {
-    return "0x0000000000000000000000000000000000000000";
-  }
-  encode(writer, _value) {
-    let value = Typed2.dereference(_value, "string");
-    try {
-      value = getAddress3(value);
-    } catch (error) {
-      return this._throwError(error.message, _value);
-    }
-    return writer.writeValue(value);
-  }
-  decode(reader) {
-    return getAddress3(toBeHex3(reader.readValue(), 20));
-  }
-};
-
-// ../smart-contracts/node_modules/ethers/lib.esm/abi/coders/anonymous.js
-var AnonymousCoder2 = class extends Coder2 {
-  coder;
-  constructor(coder) {
-    super(coder.name, coder.type, "_", coder.dynamic);
-    this.coder = coder;
-  }
-  defaultValue() {
-    return this.coder.defaultValue();
-  }
-  encode(writer, value) {
-    return this.coder.encode(writer, value);
-  }
-  decode(reader) {
-    return this.coder.decode(reader);
-  }
-};
-
-// ../smart-contracts/node_modules/ethers/lib.esm/abi/coders/array.js
-function pack2(writer, coders, values) {
-  let arrayValues = [];
-  if (Array.isArray(values)) {
-    arrayValues = values;
-  } else if (values && typeof values === "object") {
-    let unique = {};
-    arrayValues = coders.map((coder) => {
-      const name = coder.localName;
-      assert3(name, "cannot encode object for signature with missing names", "INVALID_ARGUMENT", { argument: "values", info: { coder }, value: values });
-      assert3(!unique[name], "cannot encode object for signature with duplicate names", "INVALID_ARGUMENT", { argument: "values", info: { coder }, value: values });
-      unique[name] = true;
-      return values[name];
-    });
-  } else {
-    assertArgument3(false, "invalid tuple value", "tuple", values);
-  }
-  assertArgument3(coders.length === arrayValues.length, "types/value length mismatch", "tuple", values);
-  let staticWriter = new Writer2();
-  let dynamicWriter = new Writer2();
-  let updateFuncs = [];
-  coders.forEach((coder, index) => {
-    let value = arrayValues[index];
-    if (coder.dynamic) {
-      let dynamicOffset = dynamicWriter.length;
-      coder.encode(dynamicWriter, value);
-      let updateFunc = staticWriter.writeUpdatableValue();
-      updateFuncs.push((baseOffset) => {
-        updateFunc(baseOffset + dynamicOffset);
-      });
-    } else {
-      coder.encode(staticWriter, value);
-    }
-  });
-  updateFuncs.forEach((func) => {
-    func(staticWriter.length);
-  });
-  let length = writer.appendWriter(staticWriter);
-  length += writer.appendWriter(dynamicWriter);
-  return length;
-}
-function unpack2(reader, coders) {
-  let values = [];
-  let keys = [];
-  let baseReader = reader.subReader(0);
-  coders.forEach((coder) => {
-    let value = null;
-    if (coder.dynamic) {
-      let offset = reader.readIndex();
-      let offsetReader = baseReader.subReader(offset);
-      try {
-        value = coder.decode(offsetReader);
-      } catch (error) {
-        if (isError3(error, "BUFFER_OVERRUN")) {
-          throw error;
-        }
-        value = error;
-        value.baseType = coder.name;
-        value.name = coder.localName;
-        value.type = coder.type;
-      }
-    } else {
-      try {
-        value = coder.decode(reader);
-      } catch (error) {
-        if (isError3(error, "BUFFER_OVERRUN")) {
-          throw error;
-        }
-        value = error;
-        value.baseType = coder.name;
-        value.name = coder.localName;
-        value.type = coder.type;
-      }
-    }
-    if (value == void 0) {
-      throw new Error("investigate");
-    }
-    values.push(value);
-    keys.push(coder.localName || null);
-  });
-  return Result2.fromItems(values, keys);
-}
-var ArrayCoder2 = class extends Coder2 {
-  coder;
-  length;
-  constructor(coder, length, localName) {
-    const type = coder.type + "[" + (length >= 0 ? length : "") + "]";
-    const dynamic = length === -1 || coder.dynamic;
-    super("array", type, localName, dynamic);
-    defineProperties3(this, { coder, length });
-  }
-  defaultValue() {
-    const defaultChild = this.coder.defaultValue();
-    const result = [];
-    for (let i = 0; i < this.length; i++) {
-      result.push(defaultChild);
-    }
-    return result;
-  }
-  encode(writer, _value) {
-    const value = Typed2.dereference(_value, "array");
-    if (!Array.isArray(value)) {
-      this._throwError("expected array value", value);
-    }
-    let count = this.length;
-    if (count === -1) {
-      count = value.length;
-      writer.writeValue(value.length);
-    }
-    assertArgumentCount3(value.length, count, "coder array" + (this.localName ? " " + this.localName : ""));
-    let coders = [];
-    for (let i = 0; i < value.length; i++) {
-      coders.push(this.coder);
-    }
-    return pack2(writer, coders, value);
-  }
-  decode(reader) {
-    let count = this.length;
-    if (count === -1) {
-      count = reader.readIndex();
-      assert3(count * WordSize2 <= reader.dataLength, "insufficient data length", "BUFFER_OVERRUN", { buffer: reader.bytes, offset: count * WordSize2, length: reader.dataLength });
-    }
-    let coders = [];
-    for (let i = 0; i < count; i++) {
-      coders.push(new AnonymousCoder2(this.coder));
-    }
-    return unpack2(reader, coders);
-  }
-};
-
-// ../smart-contracts/node_modules/ethers/lib.esm/abi/coders/boolean.js
-var BooleanCoder2 = class extends Coder2 {
-  constructor(localName) {
-    super("bool", "bool", localName, false);
-  }
-  defaultValue() {
-    return false;
-  }
-  encode(writer, _value) {
-    const value = Typed2.dereference(_value, "bool");
-    return writer.writeValue(value ? 1 : 0);
-  }
-  decode(reader) {
-    return !!reader.readValue();
-  }
-};
-
-// ../smart-contracts/node_modules/ethers/lib.esm/abi/coders/bytes.js
-var DynamicBytesCoder2 = class extends Coder2 {
-  constructor(type, localName) {
-    super(type, type, localName, true);
-  }
-  defaultValue() {
-    return "0x";
-  }
-  encode(writer, value) {
-    value = getBytesCopy3(value);
-    let length = writer.writeValue(value.length);
-    length += writer.writeBytes(value);
-    return length;
-  }
-  decode(reader) {
-    return reader.readBytes(reader.readIndex(), true);
-  }
-};
-var BytesCoder2 = class extends DynamicBytesCoder2 {
-  constructor(localName) {
-    super("bytes", localName);
-  }
-  decode(reader) {
-    return hexlify3(super.decode(reader));
-  }
-};
-
-// ../smart-contracts/node_modules/ethers/lib.esm/abi/coders/fixed-bytes.js
-var FixedBytesCoder2 = class extends Coder2 {
-  size;
-  constructor(size, localName) {
-    let name = "bytes" + String(size);
-    super(name, name, localName, false);
-    defineProperties3(this, { size }, { size: "number" });
-  }
-  defaultValue() {
-    return "0x0000000000000000000000000000000000000000000000000000000000000000".substring(0, 2 + this.size * 2);
-  }
-  encode(writer, _value) {
-    let data4 = getBytesCopy3(Typed2.dereference(_value, this.type));
-    if (data4.length !== this.size) {
-      this._throwError("incorrect data length", _value);
-    }
-    return writer.writeBytes(data4);
-  }
-  decode(reader) {
-    return hexlify3(reader.readBytes(this.size));
-  }
-};
-
-// ../smart-contracts/node_modules/ethers/lib.esm/abi/coders/null.js
-var Empty2 = new Uint8Array([]);
-var NullCoder2 = class extends Coder2 {
-  constructor(localName) {
-    super("null", "", localName, false);
-  }
-  defaultValue() {
-    return null;
-  }
-  encode(writer, value) {
-    if (value != null) {
-      this._throwError("not null", value);
-    }
-    return writer.writeBytes(Empty2);
-  }
-  decode(reader) {
-    reader.readBytes(0);
-    return null;
-  }
-};
-
-// ../smart-contracts/node_modules/ethers/lib.esm/abi/coders/number.js
-var BN_016 = BigInt(0);
-var BN_19 = BigInt(1);
-var BN_MAX_UINT2563 = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-var NumberCoder2 = class extends Coder2 {
-  size;
-  signed;
-  constructor(size, signed2, localName) {
-    const name = (signed2 ? "int" : "uint") + size * 8;
-    super(name, name, localName, false);
-    defineProperties3(this, { size, signed: signed2 }, { size: "number", signed: "boolean" });
-  }
-  defaultValue() {
-    return 0;
-  }
-  encode(writer, _value) {
-    let value = getBigInt3(Typed2.dereference(_value, this.type));
-    let maxUintValue = mask3(BN_MAX_UINT2563, WordSize2 * 8);
-    if (this.signed) {
-      let bounds = mask3(maxUintValue, this.size * 8 - 1);
-      if (value > bounds || value < -(bounds + BN_19)) {
-        this._throwError("value out-of-bounds", _value);
-      }
-      value = toTwos3(value, 8 * WordSize2);
-    } else if (value < BN_016 || value > mask3(maxUintValue, this.size * 8)) {
-      this._throwError("value out-of-bounds", _value);
-    }
-    return writer.writeValue(value);
-  }
-  decode(reader) {
-    let value = mask3(reader.readValue(), this.size * 8);
-    if (this.signed) {
-      value = fromTwos3(value, this.size * 8);
-    }
-    return value;
-  }
-};
-
-// ../smart-contracts/node_modules/ethers/lib.esm/abi/coders/string.js
-var StringCoder2 = class extends DynamicBytesCoder2 {
-  constructor(localName) {
-    super("string", localName);
-  }
-  defaultValue() {
-    return "";
-  }
-  encode(writer, _value) {
-    return super.encode(writer, toUtf8Bytes3(Typed2.dereference(_value, "string")));
-  }
-  decode(reader) {
-    return toUtf8String3(super.decode(reader));
-  }
-};
-
-// ../smart-contracts/node_modules/ethers/lib.esm/abi/coders/tuple.js
-var TupleCoder2 = class extends Coder2 {
-  coders;
-  constructor(coders, localName) {
-    let dynamic = false;
-    const types = [];
-    coders.forEach((coder) => {
-      if (coder.dynamic) {
-        dynamic = true;
-      }
-      types.push(coder.type);
-    });
-    const type = "tuple(" + types.join(",") + ")";
-    super("tuple", type, localName, dynamic);
-    defineProperties3(this, { coders: Object.freeze(coders.slice()) });
-  }
-  defaultValue() {
-    const values = [];
-    this.coders.forEach((coder) => {
-      values.push(coder.defaultValue());
-    });
-    const uniqueNames = this.coders.reduce((accum, coder) => {
-      const name = coder.localName;
-      if (name) {
-        if (!accum[name]) {
-          accum[name] = 0;
-        }
-        accum[name]++;
-      }
-      return accum;
-    }, {});
-    this.coders.forEach((coder, index) => {
-      let name = coder.localName;
-      if (!name || uniqueNames[name] !== 1) {
-        return;
-      }
-      if (name === "length") {
-        name = "_length";
-      }
-      if (values[name] != null) {
-        return;
-      }
-      values[name] = values[index];
-    });
-    return Object.freeze(values);
-  }
-  encode(writer, _value) {
-    const value = Typed2.dereference(_value, "tuple");
-    return pack2(writer, this.coders, value);
-  }
-  decode(reader) {
-    return unpack2(reader, this.coders);
-  }
-};
-
-// ../smart-contracts/node_modules/ethers/lib.esm/hash/id.js
-function id3(value) {
-  return keccak2563(toUtf8Bytes3(value));
-}
-
-// ../smart-contracts/node_modules/ethers/lib.esm/transaction/accesslist.js
-function accessSetify2(addr, storageKeys) {
-  return {
-    address: getAddress3(addr),
-    storageKeys: storageKeys.map((storageKey, index) => {
-      assertArgument3(isHexString3(storageKey, 32), "invalid slot", `storageKeys[${index}]`, storageKey);
-      return storageKey.toLowerCase();
-    })
-  };
-}
-function accessListify2(value) {
-  if (Array.isArray(value)) {
-    return value.map((set, index) => {
-      if (Array.isArray(set)) {
-        assertArgument3(set.length === 2, "invalid slot set", `value[${index}]`, set);
-        return accessSetify2(set[0], set[1]);
-      }
-      assertArgument3(set != null && typeof set === "object", "invalid address-slot set", "value", value);
-      return accessSetify2(set.address, set.storageKeys);
-    });
-  }
-  assertArgument3(value != null && typeof value === "object", "invalid access list", "value", value);
-  const result = Object.keys(value).map((addr) => {
-    const storageKeys = value[addr].reduce((accum, storageKey) => {
-      accum[storageKey] = true;
-      return accum;
-    }, {});
-    return accessSetify2(addr, Object.keys(storageKeys).sort());
-  });
-  result.sort((a, b3) => a.address.localeCompare(b3.address));
-  return result;
-}
-
-// ../smart-contracts/node_modules/ethers/lib.esm/abi/fragments.js
-function setify2(items) {
-  const result = /* @__PURE__ */ new Set();
-  items.forEach((k) => result.add(k));
-  return Object.freeze(result);
-}
-var _kwVisibDeploy2 = "external public payable override";
-var KwVisibDeploy2 = setify2(_kwVisibDeploy2.split(" "));
-var _kwVisib2 = "constant external internal payable private public pure view override";
-var KwVisib2 = setify2(_kwVisib2.split(" "));
-var _kwTypes2 = "constructor error event fallback function receive struct";
-var KwTypes2 = setify2(_kwTypes2.split(" "));
-var _kwModifiers2 = "calldata memory storage payable indexed";
-var KwModifiers2 = setify2(_kwModifiers2.split(" "));
-var _kwOther2 = "tuple returns";
-var _keywords2 = [_kwTypes2, _kwModifiers2, _kwOther2, _kwVisib2].join(" ");
-var Keywords2 = setify2(_keywords2.split(" "));
-var SimpleTokens2 = {
-  "(": "OPEN_PAREN",
-  ")": "CLOSE_PAREN",
-  "[": "OPEN_BRACKET",
-  "]": "CLOSE_BRACKET",
-  ",": "COMMA",
-  "@": "AT"
-};
-var regexWhitespacePrefix2 = new RegExp("^(\\s*)");
-var regexNumberPrefix2 = new RegExp("^([0-9]+)");
-var regexIdPrefix2 = new RegExp("^([a-zA-Z$_][a-zA-Z0-9$_]*)");
-var regexId2 = new RegExp("^([a-zA-Z$_][a-zA-Z0-9$_]*)$");
-var regexType2 = new RegExp("^(address|bool|bytes([0-9]*)|string|u?int([0-9]*))$");
-var TokenString2 = class _TokenString {
-  #offset;
-  #tokens;
-  get offset() {
-    return this.#offset;
-  }
-  get length() {
-    return this.#tokens.length - this.#offset;
-  }
-  constructor(tokens) {
-    this.#offset = 0;
-    this.#tokens = tokens.slice();
-  }
-  clone() {
-    return new _TokenString(this.#tokens);
-  }
-  reset() {
-    this.#offset = 0;
-  }
-  #subTokenString(from = 0, to = 0) {
-    return new _TokenString(this.#tokens.slice(from, to).map((t) => {
-      return Object.freeze(Object.assign({}, t, {
-        match: t.match - from,
-        linkBack: t.linkBack - from,
-        linkNext: t.linkNext - from
-      }));
-    }));
-  }
-  // Pops and returns the value of the next token, if it is a keyword in allowed; throws if out of tokens
-  popKeyword(allowed) {
-    const top = this.peek();
-    if (top.type !== "KEYWORD" || !allowed.has(top.text)) {
-      throw new Error(`expected keyword ${top.text}`);
-    }
-    return this.pop().text;
-  }
-  // Pops and returns the value of the next token if it is `type`; throws if out of tokens
-  popType(type) {
-    if (this.peek().type !== type) {
-      const top = this.peek();
-      throw new Error(`expected ${type}; got ${top.type} ${JSON.stringify(top.text)}`);
-    }
-    return this.pop().text;
-  }
-  // Pops and returns a "(" TOKENS ")"
-  popParen() {
-    const top = this.peek();
-    if (top.type !== "OPEN_PAREN") {
-      throw new Error("bad start");
-    }
-    const result = this.#subTokenString(this.#offset + 1, top.match + 1);
-    this.#offset = top.match + 1;
-    return result;
-  }
-  // Pops and returns the items within "(" ITEM1 "," ITEM2 "," ... ")"
-  popParams() {
-    const top = this.peek();
-    if (top.type !== "OPEN_PAREN") {
-      throw new Error("bad start");
-    }
-    const result = [];
-    while (this.#offset < top.match - 1) {
-      const link = this.peek().linkNext;
-      result.push(this.#subTokenString(this.#offset + 1, link));
-      this.#offset = link;
-    }
-    this.#offset = top.match + 1;
-    return result;
-  }
-  // Returns the top Token, throwing if out of tokens
-  peek() {
-    if (this.#offset >= this.#tokens.length) {
-      throw new Error("out-of-bounds");
-    }
-    return this.#tokens[this.#offset];
-  }
-  // Returns the next value, if it is a keyword in `allowed`
-  peekKeyword(allowed) {
-    const top = this.peekType("KEYWORD");
-    return top != null && allowed.has(top) ? top : null;
-  }
-  // Returns the value of the next token if it is `type`
-  peekType(type) {
-    if (this.length === 0) {
-      return null;
-    }
-    const top = this.peek();
-    return top.type === type ? top.text : null;
-  }
-  // Returns the next token; throws if out of tokens
-  pop() {
-    const result = this.peek();
-    this.#offset++;
-    return result;
-  }
-  toString() {
-    const tokens = [];
-    for (let i = this.#offset; i < this.#tokens.length; i++) {
-      const token = this.#tokens[i];
-      tokens.push(`${token.type}:${token.text}`);
-    }
-    return `<TokenString ${tokens.join(" ")}>`;
-  }
-};
-function lex2(text) {
-  const tokens = [];
-  const throwError3 = (message) => {
-    const token = offset < text.length ? JSON.stringify(text[offset]) : "$EOI";
-    throw new Error(`invalid token ${token} at ${offset}: ${message}`);
-  };
-  let brackets = [];
-  let commas = [];
-  let offset = 0;
-  while (offset < text.length) {
-    let cur = text.substring(offset);
-    let match = cur.match(regexWhitespacePrefix2);
-    if (match) {
-      offset += match[1].length;
-      cur = text.substring(offset);
-    }
-    const token = { depth: brackets.length, linkBack: -1, linkNext: -1, match: -1, type: "", text: "", offset, value: -1 };
-    tokens.push(token);
-    let type = SimpleTokens2[cur[0]] || "";
-    if (type) {
-      token.type = type;
-      token.text = cur[0];
-      offset++;
-      if (type === "OPEN_PAREN") {
-        brackets.push(tokens.length - 1);
-        commas.push(tokens.length - 1);
-      } else if (type == "CLOSE_PAREN") {
-        if (brackets.length === 0) {
-          throwError3("no matching open bracket");
-        }
-        token.match = brackets.pop();
-        tokens[token.match].match = tokens.length - 1;
-        token.depth--;
-        token.linkBack = commas.pop();
-        tokens[token.linkBack].linkNext = tokens.length - 1;
-      } else if (type === "COMMA") {
-        token.linkBack = commas.pop();
-        tokens[token.linkBack].linkNext = tokens.length - 1;
-        commas.push(tokens.length - 1);
-      } else if (type === "OPEN_BRACKET") {
-        token.type = "BRACKET";
-      } else if (type === "CLOSE_BRACKET") {
-        let suffix = tokens.pop().text;
-        if (tokens.length > 0 && tokens[tokens.length - 1].type === "NUMBER") {
-          const value = tokens.pop().text;
-          suffix = value + suffix;
-          tokens[tokens.length - 1].value = getNumber3(value);
-        }
-        if (tokens.length === 0 || tokens[tokens.length - 1].type !== "BRACKET") {
-          throw new Error("missing opening bracket");
-        }
-        tokens[tokens.length - 1].text += suffix;
-      }
-      continue;
-    }
-    match = cur.match(regexIdPrefix2);
-    if (match) {
-      token.text = match[1];
-      offset += token.text.length;
-      if (Keywords2.has(token.text)) {
-        token.type = "KEYWORD";
-        continue;
-      }
-      if (token.text.match(regexType2)) {
-        token.type = "TYPE";
-        continue;
-      }
-      token.type = "ID";
-      continue;
-    }
-    match = cur.match(regexNumberPrefix2);
-    if (match) {
-      token.text = match[1];
-      token.type = "NUMBER";
-      offset += token.text.length;
-      continue;
-    }
-    throw new Error(`unexpected token ${JSON.stringify(cur[0])} at position ${offset}`);
-  }
-  return new TokenString2(tokens.map((t) => Object.freeze(t)));
-}
-function allowSingle2(set, allowed) {
-  let included = [];
-  for (const key in allowed.keys()) {
-    if (set.has(key)) {
-      included.push(key);
-    }
-  }
-  if (included.length > 1) {
-    throw new Error(`conflicting types: ${included.join(", ")}`);
-  }
-}
-function consumeName2(type, tokens) {
-  if (tokens.peekKeyword(KwTypes2)) {
-    const keyword = tokens.pop().text;
-    if (keyword !== type) {
-      throw new Error(`expected ${type}, got ${keyword}`);
-    }
-  }
-  return tokens.popType("ID");
-}
-function consumeKeywords2(tokens, allowed) {
-  const keywords = /* @__PURE__ */ new Set();
-  while (true) {
-    const keyword = tokens.peekType("KEYWORD");
-    if (keyword == null || allowed && !allowed.has(keyword)) {
-      break;
-    }
-    tokens.pop();
-    if (keywords.has(keyword)) {
-      throw new Error(`duplicate keywords: ${JSON.stringify(keyword)}`);
-    }
-    keywords.add(keyword);
-  }
-  return Object.freeze(keywords);
-}
-function consumeMutability2(tokens) {
-  let modifiers = consumeKeywords2(tokens, KwVisib2);
-  allowSingle2(modifiers, setify2("constant payable nonpayable".split(" ")));
-  allowSingle2(modifiers, setify2("pure view payable nonpayable".split(" ")));
-  if (modifiers.has("view")) {
-    return "view";
-  }
-  if (modifiers.has("pure")) {
-    return "pure";
-  }
-  if (modifiers.has("payable")) {
-    return "payable";
-  }
-  if (modifiers.has("nonpayable")) {
-    return "nonpayable";
-  }
-  if (modifiers.has("constant")) {
-    return "view";
-  }
-  return "nonpayable";
-}
-function consumeParams2(tokens, allowIndexed) {
-  return tokens.popParams().map((t) => ParamType2.from(t, allowIndexed));
-}
-function consumeGas2(tokens) {
-  if (tokens.peekType("AT")) {
-    tokens.pop();
-    if (tokens.peekType("NUMBER")) {
-      return getBigInt3(tokens.pop().text);
-    }
-    throw new Error("invalid gas");
-  }
-  return null;
-}
-function consumeEoi2(tokens) {
-  if (tokens.length) {
-    throw new Error(`unexpected tokens at offset ${tokens.offset}: ${tokens.toString()}`);
-  }
-}
-var regexArrayType2 = new RegExp(/^(.*)\[([0-9]*)\]$/);
-function verifyBasicType2(type) {
-  const match = type.match(regexType2);
-  assertArgument3(match, "invalid type", "type", type);
-  if (type === "uint") {
-    return "uint256";
-  }
-  if (type === "int") {
-    return "int256";
-  }
-  if (match[2]) {
-    const length = parseInt(match[2]);
-    assertArgument3(length !== 0 && length <= 32, "invalid bytes length", "type", type);
-  } else if (match[3]) {
-    const size = parseInt(match[3]);
-    assertArgument3(size !== 0 && size <= 256 && size % 8 === 0, "invalid numeric width", "type", type);
-  }
-  return type;
-}
-var _guard8 = {};
-var internal3 = Symbol.for("_ethers_internal");
-var ParamTypeInternal2 = "_ParamTypeInternal";
-var ErrorFragmentInternal2 = "_ErrorInternal";
-var EventFragmentInternal2 = "_EventInternal";
-var ConstructorFragmentInternal2 = "_ConstructorInternal";
-var FallbackFragmentInternal2 = "_FallbackInternal";
-var FunctionFragmentInternal2 = "_FunctionInternal";
-var StructFragmentInternal2 = "_StructInternal";
-var ParamType2 = class _ParamType {
-  /**
-   *  The local name of the parameter (or ``""`` if unbound)
-   */
-  name;
-  /**
-   *  The fully qualified type (e.g. ``"address"``, ``"tuple(address)"``,
-   *  ``"uint256[3][]"``)
-   */
-  type;
-  /**
-   *  The base type (e.g. ``"address"``, ``"tuple"``, ``"array"``)
-   */
-  baseType;
-  /**
-   *  True if the parameters is indexed.
-   *
-   *  For non-indexable types this is ``null``.
-   */
-  indexed;
-  /**
-   *  The components for the tuple.
-   *
-   *  For non-tuple types this is ``null``.
-   */
-  components;
-  /**
-   *  The array length, or ``-1`` for dynamic-lengthed arrays.
-   *
-   *  For non-array types this is ``null``.
-   */
-  arrayLength;
-  /**
-   *  The type of each child in the array.
-   *
-   *  For non-array types this is ``null``.
-   */
-  arrayChildren;
-  /**
-   *  @private
-   */
-  constructor(guard, name, type, baseType, indexed, components, arrayLength, arrayChildren) {
-    assertPrivate3(guard, _guard8, "ParamType");
-    Object.defineProperty(this, internal3, { value: ParamTypeInternal2 });
-    if (components) {
-      components = Object.freeze(components.slice());
-    }
-    if (baseType === "array") {
-      if (arrayLength == null || arrayChildren == null) {
-        throw new Error("");
-      }
-    } else if (arrayLength != null || arrayChildren != null) {
-      throw new Error("");
-    }
-    if (baseType === "tuple") {
-      if (components == null) {
-        throw new Error("");
-      }
-    } else if (components != null) {
-      throw new Error("");
-    }
-    defineProperties3(this, {
-      name,
-      type,
-      baseType,
-      indexed,
-      components,
-      arrayLength,
-      arrayChildren
-    });
-  }
-  /**
-   *  Return a string representation of this type.
-   *
-   *  For example,
-   *
-   *  ``sighash" => "(uint256,address)"``
-   *
-   *  ``"minimal" => "tuple(uint256,address) indexed"``
-   *
-   *  ``"full" => "tuple(uint256 foo, address bar) indexed baz"``
-   */
-  format(format) {
-    if (format == null) {
-      format = "sighash";
-    }
-    if (format === "json") {
-      const name = this.name || "";
-      if (this.isArray()) {
-        const result3 = JSON.parse(this.arrayChildren.format("json"));
-        result3.name = name;
-        result3.type += `[${this.arrayLength < 0 ? "" : String(this.arrayLength)}]`;
-        return JSON.stringify(result3);
-      }
-      const result2 = {
-        type: this.baseType === "tuple" ? "tuple" : this.type,
-        name
-      };
-      if (typeof this.indexed === "boolean") {
-        result2.indexed = this.indexed;
-      }
-      if (this.isTuple()) {
-        result2.components = this.components.map((c) => JSON.parse(c.format(format)));
-      }
-      return JSON.stringify(result2);
-    }
-    let result = "";
-    if (this.isArray()) {
-      result += this.arrayChildren.format(format);
-      result += `[${this.arrayLength < 0 ? "" : String(this.arrayLength)}]`;
-    } else {
-      if (this.isTuple()) {
-        result += "(" + this.components.map((comp) => comp.format(format)).join(format === "full" ? ", " : ",") + ")";
-      } else {
-        result += this.type;
-      }
-    }
-    if (format !== "sighash") {
-      if (this.indexed === true) {
-        result += " indexed";
-      }
-      if (format === "full" && this.name) {
-        result += " " + this.name;
-      }
-    }
-    return result;
-  }
-  /**
-   *  Returns true if %%this%% is an Array type.
-   *
-   *  This provides a type gaurd ensuring that [[arrayChildren]]
-   *  and [[arrayLength]] are non-null.
-   */
-  isArray() {
-    return this.baseType === "array";
-  }
-  /**
-   *  Returns true if %%this%% is a Tuple type.
-   *
-   *  This provides a type gaurd ensuring that [[components]]
-   *  is non-null.
-   */
-  isTuple() {
-    return this.baseType === "tuple";
-  }
-  /**
-   *  Returns true if %%this%% is an Indexable type.
-   *
-   *  This provides a type gaurd ensuring that [[indexed]]
-   *  is non-null.
-   */
-  isIndexable() {
-    return this.indexed != null;
-  }
-  /**
-   *  Walks the **ParamType** with %%value%%, calling %%process%%
-   *  on each type, destructing the %%value%% recursively.
-   */
-  walk(value, process2) {
-    if (this.isArray()) {
-      if (!Array.isArray(value)) {
-        throw new Error("invalid array value");
-      }
-      if (this.arrayLength !== -1 && value.length !== this.arrayLength) {
-        throw new Error("array is wrong length");
-      }
-      const _this = this;
-      return value.map((v) => _this.arrayChildren.walk(v, process2));
-    }
-    if (this.isTuple()) {
-      if (!Array.isArray(value)) {
-        throw new Error("invalid tuple value");
-      }
-      if (value.length !== this.components.length) {
-        throw new Error("array is wrong length");
-      }
-      const _this = this;
-      return value.map((v, i) => _this.components[i].walk(v, process2));
-    }
-    return process2(this.type, value);
-  }
-  #walkAsync(promises, value, process2, setValue) {
-    if (this.isArray()) {
-      if (!Array.isArray(value)) {
-        throw new Error("invalid array value");
-      }
-      if (this.arrayLength !== -1 && value.length !== this.arrayLength) {
-        throw new Error("array is wrong length");
-      }
-      const childType = this.arrayChildren;
-      const result2 = value.slice();
-      result2.forEach((value2, index) => {
-        childType.#walkAsync(promises, value2, process2, (value3) => {
-          result2[index] = value3;
-        });
-      });
-      setValue(result2);
-      return;
-    }
-    if (this.isTuple()) {
-      const components = this.components;
-      let result2;
-      if (Array.isArray(value)) {
-        result2 = value.slice();
-      } else {
-        if (value == null || typeof value !== "object") {
-          throw new Error("invalid tuple value");
-        }
-        result2 = components.map((param) => {
-          if (!param.name) {
-            throw new Error("cannot use object value with unnamed components");
-          }
-          if (!(param.name in value)) {
-            throw new Error(`missing value for component ${param.name}`);
-          }
-          return value[param.name];
-        });
-      }
-      if (result2.length !== this.components.length) {
-        throw new Error("array is wrong length");
-      }
-      result2.forEach((value2, index) => {
-        components[index].#walkAsync(promises, value2, process2, (value3) => {
-          result2[index] = value3;
-        });
-      });
-      setValue(result2);
-      return;
-    }
-    const result = process2(this.type, value);
-    if (result.then) {
-      promises.push(async function() {
-        setValue(await result);
-      }());
-    } else {
-      setValue(result);
-    }
-  }
-  /**
-   *  Walks the **ParamType** with %%value%%, asynchronously calling
-   *  %%process%% on each type, destructing the %%value%% recursively.
-   *
-   *  This can be used to resolve ENS names by walking and resolving each
-   *  ``"address"`` type.
-   */
-  async walkAsync(value, process2) {
-    const promises = [];
-    const result = [value];
-    this.#walkAsync(promises, value, process2, (value2) => {
-      result[0] = value2;
-    });
-    if (promises.length) {
-      await Promise.all(promises);
-    }
-    return result[0];
-  }
-  /**
-   *  Creates a new **ParamType** for %%obj%%.
-   *
-   *  If %%allowIndexed%% then the ``indexed`` keyword is permitted,
-   *  otherwise the ``indexed`` keyword will throw an error.
-   */
-  static from(obj, allowIndexed) {
-    if (_ParamType.isParamType(obj)) {
-      return obj;
-    }
-    if (typeof obj === "string") {
-      try {
-        return _ParamType.from(lex2(obj), allowIndexed);
-      } catch (error) {
-        assertArgument3(false, "invalid param type", "obj", obj);
-      }
-    } else if (obj instanceof TokenString2) {
-      let type2 = "", baseType = "";
-      let comps = null;
-      if (consumeKeywords2(obj, setify2(["tuple"])).has("tuple") || obj.peekType("OPEN_PAREN")) {
-        baseType = "tuple";
-        comps = obj.popParams().map((t) => _ParamType.from(t));
-        type2 = `tuple(${comps.map((c) => c.format()).join(",")})`;
-      } else {
-        type2 = verifyBasicType2(obj.popType("TYPE"));
-        baseType = type2;
-      }
-      let arrayChildren = null;
-      let arrayLength = null;
-      while (obj.length && obj.peekType("BRACKET")) {
-        const bracket = obj.pop();
-        arrayChildren = new _ParamType(_guard8, "", type2, baseType, null, comps, arrayLength, arrayChildren);
-        arrayLength = bracket.value;
-        type2 += bracket.text;
-        baseType = "array";
-        comps = null;
-      }
-      let indexed2 = null;
-      const keywords = consumeKeywords2(obj, KwModifiers2);
-      if (keywords.has("indexed")) {
-        if (!allowIndexed) {
-          throw new Error("");
-        }
-        indexed2 = true;
-      }
-      const name2 = obj.peekType("ID") ? obj.pop().text : "";
-      if (obj.length) {
-        throw new Error("leftover tokens");
-      }
-      return new _ParamType(_guard8, name2, type2, baseType, indexed2, comps, arrayLength, arrayChildren);
-    }
-    const name = obj.name;
-    assertArgument3(!name || typeof name === "string" && name.match(regexId2), "invalid name", "obj.name", name);
-    let indexed = obj.indexed;
-    if (indexed != null) {
-      assertArgument3(allowIndexed, "parameter cannot be indexed", "obj.indexed", obj.indexed);
-      indexed = !!indexed;
-    }
-    let type = obj.type;
-    let arrayMatch = type.match(regexArrayType2);
-    if (arrayMatch) {
-      const arrayLength = parseInt(arrayMatch[2] || "-1");
-      const arrayChildren = _ParamType.from({
-        type: arrayMatch[1],
-        components: obj.components
-      });
-      return new _ParamType(_guard8, name || "", type, "array", indexed, null, arrayLength, arrayChildren);
-    }
-    if (type === "tuple" || type.startsWith(
-      "tuple("
-      /* fix: ) */
-    ) || type.startsWith(
-      "("
-      /* fix: ) */
-    )) {
-      const comps = obj.components != null ? obj.components.map((c) => _ParamType.from(c)) : null;
-      const tuple = new _ParamType(_guard8, name || "", type, "tuple", indexed, comps, null, null);
-      return tuple;
-    }
-    type = verifyBasicType2(obj.type);
-    return new _ParamType(_guard8, name || "", type, type, indexed, null, null, null);
-  }
-  /**
-   *  Returns true if %%value%% is a **ParamType**.
-   */
-  static isParamType(value) {
-    return value && value[internal3] === ParamTypeInternal2;
-  }
-};
-var Fragment2 = class _Fragment {
-  /**
-   *  The type of the fragment.
-   */
-  type;
-  /**
-   *  The inputs for the fragment.
-   */
-  inputs;
-  /**
-   *  @private
-   */
-  constructor(guard, type, inputs) {
-    assertPrivate3(guard, _guard8, "Fragment");
-    inputs = Object.freeze(inputs.slice());
-    defineProperties3(this, { type, inputs });
-  }
-  /**
-   *  Creates a new **Fragment** for %%obj%%, wich can be any supported
-   *  ABI frgament type.
-   */
-  static from(obj) {
-    if (typeof obj === "string") {
-      try {
-        _Fragment.from(JSON.parse(obj));
-      } catch (e) {
-      }
-      return _Fragment.from(lex2(obj));
-    }
-    if (obj instanceof TokenString2) {
-      const type = obj.peekKeyword(KwTypes2);
-      switch (type) {
-        case "constructor":
-          return ConstructorFragment2.from(obj);
-        case "error":
-          return ErrorFragment2.from(obj);
-        case "event":
-          return EventFragment2.from(obj);
-        case "fallback":
-        case "receive":
-          return FallbackFragment2.from(obj);
-        case "function":
-          return FunctionFragment2.from(obj);
-        case "struct":
-          return StructFragment2.from(obj);
-      }
-    } else if (typeof obj === "object") {
-      switch (obj.type) {
-        case "constructor":
-          return ConstructorFragment2.from(obj);
-        case "error":
-          return ErrorFragment2.from(obj);
-        case "event":
-          return EventFragment2.from(obj);
-        case "fallback":
-        case "receive":
-          return FallbackFragment2.from(obj);
-        case "function":
-          return FunctionFragment2.from(obj);
-        case "struct":
-          return StructFragment2.from(obj);
-      }
-      assert3(false, `unsupported type: ${obj.type}`, "UNSUPPORTED_OPERATION", {
-        operation: "Fragment.from"
-      });
-    }
-    assertArgument3(false, "unsupported frgament object", "obj", obj);
-  }
-  /**
-   *  Returns true if %%value%% is a [[ConstructorFragment]].
-   */
-  static isConstructor(value) {
-    return ConstructorFragment2.isFragment(value);
-  }
-  /**
-   *  Returns true if %%value%% is an [[ErrorFragment]].
-   */
-  static isError(value) {
-    return ErrorFragment2.isFragment(value);
-  }
-  /**
-   *  Returns true if %%value%% is an [[EventFragment]].
-   */
-  static isEvent(value) {
-    return EventFragment2.isFragment(value);
-  }
-  /**
-   *  Returns true if %%value%% is a [[FunctionFragment]].
-   */
-  static isFunction(value) {
-    return FunctionFragment2.isFragment(value);
-  }
-  /**
-   *  Returns true if %%value%% is a [[StructFragment]].
-   */
-  static isStruct(value) {
-    return StructFragment2.isFragment(value);
-  }
-};
-var NamedFragment2 = class extends Fragment2 {
-  /**
-   *  The name of the fragment.
-   */
-  name;
-  /**
-   *  @private
-   */
-  constructor(guard, type, name, inputs) {
-    super(guard, type, inputs);
-    assertArgument3(typeof name === "string" && name.match(regexId2), "invalid identifier", "name", name);
-    inputs = Object.freeze(inputs.slice());
-    defineProperties3(this, { name });
-  }
-};
-function joinParams2(format, params) {
-  return "(" + params.map((p) => p.format(format)).join(format === "full" ? ", " : ",") + ")";
-}
-var ErrorFragment2 = class _ErrorFragment extends NamedFragment2 {
-  /**
-   *  @private
-   */
-  constructor(guard, name, inputs) {
-    super(guard, "error", name, inputs);
-    Object.defineProperty(this, internal3, { value: ErrorFragmentInternal2 });
-  }
-  /**
-   *  The Custom Error selector.
-   */
-  get selector() {
-    return id3(this.format("sighash")).substring(0, 10);
-  }
-  /**
-   *  Returns a string representation of this fragment as %%format%%.
-   */
-  format(format) {
-    if (format == null) {
-      format = "sighash";
-    }
-    if (format === "json") {
-      return JSON.stringify({
-        type: "error",
-        name: this.name,
-        inputs: this.inputs.map((input) => JSON.parse(input.format(format)))
-      });
-    }
-    const result = [];
-    if (format !== "sighash") {
-      result.push("error");
-    }
-    result.push(this.name + joinParams2(format, this.inputs));
-    return result.join(" ");
-  }
-  /**
-   *  Returns a new **ErrorFragment** for %%obj%%.
-   */
-  static from(obj) {
-    if (_ErrorFragment.isFragment(obj)) {
-      return obj;
-    }
-    if (typeof obj === "string") {
-      return _ErrorFragment.from(lex2(obj));
-    } else if (obj instanceof TokenString2) {
-      const name = consumeName2("error", obj);
-      const inputs = consumeParams2(obj);
-      consumeEoi2(obj);
-      return new _ErrorFragment(_guard8, name, inputs);
-    }
-    return new _ErrorFragment(_guard8, obj.name, obj.inputs ? obj.inputs.map(ParamType2.from) : []);
-  }
-  /**
-   *  Returns ``true`` and provides a type guard if %%value%% is an
-   *  **ErrorFragment**.
-   */
-  static isFragment(value) {
-    return value && value[internal3] === ErrorFragmentInternal2;
-  }
-};
-var EventFragment2 = class _EventFragment extends NamedFragment2 {
-  /**
-   *  Whether this event is anonymous.
-   */
-  anonymous;
-  /**
-   *  @private
-   */
-  constructor(guard, name, inputs, anonymous) {
-    super(guard, "event", name, inputs);
-    Object.defineProperty(this, internal3, { value: EventFragmentInternal2 });
-    defineProperties3(this, { anonymous });
-  }
-  /**
-   *  The Event topic hash.
-   */
-  get topicHash() {
-    return id3(this.format("sighash"));
-  }
-  /**
-   *  Returns a string representation of this event as %%format%%.
-   */
-  format(format) {
-    if (format == null) {
-      format = "sighash";
-    }
-    if (format === "json") {
-      return JSON.stringify({
-        type: "event",
-        anonymous: this.anonymous,
-        name: this.name,
-        inputs: this.inputs.map((i) => JSON.parse(i.format(format)))
-      });
-    }
-    const result = [];
-    if (format !== "sighash") {
-      result.push("event");
-    }
-    result.push(this.name + joinParams2(format, this.inputs));
-    if (format !== "sighash" && this.anonymous) {
-      result.push("anonymous");
-    }
-    return result.join(" ");
-  }
-  /**
-   *  Return the topic hash for an event with %%name%% and %%params%%.
-   */
-  static getTopicHash(name, params) {
-    params = (params || []).map((p) => ParamType2.from(p));
-    const fragment = new _EventFragment(_guard8, name, params, false);
-    return fragment.topicHash;
-  }
-  /**
-   *  Returns a new **EventFragment** for %%obj%%.
-   */
-  static from(obj) {
-    if (_EventFragment.isFragment(obj)) {
-      return obj;
-    }
-    if (typeof obj === "string") {
-      try {
-        return _EventFragment.from(lex2(obj));
-      } catch (error) {
-        assertArgument3(false, "invalid event fragment", "obj", obj);
-      }
-    } else if (obj instanceof TokenString2) {
-      const name = consumeName2("event", obj);
-      const inputs = consumeParams2(obj, true);
-      const anonymous = !!consumeKeywords2(obj, setify2(["anonymous"])).has("anonymous");
-      consumeEoi2(obj);
-      return new _EventFragment(_guard8, name, inputs, anonymous);
-    }
-    return new _EventFragment(_guard8, obj.name, obj.inputs ? obj.inputs.map((p) => ParamType2.from(p, true)) : [], !!obj.anonymous);
-  }
-  /**
-   *  Returns ``true`` and provides a type guard if %%value%% is an
-   *  **EventFragment**.
-   */
-  static isFragment(value) {
-    return value && value[internal3] === EventFragmentInternal2;
-  }
-};
-var ConstructorFragment2 = class _ConstructorFragment extends Fragment2 {
-  /**
-   *  Whether the constructor can receive an endowment.
-   */
-  payable;
-  /**
-   *  The recommended gas limit for deployment or ``null``.
-   */
-  gas;
-  /**
-   *  @private
-   */
-  constructor(guard, type, inputs, payable, gas) {
-    super(guard, type, inputs);
-    Object.defineProperty(this, internal3, { value: ConstructorFragmentInternal2 });
-    defineProperties3(this, { payable, gas });
-  }
-  /**
-   *  Returns a string representation of this constructor as %%format%%.
-   */
-  format(format) {
-    assert3(format != null && format !== "sighash", "cannot format a constructor for sighash", "UNSUPPORTED_OPERATION", { operation: "format(sighash)" });
-    if (format === "json") {
-      return JSON.stringify({
-        type: "constructor",
-        stateMutability: this.payable ? "payable" : "undefined",
-        payable: this.payable,
-        gas: this.gas != null ? this.gas : void 0,
-        inputs: this.inputs.map((i) => JSON.parse(i.format(format)))
-      });
-    }
-    const result = [`constructor${joinParams2(format, this.inputs)}`];
-    if (this.payable) {
-      result.push("payable");
-    }
-    if (this.gas != null) {
-      result.push(`@${this.gas.toString()}`);
-    }
-    return result.join(" ");
-  }
-  /**
-   *  Returns a new **ConstructorFragment** for %%obj%%.
-   */
-  static from(obj) {
-    if (_ConstructorFragment.isFragment(obj)) {
-      return obj;
-    }
-    if (typeof obj === "string") {
-      try {
-        return _ConstructorFragment.from(lex2(obj));
-      } catch (error) {
-        assertArgument3(false, "invalid constuctor fragment", "obj", obj);
-      }
-    } else if (obj instanceof TokenString2) {
-      consumeKeywords2(obj, setify2(["constructor"]));
-      const inputs = consumeParams2(obj);
-      const payable = !!consumeKeywords2(obj, KwVisibDeploy2).has("payable");
-      const gas = consumeGas2(obj);
-      consumeEoi2(obj);
-      return new _ConstructorFragment(_guard8, "constructor", inputs, payable, gas);
-    }
-    return new _ConstructorFragment(_guard8, "constructor", obj.inputs ? obj.inputs.map(ParamType2.from) : [], !!obj.payable, obj.gas != null ? obj.gas : null);
-  }
-  /**
-   *  Returns ``true`` and provides a type guard if %%value%% is a
-   *  **ConstructorFragment**.
-   */
-  static isFragment(value) {
-    return value && value[internal3] === ConstructorFragmentInternal2;
-  }
-};
-var FallbackFragment2 = class _FallbackFragment extends Fragment2 {
-  /**
-   *  If the function can be sent value during invocation.
-   */
-  payable;
-  constructor(guard, inputs, payable) {
-    super(guard, "fallback", inputs);
-    Object.defineProperty(this, internal3, { value: FallbackFragmentInternal2 });
-    defineProperties3(this, { payable });
-  }
-  /**
-   *  Returns a string representation of this fallback as %%format%%.
-   */
-  format(format) {
-    const type = this.inputs.length === 0 ? "receive" : "fallback";
-    if (format === "json") {
-      const stateMutability = this.payable ? "payable" : "nonpayable";
-      return JSON.stringify({ type, stateMutability });
-    }
-    return `${type}()${this.payable ? " payable" : ""}`;
-  }
-  /**
-   *  Returns a new **FallbackFragment** for %%obj%%.
-   */
-  static from(obj) {
-    if (_FallbackFragment.isFragment(obj)) {
-      return obj;
-    }
-    if (typeof obj === "string") {
-      try {
-        return _FallbackFragment.from(lex2(obj));
-      } catch (error) {
-        assertArgument3(false, "invalid fallback fragment", "obj", obj);
-      }
-    } else if (obj instanceof TokenString2) {
-      const errorObj = obj.toString();
-      const topIsValid = obj.peekKeyword(setify2(["fallback", "receive"]));
-      assertArgument3(topIsValid, "type must be fallback or receive", "obj", errorObj);
-      const type = obj.popKeyword(setify2(["fallback", "receive"]));
-      if (type === "receive") {
-        const inputs2 = consumeParams2(obj);
-        assertArgument3(inputs2.length === 0, `receive cannot have arguments`, "obj.inputs", inputs2);
-        consumeKeywords2(obj, setify2(["payable"]));
-        consumeEoi2(obj);
-        return new _FallbackFragment(_guard8, [], true);
-      }
-      let inputs = consumeParams2(obj);
-      if (inputs.length) {
-        assertArgument3(inputs.length === 1 && inputs[0].type === "bytes", "invalid fallback inputs", "obj.inputs", inputs.map((i) => i.format("minimal")).join(", "));
-      } else {
-        inputs = [ParamType2.from("bytes")];
-      }
-      const mutability = consumeMutability2(obj);
-      assertArgument3(mutability === "nonpayable" || mutability === "payable", "fallback cannot be constants", "obj.stateMutability", mutability);
-      if (consumeKeywords2(obj, setify2(["returns"])).has("returns")) {
-        const outputs = consumeParams2(obj);
-        assertArgument3(outputs.length === 1 && outputs[0].type === "bytes", "invalid fallback outputs", "obj.outputs", outputs.map((i) => i.format("minimal")).join(", "));
-      }
-      consumeEoi2(obj);
-      return new _FallbackFragment(_guard8, inputs, mutability === "payable");
-    }
-    if (obj.type === "receive") {
-      return new _FallbackFragment(_guard8, [], true);
-    }
-    if (obj.type === "fallback") {
-      const inputs = [ParamType2.from("bytes")];
-      const payable = obj.stateMutability === "payable";
-      return new _FallbackFragment(_guard8, inputs, payable);
-    }
-    assertArgument3(false, "invalid fallback description", "obj", obj);
-  }
-  /**
-   *  Returns ``true`` and provides a type guard if %%value%% is a
-   *  **FallbackFragment**.
-   */
-  static isFragment(value) {
-    return value && value[internal3] === FallbackFragmentInternal2;
-  }
-};
-var FunctionFragment2 = class _FunctionFragment extends NamedFragment2 {
-  /**
-   *  If the function is constant (e.g. ``pure`` or ``view`` functions).
-   */
-  constant;
-  /**
-   *  The returned types for the result of calling this function.
-   */
-  outputs;
-  /**
-   *  The state mutability (e.g. ``payable``, ``nonpayable``, ``view``
-   *  or ``pure``)
-   */
-  stateMutability;
-  /**
-   *  If the function can be sent value during invocation.
-   */
-  payable;
-  /**
-   *  The recommended gas limit to send when calling this function.
-   */
-  gas;
-  /**
-   *  @private
-   */
-  constructor(guard, name, stateMutability, inputs, outputs, gas) {
-    super(guard, "function", name, inputs);
-    Object.defineProperty(this, internal3, { value: FunctionFragmentInternal2 });
-    outputs = Object.freeze(outputs.slice());
-    const constant = stateMutability === "view" || stateMutability === "pure";
-    const payable = stateMutability === "payable";
-    defineProperties3(this, { constant, gas, outputs, payable, stateMutability });
-  }
-  /**
-   *  The Function selector.
-   */
-  get selector() {
-    return id3(this.format("sighash")).substring(0, 10);
-  }
-  /**
-   *  Returns a string representation of this function as %%format%%.
-   */
-  format(format) {
-    if (format == null) {
-      format = "sighash";
-    }
-    if (format === "json") {
-      return JSON.stringify({
-        type: "function",
-        name: this.name,
-        constant: this.constant,
-        stateMutability: this.stateMutability !== "nonpayable" ? this.stateMutability : void 0,
-        payable: this.payable,
-        gas: this.gas != null ? this.gas : void 0,
-        inputs: this.inputs.map((i) => JSON.parse(i.format(format))),
-        outputs: this.outputs.map((o) => JSON.parse(o.format(format)))
-      });
-    }
-    const result = [];
-    if (format !== "sighash") {
-      result.push("function");
-    }
-    result.push(this.name + joinParams2(format, this.inputs));
-    if (format !== "sighash") {
-      if (this.stateMutability !== "nonpayable") {
-        result.push(this.stateMutability);
-      }
-      if (this.outputs && this.outputs.length) {
-        result.push("returns");
-        result.push(joinParams2(format, this.outputs));
-      }
-      if (this.gas != null) {
-        result.push(`@${this.gas.toString()}`);
-      }
-    }
-    return result.join(" ");
-  }
-  /**
-   *  Return the selector for a function with %%name%% and %%params%%.
-   */
-  static getSelector(name, params) {
-    params = (params || []).map((p) => ParamType2.from(p));
-    const fragment = new _FunctionFragment(_guard8, name, "view", params, [], null);
-    return fragment.selector;
-  }
-  /**
-   *  Returns a new **FunctionFragment** for %%obj%%.
-   */
-  static from(obj) {
-    if (_FunctionFragment.isFragment(obj)) {
-      return obj;
-    }
-    if (typeof obj === "string") {
-      try {
-        return _FunctionFragment.from(lex2(obj));
-      } catch (error) {
-        assertArgument3(false, "invalid function fragment", "obj", obj);
-      }
-    } else if (obj instanceof TokenString2) {
-      const name = consumeName2("function", obj);
-      const inputs = consumeParams2(obj);
-      const mutability = consumeMutability2(obj);
-      let outputs = [];
-      if (consumeKeywords2(obj, setify2(["returns"])).has("returns")) {
-        outputs = consumeParams2(obj);
-      }
-      const gas = consumeGas2(obj);
-      consumeEoi2(obj);
-      return new _FunctionFragment(_guard8, name, mutability, inputs, outputs, gas);
-    }
-    let stateMutability = obj.stateMutability;
-    if (stateMutability == null) {
-      stateMutability = "payable";
-      if (typeof obj.constant === "boolean") {
-        stateMutability = "view";
-        if (!obj.constant) {
-          stateMutability = "payable";
-          if (typeof obj.payable === "boolean" && !obj.payable) {
-            stateMutability = "nonpayable";
-          }
-        }
-      } else if (typeof obj.payable === "boolean" && !obj.payable) {
-        stateMutability = "nonpayable";
-      }
-    }
-    return new _FunctionFragment(_guard8, obj.name, stateMutability, obj.inputs ? obj.inputs.map(ParamType2.from) : [], obj.outputs ? obj.outputs.map(ParamType2.from) : [], obj.gas != null ? obj.gas : null);
-  }
-  /**
-   *  Returns ``true`` and provides a type guard if %%value%% is a
-   *  **FunctionFragment**.
-   */
-  static isFragment(value) {
-    return value && value[internal3] === FunctionFragmentInternal2;
-  }
-};
-var StructFragment2 = class _StructFragment extends NamedFragment2 {
-  /**
-   *  @private
-   */
-  constructor(guard, name, inputs) {
-    super(guard, "struct", name, inputs);
-    Object.defineProperty(this, internal3, { value: StructFragmentInternal2 });
-  }
-  /**
-   *  Returns a string representation of this struct as %%format%%.
-   */
-  format() {
-    throw new Error("@TODO");
-  }
-  /**
-   *  Returns a new **StructFragment** for %%obj%%.
-   */
-  static from(obj) {
-    if (typeof obj === "string") {
-      try {
-        return _StructFragment.from(lex2(obj));
-      } catch (error) {
-        assertArgument3(false, "invalid struct fragment", "obj", obj);
-      }
-    } else if (obj instanceof TokenString2) {
-      const name = consumeName2("struct", obj);
-      const inputs = consumeParams2(obj);
-      consumeEoi2(obj);
-      return new _StructFragment(_guard8, name, inputs);
-    }
-    return new _StructFragment(_guard8, obj.name, obj.inputs ? obj.inputs.map(ParamType2.from) : []);
-  }
-  // @TODO: fix this return type
-  /**
-   *  Returns ``true`` and provides a type guard if %%value%% is a
-   *  **StructFragment**.
-   */
-  static isFragment(value) {
-    return value && value[internal3] === StructFragmentInternal2;
-  }
-};
-
-// ../smart-contracts/node_modules/ethers/lib.esm/abi/abi-coder.js
-var PanicReasons3 = /* @__PURE__ */ new Map();
-PanicReasons3.set(0, "GENERIC_PANIC");
-PanicReasons3.set(1, "ASSERT_FALSE");
-PanicReasons3.set(17, "OVERFLOW");
-PanicReasons3.set(18, "DIVIDE_BY_ZERO");
-PanicReasons3.set(33, "ENUM_RANGE_ERROR");
-PanicReasons3.set(34, "BAD_STORAGE_DATA");
-PanicReasons3.set(49, "STACK_UNDERFLOW");
-PanicReasons3.set(50, "ARRAY_RANGE_ERROR");
-PanicReasons3.set(65, "OUT_OF_MEMORY");
-PanicReasons3.set(81, "UNINITIALIZED_FUNCTION_CALL");
-var paramTypeBytes2 = new RegExp(/^bytes([0-9]*)$/);
-var paramTypeNumber2 = new RegExp(/^(u?int)([0-9]*)$/);
-var defaultCoder2 = null;
-var defaultMaxInflation2 = 1024;
-function getBuiltinCallException2(action, tx, data4, abiCoder) {
-  let message = "missing revert data";
-  let reason = null;
-  const invocation = null;
-  let revert = null;
-  if (data4) {
-    message = "execution reverted";
-    const bytes5 = getBytes3(data4);
-    data4 = hexlify3(data4);
-    if (bytes5.length === 0) {
-      message += " (no data present; likely require(false) occurred";
-      reason = "require(false)";
-    } else if (bytes5.length % 32 !== 4) {
-      message += " (could not decode reason; invalid data length)";
-    } else if (hexlify3(bytes5.slice(0, 4)) === "0x08c379a0") {
-      try {
-        reason = abiCoder.decode(["string"], bytes5.slice(4))[0];
-        revert = {
-          signature: "Error(string)",
-          name: "Error",
-          args: [reason]
-        };
-        message += `: ${JSON.stringify(reason)}`;
-      } catch (error) {
-        message += " (could not decode reason; invalid string data)";
-      }
-    } else if (hexlify3(bytes5.slice(0, 4)) === "0x4e487b71") {
-      try {
-        const code = Number(abiCoder.decode(["uint256"], bytes5.slice(4))[0]);
-        revert = {
-          signature: "Panic(uint256)",
-          name: "Panic",
-          args: [code]
-        };
-        reason = `Panic due to ${PanicReasons3.get(code) || "UNKNOWN"}(${code})`;
-        message += `: ${reason}`;
-      } catch (error) {
-        message += " (could not decode panic code)";
-      }
-    } else {
-      message += " (unknown custom error)";
-    }
-  }
-  const transaction = {
-    to: tx.to ? getAddress3(tx.to) : null,
-    data: tx.data || "0x"
-  };
-  if (tx.from) {
-    transaction.from = getAddress3(tx.from);
-  }
-  return makeError3(message, "CALL_EXCEPTION", {
-    action,
-    data: data4,
-    reason,
-    transaction,
-    invocation,
-    revert
-  });
-}
-var AbiCoder2 = class _AbiCoder {
-  #getCoder(param) {
-    if (param.isArray()) {
-      return new ArrayCoder2(this.#getCoder(param.arrayChildren), param.arrayLength, param.name);
-    }
-    if (param.isTuple()) {
-      return new TupleCoder2(param.components.map((c) => this.#getCoder(c)), param.name);
-    }
-    switch (param.baseType) {
-      case "address":
-        return new AddressCoder2(param.name);
-      case "bool":
-        return new BooleanCoder2(param.name);
-      case "string":
-        return new StringCoder2(param.name);
-      case "bytes":
-        return new BytesCoder2(param.name);
-      case "":
-        return new NullCoder2(param.name);
-    }
-    let match = param.type.match(paramTypeNumber2);
-    if (match) {
-      let size = parseInt(match[2] || "256");
-      assertArgument3(size !== 0 && size <= 256 && size % 8 === 0, "invalid " + match[1] + " bit length", "param", param);
-      return new NumberCoder2(size / 8, match[1] === "int", param.name);
-    }
-    match = param.type.match(paramTypeBytes2);
-    if (match) {
-      let size = parseInt(match[1]);
-      assertArgument3(size !== 0 && size <= 32, "invalid bytes length", "param", param);
-      return new FixedBytesCoder2(size, param.name);
-    }
-    assertArgument3(false, "invalid type", "type", param.type);
-  }
-  /**
-   *  Get the default values for the given %%types%%.
-   *
-   *  For example, a ``uint`` is by default ``0`` and ``bool``
-   *  is by default ``false``.
-   */
-  getDefaultValue(types) {
-    const coders = types.map((type) => this.#getCoder(ParamType2.from(type)));
-    const coder = new TupleCoder2(coders, "_");
-    return coder.defaultValue();
-  }
-  /**
-   *  Encode the %%values%% as the %%types%% into ABI data.
-   *
-   *  @returns DataHexstring
-   */
-  encode(types, values) {
-    assertArgumentCount3(values.length, types.length, "types/values length mismatch");
-    const coders = types.map((type) => this.#getCoder(ParamType2.from(type)));
-    const coder = new TupleCoder2(coders, "_");
-    const writer = new Writer2();
-    coder.encode(writer, values);
-    return writer.data;
-  }
-  /**
-   *  Decode the ABI %%data%% as the %%types%% into values.
-   *
-   *  If %%loose%% decoding is enabled, then strict padding is
-   *  not enforced. Some older versions of Solidity incorrectly
-   *  padded event data emitted from ``external`` functions.
-   */
-  decode(types, data4, loose) {
-    const coders = types.map((type) => this.#getCoder(ParamType2.from(type)));
-    const coder = new TupleCoder2(coders, "_");
-    return coder.decode(new Reader2(data4, loose, defaultMaxInflation2));
-  }
-  static _setDefaultMaxInflation(value) {
-    assertArgument3(typeof value === "number" && Number.isInteger(value), "invalid defaultMaxInflation factor", "value", value);
-    defaultMaxInflation2 = value;
-  }
-  /**
-   *  Returns the shared singleton instance of a default [[AbiCoder]].
-   *
-   *  On the first call, the instance is created internally.
-   */
-  static defaultAbiCoder() {
-    if (defaultCoder2 == null) {
-      defaultCoder2 = new _AbiCoder();
-    }
-    return defaultCoder2;
-  }
-  /**
-   *  Returns an ethers-compatible [[CallExceptionError]] Error for the given
-   *  result %%data%% for the [[CallExceptionAction]] %%action%% against
-   *  the Transaction %%tx%%.
-   */
-  static getBuiltinCallException(action, tx, data4) {
-    return getBuiltinCallException2(action, tx, data4, _AbiCoder.defaultAbiCoder());
-  }
-};
-
-// ../smart-contracts/node_modules/ethers/lib.esm/abi/interface.js
-var LogDescription2 = class {
-  /**
-   *  The matching fragment for the ``topic0``.
-   */
-  fragment;
-  /**
-   *  The name of the Event.
-   */
-  name;
-  /**
-   *  The full Event signature.
-   */
-  signature;
-  /**
-   *  The topic hash for the Event.
-   */
-  topic;
-  /**
-   *  The arguments passed into the Event with ``emit``.
-   */
-  args;
-  /**
-   *  @_ignore:
-   */
-  constructor(fragment, topic, args) {
-    const name = fragment.name, signature = fragment.format();
-    defineProperties3(this, {
-      fragment,
-      name,
-      signature,
-      topic,
-      args
-    });
-  }
-};
-var TransactionDescription2 = class {
-  /**
-   *  The matching fragment from the transaction ``data``.
-   */
-  fragment;
-  /**
-   *  The name of the Function from the transaction ``data``.
-   */
-  name;
-  /**
-   *  The arguments passed to the Function from the transaction ``data``.
-   */
-  args;
-  /**
-   *  The full Function signature from the transaction ``data``.
-   */
-  signature;
-  /**
-   *  The selector for the Function from the transaction ``data``.
-   */
-  selector;
-  /**
-   *  The ``value`` (in wei) from the transaction.
-   */
-  value;
-  /**
-   *  @_ignore:
-   */
-  constructor(fragment, selector, args, value) {
-    const name = fragment.name, signature = fragment.format();
-    defineProperties3(this, {
-      fragment,
-      name,
-      args,
-      signature,
-      selector,
-      value
-    });
-  }
-};
-var ErrorDescription2 = class {
-  /**
-   *  The matching fragment.
-   */
-  fragment;
-  /**
-   *  The name of the Error.
-   */
-  name;
-  /**
-   *  The arguments passed to the Error with ``revert``.
-   */
-  args;
-  /**
-   *  The full Error signature.
-   */
-  signature;
-  /**
-   *  The selector for the Error.
-   */
-  selector;
-  /**
-   *  @_ignore:
-   */
-  constructor(fragment, selector, args) {
-    const name = fragment.name, signature = fragment.format();
-    defineProperties3(this, {
-      fragment,
-      name,
-      args,
-      signature,
-      selector
-    });
-  }
-};
-var Indexed2 = class {
-  /**
-   *  The ``keccak256`` of the value logged.
-   */
-  hash;
-  /**
-   *  @_ignore:
-   */
-  _isIndexed;
-  /**
-   *  Returns ``true`` if %%value%% is an **Indexed**.
-   *
-   *  This provides a Type Guard for property access.
-   */
-  static isIndexed(value) {
-    return !!(value && value._isIndexed);
-  }
-  /**
-   *  @_ignore:
-   */
-  constructor(hash3) {
-    defineProperties3(this, { hash: hash3, _isIndexed: true });
-  }
-};
-var PanicReasons4 = {
-  "0": "generic panic",
-  "1": "assert(false)",
-  "17": "arithmetic overflow",
-  "18": "division or modulo by zero",
-  "33": "enum overflow",
-  "34": "invalid encoded storage byte array accessed",
-  "49": "out-of-bounds array access; popping on an empty array",
-  "50": "out-of-bounds access of an array or bytesN",
-  "65": "out of memory",
-  "81": "uninitialized function"
-};
-var BuiltinErrors2 = {
-  "0x08c379a0": {
-    signature: "Error(string)",
-    name: "Error",
-    inputs: ["string"],
-    reason: (message) => {
-      return `reverted with reason string ${JSON.stringify(message)}`;
-    }
-  },
-  "0x4e487b71": {
-    signature: "Panic(uint256)",
-    name: "Panic",
-    inputs: ["uint256"],
-    reason: (code) => {
-      let reason = "unknown panic code";
-      if (code >= 0 && code <= 255 && PanicReasons4[code.toString()]) {
-        reason = PanicReasons4[code.toString()];
-      }
-      return `reverted with panic code 0x${code.toString(16)} (${reason})`;
-    }
-  }
-};
-var Interface2 = class _Interface {
-  /**
-   *  All the Contract ABI members (i.e. methods, events, errors, etc).
-   */
-  fragments;
-  /**
-   *  The Contract constructor.
-   */
-  deploy;
-  /**
-   *  The Fallback method, if any.
-   */
-  fallback;
-  /**
-   *  If receiving ether is supported.
-   */
-  receive;
-  #errors;
-  #events;
-  #functions;
-  //    #structs: Map<string, StructFragment>;
-  #abiCoder;
-  /**
-   *  Create a new Interface for the %%fragments%%.
-   */
-  constructor(fragments) {
-    let abi = [];
-    if (typeof fragments === "string") {
-      abi = JSON.parse(fragments);
-    } else {
-      abi = fragments;
-    }
-    this.#functions = /* @__PURE__ */ new Map();
-    this.#errors = /* @__PURE__ */ new Map();
-    this.#events = /* @__PURE__ */ new Map();
-    const frags = [];
-    for (const a of abi) {
-      try {
-        frags.push(Fragment2.from(a));
-      } catch (error) {
-        console.log(`[Warning] Invalid Fragment ${JSON.stringify(a)}:`, error.message);
-      }
-    }
-    defineProperties3(this, {
-      fragments: Object.freeze(frags)
-    });
-    let fallback = null;
-    let receive = false;
-    this.#abiCoder = this.getAbiCoder();
-    this.fragments.forEach((fragment, index) => {
-      let bucket;
-      switch (fragment.type) {
-        case "constructor":
-          if (this.deploy) {
-            console.log("duplicate definition - constructor");
-            return;
-          }
-          defineProperties3(this, { deploy: fragment });
-          return;
-        case "fallback":
-          if (fragment.inputs.length === 0) {
-            receive = true;
-          } else {
-            assertArgument3(!fallback || fragment.payable !== fallback.payable, "conflicting fallback fragments", `fragments[${index}]`, fragment);
-            fallback = fragment;
-            receive = fallback.payable;
-          }
-          return;
-        case "function":
-          bucket = this.#functions;
-          break;
-        case "event":
-          bucket = this.#events;
-          break;
-        case "error":
-          bucket = this.#errors;
-          break;
-        default:
-          return;
-      }
-      const signature = fragment.format();
-      if (bucket.has(signature)) {
-        return;
-      }
-      bucket.set(signature, fragment);
-    });
-    if (!this.deploy) {
-      defineProperties3(this, {
-        deploy: ConstructorFragment2.from("constructor()")
-      });
-    }
-    defineProperties3(this, { fallback, receive });
-  }
-  /**
-   *  Returns the entire Human-Readable ABI, as an array of
-   *  signatures, optionally as %%minimal%% strings, which
-   *  removes parameter names and unneceesary spaces.
-   */
-  format(minimal) {
-    const format = minimal ? "minimal" : "full";
-    const abi = this.fragments.map((f2) => f2.format(format));
-    return abi;
-  }
-  /**
-   *  Return the JSON-encoded ABI. This is the format Solidiy
-   *  returns.
-   */
-  formatJson() {
-    const abi = this.fragments.map((f2) => f2.format("json"));
-    return JSON.stringify(abi.map((j) => JSON.parse(j)));
-  }
-  /**
-   *  The ABI coder that will be used to encode and decode binary
-   *  data.
-   */
-  getAbiCoder() {
-    return AbiCoder2.defaultAbiCoder();
-  }
-  // Find a function definition by any means necessary (unless it is ambiguous)
-  #getFunction(key, values, forceUnique) {
-    if (isHexString3(key)) {
-      const selector = key.toLowerCase();
-      for (const fragment of this.#functions.values()) {
-        if (selector === fragment.selector) {
-          return fragment;
-        }
-      }
-      return null;
-    }
-    if (key.indexOf("(") === -1) {
-      const matching = [];
-      for (const [name, fragment] of this.#functions) {
-        if (name.split(
-          "("
-          /* fix:) */
-        )[0] === key) {
-          matching.push(fragment);
-        }
-      }
-      if (values) {
-        const lastValue = values.length > 0 ? values[values.length - 1] : null;
-        let valueLength = values.length;
-        let allowOptions = true;
-        if (Typed2.isTyped(lastValue) && lastValue.type === "overrides") {
-          allowOptions = false;
-          valueLength--;
-        }
-        for (let i = matching.length - 1; i >= 0; i--) {
-          const inputs = matching[i].inputs.length;
-          if (inputs !== valueLength && (!allowOptions || inputs !== valueLength - 1)) {
-            matching.splice(i, 1);
-          }
-        }
-        for (let i = matching.length - 1; i >= 0; i--) {
-          const inputs = matching[i].inputs;
-          for (let j = 0; j < values.length; j++) {
-            if (!Typed2.isTyped(values[j])) {
-              continue;
-            }
-            if (j >= inputs.length) {
-              if (values[j].type === "overrides") {
-                continue;
-              }
-              matching.splice(i, 1);
-              break;
-            }
-            if (values[j].type !== inputs[j].baseType) {
-              matching.splice(i, 1);
-              break;
-            }
-          }
-        }
-      }
-      if (matching.length === 1 && values && values.length !== matching[0].inputs.length) {
-        const lastArg = values[values.length - 1];
-        if (lastArg == null || Array.isArray(lastArg) || typeof lastArg !== "object") {
-          matching.splice(0, 1);
-        }
-      }
-      if (matching.length === 0) {
-        return null;
-      }
-      if (matching.length > 1 && forceUnique) {
-        const matchStr = matching.map((m) => JSON.stringify(m.format())).join(", ");
-        assertArgument3(false, `ambiguous function description (i.e. matches ${matchStr})`, "key", key);
-      }
-      return matching[0];
-    }
-    const result = this.#functions.get(FunctionFragment2.from(key).format());
-    if (result) {
-      return result;
-    }
-    return null;
-  }
-  /**
-   *  Get the function name for %%key%%, which may be a function selector,
-   *  function name or function signature that belongs to the ABI.
-   */
-  getFunctionName(key) {
-    const fragment = this.#getFunction(key, null, false);
-    assertArgument3(fragment, "no matching function", "key", key);
-    return fragment.name;
-  }
-  /**
-   *  Returns true if %%key%% (a function selector, function name or
-   *  function signature) is present in the ABI.
-   *
-   *  In the case of a function name, the name may be ambiguous, so
-   *  accessing the [[FunctionFragment]] may require refinement.
-   */
-  hasFunction(key) {
-    return !!this.#getFunction(key, null, false);
-  }
-  /**
-   *  Get the [[FunctionFragment]] for %%key%%, which may be a function
-   *  selector, function name or function signature that belongs to the ABI.
-   *
-   *  If %%values%% is provided, it will use the Typed API to handle
-   *  ambiguous cases where multiple functions match by name.
-   *
-   *  If the %%key%% and %%values%% do not refine to a single function in
-   *  the ABI, this will throw.
-   */
-  getFunction(key, values) {
-    return this.#getFunction(key, values || null, true);
-  }
-  /**
-   *  Iterate over all functions, calling %%callback%%, sorted by their name.
-   */
-  forEachFunction(callback) {
-    const names2 = Array.from(this.#functions.keys());
-    names2.sort((a, b3) => a.localeCompare(b3));
-    for (let i = 0; i < names2.length; i++) {
-      const name = names2[i];
-      callback(this.#functions.get(name), i);
-    }
-  }
-  // Find an event definition by any means necessary (unless it is ambiguous)
-  #getEvent(key, values, forceUnique) {
-    if (isHexString3(key)) {
-      const eventTopic = key.toLowerCase();
-      for (const fragment of this.#events.values()) {
-        if (eventTopic === fragment.topicHash) {
-          return fragment;
-        }
-      }
-      return null;
-    }
-    if (key.indexOf("(") === -1) {
-      const matching = [];
-      for (const [name, fragment] of this.#events) {
-        if (name.split(
-          "("
-          /* fix:) */
-        )[0] === key) {
-          matching.push(fragment);
-        }
-      }
-      if (values) {
-        for (let i = matching.length - 1; i >= 0; i--) {
-          if (matching[i].inputs.length < values.length) {
-            matching.splice(i, 1);
-          }
-        }
-        for (let i = matching.length - 1; i >= 0; i--) {
-          const inputs = matching[i].inputs;
-          for (let j = 0; j < values.length; j++) {
-            if (!Typed2.isTyped(values[j])) {
-              continue;
-            }
-            if (values[j].type !== inputs[j].baseType) {
-              matching.splice(i, 1);
-              break;
-            }
-          }
-        }
-      }
-      if (matching.length === 0) {
-        return null;
-      }
-      if (matching.length > 1 && forceUnique) {
-        const matchStr = matching.map((m) => JSON.stringify(m.format())).join(", ");
-        assertArgument3(false, `ambiguous event description (i.e. matches ${matchStr})`, "key", key);
-      }
-      return matching[0];
-    }
-    const result = this.#events.get(EventFragment2.from(key).format());
-    if (result) {
-      return result;
-    }
-    return null;
-  }
-  /**
-   *  Get the event name for %%key%%, which may be a topic hash,
-   *  event name or event signature that belongs to the ABI.
-   */
-  getEventName(key) {
-    const fragment = this.#getEvent(key, null, false);
-    assertArgument3(fragment, "no matching event", "key", key);
-    return fragment.name;
-  }
-  /**
-   *  Returns true if %%key%% (an event topic hash, event name or
-   *  event signature) is present in the ABI.
-   *
-   *  In the case of an event name, the name may be ambiguous, so
-   *  accessing the [[EventFragment]] may require refinement.
-   */
-  hasEvent(key) {
-    return !!this.#getEvent(key, null, false);
-  }
-  /**
-   *  Get the [[EventFragment]] for %%key%%, which may be a topic hash,
-   *  event name or event signature that belongs to the ABI.
-   *
-   *  If %%values%% is provided, it will use the Typed API to handle
-   *  ambiguous cases where multiple events match by name.
-   *
-   *  If the %%key%% and %%values%% do not refine to a single event in
-   *  the ABI, this will throw.
-   */
-  getEvent(key, values) {
-    return this.#getEvent(key, values || null, true);
-  }
-  /**
-   *  Iterate over all events, calling %%callback%%, sorted by their name.
-   */
-  forEachEvent(callback) {
-    const names2 = Array.from(this.#events.keys());
-    names2.sort((a, b3) => a.localeCompare(b3));
-    for (let i = 0; i < names2.length; i++) {
-      const name = names2[i];
-      callback(this.#events.get(name), i);
-    }
-  }
-  /**
-   *  Get the [[ErrorFragment]] for %%key%%, which may be an error
-   *  selector, error name or error signature that belongs to the ABI.
-   *
-   *  If %%values%% is provided, it will use the Typed API to handle
-   *  ambiguous cases where multiple errors match by name.
-   *
-   *  If the %%key%% and %%values%% do not refine to a single error in
-   *  the ABI, this will throw.
-   */
-  getError(key, values) {
-    if (isHexString3(key)) {
-      const selector = key.toLowerCase();
-      if (BuiltinErrors2[selector]) {
-        return ErrorFragment2.from(BuiltinErrors2[selector].signature);
-      }
-      for (const fragment of this.#errors.values()) {
-        if (selector === fragment.selector) {
-          return fragment;
-        }
-      }
-      return null;
-    }
-    if (key.indexOf("(") === -1) {
-      const matching = [];
-      for (const [name, fragment] of this.#errors) {
-        if (name.split(
-          "("
-          /* fix:) */
-        )[0] === key) {
-          matching.push(fragment);
-        }
-      }
-      if (matching.length === 0) {
-        if (key === "Error") {
-          return ErrorFragment2.from("error Error(string)");
-        }
-        if (key === "Panic") {
-          return ErrorFragment2.from("error Panic(uint256)");
-        }
-        return null;
-      } else if (matching.length > 1) {
-        const matchStr = matching.map((m) => JSON.stringify(m.format())).join(", ");
-        assertArgument3(false, `ambiguous error description (i.e. ${matchStr})`, "name", key);
-      }
-      return matching[0];
-    }
-    key = ErrorFragment2.from(key).format();
-    if (key === "Error(string)") {
-      return ErrorFragment2.from("error Error(string)");
-    }
-    if (key === "Panic(uint256)") {
-      return ErrorFragment2.from("error Panic(uint256)");
-    }
-    const result = this.#errors.get(key);
-    if (result) {
-      return result;
-    }
-    return null;
-  }
-  /**
-   *  Iterate over all errors, calling %%callback%%, sorted by their name.
-   */
-  forEachError(callback) {
-    const names2 = Array.from(this.#errors.keys());
-    names2.sort((a, b3) => a.localeCompare(b3));
-    for (let i = 0; i < names2.length; i++) {
-      const name = names2[i];
-      callback(this.#errors.get(name), i);
-    }
-  }
-  // Get the 4-byte selector used by Solidity to identify a function
-  /*
-  getSelector(fragment: ErrorFragment | FunctionFragment): string {
-      if (typeof(fragment) === "string") {
-          const matches: Array<Fragment> = [ ];
-  
-          try { matches.push(this.getFunction(fragment)); } catch (error) { }
-          try { matches.push(this.getError(<string>fragment)); } catch (_) { }
-  
-          if (matches.length === 0) {
-              logger.throwArgumentError("unknown fragment", "key", fragment);
-          } else if (matches.length > 1) {
-              logger.throwArgumentError("ambiguous fragment matches function and error", "key", fragment);
-          }
-  
-          fragment = matches[0];
-      }
-  
-      return dataSlice(id(fragment.format()), 0, 4);
-  }
-      */
-  // Get the 32-byte topic hash used by Solidity to identify an event
-  /*
-  getEventTopic(fragment: EventFragment): string {
-      //if (typeof(fragment) === "string") { fragment = this.getEvent(eventFragment); }
-      return id(fragment.format());
-  }
-  */
-  _decodeParams(params, data4) {
-    return this.#abiCoder.decode(params, data4);
-  }
-  _encodeParams(params, values) {
-    return this.#abiCoder.encode(params, values);
-  }
-  /**
-   *  Encodes a ``tx.data`` object for deploying the Contract with
-   *  the %%values%% as the constructor arguments.
-   */
-  encodeDeploy(values) {
-    return this._encodeParams(this.deploy.inputs, values || []);
-  }
-  /**
-   *  Decodes the result %%data%% (e.g. from an ``eth_call``) for the
-   *  specified error (see [[getError]] for valid values for
-   *  %%key%%).
-   *
-   *  Most developers should prefer the [[parseCallResult]] method instead,
-   *  which will automatically detect a ``CALL_EXCEPTION`` and throw the
-   *  corresponding error.
-   */
-  decodeErrorResult(fragment, data4) {
-    if (typeof fragment === "string") {
-      const f2 = this.getError(fragment);
-      assertArgument3(f2, "unknown error", "fragment", fragment);
-      fragment = f2;
-    }
-    assertArgument3(dataSlice3(data4, 0, 4) === fragment.selector, `data signature does not match error ${fragment.name}.`, "data", data4);
-    return this._decodeParams(fragment.inputs, dataSlice3(data4, 4));
-  }
-  /**
-   *  Encodes the transaction revert data for a call result that
-   *  reverted from the the Contract with the sepcified %%error%%
-   *  (see [[getError]] for valid values for %%fragment%%) with the %%values%%.
-   *
-   *  This is generally not used by most developers, unless trying to mock
-   *  a result from a Contract.
-   */
-  encodeErrorResult(fragment, values) {
-    if (typeof fragment === "string") {
-      const f2 = this.getError(fragment);
-      assertArgument3(f2, "unknown error", "fragment", fragment);
-      fragment = f2;
-    }
-    return concat3([
-      fragment.selector,
-      this._encodeParams(fragment.inputs, values || [])
-    ]);
-  }
-  /**
-   *  Decodes the %%data%% from a transaction ``tx.data`` for
-   *  the function specified (see [[getFunction]] for valid values
-   *  for %%fragment%%).
-   *
-   *  Most developers should prefer the [[parseTransaction]] method
-   *  instead, which will automatically detect the fragment.
-   */
-  decodeFunctionData(fragment, data4) {
-    if (typeof fragment === "string") {
-      const f2 = this.getFunction(fragment);
-      assertArgument3(f2, "unknown function", "fragment", fragment);
-      fragment = f2;
-    }
-    assertArgument3(dataSlice3(data4, 0, 4) === fragment.selector, `data signature does not match function ${fragment.name}.`, "data", data4);
-    return this._decodeParams(fragment.inputs, dataSlice3(data4, 4));
-  }
-  /**
-   *  Encodes the ``tx.data`` for a transaction that calls the function
-   *  specified (see [[getFunction]] for valid values for %%fragment%%) with
-   *  the %%values%%.
-   */
-  encodeFunctionData(fragment, values) {
-    if (typeof fragment === "string") {
-      const f2 = this.getFunction(fragment);
-      assertArgument3(f2, "unknown function", "fragment", fragment);
-      fragment = f2;
-    }
-    return concat3([
-      fragment.selector,
-      this._encodeParams(fragment.inputs, values || [])
-    ]);
-  }
-  /**
-   *  Decodes the result %%data%% (e.g. from an ``eth_call``) for the
-   *  specified function (see [[getFunction]] for valid values for
-   *  %%key%%).
-   *
-   *  Most developers should prefer the [[parseCallResult]] method instead,
-   *  which will automatically detect a ``CALL_EXCEPTION`` and throw the
-   *  corresponding error.
-   */
-  decodeFunctionResult(fragment, data4) {
-    if (typeof fragment === "string") {
-      const f2 = this.getFunction(fragment);
-      assertArgument3(f2, "unknown function", "fragment", fragment);
-      fragment = f2;
-    }
-    let message = "invalid length for result data";
-    const bytes5 = getBytesCopy3(data4);
-    if (bytes5.length % 32 === 0) {
-      try {
-        return this.#abiCoder.decode(fragment.outputs, bytes5);
-      } catch (error) {
-        message = "could not decode result data";
-      }
-    }
-    assert3(false, message, "BAD_DATA", {
-      value: hexlify3(bytes5),
-      info: { method: fragment.name, signature: fragment.format() }
-    });
-  }
-  makeError(_data, tx) {
-    const data4 = getBytes3(_data, "data");
-    const error = AbiCoder2.getBuiltinCallException("call", tx, data4);
-    const customPrefix = "execution reverted (unknown custom error)";
-    if (error.message.startsWith(customPrefix)) {
-      const selector = hexlify3(data4.slice(0, 4));
-      const ef = this.getError(selector);
-      if (ef) {
-        try {
-          const args = this.#abiCoder.decode(ef.inputs, data4.slice(4));
-          error.revert = {
-            name: ef.name,
-            signature: ef.format(),
-            args
-          };
-          error.reason = error.revert.signature;
-          error.message = `execution reverted: ${error.reason}`;
-        } catch (e) {
-          error.message = `execution reverted (coult not decode custom error)`;
-        }
-      }
-    }
-    const parsed = this.parseTransaction(tx);
-    if (parsed) {
-      error.invocation = {
-        method: parsed.name,
-        signature: parsed.signature,
-        args: parsed.args
-      };
-    }
-    return error;
-  }
-  /**
-   *  Encodes the result data (e.g. from an ``eth_call``) for the
-   *  specified function (see [[getFunction]] for valid values
-   *  for %%fragment%%) with %%values%%.
-   *
-   *  This is generally not used by most developers, unless trying to mock
-   *  a result from a Contract.
-   */
-  encodeFunctionResult(fragment, values) {
-    if (typeof fragment === "string") {
-      const f2 = this.getFunction(fragment);
-      assertArgument3(f2, "unknown function", "fragment", fragment);
-      fragment = f2;
-    }
-    return hexlify3(this.#abiCoder.encode(fragment.outputs, values || []));
-  }
-  /*
-      spelunk(inputs: Array<ParamType>, values: ReadonlyArray<any>, processfunc: (type: string, value: any) => Promise<any>): Promise<Array<any>> {
-          const promises: Array<Promise<>> = [ ];
-          const process = function(type: ParamType, value: any): any {
-              if (type.baseType === "array") {
-                  return descend(type.child
-              }
-              if (type. === "address") {
-              }
-          };
-  
-          const descend = function (inputs: Array<ParamType>, values: ReadonlyArray<any>) {
-              if (inputs.length !== values.length) { throw new Error("length mismatch"); }
-              
-          };
-  
-          const result: Array<any> = [ ];
-          values.forEach((value, index) => {
-              if (value == null) {
-                  topics.push(null);
-              } else if (param.baseType === "array" || param.baseType === "tuple") {
-                  logger.throwArgumentError("filtering with tuples or arrays not supported", ("contract." + param.name), value);
-              } else if (Array.isArray(value)) {
-                  topics.push(value.map((value) => encodeTopic(param, value)));
-              } else {
-                  topics.push(encodeTopic(param, value));
-              }
-          });
-      }
-  */
-  // Create the filter for the event with search criteria (e.g. for eth_filterLog)
-  encodeFilterTopics(fragment, values) {
-    if (typeof fragment === "string") {
-      const f2 = this.getEvent(fragment);
-      assertArgument3(f2, "unknown event", "eventFragment", fragment);
-      fragment = f2;
-    }
-    assert3(values.length <= fragment.inputs.length, `too many arguments for ${fragment.format()}`, "UNEXPECTED_ARGUMENT", { count: values.length, expectedCount: fragment.inputs.length });
-    const topics = [];
-    if (!fragment.anonymous) {
-      topics.push(fragment.topicHash);
-    }
-    const encodeTopic = (param, value) => {
-      if (param.type === "string") {
-        return id3(value);
-      } else if (param.type === "bytes") {
-        return keccak2563(hexlify3(value));
-      }
-      if (param.type === "bool" && typeof value === "boolean") {
-        value = value ? "0x01" : "0x00";
-      } else if (param.type.match(/^u?int/)) {
-        value = toBeHex3(value);
-      } else if (param.type.match(/^bytes/)) {
-        value = zeroPadBytes3(value, 32);
-      } else if (param.type === "address") {
-        this.#abiCoder.encode(["address"], [value]);
-      }
-      return zeroPadValue3(hexlify3(value), 32);
-    };
-    values.forEach((value, index) => {
-      const param = fragment.inputs[index];
-      if (!param.indexed) {
-        assertArgument3(value == null, "cannot filter non-indexed parameters; must be null", "contract." + param.name, value);
-        return;
-      }
-      if (value == null) {
-        topics.push(null);
-      } else if (param.baseType === "array" || param.baseType === "tuple") {
-        assertArgument3(false, "filtering with tuples or arrays not supported", "contract." + param.name, value);
-      } else if (Array.isArray(value)) {
-        topics.push(value.map((value2) => encodeTopic(param, value2)));
-      } else {
-        topics.push(encodeTopic(param, value));
-      }
-    });
-    while (topics.length && topics[topics.length - 1] === null) {
-      topics.pop();
-    }
-    return topics;
-  }
-  encodeEventLog(fragment, values) {
-    if (typeof fragment === "string") {
-      const f2 = this.getEvent(fragment);
-      assertArgument3(f2, "unknown event", "eventFragment", fragment);
-      fragment = f2;
-    }
-    const topics = [];
-    const dataTypes = [];
-    const dataValues = [];
-    if (!fragment.anonymous) {
-      topics.push(fragment.topicHash);
-    }
-    assertArgument3(values.length === fragment.inputs.length, "event arguments/values mismatch", "values", values);
-    fragment.inputs.forEach((param, index) => {
-      const value = values[index];
-      if (param.indexed) {
-        if (param.type === "string") {
-          topics.push(id3(value));
-        } else if (param.type === "bytes") {
-          topics.push(keccak2563(value));
-        } else if (param.baseType === "tuple" || param.baseType === "array") {
-          throw new Error("not implemented");
-        } else {
-          topics.push(this.#abiCoder.encode([param.type], [value]));
-        }
-      } else {
-        dataTypes.push(param);
-        dataValues.push(value);
-      }
-    });
-    return {
-      data: this.#abiCoder.encode(dataTypes, dataValues),
-      topics
-    };
-  }
-  // Decode a filter for the event and the search criteria
-  decodeEventLog(fragment, data4, topics) {
-    if (typeof fragment === "string") {
-      const f2 = this.getEvent(fragment);
-      assertArgument3(f2, "unknown event", "eventFragment", fragment);
-      fragment = f2;
-    }
-    if (topics != null && !fragment.anonymous) {
-      const eventTopic = fragment.topicHash;
-      assertArgument3(isHexString3(topics[0], 32) && topics[0].toLowerCase() === eventTopic, "fragment/topic mismatch", "topics[0]", topics[0]);
-      topics = topics.slice(1);
-    }
-    const indexed = [];
-    const nonIndexed = [];
-    const dynamic = [];
-    fragment.inputs.forEach((param, index) => {
-      if (param.indexed) {
-        if (param.type === "string" || param.type === "bytes" || param.baseType === "tuple" || param.baseType === "array") {
-          indexed.push(ParamType2.from({ type: "bytes32", name: param.name }));
-          dynamic.push(true);
-        } else {
-          indexed.push(param);
-          dynamic.push(false);
-        }
-      } else {
-        nonIndexed.push(param);
-        dynamic.push(false);
-      }
-    });
-    const resultIndexed = topics != null ? this.#abiCoder.decode(indexed, concat3(topics)) : null;
-    const resultNonIndexed = this.#abiCoder.decode(nonIndexed, data4, true);
-    const values = [];
-    const keys = [];
-    let nonIndexedIndex = 0, indexedIndex = 0;
-    fragment.inputs.forEach((param, index) => {
-      let value = null;
-      if (param.indexed) {
-        if (resultIndexed == null) {
-          value = new Indexed2(null);
-        } else if (dynamic[index]) {
-          value = new Indexed2(resultIndexed[indexedIndex++]);
-        } else {
-          try {
-            value = resultIndexed[indexedIndex++];
-          } catch (error) {
-            value = error;
-          }
-        }
-      } else {
-        try {
-          value = resultNonIndexed[nonIndexedIndex++];
-        } catch (error) {
-          value = error;
-        }
-      }
-      values.push(value);
-      keys.push(param.name || null);
-    });
-    return Result2.fromItems(values, keys);
-  }
-  /**
-   *  Parses a transaction, finding the matching function and extracts
-   *  the parameter values along with other useful function details.
-   *
-   *  If the matching function cannot be found, return null.
-   */
-  parseTransaction(tx) {
-    const data4 = getBytes3(tx.data, "tx.data");
-    const value = getBigInt3(tx.value != null ? tx.value : 0, "tx.value");
-    const fragment = this.getFunction(hexlify3(data4.slice(0, 4)));
-    if (!fragment) {
-      return null;
-    }
-    const args = this.#abiCoder.decode(fragment.inputs, data4.slice(4));
-    return new TransactionDescription2(fragment, fragment.selector, args, value);
-  }
-  parseCallResult(data4) {
-    throw new Error("@TODO");
-  }
-  /**
-   *  Parses a receipt log, finding the matching event and extracts
-   *  the parameter values along with other useful event details.
-   *
-   *  If the matching event cannot be found, returns null.
-   */
-  parseLog(log) {
-    const fragment = this.getEvent(log.topics[0]);
-    if (!fragment || fragment.anonymous) {
-      return null;
-    }
-    return new LogDescription2(fragment, fragment.topicHash, this.decodeEventLog(fragment, log.data, log.topics));
-  }
-  /**
-   *  Parses a revert data, finding the matching error and extracts
-   *  the parameter values along with other useful error details.
-   *
-   *  If the matching error cannot be found, returns null.
-   */
-  parseError(data4) {
-    const hexData = hexlify3(data4);
-    const fragment = this.getError(dataSlice3(hexData, 0, 4));
-    if (!fragment) {
-      return null;
-    }
-    const args = this.#abiCoder.decode(fragment.inputs, dataSlice3(hexData, 4));
-    return new ErrorDescription2(fragment, fragment.selector, args);
-  }
-  /**
-   *  Creates a new [[Interface]] from the ABI %%value%%.
-   *
-   *  The %%value%% may be provided as an existing [[Interface]] object,
-   *  a JSON-encoded ABI or any Human-Readable ABI format.
-   */
-  static from(value) {
-    if (value instanceof _Interface) {
-      return value;
-    }
-    if (typeof value === "string") {
-      return new _Interface(JSON.parse(value));
-    }
-    if (typeof value.formatJson === "function") {
-      return new _Interface(value.formatJson());
-    }
-    if (typeof value.format === "function") {
-      return new _Interface(value.format("json"));
-    }
-    return new _Interface(value);
-  }
-};
-
-// ../smart-contracts/node_modules/ethers/lib.esm/providers/provider.js
-var BN_017 = BigInt(0);
-function toJson2(value) {
-  if (value == null) {
-    return null;
-  }
-  return value.toString();
-}
-function copyRequest2(req) {
-  const result = {};
-  if (req.to) {
-    result.to = req.to;
-  }
-  if (req.from) {
-    result.from = req.from;
-  }
-  if (req.data) {
-    result.data = hexlify3(req.data);
-  }
-  const bigIntKeys = "chainId,gasLimit,gasPrice,maxFeePerBlobGas,maxFeePerGas,maxPriorityFeePerGas,value".split(/,/);
-  for (const key of bigIntKeys) {
-    if (!(key in req) || req[key] == null) {
-      continue;
-    }
-    result[key] = getBigInt3(req[key], `request.${key}`);
-  }
-  const numberKeys = "type,nonce".split(/,/);
-  for (const key of numberKeys) {
-    if (!(key in req) || req[key] == null) {
-      continue;
-    }
-    result[key] = getNumber3(req[key], `request.${key}`);
-  }
-  if (req.accessList) {
-    result.accessList = accessListify2(req.accessList);
-  }
-  if ("blockTag" in req) {
-    result.blockTag = req.blockTag;
-  }
-  if ("enableCcipRead" in req) {
-    result.enableCcipRead = !!req.enableCcipRead;
-  }
-  if ("customData" in req) {
-    result.customData = req.customData;
-  }
-  if ("blobVersionedHashes" in req && req.blobVersionedHashes) {
-    result.blobVersionedHashes = req.blobVersionedHashes.slice();
-  }
-  if ("kzg" in req) {
-    result.kzg = req.kzg;
-  }
-  if ("blobs" in req && req.blobs) {
-    result.blobs = req.blobs.map((b3) => {
-      if (isBytesLike3(b3)) {
-        return hexlify3(b3);
-      }
-      return Object.assign({}, b3);
-    });
-  }
-  return result;
-}
-var Log2 = class {
-  /**
-   *  The provider connected to the log used to fetch additional details
-   *  if necessary.
-   */
-  provider;
-  /**
-   *  The transaction hash of the transaction this log occurred in. Use the
-   *  [[Log-getTransaction]] to get the [[TransactionResponse]].
-   */
-  transactionHash;
-  /**
-   *  The block hash of the block this log occurred in. Use the
-   *  [[Log-getBlock]] to get the [[Block]].
-   */
-  blockHash;
-  /**
-   *  The block number of the block this log occurred in. It is preferred
-   *  to use the [[Block-hash]] when fetching the related [[Block]],
-   *  since in the case of an orphaned block, the block at that height may
-   *  have changed.
-   */
-  blockNumber;
-  /**
-   *  If the **Log** represents a block that was removed due to an orphaned
-   *  block, this will be true.
-   *
-   *  This can only happen within an orphan event listener.
-   */
-  removed;
-  /**
-   *  The address of the contract that emitted this log.
-   */
-  address;
-  /**
-   *  The data included in this log when it was emitted.
-   */
-  data;
-  /**
-   *  The indexed topics included in this log when it was emitted.
-   *
-   *  All topics are included in the bloom filters, so they can be
-   *  efficiently filtered using the [[Provider-getLogs]] method.
-   */
-  topics;
-  /**
-   *  The index within the block this log occurred at. This is generally
-   *  not useful to developers, but can be used with the various roots
-   *  to proof inclusion within a block.
-   */
-  index;
-  /**
-   *  The index within the transaction of this log.
-   */
-  transactionIndex;
-  /**
-   *  @_ignore:
-   */
-  constructor(log, provider) {
-    this.provider = provider;
-    const topics = Object.freeze(log.topics.slice());
-    defineProperties3(this, {
-      transactionHash: log.transactionHash,
-      blockHash: log.blockHash,
-      blockNumber: log.blockNumber,
-      removed: log.removed,
-      address: log.address,
-      data: log.data,
-      topics,
-      index: log.index,
-      transactionIndex: log.transactionIndex
-    });
-  }
-  /**
-   *  Returns a JSON-compatible object.
-   */
-  toJSON() {
-    const { address, blockHash, blockNumber, data: data4, index, removed, topics, transactionHash, transactionIndex } = this;
-    return {
-      _type: "log",
-      address,
-      blockHash,
-      blockNumber,
-      data: data4,
-      index,
-      removed,
-      topics,
-      transactionHash,
-      transactionIndex
-    };
-  }
-  /**
-   *  Returns the block that this log occurred in.
-   */
-  async getBlock() {
-    const block = await this.provider.getBlock(this.blockHash);
-    assert3(!!block, "failed to find transaction", "UNKNOWN_ERROR", {});
-    return block;
-  }
-  /**
-   *  Returns the transaction that this log occurred in.
-   */
-  async getTransaction() {
-    const tx = await this.provider.getTransaction(this.transactionHash);
-    assert3(!!tx, "failed to find transaction", "UNKNOWN_ERROR", {});
-    return tx;
-  }
-  /**
-   *  Returns the transaction receipt fot the transaction that this
-   *  log occurred in.
-   */
-  async getTransactionReceipt() {
-    const receipt = await this.provider.getTransactionReceipt(this.transactionHash);
-    assert3(!!receipt, "failed to find transaction receipt", "UNKNOWN_ERROR", {});
-    return receipt;
-  }
-  /**
-   *  @_ignore:
-   */
-  removedEvent() {
-    return createRemovedLogFilter2(this);
-  }
-};
-var TransactionReceipt2 = class {
-  /**
-   *  The provider connected to the log used to fetch additional details
-   *  if necessary.
-   */
-  provider;
-  /**
-   *  The address the transaction was sent to.
-   */
-  to;
-  /**
-   *  The sender of the transaction.
-   */
-  from;
-  /**
-   *  The address of the contract if the transaction was directly
-   *  responsible for deploying one.
-   *
-   *  This is non-null **only** if the ``to`` is empty and the ``data``
-   *  was successfully executed as initcode.
-   */
-  contractAddress;
-  /**
-   *  The transaction hash.
-   */
-  hash;
-  /**
-   *  The index of this transaction within the block transactions.
-   */
-  index;
-  /**
-   *  The block hash of the [[Block]] this transaction was included in.
-   */
-  blockHash;
-  /**
-   *  The block number of the [[Block]] this transaction was included in.
-   */
-  blockNumber;
-  /**
-   *  The bloom filter bytes that represent all logs that occurred within
-   *  this transaction. This is generally not useful for most developers,
-   *  but can be used to validate the included logs.
-   */
-  logsBloom;
-  /**
-   *  The actual amount of gas used by this transaction.
-   *
-   *  When creating a transaction, the amount of gas that will be used can
-   *  only be approximated, but the sender must pay the gas fee for the
-   *  entire gas limit. After the transaction, the difference is refunded.
-   */
-  gasUsed;
-  /**
-   *  The gas used for BLObs. See [[link-eip-4844]].
-   */
-  blobGasUsed;
-  /**
-   *  The amount of gas used by all transactions within the block for this
-   *  and all transactions with a lower ``index``.
-   *
-   *  This is generally not useful for developers but can be used to
-   *  validate certain aspects of execution.
-   */
-  cumulativeGasUsed;
-  /**
-   *  The actual gas price used during execution.
-   *
-   *  Due to the complexity of [[link-eip-1559]] this value can only
-   *  be caluclated after the transaction has been mined, snce the base
-   *  fee is protocol-enforced.
-   */
-  gasPrice;
-  /**
-   *  The price paid per BLOB in gas. See [[link-eip-4844]].
-   */
-  blobGasPrice;
-  /**
-   *  The [[link-eip-2718]] transaction type.
-   */
-  type;
-  //readonly byzantium!: boolean;
-  /**
-   *  The status of this transaction, indicating success (i.e. ``1``) or
-   *  a revert (i.e. ``0``).
-   *
-   *  This is available in post-byzantium blocks, but some backends may
-   *  backfill this value.
-   */
-  status;
-  /**
-   *  The root hash of this transaction.
-   *
-   *  This is no present and was only included in pre-byzantium blocks, but
-   *  could be used to validate certain parts of the receipt.
-   */
-  root;
-  #logs;
-  /**
-   *  @_ignore:
-   */
-  constructor(tx, provider) {
-    this.#logs = Object.freeze(tx.logs.map((log) => {
-      return new Log2(log, provider);
-    }));
-    let gasPrice = BN_017;
-    if (tx.effectiveGasPrice != null) {
-      gasPrice = tx.effectiveGasPrice;
-    } else if (tx.gasPrice != null) {
-      gasPrice = tx.gasPrice;
-    }
-    defineProperties3(this, {
-      provider,
-      to: tx.to,
-      from: tx.from,
-      contractAddress: tx.contractAddress,
-      hash: tx.hash,
-      index: tx.index,
-      blockHash: tx.blockHash,
-      blockNumber: tx.blockNumber,
-      logsBloom: tx.logsBloom,
-      gasUsed: tx.gasUsed,
-      cumulativeGasUsed: tx.cumulativeGasUsed,
-      blobGasUsed: tx.blobGasUsed,
-      gasPrice,
-      blobGasPrice: tx.blobGasPrice,
-      type: tx.type,
-      //byzantium: tx.byzantium,
-      status: tx.status,
-      root: tx.root
-    });
-  }
-  /**
-   *  The logs for this transaction.
-   */
-  get logs() {
-    return this.#logs;
-  }
-  /**
-   *  Returns a JSON-compatible representation.
-   */
-  toJSON() {
-    const {
-      to,
-      from,
-      contractAddress,
-      hash: hash3,
-      index,
-      blockHash,
-      blockNumber,
-      logsBloom,
-      logs,
-      //byzantium, 
-      status,
-      root
-    } = this;
-    return {
-      _type: "TransactionReceipt",
-      blockHash,
-      blockNumber,
-      //byzantium, 
-      contractAddress,
-      cumulativeGasUsed: toJson2(this.cumulativeGasUsed),
-      from,
-      gasPrice: toJson2(this.gasPrice),
-      blobGasUsed: toJson2(this.blobGasUsed),
-      blobGasPrice: toJson2(this.blobGasPrice),
-      gasUsed: toJson2(this.gasUsed),
-      hash: hash3,
-      index,
-      logs,
-      logsBloom,
-      root,
-      status,
-      to
-    };
-  }
-  /**
-   *  @_ignore:
-   */
-  get length() {
-    return this.logs.length;
-  }
-  [Symbol.iterator]() {
-    let index = 0;
-    return {
-      next: () => {
-        if (index < this.length) {
-          return { value: this.logs[index++], done: false };
-        }
-        return { value: void 0, done: true };
-      }
-    };
-  }
-  /**
-   *  The total fee for this transaction, in wei.
-   */
-  get fee() {
-    return this.gasUsed * this.gasPrice;
-  }
-  /**
-   *  Resolves to the block this transaction occurred in.
-   */
-  async getBlock() {
-    const block = await this.provider.getBlock(this.blockHash);
-    if (block == null) {
-      throw new Error("TODO");
-    }
-    return block;
-  }
-  /**
-   *  Resolves to the transaction this transaction occurred in.
-   */
-  async getTransaction() {
-    const tx = await this.provider.getTransaction(this.hash);
-    if (tx == null) {
-      throw new Error("TODO");
-    }
-    return tx;
-  }
-  /**
-   *  Resolves to the return value of the execution of this transaction.
-   *
-   *  Support for this feature is limited, as it requires an archive node
-   *  with the ``debug_`` or ``trace_`` API enabled.
-   */
-  async getResult() {
-    return await this.provider.getTransactionResult(this.hash);
-  }
-  /**
-   *  Resolves to the number of confirmations this transaction has.
-   */
-  async confirmations() {
-    return await this.provider.getBlockNumber() - this.blockNumber + 1;
-  }
-  /**
-   *  @_ignore:
-   */
-  removedEvent() {
-    return createRemovedTransactionFilter2(this);
-  }
-  /**
-   *  @_ignore:
-   */
-  reorderedEvent(other) {
-    assert3(!other || other.isMined(), "unmined 'other' transction cannot be orphaned", "UNSUPPORTED_OPERATION", { operation: "reorderedEvent(other)" });
-    return createReorderedTransactionFilter2(this, other);
-  }
-};
-var TransactionResponse2 = class _TransactionResponse {
-  /**
-   *  The provider this is connected to, which will influence how its
-   *  methods will resolve its async inspection methods.
-   */
-  provider;
-  /**
-   *  The block number of the block that this transaction was included in.
-   *
-   *  This is ``null`` for pending transactions.
-   */
-  blockNumber;
-  /**
-   *  The blockHash of the block that this transaction was included in.
-   *
-   *  This is ``null`` for pending transactions.
-   */
-  blockHash;
-  /**
-   *  The index within the block that this transaction resides at.
-   */
-  index;
-  /**
-   *  The transaction hash.
-   */
-  hash;
-  /**
-   *  The [[link-eip-2718]] transaction envelope type. This is
-   *  ``0`` for legacy transactions types.
-   */
-  type;
-  /**
-   *  The receiver of this transaction.
-   *
-   *  If ``null``, then the transaction is an initcode transaction.
-   *  This means the result of executing the [[data]] will be deployed
-   *  as a new contract on chain (assuming it does not revert) and the
-   *  address may be computed using [[getCreateAddress]].
-   */
-  to;
-  /**
-   *  The sender of this transaction. It is implicitly computed
-   *  from the transaction pre-image hash (as the digest) and the
-   *  [[signature]] using ecrecover.
-   */
-  from;
-  /**
-   *  The nonce, which is used to prevent replay attacks and offer
-   *  a method to ensure transactions from a given sender are explicitly
-   *  ordered.
-   *
-   *  When sending a transaction, this must be equal to the number of
-   *  transactions ever sent by [[from]].
-   */
-  nonce;
-  /**
-   *  The maximum units of gas this transaction can consume. If execution
-   *  exceeds this, the entries transaction is reverted and the sender
-   *  is charged for the full amount, despite not state changes being made.
-   */
-  gasLimit;
-  /**
-   *  The gas price can have various values, depending on the network.
-   *
-   *  In modern networks, for transactions that are included this is
-   *  the //effective gas price// (the fee per gas that was actually
-   *  charged), while for transactions that have not been included yet
-   *  is the [[maxFeePerGas]].
-   *
-   *  For legacy transactions, or transactions on legacy networks, this
-   *  is the fee that will be charged per unit of gas the transaction
-   *  consumes.
-   */
-  gasPrice;
-  /**
-   *  The maximum priority fee (per unit of gas) to allow a
-   *  validator to charge the sender. This is inclusive of the
-   *  [[maxFeeFeePerGas]].
-   */
-  maxPriorityFeePerGas;
-  /**
-   *  The maximum fee (per unit of gas) to allow this transaction
-   *  to charge the sender.
-   */
-  maxFeePerGas;
-  /**
-   *  The [[link-eip-4844]] max fee per BLOb gas.
-   */
-  maxFeePerBlobGas;
-  /**
-   *  The data.
-   */
-  data;
-  /**
-   *  The value, in wei. Use [[formatEther]] to format this value
-   *  as ether.
-   */
-  value;
-  /**
-   *  The chain ID.
-   */
-  chainId;
-  /**
-   *  The signature.
-   */
-  signature;
-  /**
-   *  The [[link-eip-2930]] access list for transaction types that
-   *  support it, otherwise ``null``.
-   */
-  accessList;
-  /**
-   *  The [[link-eip-4844]] BLOb versioned hashes.
-   */
-  blobVersionedHashes;
-  #startBlock;
-  /**
-   *  @_ignore:
-   */
-  constructor(tx, provider) {
-    this.provider = provider;
-    this.blockNumber = tx.blockNumber != null ? tx.blockNumber : null;
-    this.blockHash = tx.blockHash != null ? tx.blockHash : null;
-    this.hash = tx.hash;
-    this.index = tx.index;
-    this.type = tx.type;
-    this.from = tx.from;
-    this.to = tx.to || null;
-    this.gasLimit = tx.gasLimit;
-    this.nonce = tx.nonce;
-    this.data = tx.data;
-    this.value = tx.value;
-    this.gasPrice = tx.gasPrice;
-    this.maxPriorityFeePerGas = tx.maxPriorityFeePerGas != null ? tx.maxPriorityFeePerGas : null;
-    this.maxFeePerGas = tx.maxFeePerGas != null ? tx.maxFeePerGas : null;
-    this.maxFeePerBlobGas = tx.maxFeePerBlobGas != null ? tx.maxFeePerBlobGas : null;
-    this.chainId = tx.chainId;
-    this.signature = tx.signature;
-    this.accessList = tx.accessList != null ? tx.accessList : null;
-    this.blobVersionedHashes = tx.blobVersionedHashes != null ? tx.blobVersionedHashes : null;
-    this.#startBlock = -1;
-  }
-  /**
-   *  Returns a JSON-compatible representation of this transaction.
-   */
-  toJSON() {
-    const { blockNumber, blockHash, index, hash: hash3, type, to, from, nonce, data: data4, signature, accessList, blobVersionedHashes } = this;
-    return {
-      _type: "TransactionResponse",
-      accessList,
-      blockNumber,
-      blockHash,
-      blobVersionedHashes,
-      chainId: toJson2(this.chainId),
-      data: data4,
-      from,
-      gasLimit: toJson2(this.gasLimit),
-      gasPrice: toJson2(this.gasPrice),
-      hash: hash3,
-      maxFeePerGas: toJson2(this.maxFeePerGas),
-      maxPriorityFeePerGas: toJson2(this.maxPriorityFeePerGas),
-      maxFeePerBlobGas: toJson2(this.maxFeePerBlobGas),
-      nonce,
-      signature,
-      to,
-      index,
-      type,
-      value: toJson2(this.value)
-    };
-  }
-  /**
-   *  Resolves to the Block that this transaction was included in.
-   *
-   *  This will return null if the transaction has not been included yet.
-   */
-  async getBlock() {
-    let blockNumber = this.blockNumber;
-    if (blockNumber == null) {
-      const tx = await this.getTransaction();
-      if (tx) {
-        blockNumber = tx.blockNumber;
-      }
-    }
-    if (blockNumber == null) {
-      return null;
-    }
-    const block = this.provider.getBlock(blockNumber);
-    if (block == null) {
-      throw new Error("TODO");
-    }
-    return block;
-  }
-  /**
-   *  Resolves to this transaction being re-requested from the
-   *  provider. This can be used if you have an unmined transaction
-   *  and wish to get an up-to-date populated instance.
-   */
-  async getTransaction() {
-    return this.provider.getTransaction(this.hash);
-  }
-  /**
-   *  Resolve to the number of confirmations this transaction has.
-   */
-  async confirmations() {
-    if (this.blockNumber == null) {
-      const { tx, blockNumber: blockNumber2 } = await resolveProperties3({
-        tx: this.getTransaction(),
-        blockNumber: this.provider.getBlockNumber()
-      });
-      if (tx == null || tx.blockNumber == null) {
-        return 0;
-      }
-      return blockNumber2 - tx.blockNumber + 1;
-    }
-    const blockNumber = await this.provider.getBlockNumber();
-    return blockNumber - this.blockNumber + 1;
-  }
-  /**
-   *  Resolves once this transaction has been mined and has
-   *  %%confirms%% blocks including it (default: ``1``) with an
-   *  optional %%timeout%%.
-   *
-   *  This can resolve to ``null`` only if %%confirms%% is ``0``
-   *  and the transaction has not been mined, otherwise this will
-   *  wait until enough confirmations have completed.
-   */
-  async wait(_confirms, _timeout) {
-    const confirms = _confirms == null ? 1 : _confirms;
-    const timeout = _timeout == null ? 0 : _timeout;
-    let startBlock = this.#startBlock;
-    let nextScan = -1;
-    let stopScanning = startBlock === -1 ? true : false;
-    const checkReplacement = async () => {
-      if (stopScanning) {
-        return null;
-      }
-      const { blockNumber, nonce } = await resolveProperties3({
-        blockNumber: this.provider.getBlockNumber(),
-        nonce: this.provider.getTransactionCount(this.from)
-      });
-      if (nonce < this.nonce) {
-        startBlock = blockNumber;
-        return;
-      }
-      if (stopScanning) {
-        return null;
-      }
-      const mined = await this.getTransaction();
-      if (mined && mined.blockNumber != null) {
-        return;
-      }
-      if (nextScan === -1) {
-        nextScan = startBlock - 3;
-        if (nextScan < this.#startBlock) {
-          nextScan = this.#startBlock;
-        }
-      }
-      while (nextScan <= blockNumber) {
-        if (stopScanning) {
-          return null;
-        }
-        const block = await this.provider.getBlock(nextScan, true);
-        if (block == null) {
-          return;
-        }
-        for (const hash3 of block) {
-          if (hash3 === this.hash) {
-            return;
-          }
-        }
-        for (let i = 0; i < block.length; i++) {
-          const tx = await block.getTransaction(i);
-          if (tx.from === this.from && tx.nonce === this.nonce) {
-            if (stopScanning) {
-              return null;
-            }
-            const receipt2 = await this.provider.getTransactionReceipt(tx.hash);
-            if (receipt2 == null) {
-              return;
-            }
-            if (blockNumber - receipt2.blockNumber + 1 < confirms) {
-              return;
-            }
-            let reason = "replaced";
-            if (tx.data === this.data && tx.to === this.to && tx.value === this.value) {
-              reason = "repriced";
-            } else if (tx.data === "0x" && tx.from === tx.to && tx.value === BN_017) {
-              reason = "cancelled";
-            }
-            assert3(false, "transaction was replaced", "TRANSACTION_REPLACED", {
-              cancelled: reason === "replaced" || reason === "cancelled",
-              reason,
-              replacement: tx.replaceableTransaction(startBlock),
-              hash: tx.hash,
-              receipt: receipt2
-            });
-          }
-        }
-        nextScan++;
-      }
-      return;
-    };
-    const checkReceipt = (receipt2) => {
-      if (receipt2 == null || receipt2.status !== 0) {
-        return receipt2;
-      }
-      assert3(false, "transaction execution reverted", "CALL_EXCEPTION", {
-        action: "sendTransaction",
-        data: null,
-        reason: null,
-        invocation: null,
-        revert: null,
-        transaction: {
-          to: receipt2.to,
-          from: receipt2.from,
-          data: ""
-          // @TODO: in v7, split out sendTransaction properties
-        },
-        receipt: receipt2
-      });
-    };
-    const receipt = await this.provider.getTransactionReceipt(this.hash);
-    if (confirms === 0) {
-      return checkReceipt(receipt);
-    }
-    if (receipt) {
-      if (await receipt.confirmations() >= confirms) {
-        return checkReceipt(receipt);
-      }
-    } else {
-      await checkReplacement();
-      if (confirms === 0) {
-        return null;
-      }
-    }
-    const waiter = new Promise((resolve, reject) => {
-      const cancellers = [];
-      const cancel = () => {
-        cancellers.forEach((c) => c());
-      };
-      cancellers.push(() => {
-        stopScanning = true;
-      });
-      if (timeout > 0) {
-        const timer = setTimeout(() => {
-          cancel();
-          reject(makeError3("wait for transaction timeout", "TIMEOUT"));
-        }, timeout);
-        cancellers.push(() => {
-          clearTimeout(timer);
-        });
-      }
-      const txListener = async (receipt2) => {
-        if (await receipt2.confirmations() >= confirms) {
-          cancel();
-          try {
-            resolve(checkReceipt(receipt2));
-          } catch (error) {
-            reject(error);
-          }
-        }
-      };
-      cancellers.push(() => {
-        this.provider.off(this.hash, txListener);
-      });
-      this.provider.on(this.hash, txListener);
-      if (startBlock >= 0) {
-        const replaceListener = async () => {
-          try {
-            await checkReplacement();
-          } catch (error) {
-            if (isError3(error, "TRANSACTION_REPLACED")) {
-              cancel();
-              reject(error);
-              return;
-            }
-          }
-          if (!stopScanning) {
-            this.provider.once("block", replaceListener);
-          }
-        };
-        cancellers.push(() => {
-          this.provider.off("block", replaceListener);
-        });
-        this.provider.once("block", replaceListener);
-      }
-    });
-    return await waiter;
-  }
-  /**
-   *  Returns ``true`` if this transaction has been included.
-   *
-   *  This is effective only as of the time the TransactionResponse
-   *  was instantiated. To get up-to-date information, use
-   *  [[getTransaction]].
-   *
-   *  This provides a Type Guard that this transaction will have
-   *  non-null property values for properties that are null for
-   *  unmined transactions.
-   */
-  isMined() {
-    return this.blockHash != null;
-  }
-  /**
-   *  Returns true if the transaction is a legacy (i.e. ``type == 0``)
-   *  transaction.
-   *
-   *  This provides a Type Guard that this transaction will have
-   *  the ``null``-ness for hardfork-specific properties set correctly.
-   */
-  isLegacy() {
-    return this.type === 0;
-  }
-  /**
-   *  Returns true if the transaction is a Berlin (i.e. ``type == 1``)
-   *  transaction. See [[link-eip-2070]].
-   *
-   *  This provides a Type Guard that this transaction will have
-   *  the ``null``-ness for hardfork-specific properties set correctly.
-   */
-  isBerlin() {
-    return this.type === 1;
-  }
-  /**
-   *  Returns true if the transaction is a London (i.e. ``type == 2``)
-   *  transaction. See [[link-eip-1559]].
-   *
-   *  This provides a Type Guard that this transaction will have
-   *  the ``null``-ness for hardfork-specific properties set correctly.
-   */
-  isLondon() {
-    return this.type === 2;
-  }
-  /**
-   *  Returns true if hte transaction is a Cancun (i.e. ``type == 3``)
-   *  transaction. See [[link-eip-4844]].
-   */
-  isCancun() {
-    return this.type === 3;
-  }
-  /**
-   *  Returns a filter which can be used to listen for orphan events
-   *  that evict this transaction.
-   */
-  removedEvent() {
-    assert3(this.isMined(), "unmined transaction canot be orphaned", "UNSUPPORTED_OPERATION", { operation: "removeEvent()" });
-    return createRemovedTransactionFilter2(this);
-  }
-  /**
-   *  Returns a filter which can be used to listen for orphan events
-   *  that re-order this event against %%other%%.
-   */
-  reorderedEvent(other) {
-    assert3(this.isMined(), "unmined transaction canot be orphaned", "UNSUPPORTED_OPERATION", { operation: "removeEvent()" });
-    assert3(!other || other.isMined(), "unmined 'other' transaction canot be orphaned", "UNSUPPORTED_OPERATION", { operation: "removeEvent()" });
-    return createReorderedTransactionFilter2(this, other);
-  }
-  /**
-   *  Returns a new TransactionResponse instance which has the ability to
-   *  detect (and throw an error) if the transaction is replaced, which
-   *  will begin scanning at %%startBlock%%.
-   *
-   *  This should generally not be used by developers and is intended
-   *  primarily for internal use. Setting an incorrect %%startBlock%% can
-   *  have devastating performance consequences if used incorrectly.
-   */
-  replaceableTransaction(startBlock) {
-    assertArgument3(Number.isInteger(startBlock) && startBlock >= 0, "invalid startBlock", "startBlock", startBlock);
-    const tx = new _TransactionResponse(this, this.provider);
-    tx.#startBlock = startBlock;
-    return tx;
-  }
-};
-function createReorderedTransactionFilter2(tx, other) {
-  return { orphan: "reorder-transaction", tx, other };
-}
-function createRemovedTransactionFilter2(tx) {
-  return { orphan: "drop-transaction", tx };
-}
-function createRemovedLogFilter2(log) {
-  return { orphan: "drop-log", log: {
-    transactionHash: log.transactionHash,
-    blockHash: log.blockHash,
-    blockNumber: log.blockNumber,
-    address: log.address,
-    data: log.data,
-    topics: Object.freeze(log.topics.slice()),
-    index: log.index
-  } };
-}
-
-// ../smart-contracts/node_modules/ethers/lib.esm/contract/wrappers.js
-var EventLog2 = class extends Log2 {
-  /**
-   *  The Contract Interface.
-   */
-  interface;
-  /**
-   *  The matching event.
-   */
-  fragment;
-  /**
-   *  The parsed arguments passed to the event by ``emit``.
-   */
-  args;
-  /**
-   * @_ignore:
-   */
-  constructor(log, iface, fragment) {
-    super(log, log.provider);
-    const args = iface.decodeEventLog(fragment, log.data, log.topics);
-    defineProperties3(this, { args, fragment, interface: iface });
-  }
-  /**
-   *  The name of the event.
-   */
-  get eventName() {
-    return this.fragment.name;
-  }
-  /**
-   *  The signature of the event.
-   */
-  get eventSignature() {
-    return this.fragment.format();
-  }
-};
-var UndecodedEventLog2 = class extends Log2 {
-  /**
-   *  The error encounted when trying to decode the log.
-   */
-  error;
-  /**
-   * @_ignore:
-   */
-  constructor(log, error) {
-    super(log, log.provider);
-    defineProperties3(this, { error });
-  }
-};
-var ContractTransactionReceipt2 = class extends TransactionReceipt2 {
-  #iface;
-  /**
-   *  @_ignore:
-   */
-  constructor(iface, provider, tx) {
-    super(tx, provider);
-    this.#iface = iface;
-  }
-  /**
-   *  The parsed logs for any [[Log]] which has a matching event in the
-   *  Contract ABI.
-   */
-  get logs() {
-    return super.logs.map((log) => {
-      const fragment = log.topics.length ? this.#iface.getEvent(log.topics[0]) : null;
-      if (fragment) {
-        try {
-          return new EventLog2(log, this.#iface, fragment);
-        } catch (error) {
-          return new UndecodedEventLog2(log, error);
-        }
-      }
-      return log;
-    });
-  }
-};
-var ContractTransactionResponse2 = class extends TransactionResponse2 {
-  #iface;
-  /**
-   *  @_ignore:
-   */
-  constructor(iface, provider, tx) {
-    super(tx, provider);
-    this.#iface = iface;
-  }
-  /**
-   *  Resolves once this transaction has been mined and has
-   *  %%confirms%% blocks including it (default: ``1``) with an
-   *  optional %%timeout%%.
-   *
-   *  This can resolve to ``null`` only if %%confirms%% is ``0``
-   *  and the transaction has not been mined, otherwise this will
-   *  wait until enough confirmations have completed.
-   */
-  async wait(confirms, timeout) {
-    const receipt = await super.wait(confirms, timeout);
-    if (receipt == null) {
-      return null;
-    }
-    return new ContractTransactionReceipt2(this.#iface, this.provider, receipt);
-  }
-};
-var ContractUnknownEventPayload2 = class extends EventPayload3 {
-  /**
-   *  The log with no matching events.
-   */
-  log;
-  /**
-   *  @_event:
-   */
-  constructor(contract, listener, filter, log) {
-    super(contract, listener, filter);
-    defineProperties3(this, { log });
-  }
-  /**
-   *  Resolves to the block the event occured in.
-   */
-  async getBlock() {
-    return await this.log.getBlock();
-  }
-  /**
-   *  Resolves to the transaction the event occured in.
-   */
-  async getTransaction() {
-    return await this.log.getTransaction();
-  }
-  /**
-   *  Resolves to the transaction receipt the event occured in.
-   */
-  async getTransactionReceipt() {
-    return await this.log.getTransactionReceipt();
-  }
-};
-var ContractEventPayload2 = class extends ContractUnknownEventPayload2 {
-  /**
-   *  @_ignore:
-   */
-  constructor(contract, listener, filter, fragment, _log) {
-    super(contract, listener, filter, new EventLog2(_log, contract.interface, fragment));
-    const args = contract.interface.decodeEventLog(fragment, this.log.data, this.log.topics);
-    defineProperties3(this, { args, fragment });
-  }
-  /**
-   *  The event name.
-   */
-  get eventName() {
-    return this.fragment.name;
-  }
-  /**
-   *  The event signature.
-   */
-  get eventSignature() {
-    return this.fragment.format();
-  }
-};
-
-// ../smart-contracts/node_modules/ethers/lib.esm/contract/contract.js
-var BN_018 = BigInt(0);
-function canCall2(value) {
-  return value && typeof value.call === "function";
-}
-function canEstimate2(value) {
-  return value && typeof value.estimateGas === "function";
-}
-function canResolve2(value) {
-  return value && typeof value.resolveName === "function";
-}
-function canSend2(value) {
-  return value && typeof value.sendTransaction === "function";
-}
-function getResolver2(value) {
-  if (value != null) {
-    if (canResolve2(value)) {
-      return value;
-    }
-    if (value.provider) {
-      return value.provider;
-    }
-  }
-  return void 0;
-}
-var PreparedTopicFilter2 = class {
-  #filter;
-  fragment;
-  constructor(contract, fragment, args) {
-    defineProperties3(this, { fragment });
-    if (fragment.inputs.length < args.length) {
-      throw new Error("too many arguments");
-    }
-    const runner = getRunner2(contract.runner, "resolveName");
-    const resolver = canResolve2(runner) ? runner : null;
-    this.#filter = async function() {
-      const resolvedArgs = await Promise.all(fragment.inputs.map((param, index) => {
-        const arg = args[index];
-        if (arg == null) {
-          return null;
-        }
-        return param.walkAsync(args[index], (type, value) => {
-          if (type === "address") {
-            if (Array.isArray(value)) {
-              return Promise.all(value.map((v) => resolveAddress2(v, resolver)));
-            }
-            return resolveAddress2(value, resolver);
-          }
-          return value;
-        });
-      }));
-      return contract.interface.encodeFilterTopics(fragment, resolvedArgs);
-    }();
-  }
-  getTopicFilter() {
-    return this.#filter;
-  }
-};
-function getRunner2(value, feature) {
-  if (value == null) {
-    return null;
-  }
-  if (typeof value[feature] === "function") {
-    return value;
-  }
-  if (value.provider && typeof value.provider[feature] === "function") {
-    return value.provider;
-  }
-  return null;
-}
-function getProvider2(value) {
-  if (value == null) {
-    return null;
-  }
-  return value.provider || null;
-}
-async function copyOverrides2(arg, allowed) {
-  const _overrides = Typed2.dereference(arg, "overrides");
-  assertArgument3(typeof _overrides === "object", "invalid overrides parameter", "overrides", arg);
-  const overrides = copyRequest2(_overrides);
-  assertArgument3(overrides.to == null || (allowed || []).indexOf("to") >= 0, "cannot override to", "overrides.to", overrides.to);
-  assertArgument3(overrides.data == null || (allowed || []).indexOf("data") >= 0, "cannot override data", "overrides.data", overrides.data);
-  if (overrides.from) {
-    overrides.from = overrides.from;
-  }
-  return overrides;
-}
-async function resolveArgs2(_runner, inputs, args) {
-  const runner = getRunner2(_runner, "resolveName");
-  const resolver = canResolve2(runner) ? runner : null;
-  return await Promise.all(inputs.map((param, index) => {
-    return param.walkAsync(args[index], (type, value) => {
-      value = Typed2.dereference(value, type);
-      if (type === "address") {
-        return resolveAddress2(value, resolver);
-      }
-      return value;
-    });
-  }));
-}
-function buildWrappedFallback2(contract) {
-  const populateTransaction = async function(overrides) {
-    const tx = await copyOverrides2(overrides, ["data"]);
-    tx.to = await contract.getAddress();
-    if (tx.from) {
-      tx.from = await resolveAddress2(tx.from, getResolver2(contract.runner));
-    }
-    const iface = contract.interface;
-    const noValue = getBigInt3(tx.value || BN_018, "overrides.value") === BN_018;
-    const noData = (tx.data || "0x") === "0x";
-    if (iface.fallback && !iface.fallback.payable && iface.receive && !noData && !noValue) {
-      assertArgument3(false, "cannot send data to receive or send value to non-payable fallback", "overrides", overrides);
-    }
-    assertArgument3(iface.fallback || noData, "cannot send data to receive-only contract", "overrides.data", tx.data);
-    const payable = iface.receive || iface.fallback && iface.fallback.payable;
-    assertArgument3(payable || noValue, "cannot send value to non-payable fallback", "overrides.value", tx.value);
-    assertArgument3(iface.fallback || noData, "cannot send data to receive-only contract", "overrides.data", tx.data);
-    return tx;
-  };
-  const staticCall = async function(overrides) {
-    const runner = getRunner2(contract.runner, "call");
-    assert3(canCall2(runner), "contract runner does not support calling", "UNSUPPORTED_OPERATION", { operation: "call" });
-    const tx = await populateTransaction(overrides);
-    try {
-      return await runner.call(tx);
-    } catch (error) {
-      if (isCallException3(error) && error.data) {
-        throw contract.interface.makeError(error.data, tx);
-      }
-      throw error;
-    }
-  };
-  const send = async function(overrides) {
-    const runner = contract.runner;
-    assert3(canSend2(runner), "contract runner does not support sending transactions", "UNSUPPORTED_OPERATION", { operation: "sendTransaction" });
-    const tx = await runner.sendTransaction(await populateTransaction(overrides));
-    const provider = getProvider2(contract.runner);
-    return new ContractTransactionResponse2(contract.interface, provider, tx);
-  };
-  const estimateGas = async function(overrides) {
-    const runner = getRunner2(contract.runner, "estimateGas");
-    assert3(canEstimate2(runner), "contract runner does not support gas estimation", "UNSUPPORTED_OPERATION", { operation: "estimateGas" });
-    return await runner.estimateGas(await populateTransaction(overrides));
-  };
-  const method = async (overrides) => {
-    return await send(overrides);
-  };
-  defineProperties3(method, {
-    _contract: contract,
-    estimateGas,
-    populateTransaction,
-    send,
-    staticCall
-  });
-  return method;
-}
-function buildWrappedMethod2(contract, key) {
-  const getFragment = function(...args) {
-    const fragment = contract.interface.getFunction(key, args);
-    assert3(fragment, "no matching fragment", "UNSUPPORTED_OPERATION", {
-      operation: "fragment",
-      info: { key, args }
-    });
-    return fragment;
-  };
-  const populateTransaction = async function(...args) {
-    const fragment = getFragment(...args);
-    let overrides = {};
-    if (fragment.inputs.length + 1 === args.length) {
-      overrides = await copyOverrides2(args.pop());
-      if (overrides.from) {
-        overrides.from = await resolveAddress2(overrides.from, getResolver2(contract.runner));
-      }
-    }
-    if (fragment.inputs.length !== args.length) {
-      throw new Error("internal error: fragment inputs doesn't match arguments; should not happen");
-    }
-    const resolvedArgs = await resolveArgs2(contract.runner, fragment.inputs, args);
-    return Object.assign({}, overrides, await resolveProperties3({
-      to: contract.getAddress(),
-      data: contract.interface.encodeFunctionData(fragment, resolvedArgs)
-    }));
-  };
-  const staticCall = async function(...args) {
-    const result = await staticCallResult(...args);
-    if (result.length === 1) {
-      return result[0];
-    }
-    return result;
-  };
-  const send = async function(...args) {
-    const runner = contract.runner;
-    assert3(canSend2(runner), "contract runner does not support sending transactions", "UNSUPPORTED_OPERATION", { operation: "sendTransaction" });
-    const tx = await runner.sendTransaction(await populateTransaction(...args));
-    const provider = getProvider2(contract.runner);
-    return new ContractTransactionResponse2(contract.interface, provider, tx);
-  };
-  const estimateGas = async function(...args) {
-    const runner = getRunner2(contract.runner, "estimateGas");
-    assert3(canEstimate2(runner), "contract runner does not support gas estimation", "UNSUPPORTED_OPERATION", { operation: "estimateGas" });
-    return await runner.estimateGas(await populateTransaction(...args));
-  };
-  const staticCallResult = async function(...args) {
-    const runner = getRunner2(contract.runner, "call");
-    assert3(canCall2(runner), "contract runner does not support calling", "UNSUPPORTED_OPERATION", { operation: "call" });
-    const tx = await populateTransaction(...args);
-    let result = "0x";
-    try {
-      result = await runner.call(tx);
-    } catch (error) {
-      if (isCallException3(error) && error.data) {
-        throw contract.interface.makeError(error.data, tx);
-      }
-      throw error;
-    }
-    const fragment = getFragment(...args);
-    return contract.interface.decodeFunctionResult(fragment, result);
-  };
-  const method = async (...args) => {
-    const fragment = getFragment(...args);
-    if (fragment.constant) {
-      return await staticCall(...args);
-    }
-    return await send(...args);
-  };
-  defineProperties3(method, {
-    name: contract.interface.getFunctionName(key),
-    _contract: contract,
-    _key: key,
-    getFragment,
-    estimateGas,
-    populateTransaction,
-    send,
-    staticCall,
-    staticCallResult
-  });
-  Object.defineProperty(method, "fragment", {
-    configurable: false,
-    enumerable: true,
-    get: () => {
-      const fragment = contract.interface.getFunction(key);
-      assert3(fragment, "no matching fragment", "UNSUPPORTED_OPERATION", {
-        operation: "fragment",
-        info: { key }
-      });
-      return fragment;
-    }
-  });
-  return method;
-}
-function buildWrappedEvent2(contract, key) {
-  const getFragment = function(...args) {
-    const fragment = contract.interface.getEvent(key, args);
-    assert3(fragment, "no matching fragment", "UNSUPPORTED_OPERATION", {
-      operation: "fragment",
-      info: { key, args }
-    });
-    return fragment;
-  };
-  const method = function(...args) {
-    return new PreparedTopicFilter2(contract, getFragment(...args), args);
-  };
-  defineProperties3(method, {
-    name: contract.interface.getEventName(key),
-    _contract: contract,
-    _key: key,
-    getFragment
-  });
-  Object.defineProperty(method, "fragment", {
-    configurable: false,
-    enumerable: true,
-    get: () => {
-      const fragment = contract.interface.getEvent(key);
-      assert3(fragment, "no matching fragment", "UNSUPPORTED_OPERATION", {
-        operation: "fragment",
-        info: { key }
-      });
-      return fragment;
-    }
-  });
-  return method;
-}
-var internal4 = Symbol.for("_ethersInternal_contract");
-var internalValues2 = /* @__PURE__ */ new WeakMap();
-function setInternal2(contract, values) {
-  internalValues2.set(contract[internal4], values);
-}
-function getInternal2(contract) {
-  return internalValues2.get(contract[internal4]);
-}
-function isDeferred2(value) {
-  return value && typeof value === "object" && "getTopicFilter" in value && typeof value.getTopicFilter === "function" && value.fragment;
-}
-async function getSubInfo2(contract, event) {
-  let topics;
-  let fragment = null;
-  if (Array.isArray(event)) {
-    const topicHashify = function(name) {
-      if (isHexString3(name, 32)) {
-        return name;
-      }
-      const fragment2 = contract.interface.getEvent(name);
-      assertArgument3(fragment2, "unknown fragment", "name", name);
-      return fragment2.topicHash;
-    };
-    topics = event.map((e) => {
-      if (e == null) {
-        return null;
-      }
-      if (Array.isArray(e)) {
-        return e.map(topicHashify);
-      }
-      return topicHashify(e);
-    });
-  } else if (event === "*") {
-    topics = [null];
-  } else if (typeof event === "string") {
-    if (isHexString3(event, 32)) {
-      topics = [event];
-    } else {
-      fragment = contract.interface.getEvent(event);
-      assertArgument3(fragment, "unknown fragment", "event", event);
-      topics = [fragment.topicHash];
-    }
-  } else if (isDeferred2(event)) {
-    topics = await event.getTopicFilter();
-  } else if ("fragment" in event) {
-    fragment = event.fragment;
-    topics = [fragment.topicHash];
-  } else {
-    assertArgument3(false, "unknown event name", "event", event);
-  }
-  topics = topics.map((t) => {
-    if (t == null) {
-      return null;
-    }
-    if (Array.isArray(t)) {
-      const items = Array.from(new Set(t.map((t2) => t2.toLowerCase())).values());
-      if (items.length === 1) {
-        return items[0];
-      }
-      items.sort();
-      return items;
-    }
-    return t.toLowerCase();
-  });
-  const tag = topics.map((t) => {
-    if (t == null) {
-      return "null";
-    }
-    if (Array.isArray(t)) {
-      return t.join("|");
-    }
-    return t;
-  }).join("&");
-  return { fragment, tag, topics };
-}
-async function hasSub2(contract, event) {
-  const { subs } = getInternal2(contract);
-  return subs.get((await getSubInfo2(contract, event)).tag) || null;
-}
-async function getSub2(contract, operation, event) {
-  const provider = getProvider2(contract.runner);
-  assert3(provider, "contract runner does not support subscribing", "UNSUPPORTED_OPERATION", { operation });
-  const { fragment, tag, topics } = await getSubInfo2(contract, event);
-  const { addr, subs } = getInternal2(contract);
-  let sub = subs.get(tag);
-  if (!sub) {
-    const address = addr ? addr : contract;
-    const filter = { address, topics };
-    const listener = (log) => {
-      let foundFragment = fragment;
-      if (foundFragment == null) {
-        try {
-          foundFragment = contract.interface.getEvent(log.topics[0]);
-        } catch (error) {
-        }
-      }
-      if (foundFragment) {
-        const _foundFragment = foundFragment;
-        const args = fragment ? contract.interface.decodeEventLog(fragment, log.data, log.topics) : [];
-        emit2(contract, event, args, (listener2) => {
-          return new ContractEventPayload2(contract, listener2, event, _foundFragment, log);
-        });
-      } else {
-        emit2(contract, event, [], (listener2) => {
-          return new ContractUnknownEventPayload2(contract, listener2, event, log);
-        });
-      }
-    };
-    let starting = [];
-    const start = () => {
-      if (starting.length) {
-        return;
-      }
-      starting.push(provider.on(filter, listener));
-    };
-    const stop = async () => {
-      if (starting.length == 0) {
-        return;
-      }
-      let started = starting;
-      starting = [];
-      await Promise.all(started);
-      provider.off(filter, listener);
-    };
-    sub = { tag, listeners: [], start, stop };
-    subs.set(tag, sub);
-  }
-  return sub;
-}
-var lastEmit2 = Promise.resolve();
-async function _emit2(contract, event, args, payloadFunc) {
-  await lastEmit2;
-  const sub = await hasSub2(contract, event);
-  if (!sub) {
-    return false;
-  }
-  const count = sub.listeners.length;
-  sub.listeners = sub.listeners.filter(({ listener, once }) => {
-    const passArgs = Array.from(args);
-    if (payloadFunc) {
-      passArgs.push(payloadFunc(once ? null : listener));
-    }
-    try {
-      listener.call(contract, ...passArgs);
-    } catch (error) {
-    }
-    return !once;
-  });
-  if (sub.listeners.length === 0) {
-    sub.stop();
-    getInternal2(contract).subs.delete(sub.tag);
-  }
-  return count > 0;
-}
-async function emit2(contract, event, args, payloadFunc) {
-  try {
-    await lastEmit2;
-  } catch (error) {
-  }
-  const resultPromise = _emit2(contract, event, args, payloadFunc);
-  lastEmit2 = resultPromise;
-  return await resultPromise;
-}
-var passProperties4 = ["then"];
-var BaseContract2 = class _BaseContract {
-  /**
-   *  The target to connect to.
-   *
-   *  This can be an address, ENS name or any [[Addressable]], such as
-   *  another contract. To get the resovled address, use the ``getAddress``
-   *  method.
-   */
-  target;
-  /**
-   *  The contract Interface.
-   */
-  interface;
-  /**
-   *  The connected runner. This is generally a [[Provider]] or a
-   *  [[Signer]], which dictates what operations are supported.
-   *
-   *  For example, a **Contract** connected to a [[Provider]] may
-   *  only execute read-only operations.
-   */
-  runner;
-  /**
-   *  All the Events available on this contract.
-   */
-  filters;
-  /**
-   *  @_ignore:
-   */
-  [internal4];
-  /**
-   *  The fallback or receive function if any.
-   */
-  fallback;
-  /**
-   *  Creates a new contract connected to %%target%% with the %%abi%% and
-   *  optionally connected to a %%runner%% to perform operations on behalf
-   *  of.
-   */
-  constructor(target, abi, runner, _deployTx) {
-    assertArgument3(typeof target === "string" || isAddressable2(target), "invalid value for Contract target", "target", target);
-    if (runner == null) {
-      runner = null;
-    }
-    const iface = Interface2.from(abi);
-    defineProperties3(this, { target, runner, interface: iface });
-    Object.defineProperty(this, internal4, { value: {} });
-    let addrPromise;
-    let addr = null;
-    let deployTx = null;
-    if (_deployTx) {
-      const provider = getProvider2(runner);
-      deployTx = new ContractTransactionResponse2(this.interface, provider, _deployTx);
-    }
-    let subs = /* @__PURE__ */ new Map();
-    if (typeof target === "string") {
-      if (isHexString3(target)) {
-        addr = target;
-        addrPromise = Promise.resolve(target);
-      } else {
-        const resolver = getRunner2(runner, "resolveName");
-        if (!canResolve2(resolver)) {
-          throw makeError3("contract runner does not support name resolution", "UNSUPPORTED_OPERATION", {
-            operation: "resolveName"
-          });
-        }
-        addrPromise = resolver.resolveName(target).then((addr2) => {
-          if (addr2 == null) {
-            throw makeError3("an ENS name used for a contract target must be correctly configured", "UNCONFIGURED_NAME", {
-              value: target
-            });
-          }
-          getInternal2(this).addr = addr2;
-          return addr2;
-        });
-      }
-    } else {
-      addrPromise = target.getAddress().then((addr2) => {
-        if (addr2 == null) {
-          throw new Error("TODO");
-        }
-        getInternal2(this).addr = addr2;
-        return addr2;
-      });
-    }
-    setInternal2(this, { addrPromise, addr, deployTx, subs });
-    const filters = new Proxy({}, {
-      get: (target2, prop, receiver) => {
-        if (typeof prop === "symbol" || passProperties4.indexOf(prop) >= 0) {
-          return Reflect.get(target2, prop, receiver);
-        }
-        try {
-          return this.getEvent(prop);
-        } catch (error) {
-          if (!isError3(error, "INVALID_ARGUMENT") || error.argument !== "key") {
-            throw error;
-          }
-        }
-        return void 0;
-      },
-      has: (target2, prop) => {
-        if (passProperties4.indexOf(prop) >= 0) {
-          return Reflect.has(target2, prop);
-        }
-        return Reflect.has(target2, prop) || this.interface.hasEvent(String(prop));
-      }
-    });
-    defineProperties3(this, { filters });
-    defineProperties3(this, {
-      fallback: iface.receive || iface.fallback ? buildWrappedFallback2(this) : null
-    });
-    return new Proxy(this, {
-      get: (target2, prop, receiver) => {
-        if (typeof prop === "symbol" || prop in target2 || passProperties4.indexOf(prop) >= 0) {
-          return Reflect.get(target2, prop, receiver);
-        }
-        try {
-          return target2.getFunction(prop);
-        } catch (error) {
-          if (!isError3(error, "INVALID_ARGUMENT") || error.argument !== "key") {
-            throw error;
-          }
-        }
-        return void 0;
-      },
-      has: (target2, prop) => {
-        if (typeof prop === "symbol" || prop in target2 || passProperties4.indexOf(prop) >= 0) {
-          return Reflect.has(target2, prop);
-        }
-        return target2.interface.hasFunction(prop);
-      }
-    });
-  }
-  /**
-   *  Return a new Contract instance with the same target and ABI, but
-   *  a different %%runner%%.
-   */
-  connect(runner) {
-    return new _BaseContract(this.target, this.interface, runner);
-  }
-  /**
-   *  Return a new Contract instance with the same ABI and runner, but
-   *  a different %%target%%.
-   */
-  attach(target) {
-    return new _BaseContract(target, this.interface, this.runner);
-  }
-  /**
-   *  Return the resolved address of this Contract.
-   */
-  async getAddress() {
-    return await getInternal2(this).addrPromise;
-  }
-  /**
-   *  Return the deployed bytecode or null if no bytecode is found.
-   */
-  async getDeployedCode() {
-    const provider = getProvider2(this.runner);
-    assert3(provider, "runner does not support .provider", "UNSUPPORTED_OPERATION", { operation: "getDeployedCode" });
-    const code = await provider.getCode(await this.getAddress());
-    if (code === "0x") {
-      return null;
-    }
-    return code;
-  }
-  /**
-   *  Resolve to this Contract once the bytecode has been deployed, or
-   *  resolve immediately if already deployed.
-   */
-  async waitForDeployment() {
-    const deployTx = this.deploymentTransaction();
-    if (deployTx) {
-      await deployTx.wait();
-      return this;
-    }
-    const code = await this.getDeployedCode();
-    if (code != null) {
-      return this;
-    }
-    const provider = getProvider2(this.runner);
-    assert3(provider != null, "contract runner does not support .provider", "UNSUPPORTED_OPERATION", { operation: "waitForDeployment" });
-    return new Promise((resolve, reject) => {
-      const checkCode = async () => {
-        try {
-          const code2 = await this.getDeployedCode();
-          if (code2 != null) {
-            return resolve(this);
-          }
-          provider.once("block", checkCode);
-        } catch (error) {
-          reject(error);
-        }
-      };
-      checkCode();
-    });
-  }
-  /**
-   *  Return the transaction used to deploy this contract.
-   *
-   *  This is only available if this instance was returned from a
-   *  [[ContractFactory]].
-   */
-  deploymentTransaction() {
-    return getInternal2(this).deployTx;
-  }
-  /**
-   *  Return the function for a given name. This is useful when a contract
-   *  method name conflicts with a JavaScript name such as ``prototype`` or
-   *  when using a Contract programatically.
-   */
-  getFunction(key) {
-    if (typeof key !== "string") {
-      key = key.format();
-    }
-    const func = buildWrappedMethod2(this, key);
-    return func;
-  }
-  /**
-   *  Return the event for a given name. This is useful when a contract
-   *  event name conflicts with a JavaScript name such as ``prototype`` or
-   *  when using a Contract programatically.
-   */
-  getEvent(key) {
-    if (typeof key !== "string") {
-      key = key.format();
-    }
-    return buildWrappedEvent2(this, key);
-  }
-  /**
-   *  @_ignore:
-   */
-  async queryTransaction(hash3) {
-    throw new Error("@TODO");
-  }
-  /*
-      // @TODO: this is a non-backwards compatible change, but will be added
-      //        in v7 and in a potential SmartContract class in an upcoming
-      //        v6 release
-      async getTransactionReceipt(hash: string): Promise<null | ContractTransactionReceipt> {
-          const provider = getProvider(this.runner);
-          assert(provider, "contract runner does not have a provider",
-              "UNSUPPORTED_OPERATION", { operation: "queryTransaction" });
-  
-          const receipt = await provider.getTransactionReceipt(hash);
-          if (receipt == null) { return null; }
-  
-          return new ContractTransactionReceipt(this.interface, provider, receipt);
-      }
-      */
-  /**
-   *  Provide historic access to event data for %%event%% in the range
-   *  %%fromBlock%% (default: ``0``) to %%toBlock%% (default: ``"latest"``)
-   *  inclusive.
-   */
-  async queryFilter(event, fromBlock, toBlock) {
-    if (fromBlock == null) {
-      fromBlock = 0;
-    }
-    if (toBlock == null) {
-      toBlock = "latest";
-    }
-    const { addr, addrPromise } = getInternal2(this);
-    const address = addr ? addr : await addrPromise;
-    const { fragment, topics } = await getSubInfo2(this, event);
-    const filter = { address, topics, fromBlock, toBlock };
-    const provider = getProvider2(this.runner);
-    assert3(provider, "contract runner does not have a provider", "UNSUPPORTED_OPERATION", { operation: "queryFilter" });
-    return (await provider.getLogs(filter)).map((log) => {
-      let foundFragment = fragment;
-      if (foundFragment == null) {
-        try {
-          foundFragment = this.interface.getEvent(log.topics[0]);
-        } catch (error) {
-        }
-      }
-      if (foundFragment) {
-        try {
-          return new EventLog2(log, this.interface, foundFragment);
-        } catch (error) {
-          return new UndecodedEventLog2(log, error);
-        }
-      }
-      return new Log2(log, provider);
-    });
-  }
-  /**
-   *  Add an event %%listener%% for the %%event%%.
-   */
-  async on(event, listener) {
-    const sub = await getSub2(this, "on", event);
-    sub.listeners.push({ listener, once: false });
-    sub.start();
-    return this;
-  }
-  /**
-   *  Add an event %%listener%% for the %%event%%, but remove the listener
-   *  after it is fired once.
-   */
-  async once(event, listener) {
-    const sub = await getSub2(this, "once", event);
-    sub.listeners.push({ listener, once: true });
-    sub.start();
-    return this;
-  }
-  /**
-   *  Emit an %%event%% calling all listeners with %%args%%.
-   *
-   *  Resolves to ``true`` if any listeners were called.
-   */
-  async emit(event, ...args) {
-    return await emit2(this, event, args, null);
-  }
-  /**
-   *  Resolves to the number of listeners of %%event%% or the total number
-   *  of listeners if unspecified.
-   */
-  async listenerCount(event) {
-    if (event) {
-      const sub = await hasSub2(this, event);
-      if (!sub) {
-        return 0;
-      }
-      return sub.listeners.length;
-    }
-    const { subs } = getInternal2(this);
-    let total = 0;
-    for (const { listeners } of subs.values()) {
-      total += listeners.length;
-    }
-    return total;
-  }
-  /**
-   *  Resolves to the listeners subscribed to %%event%% or all listeners
-   *  if unspecified.
-   */
-  async listeners(event) {
-    if (event) {
-      const sub = await hasSub2(this, event);
-      if (!sub) {
-        return [];
-      }
-      return sub.listeners.map(({ listener }) => listener);
-    }
-    const { subs } = getInternal2(this);
-    let result = [];
-    for (const { listeners } of subs.values()) {
-      result = result.concat(listeners.map(({ listener }) => listener));
-    }
-    return result;
-  }
-  /**
-   *  Remove the %%listener%% from the listeners for %%event%% or remove
-   *  all listeners if unspecified.
-   */
-  async off(event, listener) {
-    const sub = await hasSub2(this, event);
-    if (!sub) {
-      return this;
-    }
-    if (listener) {
-      const index = sub.listeners.map(({ listener: listener2 }) => listener2).indexOf(listener);
-      if (index >= 0) {
-        sub.listeners.splice(index, 1);
-      }
-    }
-    if (listener == null || sub.listeners.length === 0) {
-      sub.stop();
-      getInternal2(this).subs.delete(sub.tag);
-    }
-    return this;
-  }
-  /**
-   *  Remove all the listeners for %%event%% or remove all listeners if
-   *  unspecified.
-   */
-  async removeAllListeners(event) {
-    if (event) {
-      const sub = await hasSub2(this, event);
-      if (!sub) {
-        return this;
-      }
-      sub.stop();
-      getInternal2(this).subs.delete(sub.tag);
-    } else {
-      const { subs } = getInternal2(this);
-      for (const { tag, stop } of subs.values()) {
-        stop();
-        subs.delete(tag);
-      }
-    }
-    return this;
-  }
-  /**
-   *  Alias for [on].
-   */
-  async addListener(event, listener) {
-    return await this.on(event, listener);
-  }
-  /**
-   *  Alias for [off].
-   */
-  async removeListener(event, listener) {
-    return await this.off(event, listener);
-  }
-  /**
-   *  Create a new Class for the %%abi%%.
-   */
-  static buildClass(abi) {
-    class CustomContract extends _BaseContract {
-      constructor(address, runner = null) {
-        super(address, abi, runner);
-      }
-    }
-    return CustomContract;
-  }
-  /**
-   *  Create a new BaseContract with a specified Interface.
-   */
-  static from(target, abi, runner) {
-    if (runner == null) {
-      runner = null;
-    }
-    const contract = new this(target, abi, runner);
-    return contract;
-  }
-};
-function _ContractBase2() {
-  return BaseContract2;
-}
-var Contract2 = class extends _ContractBase2() {
-};
-
-// ../smart-contracts/node_modules/ethers/lib.esm/contract/factory.js
-var ContractFactory2 = class _ContractFactory {
-  /**
-   *  The Contract Interface.
-   */
-  interface;
-  /**
-   *  The Contract deployment bytecode. Often called the initcode.
-   */
-  bytecode;
-  /**
-   *  The ContractRunner to deploy the Contract as.
-   */
-  runner;
-  /**
-   *  Create a new **ContractFactory** with %%abi%% and %%bytecode%%,
-   *  optionally connected to %%runner%%.
-   *
-   *  The %%bytecode%% may be the ``bytecode`` property within the
-   *  standard Solidity JSON output.
-   */
-  constructor(abi, bytecode, runner) {
-    const iface = Interface2.from(abi);
-    if (bytecode instanceof Uint8Array) {
-      bytecode = hexlify3(getBytes3(bytecode));
-    } else {
-      if (typeof bytecode === "object") {
-        bytecode = bytecode.object;
-      }
-      if (!bytecode.startsWith("0x")) {
-        bytecode = "0x" + bytecode;
-      }
-      bytecode = hexlify3(getBytes3(bytecode));
-    }
-    defineProperties3(this, {
-      bytecode,
-      interface: iface,
-      runner: runner || null
-    });
-  }
-  attach(target) {
-    return new BaseContract2(target, this.interface, this.runner);
-  }
-  /**
-   *  Resolves to the transaction to deploy the contract, passing %%args%%
-   *  into the constructor.
-   */
-  async getDeployTransaction(...args) {
-    let overrides = {};
-    const fragment = this.interface.deploy;
-    if (fragment.inputs.length + 1 === args.length) {
-      overrides = await copyOverrides2(args.pop());
-    }
-    if (fragment.inputs.length !== args.length) {
-      throw new Error("incorrect number of arguments to constructor");
-    }
-    const resolvedArgs = await resolveArgs2(this.runner, fragment.inputs, args);
-    const data4 = concat3([this.bytecode, this.interface.encodeDeploy(resolvedArgs)]);
-    return Object.assign({}, overrides, { data: data4 });
-  }
-  /**
-   *  Resolves to the Contract deployed by passing %%args%% into the
-   *  constructor.
-   *
-   *  This will resolve to the Contract before it has been deployed to the
-   *  network, so the [[BaseContract-waitForDeployment]] should be used before
-   *  sending any transactions to it.
-   */
-  async deploy(...args) {
-    const tx = await this.getDeployTransaction(...args);
-    assert3(this.runner && typeof this.runner.sendTransaction === "function", "factory runner does not support sending transactions", "UNSUPPORTED_OPERATION", {
-      operation: "sendTransaction"
-    });
-    const sentTx = await this.runner.sendTransaction(tx);
-    const address = getCreateAddress2(sentTx);
-    return new BaseContract2(address, this.interface, this.runner, sentTx);
-  }
-  /**
-   *  Return a new **ContractFactory** with the same ABI and bytecode,
-   *  but connected to %%runner%%.
-   */
-  connect(runner) {
-    return new _ContractFactory(this.interface, this.bytecode, runner);
-  }
-  /**
-   *  Create a new **ContractFactory** from the standard Solidity JSON output.
-   */
-  static fromSolidity(output5, runner) {
-    assertArgument3(output5 != null, "bad compiler output", "output", output5);
-    if (typeof output5 === "string") {
-      output5 = JSON.parse(output5);
-    }
-    const abi = output5.abi;
-    let bytecode = "";
-    if (output5.bytecode) {
-      bytecode = output5.bytecode;
-    } else if (output5.evm && output5.evm.bytecode) {
-      bytecode = output5.evm.bytecode;
-    }
-    return new this(abi, bytecode, runner);
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/@openzeppelin/contracts/access/AccessControl__factory.ts
+// src/generated/factories/BlocklockSender__factory.ts
 var _abi = [
   {
-    inputs: [],
-    name: "AccessControlBadConfirmation",
-    type: "error"
-  },
-  {
+    type: "constructor",
     inputs: [
       {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      },
-      {
-        internalType: "bytes32",
-        name: "neededRole",
-        type: "bytes32"
+        name: "_signatureSender",
+        type: "address",
+        internalType: "address"
       }
     ],
-    name: "AccessControlUnauthorizedAccount",
-    type: "error"
+    stateMutability: "nonpayable"
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "previousAdminRole",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "newAdminRole",
-        type: "bytes32"
-      }
-    ],
-    name: "RoleAdminChanged",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "account",
-        type: "address"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "sender",
-        type: "address"
-      }
-    ],
-    name: "RoleGranted",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "account",
-        type: "address"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "sender",
-        type: "address"
-      }
-    ],
-    name: "RoleRevoked",
-    type: "event"
-  },
-  {
-    inputs: [],
+    type: "function",
     name: "DEFAULT_ADMIN_ROLE",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      }
-    ],
-    name: "getRoleAdmin",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      }
-    ],
-    name: "grantRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      }
-    ],
-    name: "hasRole",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
-        name: "callerConfirmation",
-        type: "address"
-      }
-    ],
-    name: "renounceRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      }
-    ],
-    name: "revokeRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes4",
-        name: "interfaceId",
-        type: "bytes4"
-      }
-    ],
-    name: "supportsInterface",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  }
-];
-var AccessControl__factory = class {
-  static {
-    this.abi = _abi;
-  }
-  static createInterface() {
-    return new Interface2(_abi);
-  }
-  static connect(address, runner) {
-    return new Contract2(address, _abi, runner);
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/@openzeppelin/contracts/access/IAccessControl__factory.ts
-var _abi2 = [
-  {
     inputs: [],
-    name: "AccessControlBadConfirmation",
-    type: "error"
-  },
-  {
-    inputs: [
+    outputs: [
       {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      },
-      {
-        internalType: "bytes32",
-        name: "neededRole",
-        type: "bytes32"
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
       }
     ],
-    name: "AccessControlUnauthorizedAccount",
-    type: "error"
+    stateMutability: "view"
   },
   {
-    anonymous: false,
-    inputs: [
+    type: "function",
+    name: "SCHEME_ID",
+    inputs: [],
+    outputs: [
       {
-        indexed: true,
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "previousAdminRole",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "newAdminRole",
-        type: "bytes32"
+        name: "",
+        type: "string",
+        internalType: "string"
       }
     ],
-    name: "RoleAdminChanged",
-    type: "event"
+    stateMutability: "view"
   },
   {
-    anonymous: false,
+    type: "function",
+    name: "blocklockRequests",
     inputs: [
       {
-        indexed: true,
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "account",
-        type: "address"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "sender",
-        type: "address"
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
       }
     ],
-    name: "RoleGranted",
-    type: "event"
+    outputs: [
+      {
+        name: "signatureRequestID",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "blockHeight",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "ciphertext",
+        type: "bytes",
+        internalType: "bytes"
+      },
+      {
+        name: "signature",
+        type: "bytes",
+        internalType: "bytes"
+      },
+      {
+        name: "callback",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    stateMutability: "view"
   },
   {
-    anonymous: false,
+    type: "function",
+    name: "getRequest",
     inputs: [
       {
-        indexed: true,
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "account",
-        type: "address"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "sender",
-        type: "address"
+        name: "requestID",
+        type: "uint256",
+        internalType: "uint256"
       }
     ],
-    name: "RoleRevoked",
-    type: "event"
+    outputs: [
+      {
+        name: "",
+        type: "tuple",
+        internalType: "struct TypesLib.BlocklockRequest",
+        components: [
+          {
+            name: "signatureRequestID",
+            type: "uint256",
+            internalType: "uint256"
+          },
+          {
+            name: "blockHeight",
+            type: "uint256",
+            internalType: "uint256"
+          },
+          {
+            name: "ciphertext",
+            type: "bytes",
+            internalType: "bytes"
+          },
+          {
+            name: "signature",
+            type: "bytes",
+            internalType: "bytes"
+          },
+          {
+            name: "callback",
+            type: "address",
+            internalType: "address"
+          }
+        ]
+      }
+    ],
+    stateMutability: "view"
   },
   {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      }
-    ],
+    type: "function",
     name: "getRoleAdmin",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
     inputs: [
       {
-        internalType: "bytes32",
         name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address"
+        type: "bytes32",
+        internalType: "bytes32"
       }
     ],
+    outputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
     name: "grantRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
     inputs: [
       {
-        internalType: "bytes32",
         name: "role",
-        type: "bytes32"
+        type: "bytes32",
+        internalType: "bytes32"
       },
       {
-        internalType: "address",
         name: "account",
-        type: "address"
+        type: "address",
+        internalType: "address"
       }
     ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
     name: "hasRole",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
     inputs: [
       {
-        internalType: "bytes32",
         name: "role",
-        type: "bytes32"
+        type: "bytes32",
+        internalType: "bytes32"
       },
       {
-        internalType: "address",
-        name: "callerConfirmation",
-        type: "address"
-      }
-    ],
-    name: "renounceRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
         name: "account",
-        type: "address"
+        type: "address",
+        internalType: "address"
       }
     ],
-    name: "revokeRole",
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "isInFlight",
+    inputs: [
+      {
+        name: "requestID",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "lastRequestID",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "receiveSignature",
+    inputs: [
+      {
+        name: "requestID",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "signature",
+        type: "bytes",
+        internalType: "bytes"
+      }
+    ],
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  }
-];
-var IAccessControl__factory = class {
-  static {
-    this.abi = _abi2;
-  }
-  static createInterface() {
-    return new Interface2(_abi2);
-  }
-  static connect(address, runner) {
-    return new Contract2(address, _abi2, runner);
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/@openzeppelin/contracts/utils/introspection/ERC165__factory.ts
-var _abi3 = [
+    stateMutability: "nonpayable"
+  },
   {
+    type: "function",
+    name: "renounceRole",
     inputs: [
       {
-        internalType: "bytes4",
-        name: "interfaceId",
-        type: "bytes4"
+        name: "role",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "callerConfirmation",
+        type: "address",
+        internalType: "address"
       }
     ],
-    name: "supportsInterface",
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "requestBlocklock",
+    inputs: [
+      {
+        name: "blockHeight",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "ciphertext",
+        type: "bytes",
+        internalType: "bytes"
+      }
+    ],
     outputs: [
       {
-        internalType: "bool",
-        name: "",
-        type: "bool"
+        name: "blocklockRequestID",
+        type: "uint256",
+        internalType: "uint256"
       }
     ],
-    stateMutability: "view",
-    type: "function"
-  }
-];
-var ERC165__factory = class {
-  static {
-    this.abi = _abi3;
-  }
-  static createInterface() {
-    return new Interface2(_abi3);
-  }
-  static connect(address, runner) {
-    return new Contract2(address, _abi3, runner);
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/@openzeppelin/contracts/utils/introspection/IERC165__factory.ts
-var _abi4 = [
+    stateMutability: "nonpayable"
+  },
   {
+    type: "function",
+    name: "revokeRole",
     inputs: [
       {
-        internalType: "bytes4",
-        name: "interfaceId",
-        type: "bytes4"
+        name: "role",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        internalType: "address"
       }
     ],
-    name: "supportsInterface",
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "signatureRequests",
+    inputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
     outputs: [
       {
-        internalType: "bool",
         name: "",
-        type: "bool"
+        type: "uint256",
+        internalType: "uint256"
       }
     ],
-    stateMutability: "view",
-    type: "function"
-  }
-];
-var IERC165__factory = class {
-  static {
-    this.abi = _abi4;
-  }
-  static createInterface() {
-    return new Interface2(_abi4);
-  }
-  static connect(address, runner) {
-    return new Contract2(address, _abi4, runner);
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/@openzeppelin/contracts/utils/Address__factory.ts
-var _abi5 = [
+    stateMutability: "view"
+  },
   {
+    type: "function",
+    name: "signaturesToBlocklock",
     inputs: [
       {
-        internalType: "address",
-        name: "target",
-        type: "address"
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
       }
     ],
-    name: "AddressEmptyCode",
-    type: "error"
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "supportsInterface",
+    inputs: [
+      {
+        name: "interfaceId",
+        type: "bytes4",
+        internalType: "bytes4"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "event",
+    name: "BlocklockCallbackFailed",
+    inputs: [
+      {
+        name: "requestID",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      },
+      {
+        name: "signatureRequestID",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      },
+      {
+        name: "blockHeight",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "signature",
+        type: "bytes",
+        indexed: false,
+        internalType: "bytes"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "BlocklockCallbackSuccess",
+    inputs: [
+      {
+        name: "requestID",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      },
+      {
+        name: "signatureRequestID",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      },
+      {
+        name: "blockHeight",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "ciphertext",
+        type: "bytes",
+        indexed: false,
+        internalType: "bytes"
+      },
+      {
+        name: "signature",
+        type: "bytes",
+        indexed: false,
+        internalType: "bytes"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "BlocklockRequested",
+    inputs: [
+      {
+        name: "requestID",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      },
+      {
+        name: "signatureRequestID",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      },
+      {
+        name: "blockHeight",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "ciphertext",
+        type: "bytes",
+        indexed: false,
+        internalType: "bytes"
+      },
+      {
+        name: "requester",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "requestedAt",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "RoleAdminChanged",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      },
+      {
+        name: "previousAdminRole",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      },
+      {
+        name: "newAdminRole",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "RoleGranted",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "sender",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "RoleRevoked",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "sender",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "error",
+    name: "AccessControlBadConfirmation",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "AccessControlUnauthorizedAccount",
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        internalType: "address"
+      },
+      {
+        name: "neededRole",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ]
   }
 ];
-var _bytecode = "0x60566050600b82828239805160001a6073146043577f4e487b7100000000000000000000000000000000000000000000000000000000600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220c3d621977f064e384d77a7f38001fcbf2e2b714139e5fb526a1fd3072a79689164736f6c634300081c0033";
+var _bytecode = "0x60a0604052600060015534801561001557600080fd5b50604051611e13380380611e13833981016040819052610034916100b5565b806001600160a01b0381166100a35760405162461bcd60e51b815260206004820152602b60248201527f43616e6e6f7420736574207a65726f2061646472657373206173207369676e6160448201526a3a3ab9329039b2b73232b960a91b606482015260840160405180910390fd5b6001600160a01b0316608052506100e5565b6000602082840312156100c757600080fd5b81516001600160a01b03811681146100de57600080fd5b9392505050565b608051611d0561010e600039600081816107d9015281816109100152610b7c0152611d056000f3fe608060405234801561001057600080fd5b50600436106101005760003560e01c80638a1f165a11610097578063c8db658211610066578063c8db65821461029b578063cd802c91146102ae578063d03e66bc146102c1578063d547741f146102d457600080fd5b80638a1f165a146101e657806391d148541461022f578063a217fddf14610273578063c58343ef1461027b57600080fd5b80633d7bfb13116100d35780633d7bfb131461018657806347c03186146101995780635ac38d72146101a2578063826d362b146101c257600080fd5b806301ffc9a714610105578063248a9ca31461012d5780632f2ff15d1461015e57806336568abe14610173575b600080fd5b610118610113366004611639565b6102e7565b60405190151581526020015b60405180910390f35b61015061013b36600461167b565b60009081526020819052604090206001015490565b604051908152602001610124565b61017161016c366004611694565b610380565b005b610171610181366004611694565b6103ab565b6101506101943660046116dd565b610409565b61015060015481565b6101506101b036600461167b565b60036020526000908152604090205481565b6101d56101d036600461167b565b61043a565b60405161012495949392919061176d565b6102226040518060400160405280601381526020017f424e3235342d424c532d424c4f434b4c4f434b0000000000000000000000000081525081565b60405161012491906117c7565b61011861023d366004611694565b60009182526020828152604080842073ffffffffffffffffffffffffffffffffffffffff93909316845291905290205460ff1690565b610150600081565b61028e61028936600461167b565b61058f565b60405161012491906117da565b6101716102a9366004611872565b6107c1565b6101186102bc36600461167b565b61086b565b6101506102cf366004611872565b610997565b6101716102e2366004611694565b610d19565b60007fffffffff0000000000000000000000000000000000000000000000000000000082167f7965db0b00000000000000000000000000000000000000000000000000000000148061037a57507f01ffc9a7000000000000000000000000000000000000000000000000000000007fffffffff000000000000000000000000000000000000000000000000000000008316145b92915050565b60008281526020819052604090206001015461039b81610d3e565b6103a58383610d4b565b50505050565b73ffffffffffffffffffffffffffffffffffffffff811633146103fa576040517f6697b23200000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6104048282610e47565b505050565b6002602052816000526040600020818154811061042557600080fd5b90600052602060002001600091509150505481565b60046020526000908152604090208054600182015460028301805492939192610462906118f0565b80601f016020809104026020016040519081016040528092919081815260200182805461048e906118f0565b80156104db5780601f106104b0576101008083540402835291602001916104db565b820191906000526020600020905b8154815290600101906020018083116104be57829003601f168201915b5050505050908060030180546104f0906118f0565b80601f016020809104026020016040519081016040528092919081815260200182805461051c906118f0565b80156105695780601f1061053e57610100808354040283529160200191610569565b820191906000526020600020905b81548152906001019060200180831161054c57829003601f168201915b5050506004909301549192505073ffffffffffffffffffffffffffffffffffffffff1685565b6105d76040518060a0016040528060008152602001600081526020016060815260200160608152602001600073ffffffffffffffffffffffffffffffffffffffff1681525090565b6000600460008481526020019081526020016000206040518060a0016040529081600082015481526020016001820154815260200160028201805461061b906118f0565b80601f0160208091040260200160405190810160405280929190818152602001828054610647906118f0565b80156106945780601f1061066957610100808354040283529160200191610694565b820191906000526020600020905b81548152906001019060200180831161067757829003601f168201915b505050505081526020016003820180546106ad906118f0565b80601f01602080910402602001604051908101604052809291908181526020018280546106d9906118f0565b80156107265780601f106106fb57610100808354040283529160200191610726565b820191906000526020600020905b81548152906001019060200180831161070957829003601f168201915b50505091835250506004919091015473ffffffffffffffffffffffffffffffffffffffff16602090910152805190915061037a576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601160248201527f696e76616c69642072657175657374494400000000000000000000000000000060448201526064015b60405180910390fd5b3373ffffffffffffffffffffffffffffffffffffffff7f00000000000000000000000000000000000000000000000000000000000000001614610860576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601d60248201527f4f6e6c79207369676e617475726553656e6465722063616e2063616c6c00000060448201526064016107b8565b610404838383610f02565b600081815260046020526040812054806108e1576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601b60248201527f626c6f636b6c6f636b2072657175657374206e6f7420666f756e64000000000060448201526064016107b8565b6040517fcd802c91000000000000000000000000000000000000000000000000000000008152600481018290527f000000000000000000000000000000000000000000000000000000000000000073ffffffffffffffffffffffffffffffffffffffff169063cd802c9190602401602060405180830381865afa15801561096c573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906109909190611943565b9392505050565b6000438411610a28576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152603160248201527f626c6f636b486569676874206d757374206265207374726963746c792067726560448201527f61746572207468616e2063757272656e7400000000000000000000000000000060648201526084016107b8565b600160008154610a3790611965565b919050819055905060006040518060a001604052806000815260200186815260200185858080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201829052509385525050604080516020818101835284825280860191909152339482019490945289835260039093525020549091508015610ac957808252610c0d565b600086604051602001610ade91815260200190565b604080517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08184030181528282018252601383527f424e3235342d424c532d424c4f434b4c4f434b00000000000000000000000000602084015290517f95b8d073000000000000000000000000000000000000000000000000000000008152909250829160009173ffffffffffffffffffffffffffffffffffffffff7f000000000000000000000000000000000000000000000000000000000000000016916395b8d07391610bb49190869081906004016119c4565b6020604051808303816000875af1158015610bd3573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610bf79190611a07565b80865260008a8152600360205260409020555050505b60008381526004602090815260409182902084518155908401516001820155908301518391906002820190610c429082611a9d565b5060608201516003820190610c579082611a9d565b5060809190910151600490910180547fffffffffffffffffffffffff00000000000000000000000000000000000000001673ffffffffffffffffffffffffffffffffffffffff90921691909117905581516000908152600260209081526040808320805460018101825590845291909220018490558251905133919085907f9ad2bec75f49d7ada5e4073a9d79233bff21c7d66b785c48020eadbd8126fd7c90610d08908b908b908b904290611bff565b60405180910390a450509392505050565b600082815260208190526040902060010154610d3481610d3e565b6103a58383610e47565b610d488133611542565b50565b60008281526020818152604080832073ffffffffffffffffffffffffffffffffffffffff8516845290915281205460ff16610e3f5760008381526020818152604080832073ffffffffffffffffffffffffffffffffffffffff86168452909152902080547fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00166001179055610ddd3390565b73ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16847f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a450600161037a565b50600061037a565b60008281526020818152604080832073ffffffffffffffffffffffffffffffffffffffff8516845290915281205460ff1615610e3f5760008381526020818152604080832073ffffffffffffffffffffffffffffffffffffffff8616808552925280832080547fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0016905551339286917ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b9190a450600161037a565b600083815260026020908152604080832080548251818502810185019093528083529192909190830182828015610f5857602002820191906000526020600020905b815481526020019060010190808311610f44575b505050505090506000815111610fca576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601a60248201527f696e76616c6964207369676e617475726552657175657374494400000000000060448201526064016107b8565b6110126040518060a0016040528060008152602001600081526020016060815260200160608152602001600073ffffffffffffffffffffffffffffffffffffffff1681525090565b60005b825181101561150f576004600084838151811061103457611034611c2a565b602002602001015181526020019081526020016000206040518060a00160405290816000820154815260200160018201548152602001600282018054611079906118f0565b80601f01602080910402602001604051908101604052809291908181526020018280546110a5906118f0565b80156110f25780601f106110c7576101008083540402835291602001916110f2565b820191906000526020600020905b8154815290600101906020018083116110d557829003601f168201915b5050505050815260200160038201805461110b906118f0565b80601f0160208091040260200160405190810160405280929190818152602001828054611137906118f0565b80156111845780601f1061115957610100808354040283529160200191611184565b820191906000526020600020905b81548152906001019060200180831161116757829003601f168201915b50505091835250506004919091015473ffffffffffffffffffffffffffffffffffffffff166020909101528051909250611240576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152602960248201527f6e6f206d61746368696e6720626c6f636b6c6f636b207265717565737420666f60448201527f722074686174206964000000000000000000000000000000000000000000000060648201526084016107b8565b84848080601f016020809104026020016040519081016040528093929190818152602001838380828437600092018290525060608701949094525050506080830151845173ffffffffffffffffffffffffffffffffffffffff909116907f5d94180200000000000000000000000000000000000000000000000000000000908690859081106112d1576112d1611c2a565b602002602001015188886040516024016112ed93929190611c59565b604080517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08184030181529181526020820180517bffffffffffffffffffffffffffffffffffffffffffffffffffffffff167fffffffff000000000000000000000000000000000000000000000000000000009094169390931790925290516113769190611c7c565b6000604051808303816000865af19150503d80600081146113b3576040519150601f19603f3d011682016040523d82523d6000602084013e6113b8565b606091505b505090508061142057868483815181106113d4576113d4611c2a565b60200260200101517fdeb9e228851e26055da79c6f3106c71aeb69b57a6038e2210dc1ffc66f8c5d1a8560200151898960405161141393929190611c59565b60405180910390a3611481565b8684838151811061143357611433611c2a565b60200260200101517f127e9469822443d688469661a599ae2a29d580e1c8ca78598ae0d227e6b922d7856020015186604001518a8a6040516114789493929190611c98565b60405180910390a35b6004600085848151811061149757611497611c2a565b6020026020010151815260200190815260200160002060008082016000905560018201600090556002820160006114ce91906115cc565b6114dc6003830160006115cc565b5060040180547fffffffffffffffffffffffff000000000000000000000000000000000000000016905550600101611015565b50600085815260026020526040812061152791611606565b60209081015160009081526003909152604081205550505050565b60008281526020818152604080832073ffffffffffffffffffffffffffffffffffffffff8516845290915290205460ff166115c8576040517fe2517d3f00000000000000000000000000000000000000000000000000000000815273ffffffffffffffffffffffffffffffffffffffff82166004820152602481018390526044016107b8565b5050565b5080546115d8906118f0565b6000825580601f106115e8575050565b601f016020900490600052602060002090810190610d489190611620565b5080546000825590600052602060002090810190610d4891905b5b808211156116355760008155600101611621565b5090565b60006020828403121561164b57600080fd5b81357fffffffff000000000000000000000000000000000000000000000000000000008116811461099057600080fd5b60006020828403121561168d57600080fd5b5035919050565b600080604083850312156116a757600080fd5b82359150602083013573ffffffffffffffffffffffffffffffffffffffff811681146116d257600080fd5b809150509250929050565b600080604083850312156116f057600080fd5b50508035926020909101359150565b60005b8381101561171a578181015183820152602001611702565b50506000910152565b6000815180845261173b8160208601602086016116ff565b601f017fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0169290920160200192915050565b85815284602082015260a06040820152600061178c60a0830186611723565b828103606084015261179e8186611723565b91505073ffffffffffffffffffffffffffffffffffffffff831660808301529695505050505050565b6020815260006109906020830184611723565b6020815281516020820152602082015160408201526000604083015160a0606084015261180a60c0840182611723565b905060608401517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08483030160808501526118458282611723565b91505073ffffffffffffffffffffffffffffffffffffffff60808501511660a08401528091505092915050565b60008060006040848603121561188757600080fd5b83359250602084013567ffffffffffffffff8111156118a557600080fd5b8401601f810186136118b657600080fd5b803567ffffffffffffffff8111156118cd57600080fd5b8660208284010111156118df57600080fd5b939660209190910195509293505050565b600181811c9082168061190457607f821691505b60208210810361193d577f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b50919050565b60006020828403121561195557600080fd5b8151801515811461099057600080fd5b60007fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff82036119bd577f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b5060010190565b6060815260006119d76060830186611723565b82810360208401526119e98186611723565b905082810360408401526119fd8185611723565b9695505050505050565b600060208284031215611a1957600080fd5b5051919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b601f82111561040457806000526020600020601f840160051c81016020851015611a765750805b601f840160051c820191505b81811015611a965760008155600101611a82565b5050505050565b815167ffffffffffffffff811115611ab757611ab7611a20565b611acb81611ac584546118f0565b84611a4f565b6020601f821160018114611b1d5760008315611ae75750848201515b7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff600385901b1c1916600184901b178455611a96565b6000848152602081207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08516915b82811015611b6b5787850151825560209485019460019092019101611b4b565b5084821015611ba757868401517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff600387901b60f8161c191681555b50505050600190811b01905550565b8183528181602085013750600060208284010152600060207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0601f840116840101905092915050565b848152606060208201526000611c19606083018587611bb6565b905082604083015295945050505050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b838152604060208201526000611c73604083018486611bb6565b95945050505050565b60008251611c8e8184602087016116ff565b9190910192915050565b848152606060208201526000611cb16060830186611723565b8281036040840152611cc4818587611bb6565b97965050505050505056fea26469706673582212201aa0d2406f97297ee1b98ad3ffb14c0129e897edc3aeece68a9574ea9e7cf35864736f6c634300081c0033";
 var isSuperArgs = (xs) => xs.length > 1;
-var Address__factory = class extends ContractFactory2 {
+var BlocklockSender__factory = class extends ContractFactory {
   constructor(...args) {
     if (isSuperArgs(args)) {
       super(...args);
     } else {
-      super(_abi5, _bytecode, args[0]);
-    }
-  }
-  getDeployTransaction(overrides) {
-    return super.getDeployTransaction(overrides || {});
-  }
-  deploy(overrides) {
-    return super.deploy(overrides || {});
-  }
-  connect(runner) {
-    return super.connect(runner);
-  }
-  static {
-    this.bytecode = _bytecode;
-  }
-  static {
-    this.abi = _abi5;
-  }
-  static createInterface() {
-    return new Interface2(_abi5);
-  }
-  static connect(address, runner) {
-    return new Contract2(address, _abi5, runner);
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/@openzeppelin/contracts/utils/Errors__factory.ts
-var _abi6 = [
-  {
-    inputs: [],
-    name: "FailedCall",
-    type: "error"
-  },
-  {
-    inputs: [],
-    name: "FailedDeployment",
-    type: "error"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "balance",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "needed",
-        type: "uint256"
-      }
-    ],
-    name: "InsufficientBalance",
-    type: "error"
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
-    ],
-    name: "MissingPrecompile",
-    type: "error"
-  }
-];
-var _bytecode2 = "0x60566050600b82828239805160001a6073146043577f4e487b7100000000000000000000000000000000000000000000000000000000600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122004b89e72da43ab1ee05bd033fb62a621154a79713cd82d3cd8a0e9353695a64e64736f6c634300081c0033";
-var isSuperArgs2 = (xs) => xs.length > 1;
-var Errors__factory = class extends ContractFactory2 {
-  constructor(...args) {
-    if (isSuperArgs2(args)) {
-      super(...args);
-    } else {
-      super(_abi6, _bytecode2, args[0]);
-    }
-  }
-  getDeployTransaction(overrides) {
-    return super.getDeployTransaction(overrides || {});
-  }
-  deploy(overrides) {
-    return super.deploy(overrides || {});
-  }
-  connect(runner) {
-    return super.connect(runner);
-  }
-  static {
-    this.bytecode = _bytecode2;
-  }
-  static {
-    this.abi = _abi6;
-  }
-  static createInterface() {
-    return new Interface2(_abi6);
-  }
-  static connect(address, runner) {
-    return new Contract2(address, _abi6, runner);
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/@openzeppelin/contracts/utils/Multicall__factory.ts
-var _abi7 = [
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "target",
-        type: "address"
-      }
-    ],
-    name: "AddressEmptyCode",
-    type: "error"
-  },
-  {
-    inputs: [],
-    name: "FailedCall",
-    type: "error"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes[]",
-        name: "data",
-        type: "bytes[]"
-      }
-    ],
-    name: "multicall",
-    outputs: [
-      {
-        internalType: "bytes[]",
-        name: "results",
-        type: "bytes[]"
-      }
-    ],
-    stateMutability: "nonpayable",
-    type: "function"
-  }
-];
-var Multicall__factory = class {
-  static {
-    this.abi = _abi7;
-  }
-  static createInterface() {
-    return new Interface2(_abi7);
-  }
-  static connect(address, runner) {
-    return new Contract2(address, _abi7, runner);
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/@openzeppelin/contracts/utils/ReentrancyGuard__factory.ts
-var _abi8 = [
-  {
-    inputs: [],
-    name: "ReentrancyGuardReentrantCall",
-    type: "error"
-  }
-];
-var ReentrancyGuard__factory = class {
-  static {
-    this.abi = _abi8;
-  }
-  static createInterface() {
-    return new Interface2(_abi8);
-  }
-  static connect(address, runner) {
-    return new Contract2(address, _abi8, runner);
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/src/blocklock/BlocklockSender__factory.ts
-var _abi9 = [
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_signatureSender",
-        type: "address"
-      }
-    ],
-    stateMutability: "nonpayable",
-    type: "constructor"
-  },
-  {
-    inputs: [],
-    name: "AccessControlBadConfirmation",
-    type: "error"
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      },
-      {
-        internalType: "bytes32",
-        name: "neededRole",
-        type: "bytes32"
-      }
-    ],
-    name: "AccessControlUnauthorizedAccount",
-    type: "error"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      },
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "signatureRequestID",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "blockHeight",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "bytes",
-        name: "signature",
-        type: "bytes"
-      }
-    ],
-    name: "BlocklockCallbackFailed",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      },
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "signatureRequestID",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "blockHeight",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "bytes",
-        name: "ciphertext",
-        type: "bytes"
-      },
-      {
-        indexed: false,
-        internalType: "bytes",
-        name: "signature",
-        type: "bytes"
-      }
-    ],
-    name: "BlocklockCallbackSuccess",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      },
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "signatureRequestID",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "blockHeight",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "bytes",
-        name: "ciphertext",
-        type: "bytes"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "requester",
-        type: "address"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "requestedAt",
-        type: "uint256"
-      }
-    ],
-    name: "BlocklockRequested",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "previousAdminRole",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "newAdminRole",
-        type: "bytes32"
-      }
-    ],
-    name: "RoleAdminChanged",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "account",
-        type: "address"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "sender",
-        type: "address"
-      }
-    ],
-    name: "RoleGranted",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "account",
-        type: "address"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "sender",
-        type: "address"
-      }
-    ],
-    name: "RoleRevoked",
-    type: "event"
-  },
-  {
-    inputs: [],
-    name: "DEFAULT_ADMIN_ROLE",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "SCHEME_ID",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    name: "blocklockRequests",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "signatureRequestID",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "blockHeight",
-        type: "uint256"
-      },
-      {
-        internalType: "bytes",
-        name: "ciphertext",
-        type: "bytes"
-      },
-      {
-        internalType: "bytes",
-        name: "signature",
-        type: "bytes"
-      },
-      {
-        internalType: "address",
-        name: "callback",
-        type: "address"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      }
-    ],
-    name: "getRequest",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "signatureRequestID",
-            type: "uint256"
-          },
-          {
-            internalType: "uint256",
-            name: "blockHeight",
-            type: "uint256"
-          },
-          {
-            internalType: "bytes",
-            name: "ciphertext",
-            type: "bytes"
-          },
-          {
-            internalType: "bytes",
-            name: "signature",
-            type: "bytes"
-          },
-          {
-            internalType: "address",
-            name: "callback",
-            type: "address"
-          }
-        ],
-        internalType: "struct TypesLib.BlocklockRequest",
-        name: "",
-        type: "tuple"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      }
-    ],
-    name: "getRoleAdmin",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      }
-    ],
-    name: "grantRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      }
-    ],
-    name: "hasRole",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      }
-    ],
-    name: "isInFlight",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "lastRequestID",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      },
-      {
-        internalType: "bytes",
-        name: "signature",
-        type: "bytes"
-      }
-    ],
-    name: "receiveSignature",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
-        name: "callerConfirmation",
-        type: "address"
-      }
-    ],
-    name: "renounceRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "blockHeight",
-        type: "uint256"
-      },
-      {
-        internalType: "bytes",
-        name: "ciphertext",
-        type: "bytes"
-      }
-    ],
-    name: "requestBlocklock",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "blocklockRequestID",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      }
-    ],
-    name: "revokeRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    name: "signatureRequests",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    name: "signaturesToBlocklock",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes4",
-        name: "interfaceId",
-        type: "bytes4"
-      }
-    ],
-    name: "supportsInterface",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  }
-];
-var _bytecode3 = "0x60a0604052600060015534801561001557600080fd5b506040516128f23803806128f283398181016040528101906100379190610145565b80600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16036100a7576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161009e906101f5565b60405180910390fd5b8073ffffffffffffffffffffffffffffffffffffffff1660808173ffffffffffffffffffffffffffffffffffffffff16815250505050610215565b600080fd5b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6000610112826100e7565b9050919050565b61012281610107565b811461012d57600080fd5b50565b60008151905061013f81610119565b92915050565b60006020828403121561015b5761015a6100e2565b5b600061016984828501610130565b91505092915050565b600082825260208201905092915050565b7f43616e6e6f7420736574207a65726f2061646472657373206173207369676e6160008201527f747572652073656e646572000000000000000000000000000000000000000000602082015250565b60006101df602b83610172565b91506101ea82610183565b604082019050919050565b6000602082019050818103600083015261020e816101d2565b9050919050565b6080516126b461023e6000396000818161092201528181610a1f0152610c0c01526126b46000f3fe608060405234801561001057600080fd5b50600436106101005760003560e01c80638a1f165a11610097578063c8db658211610066578063c8db6582146102eb578063cd802c9114610307578063d03e66bc14610337578063d547741f1461036757610100565b80638a1f165a1461024f57806391d148541461026d578063a217fddf1461029d578063c58343ef146102bb57610100565b80633d7bfb13116100d35780633d7bfb131461019d57806347c03186146101cd5780635ac38d72146101eb578063826d362b1461021b57610100565b806301ffc9a714610105578063248a9ca3146101355780632f2ff15d1461016557806336568abe14610181575b600080fd5b61011f600480360381019061011a9190611801565b610383565b60405161012c9190611849565b60405180910390f35b61014f600480360381019061014a919061189a565b6103fd565b60405161015c91906118d6565b60405180910390f35b61017f600480360381019061017a919061194f565b61041c565b005b61019b6004803603810190610196919061194f565b61043e565b005b6101b760048036038101906101b291906119c5565b6104b9565b6040516101c49190611a14565b60405180910390f35b6101d56104ea565b6040516101e29190611a14565b60405180910390f35b61020560048036038101906102009190611a2f565b6104f0565b6040516102129190611a14565b60405180910390f35b61023560048036038101906102309190611a2f565b610508565b604051610246959493929190611afb565b60405180910390f35b61025761066e565b6040516102649190611bb1565b60405180910390f35b6102876004803603810190610282919061194f565b6106a7565b6040516102949190611849565b60405180910390f35b6102a5610711565b6040516102b291906118d6565b60405180910390f35b6102d560048036038101906102d09190611a2f565b610718565b6040516102e29190611cb8565b60405180910390f35b61030560048036038101906103009190611d3f565b610920565b005b610321600480360381019061031c9190611a2f565b6109be565b60405161032e9190611849565b60405180910390f35b610351600480360381019061034c9190611d3f565b610abf565b60405161035e9190611a14565b60405180910390f35b610381600480360381019061037c919061194f565b610e46565b005b60007f7965db0b000000000000000000000000000000000000000000000000000000007bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916827bffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614806103f657506103f582610e68565b5b9050919050565b6000806000838152602001908152602001600020600101549050919050565b610425826103fd565b61042e81610ed2565b6104388383610ee6565b50505050565b610446610fd7565b73ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16146104aa576040517f6697b23200000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6104b48282610fdf565b505050565b600260205281600052604060002081815481106104d557600080fd5b90600052602060002001600091509150505481565b60015481565b60036020528060005260406000206000915090505481565b600460205280600052604060002060009150905080600001549080600101549080600201805461053790611dce565b80601f016020809104026020016040519081016040528092919081815260200182805461056390611dce565b80156105b05780601f10610585576101008083540402835291602001916105b0565b820191906000526020600020905b81548152906001019060200180831161059357829003601f168201915b5050505050908060030180546105c590611dce565b80601f01602080910402602001604051908101604052809291908181526020018280546105f190611dce565b801561063e5780601f106106135761010080835404028352916020019161063e565b820191906000526020600020905b81548152906001019060200180831161062157829003601f168201915b5050505050908060040160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905085565b6040518060400160405280601381526020017f424e3235342d424c532d424c4f434b4c4f434b0000000000000000000000000081525081565b600080600084815260200190815260200160002060000160008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900460ff16905092915050565b6000801b81565b6107206116dc565b6000600460008481526020019081526020016000206040518060a0016040529081600082015481526020016001820154815260200160028201805461076490611dce565b80601f016020809104026020016040519081016040528092919081815260200182805461079090611dce565b80156107dd5780601f106107b2576101008083540402835291602001916107dd565b820191906000526020600020905b8154815290600101906020018083116107c057829003601f168201915b505050505081526020016003820180546107f690611dce565b80601f016020809104026020016040519081016040528092919081815260200182805461082290611dce565b801561086f5780601f106108445761010080835404028352916020019161086f565b820191906000526020600020905b81548152906001019060200180831161085257829003601f168201915b505050505081526020016004820160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152505090506000816000015111610917576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161090e90611e4b565b60405180910390fd5b80915050919050565b7f000000000000000000000000000000000000000000000000000000000000000073ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146109ae576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016109a590611eb7565b60405180910390fd5b6109b98383836110d1565b505050565b6000806004600084815260200190815260200160002060000154905060008111610a1d576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610a1490611f23565b60405180910390fd5b7f000000000000000000000000000000000000000000000000000000000000000073ffffffffffffffffffffffffffffffffffffffff1663cd802c91826040518263ffffffff1660e01b8152600401610a769190611a14565b602060405180830381865afa158015610a93573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610ab79190611f6f565b915050919050565b6000438411610b03576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610afa9061200e565b60405180910390fd5b600160008154610b129061205d565b919050819055905060006040518060a001604052806000815260200186815260200185858080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505081526020016040518060200160405280600081525081526020013373ffffffffffffffffffffffffffffffffffffffff1681525090506000600360008781526020019081526020016000205490506000811115610bdf5780826000018181525050610d07565b600086604051602001610bf29190611a14565b6040516020818303038152906040529050600081905060007f000000000000000000000000000000000000000000000000000000000000000073ffffffffffffffffffffffffffffffffffffffff166395b8d0736040518060400160405280601381526020017f424e3235342d424c532d424c4f434b4c4f434b0000000000000000000000000081525085856040518463ffffffff1660e01b8152600401610c9c939291906120a5565b6020604051808303816000875af1158015610cbb573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610cdf9190612106565b90508085600001818152505080600360008b8152602001908152602001600020819055505050505b816004600085815260200190815260200160002060008201518160000155602082015181600101556040820151816002019081610d44919061230e565b506060820151816003019081610d5a919061230e565b5060808201518160040160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555090505060026000836000015181526020019081526020016000208390806001815401808255809150506001900390600052602060002001600090919091909150553373ffffffffffffffffffffffffffffffffffffffff168260000151847f9ad2bec75f49d7ada5e4073a9d79233bff21c7d66b785c48020eadbd8126fd7c89898942604051610e35949392919061241c565b60405180910390a450509392505050565b610e4f826103fd565b610e5881610ed2565b610e628383610fdf565b50505050565b60007f01ffc9a7000000000000000000000000000000000000000000000000000000007bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916827bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916149050919050565b610ee381610ede610fd7565b61168b565b50565b6000610ef283836106a7565b610fcc57600160008085815260200190815260200160002060000160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548160ff021916908315150217905550610f69610fd7565b73ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16847f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a460019050610fd1565b600090505b92915050565b600033905090565b6000610feb83836106a7565b156110c657600080600085815260200190815260200160002060000160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548160ff021916908315150217905550611063610fd7565b73ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16847ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b60405160405180910390a4600190506110cb565b600090505b92915050565b60006002600085815260200190815260200160002080548060200260200160405190810160405280929190818152602001828054801561113057602002820191906000526020600020905b81548152602001906001019080831161111c575b50505050509050600081511161117b576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401611172906124a8565b60405180910390fd5b6111836116dc565b60005b825181101561164957600460008483815181106111a6576111a56124c8565b5b602002602001015181526020019081526020016000206040518060a001604052908160008201548152602001600182015481526020016002820180546111eb90611dce565b80601f016020809104026020016040519081016040528092919081815260200182805461121790611dce565b80156112645780601f1061123957610100808354040283529160200191611264565b820191906000526020600020905b81548152906001019060200180831161124757829003601f168201915b5050505050815260200160038201805461127d90611dce565b80601f01602080910402602001604051908101604052809291908181526020018280546112a990611dce565b80156112f65780601f106112cb576101008083540402835291602001916112f6565b820191906000526020600020905b8154815290600101906020018083116112d957829003601f168201915b505050505081526020016004820160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815250509150600082600001511161139e576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161139590612569565b60405180910390fd5b84848080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505082606001819052506000826080015173ffffffffffffffffffffffffffffffffffffffff16635d94180260e01b858481518110611423576114226124c8565b5b6020026020010151888860405160240161143f93929190612589565b604051602081830303815290604052907bffffffffffffffffffffffffffffffffffffffffffffffffffffffff19166020820180517bffffffffffffffffffffffffffffffffffffffffffffffffffffffff83818316178352505050506040516114a991906125f7565b6000604051808303816000865af19150503d80600081146114e6576040519150601f19603f3d011682016040523d82523d6000602084013e6114eb565b606091505b50509050806115545786848381518110611508576115076124c8565b5b60200260200101517fdeb9e228851e26055da79c6f3106c71aeb69b57a6038e2210dc1ffc66f8c5d1a8560200151898960405161154793929190612589565b60405180910390a36115b6565b86848381518110611568576115676124c8565b5b60200260200101517f127e9469822443d688469661a599ae2a29d580e1c8ca78598ae0d227e6b922d7856020015186604001518a8a6040516115ad949392919061260e565b60405180910390a35b600460008584815181106115cd576115cc6124c8565b5b6020026020010151815260200190815260200160002060008082016000905560018201600090556002820160006116049190611721565b6003820160006116149190611721565b6004820160006101000a81549073ffffffffffffffffffffffffffffffffffffffff0219169055505050806001019050611186565b506002600086815260200190815260200160002060006116699190611761565b6003600082602001518152602001908152602001600020600090555050505050565b61169582826106a7565b6116d85780826040517fe2517d3f0000000000000000000000000000000000000000000000000000000081526004016116cf929190612655565b60405180910390fd5b5050565b6040518060a0016040528060008152602001600081526020016060815260200160608152602001600073ffffffffffffffffffffffffffffffffffffffff1681525090565b50805461172d90611dce565b6000825580601f1061173f575061175e565b601f01602090049060005260206000209081019061175d9190611782565b5b50565b508054600082559060005260206000209081019061177f9190611782565b50565b5b8082111561179b576000816000905550600101611783565b5090565b600080fd5b600080fd5b60007fffffffff0000000000000000000000000000000000000000000000000000000082169050919050565b6117de816117a9565b81146117e957600080fd5b50565b6000813590506117fb816117d5565b92915050565b6000602082840312156118175761181661179f565b5b6000611825848285016117ec565b91505092915050565b60008115159050919050565b6118438161182e565b82525050565b600060208201905061185e600083018461183a565b92915050565b6000819050919050565b61187781611864565b811461188257600080fd5b50565b6000813590506118948161186e565b92915050565b6000602082840312156118b0576118af61179f565b5b60006118be84828501611885565b91505092915050565b6118d081611864565b82525050565b60006020820190506118eb60008301846118c7565b92915050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b600061191c826118f1565b9050919050565b61192c81611911565b811461193757600080fd5b50565b60008135905061194981611923565b92915050565b600080604083850312156119665761196561179f565b5b600061197485828601611885565b92505060206119858582860161193a565b9150509250929050565b6000819050919050565b6119a28161198f565b81146119ad57600080fd5b50565b6000813590506119bf81611999565b92915050565b600080604083850312156119dc576119db61179f565b5b60006119ea858286016119b0565b92505060206119fb858286016119b0565b9150509250929050565b611a0e8161198f565b82525050565b6000602082019050611a296000830184611a05565b92915050565b600060208284031215611a4557611a4461179f565b5b6000611a53848285016119b0565b91505092915050565b600081519050919050565b600082825260208201905092915050565b60005b83811015611a96578082015181840152602081019050611a7b565b60008484015250505050565b6000601f19601f8301169050919050565b6000611abe82611a5c565b611ac88185611a67565b9350611ad8818560208601611a78565b611ae181611aa2565b840191505092915050565b611af581611911565b82525050565b600060a082019050611b106000830188611a05565b611b1d6020830187611a05565b8181036040830152611b2f8186611ab3565b90508181036060830152611b438185611ab3565b9050611b526080830184611aec565b9695505050505050565b600081519050919050565b600082825260208201905092915050565b6000611b8382611b5c565b611b8d8185611b67565b9350611b9d818560208601611a78565b611ba681611aa2565b840191505092915050565b60006020820190508181036000830152611bcb8184611b78565b905092915050565b611bdc8161198f565b82525050565b600082825260208201905092915050565b6000611bfe82611a5c565b611c088185611be2565b9350611c18818560208601611a78565b611c2181611aa2565b840191505092915050565b611c3581611911565b82525050565b600060a083016000830151611c536000860182611bd3565b506020830151611c666020860182611bd3565b5060408301518482036040860152611c7e8282611bf3565b91505060608301518482036060860152611c988282611bf3565b9150506080830151611cad6080860182611c2c565b508091505092915050565b60006020820190508181036000830152611cd28184611c3b565b905092915050565b600080fd5b600080fd5b600080fd5b60008083601f840112611cff57611cfe611cda565b5b8235905067ffffffffffffffff811115611d1c57611d1b611cdf565b5b602083019150836001820283011115611d3857611d37611ce4565b5b9250929050565b600080600060408486031215611d5857611d5761179f565b5b6000611d66868287016119b0565b935050602084013567ffffffffffffffff811115611d8757611d866117a4565b5b611d9386828701611ce9565b92509250509250925092565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b60006002820490506001821680611de657607f821691505b602082108103611df957611df8611d9f565b5b50919050565b7f696e76616c696420726571756573744944000000000000000000000000000000600082015250565b6000611e35601183611b67565b9150611e4082611dff565b602082019050919050565b60006020820190508181036000830152611e6481611e28565b9050919050565b7f4f6e6c79207369676e617475726553656e6465722063616e2063616c6c000000600082015250565b6000611ea1601d83611b67565b9150611eac82611e6b565b602082019050919050565b60006020820190508181036000830152611ed081611e94565b9050919050565b7f626c6f636b6c6f636b2072657175657374206e6f7420666f756e640000000000600082015250565b6000611f0d601b83611b67565b9150611f1882611ed7565b602082019050919050565b60006020820190508181036000830152611f3c81611f00565b9050919050565b611f4c8161182e565b8114611f5757600080fd5b50565b600081519050611f6981611f43565b92915050565b600060208284031215611f8557611f8461179f565b5b6000611f9384828501611f5a565b91505092915050565b7f626c6f636b486569676874206d757374206265207374726963746c792067726560008201527f61746572207468616e2063757272656e74000000000000000000000000000000602082015250565b6000611ff8603183611b67565b915061200382611f9c565b604082019050919050565b6000602082019050818103600083015261202781611feb565b9050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b60006120688261198f565b91507fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff820361209a5761209961202e565b5b600182019050919050565b600060608201905081810360008301526120bf8186611b78565b905081810360208301526120d38185611ab3565b905081810360408301526120e78184611ab3565b9050949350505050565b60008151905061210081611999565b92915050565b60006020828403121561211c5761211b61179f565b5b600061212a848285016120f1565b91505092915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b60008190508160005260206000209050919050565b60006020601f8301049050919050565b600082821b905092915050565b6000600883026121c47fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff82612187565b6121ce8683612187565b95508019841693508086168417925050509392505050565b6000819050919050565b600061220b6122066122018461198f565b6121e6565b61198f565b9050919050565b6000819050919050565b612225836121f0565b61223961223182612212565b848454612194565b825550505050565b600090565b61224e612241565b61225981848461221c565b505050565b5b8181101561227d57612272600082612246565b60018101905061225f565b5050565b601f8211156122c25761229381612162565b61229c84612177565b810160208510156122ab578190505b6122bf6122b785612177565b83018261225e565b50505b505050565b600082821c905092915050565b60006122e5600019846008026122c7565b1980831691505092915050565b60006122fe83836122d4565b9150826002028217905092915050565b61231782611a5c565b67ffffffffffffffff8111156123305761232f612133565b5b61233a8254611dce565b612345828285612281565b600060209050601f8311600181146123785760008415612366578287015190505b61237085826122f2565b8655506123d8565b601f19841661238686612162565b60005b828110156123ae57848901518255600182019150602085019450602081019050612389565b868310156123cb57848901516123c7601f8916826122d4565b8355505b6001600288020188555050505b505050505050565b82818337600083830152505050565b60006123fb8385611a67565b93506124088385846123e0565b61241183611aa2565b840190509392505050565b60006060820190506124316000830187611a05565b81810360208301526124448185876123ef565b90506124536040830184611a05565b95945050505050565b7f696e76616c6964207369676e6174757265526571756573744944000000000000600082015250565b6000612492601a83611b67565b915061249d8261245c565b602082019050919050565b600060208201905081810360008301526124c181612485565b9050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b7f6e6f206d61746368696e6720626c6f636b6c6f636b207265717565737420666f60008201527f7220746861742069640000000000000000000000000000000000000000000000602082015250565b6000612553602983611b67565b915061255e826124f7565b604082019050919050565b6000602082019050818103600083015261258281612546565b9050919050565b600060408201905061259e6000830186611a05565b81810360208301526125b18184866123ef565b9050949350505050565b600081905092915050565b60006125d182611a5c565b6125db81856125bb565b93506125eb818560208601611a78565b80840191505092915050565b600061260382846125c6565b915081905092915050565b60006060820190506126236000830187611a05565b81810360208301526126358186611ab3565b9050818103604083015261264a8184866123ef565b905095945050505050565b600060408201905061266a6000830185611aec565b61267760208301846118c7565b939250505056fea2646970667358221220747fe479bc655939395a51a7886ffeafe1b808072ffa462cac2ec26c09381d4764736f6c634300081c0033";
-var isSuperArgs3 = (xs) => xs.length > 1;
-var BlocklockSender__factory = class extends ContractFactory2 {
-  constructor(...args) {
-    if (isSuperArgs3(args)) {
-      super(...args);
-    } else {
-      super(_abi9, _bytecode3, args[0]);
+      super(_abi, _bytecode, args[0]);
     }
   }
   getDeployTransaction(_signatureSender, overrides) {
@@ -48281,1494 +40434,1169 @@ var BlocklockSender__factory = class extends ContractFactory2 {
   connect(runner) {
     return super.connect(runner);
   }
-  static {
-    this.bytecode = _bytecode3;
-  }
-  static {
-    this.abi = _abi9;
-  }
+  static bytecode = _bytecode;
+  static abi = _abi;
   static createInterface() {
-    return new Interface2(_abi9);
+    return new Interface(_abi);
   }
   static connect(address, runner) {
-    return new Contract2(address, _abi9, runner);
+    return new Contract(address, _abi, runner);
   }
 };
 
-// ../smart-contracts/typechain-types/factories/src/blocklock/BlocklockSignatureScheme__factory.ts
-var _abi10 = [
+// src/generated/factories/BlocklockSignatureScheme__factory.ts
+var _abi2 = [
   {
-    inputs: [
-      {
-        internalType: "uint256[4]",
-        name: "input",
-        type: "uint256[4]"
-      }
-    ],
-    name: "BNAddFailed",
-    type: "error"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes",
-        name: "dst",
-        type: "bytes"
-      }
-    ],
-    name: "InvalidDSTLength",
-    type: "error"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "x",
-        type: "uint256"
-      }
-    ],
-    name: "InvalidFieldElement",
-    type: "error"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "noSqrt",
-        type: "uint256"
-      }
-    ],
-    name: "MapToPointFailed",
-    type: "error"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "base",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "exponent",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "modulus",
-        type: "uint256"
-      }
-    ],
-    name: "ModExpFailed",
-    type: "error"
-  },
-  {
-    inputs: [],
+    type: "function",
     name: "DST",
-    outputs: [
-      {
-        internalType: "bytes",
-        name: "",
-        type: "bytes"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
     inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "bytes",
+        internalType: "bytes"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
     name: "SCHEME_ID",
+    inputs: [],
     outputs: [
       {
-        internalType: "string",
         name: "",
-        type: "string"
+        type: "string",
+        internalType: "string"
       }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
   },
   {
-    inputs: [
-      {
-        internalType: "bytes",
-        name: "message",
-        type: "bytes"
-      }
-    ],
+    type: "function",
     name: "hashToBytes",
-    outputs: [
-      {
-        internalType: "bytes",
-        name: "",
-        type: "bytes"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
     inputs: [
       {
-        internalType: "bytes",
         name: "message",
-        type: "bytes"
+        type: "bytes",
+        internalType: "bytes"
       }
     ],
+    outputs: [
+      {
+        name: "",
+        type: "bytes",
+        internalType: "bytes"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
     name: "hashToPoint",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
     inputs: [
       {
-        internalType: "bytes",
         name: "message",
-        type: "bytes"
-      },
-      {
-        internalType: "bytes",
-        name: "signature",
-        type: "bytes"
-      },
-      {
-        internalType: "bytes",
-        name: "publicKey",
-        type: "bytes"
+        type: "bytes",
+        internalType: "bytes"
       }
     ],
-    name: "verifySignature",
     outputs: [
       {
-        internalType: "bool",
-        name: "isValid",
-        type: "bool"
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
       }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "verifySignature",
+    inputs: [
+      {
+        name: "message",
+        type: "bytes",
+        internalType: "bytes"
+      },
+      {
+        name: "signature",
+        type: "bytes",
+        internalType: "bytes"
+      },
+      {
+        name: "publicKey",
+        type: "bytes",
+        internalType: "bytes"
+      }
+    ],
+    outputs: [
+      {
+        name: "isValid",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "error",
+    name: "BNAddFailed",
+    inputs: [
+      {
+        name: "input",
+        type: "uint256[4]",
+        internalType: "uint256[4]"
+      }
+    ]
+  },
+  {
+    type: "error",
+    name: "InvalidDSTLength",
+    inputs: [
+      {
+        name: "dst",
+        type: "bytes",
+        internalType: "bytes"
+      }
+    ]
+  },
+  {
+    type: "error",
+    name: "InvalidFieldElement",
+    inputs: [
+      {
+        name: "x",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ]
+  },
+  {
+    type: "error",
+    name: "MapToPointFailed",
+    inputs: [
+      {
+        name: "noSqrt",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ]
+  },
+  {
+    type: "error",
+    name: "ModExpFailed",
+    inputs: [
+      {
+        name: "base",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "exponent",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "modulus",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ]
   }
 ];
-var _bytecode4 = "0x6080604052348015600f57600080fd5b50612dce8061001f6000396000f3fe608060405234801561001057600080fd5b50600436106100575760003560e01c80633033cc511461005c5780635f7c75221461008d5780638a1f165a146100ab578063eae1e15b146100c9578063f6e548e9146100f9575b600080fd5b61007660048036038101906100719190612622565b610129565b604051610084929190612688565b60405180910390f35b6100956101ac565b6040516100a29190612741565b60405180910390f35b6100b36101c8565b6040516100c091906127b8565b60405180910390f35b6100e360048036038101906100de9190612622565b610201565b6040516100f09190612741565b60405180910390f35b610113600480360381019061010e91906127da565b61023b565b60405161012091906128a9565b60405180910390f35b6000806000610194604051806060016040528060268152602001612d736026913986868080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505061035c565b90508060000151816020015192509250509250929050565b604051806060016040528060268152602001612d736026913981565b6040518060400160405280601381526020017f424e3235342d424c532d424c4f434b4c4f434b0000000000000000000000000081525081565b60606000806102108585610129565b91509150610231604051806040016040528084815260200183815250610542565b9250505092915050565b60008061028b88888080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050506105c5565b905060006102dc87878080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050506105c5565b9050600061032d86868080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050610646565b905060008061033d8484876106fc565b9150915081801561034b5750805b955050505050509695505050505050565b61036461250d565b60006103708484610897565b905060006103958260006002811061038b5761038a6128c4565b5b6020020151610a28565b905060006103ba836001600281106103b0576103af6128c4565b5b6020020151610a28565b90506103c4612527565b826000600281106103d8576103d76128c4565b5b6020020151816000600481106103f1576103f06128c4565b5b6020020181815250508260016002811061040e5761040d6128c4565b5b602002015181600160048110610427576104266128c4565b5b60200201818152505081600060028110610444576104436128c4565b5b60200201518160026004811061045d5761045c6128c4565b5b6020020181815250508160016002811061047a576104796128c4565b5b602002015181600360048110610493576104926128c4565b5b602002018181525050600060408460808460066107d05a03fa9050806104f057816040517f128e3f080000000000000000000000000000000000000000000000000000000081526004016104e7919061299e565b60405180910390fd5b60405180604001604052808560006002811061050f5761050e6128c4565b5b602002015181526020018560016002811061052d5761052c6128c4565b5b60200201518152509550505050505092915050565b60606000604067ffffffffffffffff811115610561576105606129b9565b5b6040519080825280601f01601f1916602001820160405280156105935781602001600182028036833780820191505090505b5090506000836000015160001b90506000846020015160001b9050816020840152806040840152829350505050919050565b6105cd61250d565b6040825114610611576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161060890612a34565b60405180910390fd5b600080602084015191506040840151905060405180604001604052808360001c81526020018260001c81525092505050919050565b61064e612549565b6080825114610692576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161068990612aa0565b60405180910390fd5b6000806000806020860151935060408601519250606086015191506080860151905060405180604001604052806040518060400160405280878152602001868152508152602001604051806040016040528085815260200184815250815250945050505050919050565b600080600060405180610180016040528087600001518152602001876020015181526020017f198e9393920d483a7260bfb731fb5d25f1aa493335a9e71297e485b7aef312c281526020017f1800deef121f1e76426a00665e5c4479674322d4f75edadd46debd5cd992f6ed81526020017f275dc4a288d1afb3cbb1ac09187524c7db36395df7be3b99e673b13a075a65ec81526020017f1d9befcd05a5323e6da4d435f3b617cdb3af83285c2df711ef39c01571827f9d8152602001856000015181526020018560200151815260200186600001516001600281106107e5576107e46128c4565b5b602002015181526020018660000151600060028110610807576108066128c4565b5b602002015181526020018660200151600160028110610829576108286128c4565b5b60200201518152602001866020015160006002811061084b5761084a6128c4565b5b6020020151815250905061085d61256f565b6020816101808460086107d05a03fa9250600081600060018110610884576108836128c4565b5b6020020151141593505050935093915050565b61089f612591565b60006108ab8484611123565b90506000806000806018850177ffffffffffffffffffffffffffffffffffffffffffffffff815116935060308601905077ffffffffffffffffffffffffffffffffffffffffffffffff81511694507f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47857f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd477801000000000000000000000000000000000000000000000000870908925060488601905077ffffffffffffffffffffffffffffffffffffffffffffffff815116935060608601905077ffffffffffffffffffffffffffffffffffffffffffffffff81511694507f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47857f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4778010000000000000000000000000000000000000000000000008709089150506040518060400160405280838152602001828152509550505050505092915050565b610a30612591565b7f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd478210610a9457816040517fd53e9415000000000000000000000000000000000000000000000000000000008152600401610a8b9190612ac0565b60405180910390fd5b60007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4780610ac557610ac4612adb565b5b60047f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4780610af657610af5612adb565b5b85860909905060007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4780610b2d57610b2c612adb565b5b8260010890507f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4780610b6257610b61612adb565b5b827f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47610b8e9190612b39565b60010891506000610bcf7f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4780610bc757610bc6612adb565b5b838509611325565b905060007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4780610c0257610c01612adb565b5b78016789af3a83522eb353c98fc6b36d713d5d8d1cc5dffffffa7f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4780610c4b57610c4a612adb565b5b847f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4780610c7b57610c7a612adb565b5b888b090909905060007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4780610cb357610cb2612adb565b5b827f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47610cdf9190612b39565b7f183227397098d014dc2822db40c0ac2ecbc0b548b438e5469e10460b6c3e7ea308905060007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4780610d3457610d33612adb565b5b837f183227397098d014dc2822db40c0ac2ecbc0b548b438e5469e10460b6c3e7ea308905060007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4780610d8a57610d89612adb565b5b868709905060007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4780610dc057610dbf612adb565b5b868309905060007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4780610df657610df5612adb565b5b7f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4780610e2557610e24612adb565b5b7f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4780610e5457610e53612adb565b5b8485097f10216f7ba065e00de81ac1e7808072c9dd2b2385cd7b438469602eb24829a9bd0960010890506000806001610e94610e8f89611337565b6113d5565b60000b03610f3657868c600060028110610eb157610eb06128c4565b5b602002018181525050610ec387611337565b9050610ece8161149d565b8d600160028110610ee257610ee16128c4565b5b6020020181945082815250505081610f3157806040517f396ec771000000000000000000000000000000000000000000000000000000008152600401610f289190612ac0565b60405180910390fd5b611082565b6001610f49610f4488611337565b6113d5565b60000b03610feb57858c600060028110610f6657610f656128c4565b5b602002018181525050610f7886611337565b9050610f838161149d565b8d600160028110610f9757610f966128c4565b5b6020020181945082815250505081610fe657806040517f396ec771000000000000000000000000000000000000000000000000000000008152600401610fdd9190612ac0565b60405180910390fd5b611081565b828c60006002811061100057610fff6128c4565b5b60200201818152505061101283611337565b905061101d8161149d565b8d600160028110611031576110306128c4565b5b602002018194508281525050508161108057806040517f396ec7710000000000000000000000000000000000000000000000000000000081526004016110779190612ac0565b60405180910390fd5b5b5b6110a38c600160028110611099576110986128c4565b5b60200201516114e6565b6110ac8e6114e6565b14611113578b6001600281106110c5576110c46128c4565b5b60200201517f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd476110f59190612b39565b8c600160028110611109576111086128c4565b5b6020020181815250505b5050505050505050505050919050565b606060008351905060ff81111561117157836040517f26e4f9ba0000000000000000000000000000000000000000000000000000000081526004016111689190612741565b60405180910390fd5b6000608867ffffffffffffffff81111561118e5761118d6129b9565b5b6040519080825280601f01601f1916602001820160405280156111c05781602001600182028036833780820191505090505b509050600081856000606060008a886040516020016111e59796959493929190612bec565b60405160208183030381529060405290506000818051906020012090506000816001898760405160200161121c9493929190612c8c565b60405160208183030381529060405290506000818051906020012090506000606067ffffffffffffffff811115611256576112556129b9565b5b6040519080825280601f01601f1916602001820160405280156112885781602001600182028036833780820191505090505b5090506000600390506000600190505b81811015611300578386188160016112b09190612cd6565b8d8b6040516020016112c59493929190612c8c565b604051602081830303815290604052945082602001600182036020028101905084815250848051906020012093508080600101915050611298565b5081602001600182036020028101905083815250819850505050505050505092915050565b6000611330826114fc565b9050919050565b60007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd478061136857611367612adb565b5b60037f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd478061139957611398612adb565b5b847f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47806113c9576113c8612adb565b5b86870909089050919050565b6000806113e183611c56565b905060017f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd476114109190612b39565b810361143f577fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff915050611498565b60008114158015611451575060018114155b1561149357826040517f396ec77100000000000000000000000000000000000000000000000000000000815260040161148a9190612ac0565b60405180910390fd5b809150505b919050565b6000806114a983611dc5565b9150827f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47806114db576114da612adb565b5b838409149050915091565b60006002826114f59190612d0a565b9050919050565b60007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd478083840991508083830981838209828283098385830984848309858484098684850997508684840987858409945087898a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087818a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087898a09985087898a09985087818a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087898a09985087898a09985087838a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087818a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087858a09985087898a09985087898a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087858a09985087898a09985087898a09985087898a09985087898a09985087838a09985087898a09985087898a09985087898a09985087898a09985087858a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a0998505050505050505050919050565b60008060c067ffffffffffffffff811115611c7457611c736129b9565b5b6040519080825280601f01601f191660200182016040528015611ca65781602001600182028036833780820191505090505b5090506000602082016020815260208101905060208152602081019050602081526020810190508481526020810190507f183227397098d014dc2822db40c0ac2ecbc0b548b438e5469e10460b6c3e7ea381526020810190507f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4781526020600060c06020860160055afa915060005193505080611dbe57837f183227397098d014dc2822db40c0ac2ecbc0b548b438e5469e10460b6c3e7ea37f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd476040517fc6daf7ab000000000000000000000000000000000000000000000000000000008152600401611db593929190612d3b565b60405180910390fd5b5050919050565b60007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd478083840991508083830981838209828283098385830984848309858484098684850997508684840987858409945087898a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087818a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087898a09985087898a09985087818a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087898a09985087898a09985087838a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087818a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087858a09985087898a09985087898a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087858a09985087898a09985087898a09985087898a09985087898a09985087838a09985087898a09985087898a09985087898a09985087898a09985087858a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087898a09985087898a09985087838a09985087898a0998505050505050505050919050565b604051806040016040528060008152602001600081525090565b6040518060800160405280600490602082028036833780820191505090505090565b604051806040016040528061255c612591565b8152602001612569612591565b81525090565b6040518060200160405280600190602082028036833780820191505090505090565b6040518060400160405280600290602082028036833780820191505090505090565b600080fd5b600080fd5b600080fd5b600080fd5b600080fd5b60008083601f8401126125e2576125e16125bd565b5b8235905067ffffffffffffffff8111156125ff576125fe6125c2565b5b60208301915083600182028301111561261b5761261a6125c7565b5b9250929050565b60008060208385031215612639576126386125b3565b5b600083013567ffffffffffffffff811115612657576126566125b8565b5b612663858286016125cc565b92509250509250929050565b6000819050919050565b6126828161266f565b82525050565b600060408201905061269d6000830185612679565b6126aa6020830184612679565b9392505050565b600081519050919050565b600082825260208201905092915050565b60005b838110156126eb5780820151818401526020810190506126d0565b60008484015250505050565b6000601f19601f8301169050919050565b6000612713826126b1565b61271d81856126bc565b935061272d8185602086016126cd565b612736816126f7565b840191505092915050565b6000602082019050818103600083015261275b8184612708565b905092915050565b600081519050919050565b600082825260208201905092915050565b600061278a82612763565b612794818561276e565b93506127a48185602086016126cd565b6127ad816126f7565b840191505092915050565b600060208201905081810360008301526127d2818461277f565b905092915050565b600080600080600080606087890312156127f7576127f66125b3565b5b600087013567ffffffffffffffff811115612815576128146125b8565b5b61282189828a016125cc565b9650965050602087013567ffffffffffffffff811115612844576128436125b8565b5b61285089828a016125cc565b9450945050604087013567ffffffffffffffff811115612873576128726125b8565b5b61287f89828a016125cc565b92509250509295509295509295565b60008115159050919050565b6128a38161288e565b82525050565b60006020820190506128be600083018461289a565b92915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b600060049050919050565b600081905092915050565b6000819050919050565b61291c8161266f565b82525050565b600061292e8383612913565b60208301905092915050565b6000602082019050919050565b612950816128f3565b61295a81846128fe565b925061296582612909565b8060005b8381101561299657815161297d8782612922565b96506129888361293a565b925050600181019050612969565b505050505050565b60006080820190506129b36000830184612947565b92915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b7f496e76616c6964204731206279746573206c656e677468000000000000000000600082015250565b6000612a1e60178361276e565b9150612a29826129e8565b602082019050919050565b60006020820190508181036000830152612a4d81612a11565b9050919050565b7f496e76616c6964204732206279746573206c656e677468000000000000000000600082015250565b6000612a8a60178361276e565b9150612a9582612a54565b602082019050919050565b60006020820190508181036000830152612ab981612a7d565b9050919050565b6000602082019050612ad56000830184612679565b92915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601260045260246000fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b6000612b448261266f565b9150612b4f8361266f565b9250828203905081811115612b6757612b66612b0a565b5b92915050565b600081905092915050565b6000612b83826126b1565b612b8d8185612b6d565b9350612b9d8185602086016126cd565b80840191505092915050565b600060ff82169050919050565b60008160f81b9050919050565b6000612bce82612bb6565b9050919050565b612be6612be182612ba9565b612bc3565b82525050565b6000612bf8828a612b78565b9150612c048289612b78565b9150612c108288612bd5565b600182019150612c208287612bd5565b600182019150612c308286612bd5565b600182019150612c408285612b78565b9150612c4c8284612bd5565b60018201915081905098975050505050505050565b6000819050919050565b6000819050919050565b612c86612c8182612c61565b612c6b565b82525050565b6000612c988287612c75565b602082019150612ca88286612bd5565b600182019150612cb88285612b78565b9150612cc48284612bd5565b60018201915081905095945050505050565b6000612ce18261266f565b9150612cec8361266f565b9250828201905080821115612d0457612d03612b0a565b5b92915050565b6000612d158261266f565b9150612d208361266f565b925082612d3057612d2f612adb565b5b828206905092915050565b6000606082019050612d506000830186612679565b612d5d6020830185612679565b612d6a6040830184612679565b94935050505056fe4942455f424e32353447315f584d443a4b454343414b2d3235365f535644575f524f5f48315fa26469706673582212206a8bce98076e2c80e1b182cd7783f690ea6755ed2551aa8cb0f6ff1c5eaed0b164736f6c634300081c0033";
+var _bytecode2 = "0x6080604052348015600f57600080fd5b506125138061001f6000396000f3fe608060405234801561001057600080fd5b50600436106100675760003560e01c80638a1f165a116100505780638a1f165a146100ae578063eae1e15b146100ea578063f6e548e9146100fd57600080fd5b80633033cc511461006c5780635f7c752214610099575b600080fd5b61007f61007a3660046120d3565b610120565b604080519283526020830191909152015b60405180910390f35b6100a1610193565b6040516100909190612183565b6100a16040518060400160405280601381526020017f424e3235342d424c532d424c4f434b4c4f434b0000000000000000000000000081525081565b6100a16100f83660046120d3565b6101af565b61011061010b36600461219d565b6101ea565b6040519015158152602001610090565b600080600061017d6040518060600160405280602681526020016124b86026913986868080601f0160208091040260200160405190810160405280939291908181526020018383808284376000920191909152506102e092505050565b80516020909101519093509150505b9250929050565b6040518060600160405280602681526020016124b86026913981565b60606000806101be8585610120565b915091506101df6040518060400160405280848152602001838152506103ca565b925050505b92915050565b60008061022c88888080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525061040492505050565b9050600061026f87878080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525061040492505050565b905060006102b286868080601f0160208091040260200160405190810160405280939291908181526020018383808284376000920191909152506104a292505050565b90506000806102c284848761055d565b915091508180156102d05750805b9c9b505050505050505050505050565b6040805180820190915260008082526020820152600061030084846106d8565b9050600061031482825b6020020151610826565b9050600061032383600161030a565b905061032d612012565b825181526020808401518282015282516040808401919091529083015160608301526000908460808460066107d05a03fa9050806103a257816040517f128e3f080000000000000000000000000000000000000000000000000000000081526004016103999190612272565b60405180910390fd5b6040805180820190915284518152602081018560016020020151905298975050505050505050565b6040805181815260608181018352916000919060208201818036833750508451602095860151958301525060408101939093525090919050565b60408051808201909152600080825260208201528151604014610483576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601760248201527f496e76616c6964204731206279746573206c656e6774680000000000000000006044820152606401610399565b5060208181015160409283015183518085019094529083529082015290565b6104aa612030565b8151608014610515576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601760248201527f496e76616c6964204732206279746573206c656e6774680000000000000000006044820152606401610399565b50602081810151604080840151606080860151608096870151845197880185528785019586529187019290925292855281518083019092528152808301919091529082015290565b600080600060405180610180016040528087600001518152602001876020015181526020017f198e9393920d483a7260bfb731fb5d25f1aa493335a9e71297e485b7aef312c281526020017f1800deef121f1e76426a00665e5c4479674322d4f75edadd46debd5cd992f6ed81526020017f275dc4a288d1afb3cbb1ac09187524c7db36395df7be3b99e673b13a075a65ec81526020017f1d9befcd05a5323e6da4d435f3b617cdb3af83285c2df711ef39c01571827f9d81526020018560000151815260200185602001518152602001866000015160016002811061064557610645612243565b60200201518152602001866000015160006002811061066657610666612243565b60200201518152602001866020015160016002811061068757610687612243565b6020020151815260200186602001516000600281106106a8576106a8612243565b6020020151905290506106b9612055565b6020816101808460086107d05a03fa9051151597909650945050505050565b6106e0612073565b60006106ec8484610cda565b90506000806000806018850177ffffffffffffffffffffffffffffffffffffffffffffffff815116935060308601905077ffffffffffffffffffffffffffffffffffffffffffffffff81511694507f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47857f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4778010000000000000000000000000000000000000000000000008709086048870151606088015177ffffffffffffffffffffffffffffffffffffffffffffffff908116975016945092507f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47905084817801000000000000000000000000000000000000000000000000860908604080518082019091529283526020830152509695505050505050565b61082e612073565b7f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47821061088a576040517fd53e941500000000000000000000000000000000000000000000000000000000815260048101839052602401610399565b60007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4760047f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4785860909905060007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd478260010890507f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4761094a837f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd476122d2565b6001089150600061097d7f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47838509610ecb565b905060007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4778016789af3a83522eb353c98fc6b36d713d5d8d1cc5dffffffa7f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47847f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47888b090909905060007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47610a53837f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd476122d2565b7f183227397098d014dc2822db40c0ac2ecbc0b548b438e5469e10460b6c3e7ea308905060007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47837f183227397098d014dc2822db40c0ac2ecbc0b548b438e5469e10460b6c3e7ea308905060007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47868709905060007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47868309905060007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47807f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd478485097f10216f7ba065e00de81ac1e7808072c9dd2b2385cd7b438469602eb24829a9bd096001089050600080610b92610b8d88610ed6565b610f49565b60000b600103610bfc57868c52610ba887610ed6565b9050610bb381610ffa565b60208e0191909152915081610bf7576040517f396ec77100000000000000000000000000000000000000000000000000000000815260048101829052602401610399565b610c79565b610c08610b8d87610ed6565b60000b600103610c1e57858c52610ba886610ed6565b828c52610c2a83610ed6565b9050610c3581610ffa565b60208e0191909152915081610c79576040517f396ec77100000000000000000000000000000000000000000000000000000000815260048101829052602401610399565b60208c0151610c8790611035565b610c908e611035565b14610cca5760208c0151610cc4907f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd476122d2565b60208d01525b5050505050505050505050919050565b815160609060ff811115610d1c57836040517f26e4f9ba0000000000000000000000000000000000000000000000000000000081526004016103999190612183565b60408051608880825260c08201909252600091602082018180368337019050509050600081856000606060008a88604051602001610d6097969594939291906122e5565b604051602081830303815290604052905060008180519060200120905060008160018987604051602001610d9794939291906123e6565b604080518083037fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe00181528282528051602082012060608085526080850190935290935091600091602082018180368337019050509050600360015b81811015610e8f57858418610e09826001612469565b8d8b604051602001610e1e94939291906123e6565b604080518083037fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe001815291905260207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff830181028501810195909552805194810194909420939450600101610df3565b507fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff016020908102820101919091529550505050505092915050565b60006101e482611042565b60007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4760037f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47847f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47868709090892915050565b600080610f558361179b565b9050610f8260017f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd476122d2565b8103610fb057507fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff92915050565b8015801590610fc0575080600114155b156101e4576040517f396ec77100000000000000000000000000000000000000000000000000000000815260048101849052602401610399565b600080611006836118cb565b9150827f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47838409149050915091565b60006101e460028361247c565b60007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd478083840991508083830981838209828283098385830984848309858484098684850997508684840987858409945087898a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087818a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087898a09985087898a09985087818a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087898a09985087898a09985087838a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087818a09985050868889099750868889099750868889099750868889099750868889099750868889099750868489099750868889099750868889099750868889099750868889099750868889099750868989099750868889099750868889099750868889099750868889099750868889099750868889099750868989099750868889099750868889099750868889099750868889099750868889099750868689099750868889099750868889099750868889099750868889099750868889099750868889099750868889099750868889099750868889099750868189099750508587880996508587880996508587880996508585880996508587880996508587880996508587880996508585880996508587880996508587880996508587880996508587880996508587880996508587880996508587880996508587880996508583880996508587880996508587880996508587880996508587880996508581880996505050838586099450838586099450838586099450838586099450838186099450508284850993508284850993508284850993508281850993508284850993508284850993508285850993508284850993508284850993508284850993508284850993508284850993508284850993508281850995945050505050565b6040805160c080825260e082019092526000918291906020820181803683370190505060208082018181526040830182905260608301829052608083018690527f183227397098d014dc2822db40c0ac2ecbc0b548b438e5469e10460b6c3e7ea360a08401527f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd4760c080850191909152929350600092839160055afa90506000519250806118c4576040517fc6daf7ab000000000000000000000000000000000000000000000000000000008152600481018590527f183227397098d014dc2822db40c0ac2ecbc0b548b438e5469e10460b6c3e7ea360248201527f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd476044820152606401610399565b5050919050565b60007f30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd478083840991508083830981838209828283098385830984848309858484098684850997508684840987858409945087898a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087818a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087898a09985087898a09985087818a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087878a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a09985087898a09985087898a09985087898a09985087838a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087828a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087848a09985087898a09985087898a09985087898a09985087898a09985087898a09985087868a09985087898a09985087898a099850878a8a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087898a09985087818a09985050868889099750868889099750868889099750868889099750868889099750868889099750868489099750868889099750868889099750868889099750868889099750868889099750868989099750868889099750868889099750868889099750868889099750868889099750868889099750868989099750868889099750868889099750868889099750868889099750868889099750868689099750868889099750868889099750868889099750868889099750868889099750868889099750868889099750868889099750868889099750868189099750508587880996508587880996508587880996508585880996508587880996508587880996508587880996508585880996508587880996508587880996508587880996508587880996508587880996508587880996508587880996508587880996508583880996508587880996508587880996508587880996508587880996508581880996508587880996508587880996508587880996508587880996508583880996508587880996508587880996508587880996508584880996508587880996508587880996508587880996508587880996508587880996508581880996505050505050808283099392505050565b60405180608001604052806004906020820280368337509192915050565b6040518060400160405280612043612073565b8152602001612050612073565b905290565b60405180602001604052806001906020820280368337509192915050565b60405180604001604052806002906020820280368337509192915050565b60008083601f8401126120a357600080fd5b50813567ffffffffffffffff8111156120bb57600080fd5b60208301915083602082850101111561018c57600080fd5b600080602083850312156120e657600080fd5b823567ffffffffffffffff8111156120fd57600080fd5b61210985828601612091565b90969095509350505050565b60005b83811015612130578181015183820152602001612118565b50506000910152565b60008151808452612151816020860160208601612115565b601f017fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0169290920160200192915050565b6020815260006121966020830184612139565b9392505050565b600080600080600080606087890312156121b657600080fd5b863567ffffffffffffffff8111156121cd57600080fd5b6121d989828a01612091565b909750955050602087013567ffffffffffffffff8111156121f957600080fd5b61220589828a01612091565b909550935050604087013567ffffffffffffffff81111561222557600080fd5b61223189828a01612091565b979a9699509497509295939492505050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b60808101818360005b600481101561229a57815183526020928301929091019060010161227b565b50505092915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b818103818111156101e4576101e46122a3565b600088516122f7818460208d01612115565b88519083019061230b818360208d01612115565b8082019150507fff000000000000000000000000000000000000000000000000000000000000008860f81b1681527fff000000000000000000000000000000000000000000000000000000000000008760f81b1660018201527fff000000000000000000000000000000000000000000000000000000000000008660f81b16600282015284516123a2816003840160208901612115565b8082019150507fff000000000000000000000000000000000000000000000000000000000000008460f81b1660038201526004810191505098975050505050505050565b8481527fff000000000000000000000000000000000000000000000000000000000000008460f81b16602082015260008351612429816021850160208801612115565b80830190507fff000000000000000000000000000000000000000000000000000000000000008460f81b1660218201526022810191505095945050505050565b808201808211156101e4576101e46122a3565b6000826124b2577f4e487b7100000000000000000000000000000000000000000000000000000000600052601260045260246000fd5b50069056fe4942455f424e32353447315f584d443a4b454343414b2d3235365f535644575f524f5f48315fa264697066735822122068969a98288834b11b8c8616069ac58f325f25d5bc1501e7a0094efa31b0c33664736f6c634300081c0033";
+var isSuperArgs2 = (xs) => xs.length > 1;
+var BlocklockSignatureScheme__factory = class extends ContractFactory {
+  constructor(...args) {
+    if (isSuperArgs2(args)) {
+      super(...args);
+    } else {
+      super(_abi2, _bytecode2, args[0]);
+    }
+  }
+  getDeployTransaction(overrides) {
+    return super.getDeployTransaction(overrides || {});
+  }
+  deploy(overrides) {
+    return super.deploy(overrides || {});
+  }
+  connect(runner) {
+    return super.connect(runner);
+  }
+  static bytecode = _bytecode2;
+  static abi = _abi2;
+  static createInterface() {
+    return new Interface(_abi2);
+  }
+  static connect(address, runner) {
+    return new Contract(
+      address,
+      _abi2,
+      runner
+    );
+  }
+};
+
+// src/generated/factories/SignatureSchemeAddressProvider__factory.ts
+var _abi3 = [
+  {
+    type: "constructor",
+    inputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "ADMIN_ROLE",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "DEFAULT_ADMIN_ROLE",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "getRoleAdmin",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "getSignatureSchemeAddress",
+    inputs: [
+      {
+        name: "schemeID",
+        type: "string",
+        internalType: "string"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "grantRole",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "hasRole",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "isSupportedScheme",
+    inputs: [
+      {
+        name: "schemeID",
+        type: "string",
+        internalType: "string"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "renounceRole",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "callerConfirmation",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "revokeRole",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "supportsInterface",
+    inputs: [
+      {
+        name: "interfaceId",
+        type: "bytes4",
+        internalType: "bytes4"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "updateSignatureScheme",
+    inputs: [
+      {
+        name: "schemeID",
+        type: "string",
+        internalType: "string"
+      },
+      {
+        name: "schemeAddress",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "event",
+    name: "NewSignatureSchemeAddressAdded",
+    inputs: [
+      {
+        name: "schemeID",
+        type: "string",
+        indexed: true,
+        internalType: "string"
+      },
+      {
+        name: "schemeAddress",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "addedAt",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "RoleAdminChanged",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      },
+      {
+        name: "previousAdminRole",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      },
+      {
+        name: "newAdminRole",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "RoleGranted",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "sender",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "RoleRevoked",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "sender",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "error",
+    name: "AccessControlBadConfirmation",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "AccessControlUnauthorizedAccount",
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        internalType: "address"
+      },
+      {
+        name: "neededRole",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ]
+  }
+];
+var _bytecode3 = "0x608060405234801561001057600080fd5b5061001c6000336100d0565b6100615760405162461bcd60e51b815260206004820152601160248201527011dc985b9d081c9bdb194819985a5b1959607a1b60448201526064015b60405180910390fd5b61008b7fa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775336100d0565b6100cb5760405162461bcd60e51b815260206004820152601160248201527011dc985b9d081c9bdb194819985a5b1959607a1b6044820152606401610058565b61017c565b6000828152602081815260408083206001600160a01b038516845290915281205460ff16610172576000838152602081815260408083206001600160a01b03861684529091529020805460ff1916600117905561012a3390565b6001600160a01b0316826001600160a01b0316847f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a4506001610176565b5060005b92915050565b610a208061018b6000396000f3fe608060405234801561001057600080fd5b50600436106100c95760003560e01c80635bb09cf811610081578063a217fddf1161005b578063a217fddf14610205578063bab867da1461020d578063d547741f1461022057600080fd5b80635bb09cf81461016257806375b238fc1461019a57806391d14854146101c157600080fd5b80632f2ff15d116100b25780632f2ff15d146101275780632fc9fa331461013c57806336568abe1461014f57600080fd5b806301ffc9a7146100ce578063248a9ca3146100f6575b600080fd5b6100e16100dc366004610844565b610233565b60405190151581526020015b60405180910390f35b61011961010436600461088d565b60009081526020819052604090206001015490565b6040519081526020016100ed565b61013a6101353660046108cf565b6102cc565b005b6100e161014a366004610944565b6102f7565b61013a61015d3660046108cf565b610352565b610175610170366004610944565b6103b0565b60405173ffffffffffffffffffffffffffffffffffffffff90911681526020016100ed565b6101197fa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c2177581565b6100e16101cf3660046108cf565b60009182526020828152604080842073ffffffffffffffffffffffffffffffffffffffff93909316845291905290205460ff1690565b610119600081565b61013a61021b366004610986565b6103f2565b61013a61022e3660046108cf565b6105d1565b60007fffffffff0000000000000000000000000000000000000000000000000000000082167f7965db0b0000000000000000000000000000000000000000000000000000000014806102c657507f01ffc9a7000000000000000000000000000000000000000000000000000000007fffffffff000000000000000000000000000000000000000000000000000000008316145b92915050565b6000828152602081905260409020600101546102e7816105f6565b6102f18383610603565b50505050565b60008073ffffffffffffffffffffffffffffffffffffffff16600184846040516103229291906109da565b9081526040519081900360200190205473ffffffffffffffffffffffffffffffffffffffff161415905092915050565b73ffffffffffffffffffffffffffffffffffffffff811633146103a1576040517f6697b23200000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6103ab82826106ff565b505050565b6000600183836040516103c49291906109da565b9081526040519081900360200190205473ffffffffffffffffffffffffffffffffffffffff16905092915050565b61041b7fa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c217756105f6565b73ffffffffffffffffffffffffffffffffffffffff8116158015610454575073ffffffffffffffffffffffffffffffffffffffff81163b155b156104e6576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152602a60248201527f496e76616c696420636f6e7472616374206164647265737320666f722073636860448201527f656d65416464726573730000000000000000000000000000000000000000000060648201526084015b60405180910390fd5b80600184846040516104f99291906109da565b908152604051908190036020018120805473ffffffffffffffffffffffffffffffffffffffff939093167fffffffffffffffffffffffff00000000000000000000000000000000000000009093169290921790915560019061055e90859085906109da565b9081526040519081900360200181205473ffffffffffffffffffffffffffffffffffffffff169061059290859085906109da565b604051908190038120428252907f0a1cd6a1e0a7b200d28ead555f3cee96e0d2def049535fbcfdc2926bc4cec5049060200160405180910390a3505050565b6000828152602081905260409020600101546105ec816105f6565b6102f183836106ff565b61060081336107ba565b50565b60008281526020818152604080832073ffffffffffffffffffffffffffffffffffffffff8516845290915281205460ff166106f75760008381526020818152604080832073ffffffffffffffffffffffffffffffffffffffff86168452909152902080547fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff001660011790556106953390565b73ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16847f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a45060016102c6565b5060006102c6565b60008281526020818152604080832073ffffffffffffffffffffffffffffffffffffffff8516845290915281205460ff16156106f75760008381526020818152604080832073ffffffffffffffffffffffffffffffffffffffff8616808552925280832080547fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0016905551339286917ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b9190a45060016102c6565b60008281526020818152604080832073ffffffffffffffffffffffffffffffffffffffff8516845290915290205460ff16610840576040517fe2517d3f00000000000000000000000000000000000000000000000000000000815273ffffffffffffffffffffffffffffffffffffffff82166004820152602481018390526044016104dd565b5050565b60006020828403121561085657600080fd5b81357fffffffff000000000000000000000000000000000000000000000000000000008116811461088657600080fd5b9392505050565b60006020828403121561089f57600080fd5b5035919050565b803573ffffffffffffffffffffffffffffffffffffffff811681146108ca57600080fd5b919050565b600080604083850312156108e257600080fd5b823591506108f2602084016108a6565b90509250929050565b60008083601f84011261090d57600080fd5b50813567ffffffffffffffff81111561092557600080fd5b60208301915083602082850101111561093d57600080fd5b9250929050565b6000806020838503121561095757600080fd5b823567ffffffffffffffff81111561096e57600080fd5b61097a858286016108fb565b90969095509350505050565b60008060006040848603121561099b57600080fd5b833567ffffffffffffffff8111156109b257600080fd5b6109be868287016108fb565b90945092506109d19050602085016108a6565b90509250925092565b818382376000910190815291905056fea2646970667358221220c68cfcb898063f0a88c375aa805be86e0db31046ca71379b88b89b36a0aec89c64736f6c634300081c0033";
+var isSuperArgs3 = (xs) => xs.length > 1;
+var SignatureSchemeAddressProvider__factory = class extends ContractFactory {
+  constructor(...args) {
+    if (isSuperArgs3(args)) {
+      super(...args);
+    } else {
+      super(_abi3, _bytecode3, args[0]);
+    }
+  }
+  getDeployTransaction(overrides) {
+    return super.getDeployTransaction(overrides || {});
+  }
+  deploy(overrides) {
+    return super.deploy(overrides || {});
+  }
+  connect(runner) {
+    return super.connect(runner);
+  }
+  static bytecode = _bytecode3;
+  static abi = _abi3;
+  static createInterface() {
+    return new Interface(_abi3);
+  }
+  static connect(address, runner) {
+    return new Contract(
+      address,
+      _abi3,
+      runner
+    );
+  }
+};
+
+// src/generated/factories/SignatureSender__factory.ts
+var _abi4 = [
+  {
+    type: "constructor",
+    inputs: [
+      {
+        name: "x",
+        type: "uint256[2]",
+        internalType: "uint256[2]"
+      },
+      {
+        name: "y",
+        type: "uint256[2]",
+        internalType: "uint256[2]"
+      },
+      {
+        name: "_signatureSchemeAddressProvider",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "ADMIN_ROLE",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "DEFAULT_ADMIN_ROLE",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "fulfilSignatureRequest",
+    inputs: [
+      {
+        name: "requestID",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "signature",
+        type: "bytes",
+        internalType: "bytes"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "getPublicKey",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256[2]",
+        internalType: "uint256[2]"
+      },
+      {
+        name: "",
+        type: "uint256[2]",
+        internalType: "uint256[2]"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "getPublicKeyBytes",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "bytes",
+        internalType: "bytes"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "getRequestInFlight",
+    inputs: [
+      {
+        name: "requestID",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "tuple",
+        internalType: "struct TypesLib.SignatureRequest",
+        components: [
+          {
+            name: "message",
+            type: "bytes",
+            internalType: "bytes"
+          },
+          {
+            name: "messageHash",
+            type: "bytes",
+            internalType: "bytes"
+          },
+          {
+            name: "condition",
+            type: "bytes",
+            internalType: "bytes"
+          },
+          {
+            name: "schemeID",
+            type: "string",
+            internalType: "string"
+          },
+          {
+            name: "callback",
+            type: "address",
+            internalType: "address"
+          }
+        ]
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "getRoleAdmin",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "grantRole",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "hasRole",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "isInFlight",
+    inputs: [
+      {
+        name: "requestID",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "lastRequestID",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "multicall",
+    inputs: [
+      {
+        name: "data",
+        type: "bytes[]",
+        internalType: "bytes[]"
+      }
+    ],
+    outputs: [
+      {
+        name: "results",
+        type: "bytes[]",
+        internalType: "bytes[]"
+      }
+    ],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "renounceRole",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "callerConfirmation",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "requestSignature",
+    inputs: [
+      {
+        name: "schemeID",
+        type: "string",
+        internalType: "string"
+      },
+      {
+        name: "message",
+        type: "bytes",
+        internalType: "bytes"
+      },
+      {
+        name: "condition",
+        type: "bytes",
+        internalType: "bytes"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "requestsInFlight",
+    inputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [
+      {
+        name: "message",
+        type: "bytes",
+        internalType: "bytes"
+      },
+      {
+        name: "messageHash",
+        type: "bytes",
+        internalType: "bytes"
+      },
+      {
+        name: "condition",
+        type: "bytes",
+        internalType: "bytes"
+      },
+      {
+        name: "schemeID",
+        type: "string",
+        internalType: "string"
+      },
+      {
+        name: "callback",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "revokeRole",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "signatureSchemeAddressProvider",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract ISignatureSchemeAddressProvider"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "supportsInterface",
+    inputs: [
+      {
+        name: "interfaceId",
+        type: "bytes4",
+        internalType: "bytes4"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "event",
+    name: "RoleAdminChanged",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      },
+      {
+        name: "previousAdminRole",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      },
+      {
+        name: "newAdminRole",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "RoleGranted",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "sender",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "RoleRevoked",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "sender",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "SignatureCallbackFailed",
+    inputs: [
+      {
+        name: "requestID",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      },
+      {
+        name: "signature",
+        type: "bytes",
+        indexed: false,
+        internalType: "bytes"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "SignatureRequestFulfilled",
+    inputs: [
+      {
+        name: "requestID",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "SignatureRequested",
+    inputs: [
+      {
+        name: "requestID",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      },
+      {
+        name: "callback",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "schemeID",
+        type: "string",
+        indexed: false,
+        internalType: "string"
+      },
+      {
+        name: "message",
+        type: "bytes",
+        indexed: false,
+        internalType: "bytes"
+      },
+      {
+        name: "messageHashToSign",
+        type: "bytes",
+        indexed: false,
+        internalType: "bytes"
+      },
+      {
+        name: "condition",
+        type: "bytes",
+        indexed: false,
+        internalType: "bytes"
+      },
+      {
+        name: "requestedAt",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "error",
+    name: "AccessControlBadConfirmation",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "AccessControlUnauthorizedAccount",
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        internalType: "address"
+      },
+      {
+        name: "neededRole",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ]
+  },
+  {
+    type: "error",
+    name: "AddressEmptyCode",
+    inputs: [
+      {
+        name: "target",
+        type: "address",
+        internalType: "address"
+      }
+    ]
+  },
+  {
+    type: "error",
+    name: "FailedCall",
+    inputs: []
+  }
+];
+var _bytecode4 = "0x6000600181905560e081815261010082905260a08181526101606040526101208381526101409390935260c09290925260029061003e908290816102b5565b50602082015161005490600280840191906102b5565b50505034801561006357600080fd5b50604051612e00380380612e0083398101604081905261008291610385565b604080518082019091528381526020810183905260026100a38186816102b5565b5060208201516100b990600280840191906102b5565b506100e891507fa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775905033610209565b61012d5760405162461bcd60e51b815260206004820152601160248201527011dc985b9d081c9bdb194819985a5b1959607a1b60448201526064015b60405180910390fd5b610138600033610209565b6101795760405162461bcd60e51b81526020600482015260126024820152714772616e7420726f6c65207265766572747360701b6044820152606401610124565b6001600160a01b0381166101f55760405162461bcd60e51b815260206004820152603c60248201527f43616e6e6f7420736574207a65726f2061646472657373206173207369676e6160448201527f7475726520736368656d6520616464726573732070726f7669646572000000006064820152608401610124565b6001600160a01b0316608052506103db9050565b6000828152602081815260408083206001600160a01b038516845290915281205460ff166102ab576000838152602081815260408083206001600160a01b03861684529091529020805460ff191660011790556102633390565b6001600160a01b0316826001600160a01b0316847f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a45060016102af565b5060005b92915050565b82600281019282156102e3579160200282015b828111156102e35782518255916020019190600101906102c8565b506102ef9291506102f3565b5090565b5b808211156102ef57600081556001016102f4565b600082601f83011261031957600080fd5b604080519081016001600160401b038111828210171561034957634e487b7160e01b600052604160045260246000fd5b806040525080604084018581111561036057600080fd5b845b8181101561037a578051835260209283019201610362565b509195945050505050565b600080600060a0848603121561039a57600080fd5b6103a48585610308565b92506103b38560408601610308565b60808501519092506001600160a01b03811681146103d057600080fd5b809150509250925092565b6080516129f561040b6000396000818161034001528181610b8e01528181610f4201526112da01526129f56000f3fe608060405234801561001057600080fd5b50600436106101365760003560e01c806391d14854116100b2578063acae9fee11610081578063d547741f11610066578063d547741f14610304578063d5c2d4f514610317578063e6b3ca711461033b57600080fd5b8063acae9fee146102b4578063cd802c91146102c957600080fd5b806391d148541461023557806395b8d07314610279578063a217fddf1461028c578063ac9650d81461029457600080fd5b806336568abe1161010957806347c03186116100ee57806347c03186146101f25780635eab2b20146101fb57806375b238fc1461020e57600080fd5b806336568abe146101bf57806344880e1e146101d257600080fd5b806301ffc9a71461013b578063248a9ca3146101635780632e334452146101945780632f2ff15d146101aa575b600080fd5b61014e610149366004611f58565b610387565b60405190151581526020015b60405180910390f35b610186610171366004611f9a565b60009081526020819052604090206001015490565b60405190815260200161015a565b61019c610420565b60405161015a929190611fd6565b6101bd6101b8366004612013565b61049a565b005b6101bd6101cd366004612013565b6104c5565b6101e56101e0366004611f9a565b610523565b60405161015a91906120b1565b61018660015481565b6101bd6102093660046121f6565b6107f3565b6101867fa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c2177581565b61014e610243366004612013565b60009182526020828152604080842073ffffffffffffffffffffffffffffffffffffffff93909316845291905290205460ff1690565b610186610287366004612242565b610eec565b610186600081565b6102a76102a23660046122e8565b6115e9565b60405161015a919061235f565b6102bc6116d1565b60405161015a91906123e2565b61014e6102d7366004611f9a565b60009081526006602052604090206004015473ffffffffffffffffffffffffffffffffffffffff16151590565b6101bd610312366004612013565b611750565b61032a610325366004611f9a565b611775565b60405161015a9594939291906123f5565b6103627f000000000000000000000000000000000000000000000000000000000000000081565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200161015a565b60007fffffffff0000000000000000000000000000000000000000000000000000000082167f7965db0b00000000000000000000000000000000000000000000000000000000148061041a57507f01ffc9a7000000000000000000000000000000000000000000000000000000007fffffffff000000000000000000000000000000000000000000000000000000008316145b92915050565b610428611eec565b610430611eec565b6040805180820191829052600291600491908390819081845b815481526020019060010190808311610449575050604080518082019182905294965085935060029250905082845b8154815260200190600101908083116104785750505050509050915091509091565b6000828152602081905260409020600101546104b5816119d9565b6104bf83836119e6565b50505050565b73ffffffffffffffffffffffffffffffffffffffff81163314610514576040517f6697b23200000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b61051e8282611ae2565b505050565b61056b6040518060a0016040528060608152602001606081526020016060815260200160608152602001600073ffffffffffffffffffffffffffffffffffffffff1681525090565b60008281526006602052604090819020815160a081019092528054829082906105939061246b565b80601f01602080910402602001604051908101604052809291908181526020018280546105bf9061246b565b801561060c5780601f106105e15761010080835404028352916020019161060c565b820191906000526020600020905b8154815290600101906020018083116105ef57829003601f168201915b505050505081526020016001820180546106259061246b565b80601f01602080910402602001604051908101604052809291908181526020018280546106519061246b565b801561069e5780601f106106735761010080835404028352916020019161069e565b820191906000526020600020905b81548152906001019060200180831161068157829003601f168201915b505050505081526020016002820180546106b79061246b565b80601f01602080910402602001604051908101604052809291908181526020018280546106e39061246b565b80156107305780601f1061070557610100808354040283529160200191610730565b820191906000526020600020905b81548152906001019060200180831161071357829003601f168201915b505050505081526020016003820180546107499061246b565b80601f01602080910402602001604051908101604052809291908181526020018280546107759061246b565b80156107c25780601f10610797576101008083540402835291602001916107c2565b820191906000526020600020905b8154815290600101906020018083116107a557829003601f168201915b50505091835250506004919091015473ffffffffffffffffffffffffffffffffffffffff1660209091015292915050565b61081c7fa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c217756119d9565b60008381526006602052604090206004015473ffffffffffffffffffffffffffffffffffffffff166108d5576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152602360248201527f4e6f20726571756573742077697468207370656369666965642072657175657360448201527f744944000000000000000000000000000000000000000000000000000000000060648201526084015b60405180910390fd5b600083815260066020526040808220815160a081019092528054829082906108fc9061246b565b80601f01602080910402602001604051908101604052809291908181526020018280546109289061246b565b80156109755780601f1061094a57610100808354040283529160200191610975565b820191906000526020600020905b81548152906001019060200180831161095857829003601f168201915b5050505050815260200160018201805461098e9061246b565b80601f01602080910402602001604051908101604052809291908181526020018280546109ba9061246b565b8015610a075780601f106109dc57610100808354040283529160200191610a07565b820191906000526020600020905b8154815290600101906020018083116109ea57829003601f168201915b50505050508152602001600282018054610a209061246b565b80601f0160208091040260200160405190810160405280929190818152602001828054610a4c9061246b565b8015610a995780601f10610a6e57610100808354040283529160200191610a99565b820191906000526020600020905b815481529060010190602001808311610a7c57829003601f168201915b50505050508152602001600382018054610ab29061246b565b80601f0160208091040260200160405190810160405280929190818152602001828054610ade9061246b565b8015610b2b5780601f10610b0057610100808354040283529160200191610b2b565b820191906000526020600020905b815481529060010190602001808311610b0e57829003601f168201915b505050918352505060049182015473ffffffffffffffffffffffffffffffffffffffff90811660209092019190915260608301516040517f5bb09cf8000000000000000000000000000000000000000000000000000000008152939450926000927f000000000000000000000000000000000000000000000000000000000000000090921691635bb09cf891610bc3918691016123e2565b602060405180830381865afa158015610be0573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610c0491906124be565b905060008190508073ffffffffffffffffffffffffffffffffffffffff1663f6e548e985602001518888610c366116d1565b6040518563ffffffff1660e01b8152600401610c559493929190612524565b602060405180830381865afa158015610c72573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610c969190612569565b610cfc576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601d60248201527f5369676e617475726520766572696669636174696f6e206661696c656400000060448201526064016108cc565b6000846080015173ffffffffffffffffffffffffffffffffffffffff1663c8db658260e01b898989604051602401610d369392919061258b565b604080517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08184030181529181526020820180517bffffffffffffffffffffffffffffffffffffffffffffffffffffffff167fffffffff00000000000000000000000000000000000000000000000000000000909416939093179092529051610dbf91906125a5565b6000604051808303816000865af19150503d8060008114610dfc576040519150601f19603f3d011682016040523d82523d6000602084013e610e01565b606091505b5050905080610e4957877f4774025393660320c3411faa072d59d001b53f37d266e112c0efb06fc85e1a858888604051610e3c9291906125c1565b60405180910390a2610e75565b60405188907fd4ea4684d3a92e95520ada379d1fd257a1e354567964ffd985b5f28c5940e7ab90600090a25b600088815260066020526040812090610e8e8282611f0a565b610e9c600183016000611f0a565b610eaa600283016000611f0a565b610eb8600383016000611f0a565b5060040180547fffffffffffffffffffffffff00000000000000000000000000000000000000001690555050505050505050565b60006001806000828254610f00919061260c565b90915550506040517f2fc9fa3300000000000000000000000000000000000000000000000000000000815273ffffffffffffffffffffffffffffffffffffffff7f00000000000000000000000000000000000000000000000000000000000000001690632fc9fa3390610f79908a908a906004016125c1565b602060405180830381865afa158015610f96573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610fba9190612569565b611020576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601e60248201527f5369676e617475726520736368656d65206e6f7420737570706f72746564000060448201526064016108cc565b611068600161100087878080601f016020809104026020016040519081016040528093929190818152602001838380828437600092019190915250929493925050611b9d9050565b6110f4576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152602260248201527f4d657373616765206661696c6564206c656e67746820626f756e64732063686560448201527f636b00000000000000000000000000000000000000000000000000000000000060648201526084016108cc565b61113c600061100085858080601f016020809104026020016040519081016040528093929190818152602001838380828437600092019190915250929493925050611b9d9050565b6111c7576040517f08c379a0000000000000000000000000000000000000000000000000000000008152602060048201526024808201527f436f6e646974696f6e206661696c6564206c656e67746820626f756e6473206360448201527f6865636b0000000000000000000000000000000000000000000000000000000060648201526084016108cc565b81801561129a5761120d84848080601f016020809104026020016040519081016040528093929190818152602001838380828437600092019190915250611c4c92505050565b1561129a576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152602360248201527f436f6e646974696f6e2062797465732063616e6e6f7420626520616c6c207a6560448201527f726f73000000000000000000000000000000000000000000000000000000000060648201526084016108cc565b6040517f5bb09cf800000000000000000000000000000000000000000000000000000000815260009073ffffffffffffffffffffffffffffffffffffffff7f00000000000000000000000000000000000000000000000000000000000000001690635bb09cf890611311908c908c906004016125c1565b602060405180830381865afa15801561132e573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061135291906124be565b6040517feae1e15b000000000000000000000000000000000000000000000000000000008152909150819060009073ffffffffffffffffffffffffffffffffffffffff83169063eae1e15b906113ae908c908c906004016125c1565b600060405180830381865afa1580156113cb573d6000803e3d6000fd5b505050506040513d6000823e601f3d9081017fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0168201604052611411919081019061264e565b6040805160c06020601f8d01819004028201810190925260a081018b81529293509182918c908c9081908501838280828437600092019190915250505090825250602080820184905260408051601f8b0183900483028101830182528a8152920191908a908a9081908401838280828437600092019190915250505090825250604080516020601f8f018190048102820181019092528d815291810191908e908e90819084018382808284376000920182905250938552505033602093840152506001548152600690915260409020815181906114ee9082612785565b50602082015160018201906115039082612785565b50604082015160028201906115189082612785565b506060820151600382019061152d9082612785565b5060808201518160040160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055509050503373ffffffffffffffffffffffffffffffffffffffff166001547ff0a5ef4bc87d6534674b1469f4b31d03c6510d0f7ab353f3e53f9d1d87ead02b8d8d8d8d878e8e426040516115cf98979695949392919061289e565b60405180910390a350506001549998505050505050505050565b6040805160008152602081019091526060908267ffffffffffffffff8111156116145761161461261f565b60405190808252806020026020018201604052801561164757816020015b60608152602001906001900390816116325790505b50915060005b838110156116c9576116a43086868481811061166b5761166b612904565b905060200281019061167d9190612933565b8560405160200161169093929190612998565b604051602081830303815290604052611cb1565b8382815181106116b6576116b6612904565b602090810291909101015260010161164d565b505092915050565b604080516080810180835260609261174b92916002918391908201908390819081845b8154815260200190600101908083116116f457505050918352505060408051808201918290526020909201919060028481019182845b81548152602001906001019080831161172a57505050505081525050611d34565b905090565b60008281526020819052604090206001015461176b816119d9565b6104bf8383611ae2565b6006602052600090815260409020805481906117909061246b565b80601f01602080910402602001604051908101604052809291908181526020018280546117bc9061246b565b80156118095780601f106117de57610100808354040283529160200191611809565b820191906000526020600020905b8154815290600101906020018083116117ec57829003601f168201915b50505050509080600101805461181e9061246b565b80601f016020809104026020016040519081016040528092919081815260200182805461184a9061246b565b80156118975780601f1061186c57610100808354040283529160200191611897565b820191906000526020600020905b81548152906001019060200180831161187a57829003601f168201915b5050505050908060020180546118ac9061246b565b80601f01602080910402602001604051908101604052809291908181526020018280546118d89061246b565b80156119255780601f106118fa57610100808354040283529160200191611925565b820191906000526020600020905b81548152906001019060200180831161190857829003601f168201915b50505050509080600301805461193a9061246b565b80601f01602080910402602001604051908101604052809291908181526020018280546119669061246b565b80156119b35780601f10611988576101008083540402835291602001916119b3565b820191906000526020600020905b81548152906001019060200180831161199657829003601f168201915b5050506004909301549192505073ffffffffffffffffffffffffffffffffffffffff1685565b6119e38133611d91565b50565b60008281526020818152604080832073ffffffffffffffffffffffffffffffffffffffff8516845290915281205460ff16611ada5760008381526020818152604080832073ffffffffffffffffffffffffffffffffffffffff86168452909152902080547fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00166001179055611a783390565b73ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16847f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a450600161041a565b50600061041a565b60008281526020818152604080832073ffffffffffffffffffffffffffffffffffffffff8516845290915281205460ff1615611ada5760008381526020818152604080832073ffffffffffffffffffffffffffffffffffffffff8616808552925280832080547fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0016905551339286917ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b9190a450600161041a565b600081831115611c2f576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152603a60248201527f496e76616c696420626f756e64733a206d696e4c656e6774682063616e6e6f7460448201527f2062652067726561746572207468616e206d61784c656e67746800000000000060648201526084016108cc565b8351838110801590611c415750828111155b9150505b9392505050565b6000805b8251811015611ca857828181518110611c6b57611c6b612904565b01602001517fff000000000000000000000000000000000000000000000000000000000000001615611ca05750600092915050565b600101611c50565b50600192915050565b60606000808473ffffffffffffffffffffffffffffffffffffffff1684604051611cdb91906125a5565b600060405180830381855af49150503d8060008114611d16576040519150601f19603f3d011682016040523d82523d6000602084013e611d1b565b606091505b5091509150611d2b858383611e1b565b95945050505050565b60408051608080825260a08201909252606091600091906020820181803683375050845180516020918201519682015180519083015192850191909152604084019690965260608301959095525060808101939093525090919050565b60008281526020818152604080832073ffffffffffffffffffffffffffffffffffffffff8516845290915290205460ff16611e17576040517fe2517d3f00000000000000000000000000000000000000000000000000000000815273ffffffffffffffffffffffffffffffffffffffff82166004820152602481018390526044016108cc565b5050565b606082611e3057611e2b82611eaa565b611c45565b8151158015611e54575073ffffffffffffffffffffffffffffffffffffffff84163b155b15611ea3576040517f9996b31500000000000000000000000000000000000000000000000000000000815273ffffffffffffffffffffffffffffffffffffffff851660048201526024016108cc565b5080611c45565b805115611eba5780518082602001fd5b6040517fd6bda27500000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b60405180604001604052806002906020820280368337509192915050565b508054611f169061246b565b6000825580601f10611f26575050565b601f0160209004906000526020600020908101906119e391905b80821115611f545760008155600101611f40565b5090565b600060208284031215611f6a57600080fd5b81357fffffffff0000000000000000000000000000000000000000000000000000000081168114611c4557600080fd5b600060208284031215611fac57600080fd5b5035919050565b8060005b60028110156104bf578151845260209384019390910190600101611fb7565b60808101611fe48285611fb3565b611c456040830184611fb3565b73ffffffffffffffffffffffffffffffffffffffff811681146119e357600080fd5b6000806040838503121561202657600080fd5b82359150602083013561203881611ff1565b809150509250929050565b60005b8381101561205e578181015183820152602001612046565b50506000910152565b6000815180845261207f816020860160208601612043565b601f017fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0169290920160200192915050565b602081526000825160a060208401526120cd60c0840182612067565b905060208401517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08483030160408501526121088282612067565b91505060408401517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08483030160608501526121448282612067565b91505060608401517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08483030160808501526121808282612067565b91505073ffffffffffffffffffffffffffffffffffffffff60808501511660a08401528091505092915050565b60008083601f8401126121bf57600080fd5b50813567ffffffffffffffff8111156121d757600080fd5b6020830191508360208285010111156121ef57600080fd5b9250929050565b60008060006040848603121561220b57600080fd5b83359250602084013567ffffffffffffffff81111561222957600080fd5b612235868287016121ad565b9497909650939450505050565b6000806000806000806060878903121561225b57600080fd5b863567ffffffffffffffff81111561227257600080fd5b61227e89828a016121ad565b909750955050602087013567ffffffffffffffff81111561229e57600080fd5b6122aa89828a016121ad565b909550935050604087013567ffffffffffffffff8111156122ca57600080fd5b6122d689828a016121ad565b979a9699509497509295939492505050565b600080602083850312156122fb57600080fd5b823567ffffffffffffffff81111561231257600080fd5b8301601f8101851361232357600080fd5b803567ffffffffffffffff81111561233a57600080fd5b8560208260051b840101111561234f57600080fd5b6020919091019590945092505050565b6000602082016020835280845180835260408501915060408160051b86010192506020860160005b828110156123d6577fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc08786030184526123c1858351612067565b94506020938401939190910190600101612387565b50929695505050505050565b602081526000611c456020830184612067565b60a08152600061240860a0830188612067565b828103602084015261241a8188612067565b9050828103604084015261242e8187612067565b905082810360608401526124428186612067565b91505073ffffffffffffffffffffffffffffffffffffffff831660808301529695505050505050565b600181811c9082168061247f57607f821691505b6020821081036124b8577f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b50919050565b6000602082840312156124d057600080fd5b8151611c4581611ff1565b8183528181602085013750600060208284010152600060207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0601f840116840101905092915050565b6060815260006125376060830187612067565b828103602084015261254a8186886124db565b9050828103604084015261255e8185612067565b979650505050505050565b60006020828403121561257b57600080fd5b81518015158114611c4557600080fd5b838152604060208201526000611d2b6040830184866124db565b600082516125b7818460208701612043565b9190910192915050565b6020815260006125d56020830184866124db565b949350505050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b8082018082111561041a5761041a6125dd565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b60006020828403121561266057600080fd5b815167ffffffffffffffff81111561267757600080fd5b8201601f8101841361268857600080fd5b805167ffffffffffffffff8111156126a2576126a261261f565b6040517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0603f7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0601f8501160116810181811067ffffffffffffffff8211171561270e5761270e61261f565b60405281815282820160200186101561272657600080fd5b611d2b826020830160208601612043565b601f82111561051e57806000526020600020601f840160051c8101602085101561275e5750805b601f840160051c820191505b8181101561277e576000815560010161276a565b5050505050565b815167ffffffffffffffff81111561279f5761279f61261f565b6127b3816127ad845461246b565b84612737565b6020601f82116001811461280557600083156127cf5750848201515b7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff600385901b1c1916600184901b17845561277e565b6000848152602081207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08516915b828110156128535787850151825560209485019460019092019101612833565b508482101561288f57868401517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff600387901b60f8161c191681555b50505050600190811b01905550565b60a0815260006128b260a083018a8c6124db565b82810360208401526128c581898b6124db565b905082810360408401526128d98188612067565b905082810360608401526128ee8186886124db565b9150508260808301529998505050505050505050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b60008083357fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe184360301811261296857600080fd5b83018035915067ffffffffffffffff82111561298357600080fd5b6020019150368190038213156121ef57600080fd5b8284823760008382016000815283516129b5818360208801612043565b019594505050505056fea2646970667358221220afbddc6edbbe9f5764ce484472a710dd6e6021ded45e0866dd263a4ee53dc85f64736f6c634300081c0033";
 var isSuperArgs4 = (xs) => xs.length > 1;
-var BlocklockSignatureScheme__factory = class extends ContractFactory2 {
+var SignatureSender__factory = class extends ContractFactory {
   constructor(...args) {
     if (isSuperArgs4(args)) {
       super(...args);
     } else {
-      super(_abi10, _bytecode4, args[0]);
-    }
-  }
-  getDeployTransaction(overrides) {
-    return super.getDeployTransaction(overrides || {});
-  }
-  deploy(overrides) {
-    return super.deploy(overrides || {});
-  }
-  connect(runner) {
-    return super.connect(runner);
-  }
-  static {
-    this.bytecode = _bytecode4;
-  }
-  static {
-    this.abi = _abi10;
-  }
-  static createInterface() {
-    return new Interface2(_abi10);
-  }
-  static connect(address, runner) {
-    return new Contract2(
-      address,
-      _abi10,
-      runner
-    );
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/src/interfaces/IBlocklockReceiver__factory.ts
-var _abi11 = [
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      },
-      {
-        internalType: "bytes",
-        name: "decryptionKey",
-        type: "bytes"
-      }
-    ],
-    name: "receiveBlocklock",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  }
-];
-var IBlocklockReceiver__factory = class {
-  static {
-    this.abi = _abi11;
-  }
-  static createInterface() {
-    return new Interface2(_abi11);
-  }
-  static connect(address, runner) {
-    return new Contract2(address, _abi11, runner);
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/src/interfaces/IBlocklockSender__factory.ts
-var _abi12 = [
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "requestId",
-        type: "uint256"
-      }
-    ],
-    name: "getRequest",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "signatureRequestID",
-            type: "uint256"
-          },
-          {
-            internalType: "uint256",
-            name: "blockHeight",
-            type: "uint256"
-          },
-          {
-            internalType: "bytes",
-            name: "ciphertext",
-            type: "bytes"
-          },
-          {
-            internalType: "bytes",
-            name: "signature",
-            type: "bytes"
-          },
-          {
-            internalType: "address",
-            name: "callback",
-            type: "address"
-          }
-        ],
-        internalType: "struct TypesLib.BlocklockRequest",
-        name: "",
-        type: "tuple"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "blockHeight",
-        type: "uint256"
-      },
-      {
-        internalType: "bytes",
-        name: "ciphertext",
-        type: "bytes"
-      }
-    ],
-    name: "requestBlocklock",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "nonpayable",
-    type: "function"
-  }
-];
-var IBlocklockSender__factory = class {
-  static {
-    this.abi = _abi12;
-  }
-  static createInterface() {
-    return new Interface2(_abi12);
-  }
-  static connect(address, runner) {
-    return new Contract2(address, _abi12, runner);
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/src/interfaces/ISignatureReceiver__factory.ts
-var _abi13 = [
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      },
-      {
-        internalType: "bytes",
-        name: "signature",
-        type: "bytes"
-      }
-    ],
-    name: "receiveSignature",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  }
-];
-var ISignatureReceiver__factory = class {
-  static {
-    this.abi = _abi13;
-  }
-  static createInterface() {
-    return new Interface2(_abi13);
-  }
-  static connect(address, runner) {
-    return new Contract2(address, _abi13, runner);
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/src/interfaces/ISignatureScheme__factory.ts
-var _abi14 = [
-  {
-    inputs: [],
-    name: "SCHEME_ID",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string"
-      }
-    ],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes",
-        name: "message",
-        type: "bytes"
-      }
-    ],
-    name: "hashToBytes",
-    outputs: [
-      {
-        internalType: "bytes",
-        name: "",
-        type: "bytes"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes",
-        name: "message",
-        type: "bytes"
-      }
-    ],
-    name: "hashToPoint",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes",
-        name: "message",
-        type: "bytes"
-      },
-      {
-        internalType: "bytes",
-        name: "signature",
-        type: "bytes"
-      },
-      {
-        internalType: "bytes",
-        name: "publicKey",
-        type: "bytes"
-      }
-    ],
-    name: "verifySignature",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "isValid",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  }
-];
-var ISignatureScheme__factory = class {
-  static {
-    this.abi = _abi14;
-  }
-  static createInterface() {
-    return new Interface2(_abi14);
-  }
-  static connect(address, runner) {
-    return new Contract2(address, _abi14, runner);
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/src/interfaces/ISignatureSchemeAddressProvider__factory.ts
-var _abi15 = [
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "schemeID",
-        type: "string"
-      }
-    ],
-    name: "getSignatureSchemeAddress",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "schemeID",
-        type: "string"
-      }
-    ],
-    name: "isSupportedScheme",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "schemeID",
-        type: "string"
-      },
-      {
-        internalType: "address",
-        name: "schemeAddress",
-        type: "address"
-      }
-    ],
-    name: "updateSignatureScheme",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  }
-];
-var ISignatureSchemeAddressProvider__factory = class {
-  static {
-    this.abi = _abi15;
-  }
-  static createInterface() {
-    return new Interface2(_abi15);
-  }
-  static connect(address, runner) {
-    return new Contract2(
-      address,
-      _abi15,
-      runner
-    );
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/src/interfaces/ISignatureSender__factory.ts
-var _abi16 = [
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      },
-      {
-        internalType: "bytes",
-        name: "signature",
-        type: "bytes"
-      }
-    ],
-    name: "fulfilSignatureRequest",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "getPublicKey",
-    outputs: [
-      {
-        internalType: "uint256[2]",
-        name: "",
-        type: "uint256[2]"
-      },
-      {
-        internalType: "uint256[2]",
-        name: "",
-        type: "uint256[2]"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "getPublicKeyBytes",
-    outputs: [
-      {
-        internalType: "bytes",
-        name: "",
-        type: "bytes"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      }
-    ],
-    name: "getRequestInFlight",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "bytes",
-            name: "message",
-            type: "bytes"
-          },
-          {
-            internalType: "bytes",
-            name: "messageHash",
-            type: "bytes"
-          },
-          {
-            internalType: "bytes",
-            name: "condition",
-            type: "bytes"
-          },
-          {
-            internalType: "string",
-            name: "schemeID",
-            type: "string"
-          },
-          {
-            internalType: "address",
-            name: "callback",
-            type: "address"
-          }
-        ],
-        internalType: "struct TypesLib.SignatureRequest",
-        name: "",
-        type: "tuple"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      }
-    ],
-    name: "isInFlight",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "schemeID",
-        type: "string"
-      },
-      {
-        internalType: "bytes",
-        name: "message",
-        type: "bytes"
-      },
-      {
-        internalType: "bytes",
-        name: "condition",
-        type: "bytes"
-      }
-    ],
-    name: "requestSignature",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "nonpayable",
-    type: "function"
-  }
-];
-var ISignatureSender__factory = class {
-  static {
-    this.abi = _abi16;
-  }
-  static createInterface() {
-    return new Interface2(_abi16);
-  }
-  static connect(address, runner) {
-    return new Contract2(address, _abi16, runner);
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/src/lib/BLS__factory.ts
-var _abi17 = [
-  {
-    inputs: [
-      {
-        internalType: "uint256[4]",
-        name: "input",
-        type: "uint256[4]"
-      }
-    ],
-    name: "BNAddFailed",
-    type: "error"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes",
-        name: "dst",
-        type: "bytes"
-      }
-    ],
-    name: "InvalidDSTLength",
-    type: "error"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "x",
-        type: "uint256"
-      }
-    ],
-    name: "InvalidFieldElement",
-    type: "error"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "noSqrt",
-        type: "uint256"
-      }
-    ],
-    name: "MapToPointFailed",
-    type: "error"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "base",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "exponent",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "modulus",
-        type: "uint256"
-      }
-    ],
-    name: "ModExpFailed",
-    type: "error"
-  }
-];
-var _bytecode5 = "0x60566050600b82828239805160001a6073146043577f4e487b7100000000000000000000000000000000000000000000000000000000600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212208df5d8b899de592c3861058a6903af261a2f253548f27e2351ad62d60f90340164736f6c634300081c0033";
-var isSuperArgs5 = (xs) => xs.length > 1;
-var BLS__factory = class extends ContractFactory2 {
-  constructor(...args) {
-    if (isSuperArgs5(args)) {
-      super(...args);
-    } else {
-      super(_abi17, _bytecode5, args[0]);
-    }
-  }
-  getDeployTransaction(overrides) {
-    return super.getDeployTransaction(overrides || {});
-  }
-  deploy(overrides) {
-    return super.deploy(overrides || {});
-  }
-  connect(runner) {
-    return super.connect(runner);
-  }
-  static {
-    this.bytecode = _bytecode5;
-  }
-  static {
-    this.abi = _abi17;
-  }
-  static createInterface() {
-    return new Interface2(_abi17);
-  }
-  static connect(address, runner) {
-    return new Contract2(address, _abi17, runner);
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/src/lib/BytesLib__factory.ts
-var _abi18 = [
-  {
-    inputs: [
-      {
-        internalType: "bytes",
-        name: "data",
-        type: "bytes"
-      }
-    ],
-    name: "decodeBytesToUint",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "pure",
-    type: "function"
-  }
-];
-var _bytecode6 = "0x6103d5610052600b82828239805160001a6073146045577f4e487b7100000000000000000000000000000000000000000000000000000000600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600436106100355760003560e01c8063f7ba47a31461003a575b600080fd5b610054600480360381019061004f9190610226565b61006a565b6040516100619190610288565b60405180910390f35b60006020825110156100b1576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016100a890610326565b60405180910390fd5b818060200190518101906100c59190610372565b9050919050565b6000604051905090565b600080fd5b600080fd5b600080fd5b600080fd5b6000601f19601f8301169050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b610133826100ea565b810181811067ffffffffffffffff82111715610152576101516100fb565b5b80604052505050565b60006101656100cc565b9050610171828261012a565b919050565b600067ffffffffffffffff821115610191576101906100fb565b5b61019a826100ea565b9050602081019050919050565b82818337600083830152505050565b60006101c96101c484610176565b61015b565b9050828152602081018484840111156101e5576101e46100e5565b5b6101f08482856101a7565b509392505050565b600082601f83011261020d5761020c6100e0565b5b813561021d8482602086016101b6565b91505092915050565b60006020828403121561023c5761023b6100d6565b5b600082013567ffffffffffffffff81111561025a576102596100db565b5b610266848285016101f8565b91505092915050565b6000819050919050565b6102828161026f565b82525050565b600060208201905061029d6000830184610279565b92915050565b600082825260208201905092915050565b7f44617461206d757374206265206174206c65617374203332206279746573206c60008201527f6f6e670000000000000000000000000000000000000000000000000000000000602082015250565b60006103106023836102a3565b915061031b826102b4565b604082019050919050565b6000602082019050818103600083015261033f81610303565b9050919050565b61034f8161026f565b811461035a57600080fd5b50565b60008151905061036c81610346565b92915050565b600060208284031215610388576103876100d6565b5b60006103968482850161035d565b9150509291505056fea26469706673582212203632baeeadbdfca44f86b69776298223f27806d759c0c85703046c3a7b62ff2a64736f6c634300081c0033";
-var isSuperArgs6 = (xs) => xs.length > 1;
-var BytesLib__factory = class extends ContractFactory2 {
-  constructor(...args) {
-    if (isSuperArgs6(args)) {
-      super(...args);
-    } else {
-      super(_abi18, _bytecode6, args[0]);
-    }
-  }
-  getDeployTransaction(overrides) {
-    return super.getDeployTransaction(overrides || {});
-  }
-  deploy(overrides) {
-    return super.deploy(overrides || {});
-  }
-  connect(runner) {
-    return super.connect(runner);
-  }
-  static {
-    this.bytecode = _bytecode6;
-  }
-  static {
-    this.abi = _abi18;
-  }
-  static createInterface() {
-    return new Interface2(_abi18);
-  }
-  static connect(address, runner) {
-    return new Contract2(address, _abi18, runner);
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/src/signature-requests/SignatureReceiverBase__factory.ts
-var _abi19 = [
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      },
-      {
-        internalType: "bytes",
-        name: "signature",
-        type: "bytes"
-      }
-    ],
-    name: "receiveSignature",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  }
-];
-var SignatureReceiverBase__factory = class {
-  static {
-    this.abi = _abi19;
-  }
-  static createInterface() {
-    return new Interface2(_abi19);
-  }
-  static connect(address, runner) {
-    return new Contract2(
-      address,
-      _abi19,
-      runner
-    );
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/src/signature-requests/SignatureSender__factory.ts
-var _abi20 = [
-  {
-    inputs: [
-      {
-        internalType: "uint256[2]",
-        name: "x",
-        type: "uint256[2]"
-      },
-      {
-        internalType: "uint256[2]",
-        name: "y",
-        type: "uint256[2]"
-      },
-      {
-        internalType: "address",
-        name: "_signatureSchemeAddressProvider",
-        type: "address"
-      }
-    ],
-    stateMutability: "nonpayable",
-    type: "constructor"
-  },
-  {
-    inputs: [],
-    name: "AccessControlBadConfirmation",
-    type: "error"
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      },
-      {
-        internalType: "bytes32",
-        name: "neededRole",
-        type: "bytes32"
-      }
-    ],
-    name: "AccessControlUnauthorizedAccount",
-    type: "error"
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "target",
-        type: "address"
-      }
-    ],
-    name: "AddressEmptyCode",
-    type: "error"
-  },
-  {
-    inputs: [],
-    name: "FailedCall",
-    type: "error"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "previousAdminRole",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "newAdminRole",
-        type: "bytes32"
-      }
-    ],
-    name: "RoleAdminChanged",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "account",
-        type: "address"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "sender",
-        type: "address"
-      }
-    ],
-    name: "RoleGranted",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "account",
-        type: "address"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "sender",
-        type: "address"
-      }
-    ],
-    name: "RoleRevoked",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "bytes",
-        name: "signature",
-        type: "bytes"
-      }
-    ],
-    name: "SignatureCallbackFailed",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      }
-    ],
-    name: "SignatureRequestFulfilled",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "callback",
-        type: "address"
-      },
-      {
-        indexed: false,
-        internalType: "string",
-        name: "schemeID",
-        type: "string"
-      },
-      {
-        indexed: false,
-        internalType: "bytes",
-        name: "message",
-        type: "bytes"
-      },
-      {
-        indexed: false,
-        internalType: "bytes",
-        name: "messageHashToSign",
-        type: "bytes"
-      },
-      {
-        indexed: false,
-        internalType: "bytes",
-        name: "condition",
-        type: "bytes"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "requestedAt",
-        type: "uint256"
-      }
-    ],
-    name: "SignatureRequested",
-    type: "event"
-  },
-  {
-    inputs: [],
-    name: "ADMIN_ROLE",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "DEFAULT_ADMIN_ROLE",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      },
-      {
-        internalType: "bytes",
-        name: "signature",
-        type: "bytes"
-      }
-    ],
-    name: "fulfilSignatureRequest",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "getPublicKey",
-    outputs: [
-      {
-        internalType: "uint256[2]",
-        name: "",
-        type: "uint256[2]"
-      },
-      {
-        internalType: "uint256[2]",
-        name: "",
-        type: "uint256[2]"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "getPublicKeyBytes",
-    outputs: [
-      {
-        internalType: "bytes",
-        name: "",
-        type: "bytes"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      }
-    ],
-    name: "getRequestInFlight",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "bytes",
-            name: "message",
-            type: "bytes"
-          },
-          {
-            internalType: "bytes",
-            name: "messageHash",
-            type: "bytes"
-          },
-          {
-            internalType: "bytes",
-            name: "condition",
-            type: "bytes"
-          },
-          {
-            internalType: "string",
-            name: "schemeID",
-            type: "string"
-          },
-          {
-            internalType: "address",
-            name: "callback",
-            type: "address"
-          }
-        ],
-        internalType: "struct TypesLib.SignatureRequest",
-        name: "",
-        type: "tuple"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      }
-    ],
-    name: "getRoleAdmin",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      }
-    ],
-    name: "grantRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      }
-    ],
-    name: "hasRole",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      }
-    ],
-    name: "isInFlight",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "lastRequestID",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes[]",
-        name: "data",
-        type: "bytes[]"
-      }
-    ],
-    name: "multicall",
-    outputs: [
-      {
-        internalType: "bytes[]",
-        name: "results",
-        type: "bytes[]"
-      }
-    ],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
-        name: "callerConfirmation",
-        type: "address"
-      }
-    ],
-    name: "renounceRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "schemeID",
-        type: "string"
-      },
-      {
-        internalType: "bytes",
-        name: "message",
-        type: "bytes"
-      },
-      {
-        internalType: "bytes",
-        name: "condition",
-        type: "bytes"
-      }
-    ],
-    name: "requestSignature",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    name: "requestsInFlight",
-    outputs: [
-      {
-        internalType: "bytes",
-        name: "message",
-        type: "bytes"
-      },
-      {
-        internalType: "bytes",
-        name: "messageHash",
-        type: "bytes"
-      },
-      {
-        internalType: "bytes",
-        name: "condition",
-        type: "bytes"
-      },
-      {
-        internalType: "string",
-        name: "schemeID",
-        type: "string"
-      },
-      {
-        internalType: "address",
-        name: "callback",
-        type: "address"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      }
-    ],
-    name: "revokeRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "signatureSchemeAddressProvider",
-    outputs: [
-      {
-        internalType: "contract ISignatureSchemeAddressProvider",
-        name: "",
-        type: "address"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes4",
-        name: "interfaceId",
-        type: "bytes4"
-      }
-    ],
-    name: "supportsInterface",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  }
-];
-var _bytecode7 = "0x60a06040526000600155604051806040016040528060405180604001604052806000815260200160008152508152602001604051806040016040528060008152602001600081525081525060026000820151816000019060026100639291906103d1565b5060208201518160020190600261007b9291906103d1565b50505034801561008a57600080fd5b5060405161429638038061429683398181016040528101906100ac9190610618565b60405180604001604052808481526020018381525060026000820151816000019060026100da9291906103d1565b506020820151816002019060026100f29291906103d1565b509050506101267fa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c217753361026260201b60201c565b610165576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161015c906106c8565b60405180910390fd5b6101786000801b3361026260201b60201c565b6101b7576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016101ae90610734565b60405180910390fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff1603610226576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161021d906107c6565b60405180910390fd5b8073ffffffffffffffffffffffffffffffffffffffff1660808173ffffffffffffffffffffffffffffffffffffffff16815250505050506107e6565b6000610274838361035f60201b60201c565b61035457600160008085815260200190815260200160002060000160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548160ff0219169083151502179055506102f16103c960201b60201c565b73ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16847f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a460019050610359565b600090505b92915050565b600080600084815260200190815260200160002060000160008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900460ff16905092915050565b600033905090565b8260028101928215610400579160200282015b828111156103ff5782518255916020019190600101906103e4565b5b50905061040d9190610411565b5090565b5b8082111561042a576000816000905550600101610412565b5090565b6000604051905090565b600080fd5b600080fd5b6000601f19601f8301169050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b61048b82610442565b810181811067ffffffffffffffff821117156104aa576104a9610453565b5b80604052505050565b60006104bd61042e565b90506104c98282610482565b919050565b600067ffffffffffffffff8211156104e9576104e8610453565b5b602082029050919050565b600080fd5b6000819050919050565b61050c816104f9565b811461051757600080fd5b50565b60008151905061052981610503565b92915050565b600061054261053d846104ce565b6104b3565b9050806020840283018581111561055c5761055b6104f4565b5b835b818110156105855780610571888261051a565b84526020840193505060208101905061055e565b5050509392505050565b600082601f8301126105a4576105a361043d565b5b60026105b184828561052f565b91505092915050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b60006105e5826105ba565b9050919050565b6105f5816105da565b811461060057600080fd5b50565b600081519050610612816105ec565b92915050565b600080600060a0848603121561063157610630610438565b5b600061063f8682870161058f565b93505060406106508682870161058f565b925050608061066186828701610603565b9150509250925092565b600082825260208201905092915050565b7f4772616e7420726f6c65206661696c6564000000000000000000000000000000600082015250565b60006106b260118361066b565b91506106bd8261067c565b602082019050919050565b600060208201905081810360008301526106e1816106a5565b9050919050565b7f4772616e7420726f6c6520726576657274730000000000000000000000000000600082015250565b600061071e60128361066b565b9150610729826106e8565b602082019050919050565b6000602082019050818103600083015261074d81610711565b9050919050565b7f43616e6e6f7420736574207a65726f2061646472657373206173207369676e6160008201527f7475726520736368656d6520616464726573732070726f766964657200000000602082015250565b60006107b0603c8361066b565b91506107bb82610754565b604082019050919050565b600060208201905081810360008301526107df816107a3565b9050919050565b608051613a8061081660003960008181610ba801528181610f9f015281816112510152611b430152613a806000f3fe608060405234801561001057600080fd5b50600436106101165760003560e01c806391d14854116100a2578063acae9fee11610071578063acae9fee14610308578063cd802c9114610326578063d547741f14610356578063d5c2d4f514610372578063e6b3ca71146103a657610116565b806391d148541461025a57806395b8d0731461028a578063a217fddf146102ba578063ac9650d8146102d857610116565b806336568abe116100e957806336568abe146101b657806344880e1e146101d257806347c03186146102025780635eab2b201461022057806375b238fc1461023c57610116565b806301ffc9a71461011b578063248a9ca31461014b5780632e3344521461017b5780632f2ff15d1461019a575b600080fd5b610135600480360381019061013091906122d7565b6103c4565b604051610142919061231f565b60405180910390f35b61016560048036038101906101609190612370565b61043e565b60405161017291906123ac565b60405180910390f35b61018361045d565b60405161019192919061247c565b60405180910390f35b6101b460048036038101906101af9190612503565b6104fc565b005b6101d060048036038101906101cb9190612503565b61051e565b005b6101ec60048036038101906101e7919061256f565b610599565b6040516101f9919061271b565b60405180910390f35b61020a610864565b604051610217919061274c565b60405180910390f35b61023a600480360381019061023591906127cc565b61086a565b005b610244610ef4565b60405161025191906123ac565b60405180910390f35b610274600480360381019061026f9190612503565b610f18565b604051610281919061231f565b60405180910390f35b6102a4600480360381019061029f9190612882565b610f82565b6040516102b1919061274c565b60405180910390f35b6102c26115a9565b6040516102cf91906123ac565b60405180910390f35b6102f260048036038101906102ed919061298c565b6115b0565b6040516102ff9190612a9b565b60405180910390f35b610310611794565b60405161031d9190612b07565b60405180910390f35b610340600480360381019061033b919061256f565b61183a565b60405161034d919061231f565b60405180910390f35b610370600480360381019061036b9190612503565b6118a9565b005b61038c6004803603810190610387919061256f565b6118cb565b60405161039d959493929190612b82565b60405180910390f35b6103ae611b41565b6040516103bb9190612c50565b60405180910390f35b60007f7965db0b000000000000000000000000000000000000000000000000000000007bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916827bffffffffffffffffffffffffffffffffffffffffffffffffffffffff19161480610437575061043682611b65565b5b9050919050565b6000806000838152602001908152602001600020600101549050919050565b610465612167565b61046d612167565b600260000160028001816002806020026040519081016040528092919082600280156104ae576020028201915b81548152602001906001019080831161049a575b50505050509150806002806020026040519081016040528092919082600280156104ed576020028201915b8154815260200190600101908083116104d9575b50505050509050915091509091565b6105058261043e565b61050e81611bcf565b6105188383611be3565b50505050565b610526611cd4565b73ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff161461058a576040517f6697b23200000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6105948282611cdc565b505050565b6105a1612189565b600660008381526020019081526020016000206040518060a00160405290816000820180546105cf90612c9a565b80601f01602080910402602001604051908101604052809291908181526020018280546105fb90612c9a565b80156106485780601f1061061d57610100808354040283529160200191610648565b820191906000526020600020905b81548152906001019060200180831161062b57829003601f168201915b5050505050815260200160018201805461066190612c9a565b80601f016020809104026020016040519081016040528092919081815260200182805461068d90612c9a565b80156106da5780601f106106af576101008083540402835291602001916106da565b820191906000526020600020905b8154815290600101906020018083116106bd57829003601f168201915b505050505081526020016002820180546106f390612c9a565b80601f016020809104026020016040519081016040528092919081815260200182805461071f90612c9a565b801561076c5780601f106107415761010080835404028352916020019161076c565b820191906000526020600020905b81548152906001019060200180831161074f57829003601f168201915b5050505050815260200160038201805461078590612c9a565b80601f01602080910402602001604051908101604052809291908181526020018280546107b190612c9a565b80156107fe5780601f106107d3576101008083540402835291602001916107fe565b820191906000526020600020905b8154815290600101906020018083116107e157829003601f168201915b505050505081526020016004820160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815250509050919050565b60015481565b6108937fa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775611bcf565b61089c8361183a565b6108db576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016108d290612d3d565b60405180910390fd5b6000600660008581526020019081526020016000206040518060a001604052908160008201805461090b90612c9a565b80601f016020809104026020016040519081016040528092919081815260200182805461093790612c9a565b80156109845780601f1061095957610100808354040283529160200191610984565b820191906000526020600020905b81548152906001019060200180831161096757829003601f168201915b5050505050815260200160018201805461099d90612c9a565b80601f01602080910402602001604051908101604052809291908181526020018280546109c990612c9a565b8015610a165780601f106109eb57610100808354040283529160200191610a16565b820191906000526020600020905b8154815290600101906020018083116109f957829003601f168201915b50505050508152602001600282018054610a2f90612c9a565b80601f0160208091040260200160405190810160405280929190818152602001828054610a5b90612c9a565b8015610aa85780601f10610a7d57610100808354040283529160200191610aa8565b820191906000526020600020905b815481529060010190602001808311610a8b57829003601f168201915b50505050508152602001600382018054610ac190612c9a565b80601f0160208091040260200160405190810160405280929190818152602001828054610aed90612c9a565b8015610b3a5780601f10610b0f57610100808354040283529160200191610b3a565b820191906000526020600020905b815481529060010190602001808311610b1d57829003601f168201915b505050505081526020016004820160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681525050905060008160600151905060007f000000000000000000000000000000000000000000000000000000000000000073ffffffffffffffffffffffffffffffffffffffff16635bb09cf8836040518263ffffffff1660e01b8152600401610bff9190612d5d565b602060405180830381865afa158015610c1c573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610c409190612d94565b905060008190508073ffffffffffffffffffffffffffffffffffffffff1663f6e548e985602001518888610c72611794565b6040518563ffffffff1660e01b8152600401610c919493929190612dfd565b602060405180830381865afa158015610cae573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610cd29190612e77565b610d11576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610d0890612ef0565b60405180910390fd5b6000846080015173ffffffffffffffffffffffffffffffffffffffff1663c8db658260e01b898989604051602401610d4b93929190612f10565b604051602081830303815290604052907bffffffffffffffffffffffffffffffffffffffffffffffffffffffff19166020820180517bffffffffffffffffffffffffffffffffffffffffffffffffffffffff8381831617835250505050604051610db59190612f7e565b6000604051808303816000865af19150503d8060008114610df2576040519150601f19603f3d011682016040523d82523d6000602084013e610df7565b606091505b5050905080610e3f57877f4774025393660320c3411faa072d59d001b53f37d266e112c0efb06fc85e1a858888604051610e32929190612f95565b60405180910390a2610e6d565b877fd4ea4684d3a92e95520ada379d1fd257a1e354567964ffd985b5f28c5940e7ab60405160405180910390a25b6006600089815260200190815260200160002060008082016000610e9191906121ce565b600182016000610ea191906121ce565b600282016000610eb191906121ce565b600382016000610ec1919061220e565b6004820160006101000a81549073ffffffffffffffffffffffffffffffffffffffff021916905550505050505050505050565b7fa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c2177581565b600080600084815260200190815260200160002060000160008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900460ff16905092915050565b60006001806000828254610f969190612fe8565b925050819055507f000000000000000000000000000000000000000000000000000000000000000073ffffffffffffffffffffffffffffffffffffffff16632fc9fa3388886040518363ffffffff1660e01b8152600401610ff8929190613049565b602060405180830381865afa158015611015573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906110399190612e77565b611078576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161106f906130b9565b60405180910390fd5b6110d4600161100087878080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050611dce9092919063ffffffff16565b611113576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161110a9061314b565b60405180910390fd5b61116f600061100085858080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050611dce9092919063ffffffff16565b6111ae576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016111a5906131dd565b60405180910390fd5b6000838390509050600081111561124d5761120c84848080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050611e33565b1561124c576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016112439061326f565b60405180910390fd5b5b60007f000000000000000000000000000000000000000000000000000000000000000073ffffffffffffffffffffffffffffffffffffffff16635bb09cf88a8a6040518363ffffffff1660e01b81526004016112aa929190613049565b602060405180830381865afa1580156112c7573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906112eb9190612d94565b9050600081905060008173ffffffffffffffffffffffffffffffffffffffff1663eae1e15b8a8a6040518363ffffffff1660e01b815260040161132f929190612f95565b600060405180830381865afa15801561134c573d6000803e3d6000fd5b505050506040513d6000823e3d601f19601f8201168201806040525081019061137591906133b0565b90506040518060a001604052808a8a8080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050815260200182815260200188888080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505081526020018c8c8080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505081526020013373ffffffffffffffffffffffffffffffffffffffff1681525060066000600154815260200190815260200160002060008201518160000190816114aa919061359b565b5060208201518160010190816114c0919061359b565b5060408201518160020190816114d6919061359b565b5060608201518160030190816114ec91906136c8565b5060808201518160040160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055509050503373ffffffffffffffffffffffffffffffffffffffff166001547ff0a5ef4bc87d6534674b1469f4b31d03c6510d0f7ab353f3e53f9d1d87ead02b8d8d8d8d878e8e4260405161158e98979695949392919061379a565b60405180910390a36001549450505050509695505050505050565b6000801b81565b606060006115bc611cd4565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161461165f576000366115f9611eb0565b6000369050611608919061380f565b9080926116179392919061384d565b8080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050506116ae565b600067ffffffffffffffff81111561167a57611679613294565b5b6040519080825280601f01601f1916602001820160405280156116ac5781602001600182028036833780820191505090505b505b90508383905067ffffffffffffffff8111156116cd576116cc613294565b5b60405190808252806020026020018201604052801561170057816020015b60608152602001906001900390816116eb5790505b50915060005b8484905081101561178c576117613086868481811061172857611727613888565b5b905060200281019061173a91906138c6565b8560405160200161174d9392919061394e565b604051602081830303815290604052611eb5565b83828151811061177457611773613888565b5b60200260200101819052508080600101915050611706565b505092915050565b60606118356002604051806040016040529081600082016002806020026040519081016040528092919082600280156117e2576020028201915b8154815260200190600101908083116117ce575b5050505050815260200160028201600280602002604051908101604052809291908260028015611827576020028201915b815481526020019060010190808311611813575b505050505081525050611f39565b905090565b60008073ffffffffffffffffffffffffffffffffffffffff166006600084815260200190815260200160002060040160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614159050919050565b6118b28261043e565b6118bb81611bcf565b6118c58383611cdc565b50505050565b60066020528060005260406000206000915090508060000180546118ee90612c9a565b80601f016020809104026020016040519081016040528092919081815260200182805461191a90612c9a565b80156119675780601f1061193c57610100808354040283529160200191611967565b820191906000526020600020905b81548152906001019060200180831161194a57829003601f168201915b50505050509080600101805461197c90612c9a565b80601f01602080910402602001604051908101604052809291908181526020018280546119a890612c9a565b80156119f55780601f106119ca576101008083540402835291602001916119f5565b820191906000526020600020905b8154815290600101906020018083116119d857829003601f168201915b505050505090806002018054611a0a90612c9a565b80601f0160208091040260200160405190810160405280929190818152602001828054611a3690612c9a565b8015611a835780601f10611a5857610100808354040283529160200191611a83565b820191906000526020600020905b815481529060010190602001808311611a6657829003601f168201915b505050505090806003018054611a9890612c9a565b80601f0160208091040260200160405190810160405280929190818152602001828054611ac490612c9a565b8015611b115780601f10611ae657610100808354040283529160200191611b11565b820191906000526020600020905b815481529060010190602001808311611af457829003601f168201915b5050505050908060040160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905085565b7f000000000000000000000000000000000000000000000000000000000000000081565b60007f01ffc9a7000000000000000000000000000000000000000000000000000000007bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916827bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916149050919050565b611be081611bdb611cd4565b612042565b50565b6000611bef8383610f18565b611cc957600160008085815260200190815260200160002060000160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548160ff021916908315150217905550611c66611cd4565b73ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16847f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a460019050611cce565b600090505b92915050565b600033905090565b6000611ce88383610f18565b15611dc357600080600085815260200190815260200160002060000160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548160ff021916908315150217905550611d60611cd4565b73ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16847ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b60405160405180910390a460019050611dc8565b600090505b92915050565b600081831115611e13576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401611e0a906139e6565b60405180910390fd5b600084519050838110158015611e295750828111155b9150509392505050565b600080600090505b8251811015611ea557600060f81b838281518110611e5c57611e5b613888565b5b602001015160f81c60f81b7effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614611e98576000915050611eab565b8080600101915050611e3b565b50600190505b919050565b600090565b60606000808473ffffffffffffffffffffffffffffffffffffffff1684604051611edf9190612f7e565b600060405180830381855af49150503d8060008114611f1a576040519150601f19603f3d011682016040523d82523d6000602084013e611f1f565b606091505b5091509150611f2f858383612093565b9250505092915050565b60606000608067ffffffffffffffff811115611f5857611f57613294565b5b6040519080825280601f01601f191660200182016040528015611f8a5781602001600182028036833780820191505090505b50905060008360000151600060028110611fa757611fa6613888565b5b602002015160001b905060008460000151600160028110611fcb57611fca613888565b5b602002015160001b905060008560200151600060028110611fef57611fee613888565b5b602002015160001b90506000866020015160016002811061201357612012613888565b5b602002015160001b90508360208601528260408601528160608601528060808601528495505050505050919050565b61204c8282610f18565b61208f5780826040517fe2517d3f000000000000000000000000000000000000000000000000000000008152600401612086929190613a06565b60405180910390fd5b5050565b6060826120a8576120a382612122565b61211a565b600082511480156120d0575060008473ffffffffffffffffffffffffffffffffffffffff163b145b1561211257836040517f9996b3150000000000000000000000000000000000000000000000000000000081526004016121099190613a2f565b60405180910390fd5b81905061211b565b5b9392505050565b6000815111156121355780518082602001fd5b6040517fd6bda27500000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6040518060400160405280600290602082028036833780820191505090505090565b6040518060a0016040528060608152602001606081526020016060815260200160608152602001600073ffffffffffffffffffffffffffffffffffffffff1681525090565b5080546121da90612c9a565b6000825580601f106121ec575061220b565b601f01602090049060005260206000209081019061220a919061224e565b5b50565b50805461221a90612c9a565b6000825580601f1061222c575061224b565b601f01602090049060005260206000209081019061224a919061224e565b5b50565b5b8082111561226757600081600090555060010161224f565b5090565b6000604051905090565b600080fd5b600080fd5b60007fffffffff0000000000000000000000000000000000000000000000000000000082169050919050565b6122b48161227f565b81146122bf57600080fd5b50565b6000813590506122d1816122ab565b92915050565b6000602082840312156122ed576122ec612275565b5b60006122fb848285016122c2565b91505092915050565b60008115159050919050565b61231981612304565b82525050565b60006020820190506123346000830184612310565b92915050565b6000819050919050565b61234d8161233a565b811461235857600080fd5b50565b60008135905061236a81612344565b92915050565b60006020828403121561238657612385612275565b5b60006123948482850161235b565b91505092915050565b6123a68161233a565b82525050565b60006020820190506123c1600083018461239d565b92915050565b600060029050919050565b600081905092915050565b6000819050919050565b6000819050919050565b6123fa816123e7565b82525050565b600061240c83836123f1565b60208301905092915050565b6000602082019050919050565b61242e816123c7565b61243881846123d2565b9250612443826123dd565b8060005b8381101561247457815161245b8782612400565b965061246683612418565b925050600181019050612447565b505050505050565b60006080820190506124916000830185612425565b61249e6040830184612425565b9392505050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b60006124d0826124a5565b9050919050565b6124e0816124c5565b81146124eb57600080fd5b50565b6000813590506124fd816124d7565b92915050565b6000806040838503121561251a57612519612275565b5b60006125288582860161235b565b9250506020612539858286016124ee565b9150509250929050565b61254c816123e7565b811461255757600080fd5b50565b60008135905061256981612543565b92915050565b60006020828403121561258557612584612275565b5b60006125938482850161255a565b91505092915050565b600081519050919050565b600082825260208201905092915050565b60005b838110156125d65780820151818401526020810190506125bb565b60008484015250505050565b6000601f19601f8301169050919050565b60006125fe8261259c565b61260881856125a7565b93506126188185602086016125b8565b612621816125e2565b840191505092915050565b600081519050919050565b600082825260208201905092915050565b60006126538261262c565b61265d8185612637565b935061266d8185602086016125b8565b612676816125e2565b840191505092915050565b61268a816124c5565b82525050565b600060a08301600083015184820360008601526126ad82826125f3565b915050602083015184820360208601526126c782826125f3565b915050604083015184820360408601526126e182826125f3565b915050606083015184820360608601526126fb8282612648565b91505060808301516127106080860182612681565b508091505092915050565b600060208201905081810360008301526127358184612690565b905092915050565b612746816123e7565b82525050565b6000602082019050612761600083018461273d565b92915050565b600080fd5b600080fd5b600080fd5b60008083601f84011261278c5761278b612767565b5b8235905067ffffffffffffffff8111156127a9576127a861276c565b5b6020830191508360018202830111156127c5576127c4612771565b5b9250929050565b6000806000604084860312156127e5576127e4612275565b5b60006127f38682870161255a565b935050602084013567ffffffffffffffff8111156128145761281361227a565b5b61282086828701612776565b92509250509250925092565b60008083601f84011261284257612841612767565b5b8235905067ffffffffffffffff81111561285f5761285e61276c565b5b60208301915083600182028301111561287b5761287a612771565b5b9250929050565b6000806000806000806060878903121561289f5761289e612275565b5b600087013567ffffffffffffffff8111156128bd576128bc61227a565b5b6128c989828a0161282c565b9650965050602087013567ffffffffffffffff8111156128ec576128eb61227a565b5b6128f889828a01612776565b9450945050604087013567ffffffffffffffff81111561291b5761291a61227a565b5b61292789828a01612776565b92509250509295509295509295565b60008083601f84011261294c5761294b612767565b5b8235905067ffffffffffffffff8111156129695761296861276c565b5b60208301915083602082028301111561298557612984612771565b5b9250929050565b600080602083850312156129a3576129a2612275565b5b600083013567ffffffffffffffff8111156129c1576129c061227a565b5b6129cd85828601612936565b92509250509250929050565b600081519050919050565b600082825260208201905092915050565b6000819050602082019050919050565b6000612a1183836125f3565b905092915050565b6000602082019050919050565b6000612a31826129d9565b612a3b81856129e4565b935083602082028501612a4d856129f5565b8060005b85811015612a895784840389528151612a6a8582612a05565b9450612a7583612a19565b925060208a01995050600181019050612a51565b50829750879550505050505092915050565b60006020820190508181036000830152612ab58184612a26565b905092915050565b600082825260208201905092915050565b6000612ad98261259c565b612ae38185612abd565b9350612af38185602086016125b8565b612afc816125e2565b840191505092915050565b60006020820190508181036000830152612b218184612ace565b905092915050565b600082825260208201905092915050565b6000612b458261262c565b612b4f8185612b29565b9350612b5f8185602086016125b8565b612b68816125e2565b840191505092915050565b612b7c816124c5565b82525050565b600060a0820190508181036000830152612b9c8188612ace565b90508181036020830152612bb08187612ace565b90508181036040830152612bc48186612ace565b90508181036060830152612bd88185612b3a565b9050612be76080830184612b73565b9695505050505050565b6000819050919050565b6000612c16612c11612c0c846124a5565b612bf1565b6124a5565b9050919050565b6000612c2882612bfb565b9050919050565b6000612c3a82612c1d565b9050919050565b612c4a81612c2f565b82525050565b6000602082019050612c656000830184612c41565b92915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b60006002820490506001821680612cb257607f821691505b602082108103612cc557612cc4612c6b565b5b50919050565b7f4e6f20726571756573742077697468207370656369666965642072657175657360008201527f7449440000000000000000000000000000000000000000000000000000000000602082015250565b6000612d27602383612b29565b9150612d3282612ccb565b604082019050919050565b60006020820190508181036000830152612d5681612d1a565b9050919050565b60006020820190508181036000830152612d778184612b3a565b905092915050565b600081519050612d8e816124d7565b92915050565b600060208284031215612daa57612da9612275565b5b6000612db884828501612d7f565b91505092915050565b82818337600083830152505050565b6000612ddc8385612abd565b9350612de9838584612dc1565b612df2836125e2565b840190509392505050565b60006060820190508181036000830152612e178187612ace565b90508181036020830152612e2c818587612dd0565b90508181036040830152612e408184612ace565b905095945050505050565b612e5481612304565b8114612e5f57600080fd5b50565b600081519050612e7181612e4b565b92915050565b600060208284031215612e8d57612e8c612275565b5b6000612e9b84828501612e62565b91505092915050565b7f5369676e617475726520766572696669636174696f6e206661696c6564000000600082015250565b6000612eda601d83612b29565b9150612ee582612ea4565b602082019050919050565b60006020820190508181036000830152612f0981612ecd565b9050919050565b6000604082019050612f25600083018661273d565b8181036020830152612f38818486612dd0565b9050949350505050565b600081905092915050565b6000612f588261259c565b612f628185612f42565b9350612f728185602086016125b8565b80840191505092915050565b6000612f8a8284612f4d565b915081905092915050565b60006020820190508181036000830152612fb0818486612dd0565b90509392505050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b6000612ff3826123e7565b9150612ffe836123e7565b925082820190508082111561301657613015612fb9565b5b92915050565b60006130288385612b29565b9350613035838584612dc1565b61303e836125e2565b840190509392505050565b6000602082019050818103600083015261306481848661301c565b90509392505050565b7f5369676e617475726520736368656d65206e6f7420737570706f727465640000600082015250565b60006130a3601e83612b29565b91506130ae8261306d565b602082019050919050565b600060208201905081810360008301526130d281613096565b9050919050565b7f4d657373616765206661696c6564206c656e67746820626f756e64732063686560008201527f636b000000000000000000000000000000000000000000000000000000000000602082015250565b6000613135602283612b29565b9150613140826130d9565b604082019050919050565b6000602082019050818103600083015261316481613128565b9050919050565b7f436f6e646974696f6e206661696c6564206c656e67746820626f756e6473206360008201527f6865636b00000000000000000000000000000000000000000000000000000000602082015250565b60006131c7602483612b29565b91506131d28261316b565b604082019050919050565b600060208201905081810360008301526131f6816131ba565b9050919050565b7f436f6e646974696f6e2062797465732063616e6e6f7420626520616c6c207a6560008201527f726f730000000000000000000000000000000000000000000000000000000000602082015250565b6000613259602383612b29565b9150613264826131fd565b604082019050919050565b600060208201905081810360008301526132888161324c565b9050919050565b600080fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b6132cc826125e2565b810181811067ffffffffffffffff821117156132eb576132ea613294565b5b80604052505050565b60006132fe61226b565b905061330a82826132c3565b919050565b600067ffffffffffffffff82111561332a57613329613294565b5b613333826125e2565b9050602081019050919050565b600061335361334e8461330f565b6132f4565b90508281526020810184848401111561336f5761336e61328f565b5b61337a8482856125b8565b509392505050565b600082601f83011261339757613396612767565b5b81516133a7848260208601613340565b91505092915050565b6000602082840312156133c6576133c5612275565b5b600082015167ffffffffffffffff8111156133e4576133e361227a565b5b6133f084828501613382565b91505092915050565b60008190508160005260206000209050919050565b60006020601f8301049050919050565b600082821b905092915050565b60006008830261345b7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8261341e565b613465868361341e565b95508019841693508086168417925050509392505050565b600061349861349361348e846123e7565b612bf1565b6123e7565b9050919050565b6000819050919050565b6134b28361347d565b6134c66134be8261349f565b84845461342b565b825550505050565b600090565b6134db6134ce565b6134e68184846134a9565b505050565b5b8181101561350a576134ff6000826134d3565b6001810190506134ec565b5050565b601f82111561354f57613520816133f9565b6135298461340e565b81016020851015613538578190505b61354c6135448561340e565b8301826134eb565b50505b505050565b600082821c905092915050565b600061357260001984600802613554565b1980831691505092915050565b600061358b8383613561565b9150826002028217905092915050565b6135a48261259c565b67ffffffffffffffff8111156135bd576135bc613294565b5b6135c78254612c9a565b6135d282828561350e565b600060209050601f83116001811461360557600084156135f3578287015190505b6135fd858261357f565b865550613665565b601f198416613613866133f9565b60005b8281101561363b57848901518255600182019150602085019450602081019050613616565b868310156136585784890151613654601f891682613561565b8355505b6001600288020188555050505b505050505050565b60008190508160005260206000209050919050565b601f8211156136c3576136948161366d565b61369d8461340e565b810160208510156136ac578190505b6136c06136b88561340e565b8301826134eb565b50505b505050565b6136d18261262c565b67ffffffffffffffff8111156136ea576136e9613294565b5b6136f48254612c9a565b6136ff828285613682565b600060209050601f8311600181146137325760008415613720578287015190505b61372a858261357f565b865550613792565b601f1984166137408661366d565b60005b8281101561376857848901518255600182019150602085019450602081019050613743565b868310156137855784890151613781601f891682613561565b8355505b6001600288020188555050505b505050505050565b600060a08201905081810360008301526137b5818a8c61301c565b905081810360208301526137ca81888a612dd0565b905081810360408301526137de8187612ace565b905081810360608301526137f3818587612dd0565b9050613802608083018461273d565b9998505050505050505050565b600061381a826123e7565b9150613825836123e7565b925082820390508181111561383d5761383c612fb9565b5b92915050565b600080fd5b600080fd5b6000808585111561386157613860613843565b5b8386111561387257613871613848565b5b6001850283019150848603905094509492505050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b600080fd5b600080fd5b600080fd5b600080833560016020038436030381126138e3576138e26138b7565b5b80840192508235915067ffffffffffffffff821115613905576139046138bc565b5b602083019250600182023603831315613921576139206138c1565b5b509250929050565b60006139358385612f42565b9350613942838584612dc1565b82840190509392505050565b600061395b828587613929565b91506139678284612f4d565b9150819050949350505050565b7f496e76616c696420626f756e64733a206d696e4c656e6774682063616e6e6f7460008201527f2062652067726561746572207468616e206d61784c656e677468000000000000602082015250565b60006139d0603a83612b29565b91506139db82613974565b604082019050919050565b600060208201905081810360008301526139ff816139c3565b9050919050565b6000604082019050613a1b6000830185612b73565b613a28602083018461239d565b9392505050565b6000602082019050613a446000830184612b73565b9291505056fea2646970667358221220b044fb4708c109afcdcc02343eaff3ee4588233362979509064e5b75639dcfa064736f6c634300081c0033";
-var isSuperArgs7 = (xs) => xs.length > 1;
-var SignatureSender__factory = class extends ContractFactory2 {
-  constructor(...args) {
-    if (isSuperArgs7(args)) {
-      super(...args);
-    } else {
-      super(_abi20, _bytecode7, args[0]);
+      super(_abi4, _bytecode4, args[0]);
     }
   }
   getDeployTransaction(x, y, _signatureSchemeAddressProvider, overrides) {
@@ -49790,1007 +41618,615 @@ var SignatureSender__factory = class extends ContractFactory2 {
   connect(runner) {
     return super.connect(runner);
   }
-  static {
-    this.bytecode = _bytecode7;
-  }
-  static {
-    this.abi = _abi20;
-  }
+  static bytecode = _bytecode4;
+  static abi = _abi4;
   static createInterface() {
-    return new Interface2(_abi20);
+    return new Interface(_abi4);
   }
   static connect(address, runner) {
-    return new Contract2(address, _abi20, runner);
+    return new Contract(address, _abi4, runner);
   }
 };
 
-// ../smart-contracts/typechain-types/factories/src/signature-schemes/SignatureSchemeAddressProvider__factory.ts
-var _abi21 = [
+// src/generated/factories/SimpleAuction__factory.ts
+var _abi5 = [
   {
-    inputs: [],
-    stateMutability: "nonpayable",
-    type: "constructor"
-  },
-  {
-    inputs: [],
-    name: "AccessControlBadConfirmation",
-    type: "error"
-  },
-  {
+    type: "constructor",
     inputs: [
       {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      },
-      {
-        internalType: "bytes32",
-        name: "neededRole",
-        type: "bytes32"
-      }
-    ],
-    name: "AccessControlUnauthorizedAccount",
-    type: "error"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "string",
-        name: "schemeID",
-        type: "string"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "schemeAddress",
-        type: "address"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "addedAt",
-        type: "uint256"
-      }
-    ],
-    name: "NewSignatureSchemeAddressAdded",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "previousAdminRole",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "newAdminRole",
-        type: "bytes32"
-      }
-    ],
-    name: "RoleAdminChanged",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "account",
-        type: "address"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "sender",
-        type: "address"
-      }
-    ],
-    name: "RoleGranted",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "account",
-        type: "address"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "sender",
-        type: "address"
-      }
-    ],
-    name: "RoleRevoked",
-    type: "event"
-  },
-  {
-    inputs: [],
-    name: "ADMIN_ROLE",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "DEFAULT_ADMIN_ROLE",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      }
-    ],
-    name: "getRoleAdmin",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "schemeID",
-        type: "string"
-      }
-    ],
-    name: "getSignatureSchemeAddress",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      }
-    ],
-    name: "grantRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      }
-    ],
-    name: "hasRole",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "schemeID",
-        type: "string"
-      }
-    ],
-    name: "isSupportedScheme",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
-        name: "callerConfirmation",
-        type: "address"
-      }
-    ],
-    name: "renounceRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "role",
-        type: "bytes32"
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address"
-      }
-    ],
-    name: "revokeRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes4",
-        name: "interfaceId",
-        type: "bytes4"
-      }
-    ],
-    name: "supportsInterface",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "schemeID",
-        type: "string"
-      },
-      {
-        internalType: "address",
-        name: "schemeAddress",
-        type: "address"
-      }
-    ],
-    name: "updateSignatureScheme",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  }
-];
-var _bytecode8 = "0x608060405234801561001057600080fd5b506100246000801b336100d760201b60201c565b610063576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161005a906102a3565b60405180910390fd5b6100937fa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775336100d760201b60201c565b6100d2576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016100c9906102a3565b60405180910390fd5b6102c3565b60006100e983836101d460201b60201c565b6101c957600160008085815260200190815260200160002060000160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548160ff02191690831515021790555061016661023e60201b60201c565b73ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16847f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a4600190506101ce565b600090505b92915050565b600080600084815260200190815260200160002060000160008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900460ff16905092915050565b600033905090565b600082825260208201905092915050565b7f4772616e7420726f6c65206661696c6564000000000000000000000000000000600082015250565b600061028d601183610246565b915061029882610257565b602082019050919050565b600060208201905081810360008301526102bc81610280565b9050919050565b610e36806102d26000396000f3fe608060405234801561001057600080fd5b50600436106100a95760003560e01c80635bb09cf8116100715780635bb09cf81461017657806375b238fc146101a657806391d14854146101c4578063a217fddf146101f4578063bab867da14610212578063d547741f1461022e576100a9565b806301ffc9a7146100ae578063248a9ca3146100de5780632f2ff15d1461010e5780632fc9fa331461012a57806336568abe1461015a575b600080fd5b6100c860048036038101906100c391906109de565b61024a565b6040516100d59190610a26565b60405180910390f35b6100f860048036038101906100f39190610a77565b6102c4565b6040516101059190610ab3565b60405180910390f35b61012860048036038101906101239190610b2c565b6102e3565b005b610144600480360381019061013f9190610bd1565b610305565b6040516101519190610a26565b60405180910390f35b610174600480360381019061016f9190610b2c565b61037f565b005b610190600480360381019061018b9190610bd1565b6103fa565b60405161019d9190610c2d565b60405180910390f35b6101ae610445565b6040516101bb9190610ab3565b60405180910390f35b6101de60048036038101906101d99190610b2c565b610469565b6040516101eb9190610a26565b60405180910390f35b6101fc6104d3565b6040516102099190610ab3565b60405180910390f35b61022c60048036038101906102279190610c48565b6104da565b005b61024860048036038101906102439190610b2c565b6106a0565b005b60007f7965db0b000000000000000000000000000000000000000000000000000000007bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916827bffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614806102bd57506102bc826106c2565b5b9050919050565b6000806000838152602001908152602001600020600101549050919050565b6102ec826102c4565b6102f58161072c565b6102ff8383610740565b50505050565b60008073ffffffffffffffffffffffffffffffffffffffff1660018484604051610330929190610ce7565b908152602001604051809103902060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff161415905092915050565b610387610831565b73ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16146103eb576040517f6697b23200000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6103f58282610839565b505050565b60006001838360405161040e929190610ce7565b908152602001604051809103902060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905092915050565b7fa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c2177581565b600080600084815260200190815260200160002060000160008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900460ff16905092915050565b6000801b81565b6105037fa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c2177561072c565b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16148015610556575060008173ffffffffffffffffffffffffffffffffffffffff163b145b15610596576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161058d90610d83565b60405180910390fd5b80600184846040516105a9929190610ce7565b908152602001604051809103902060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060018383604051610607929190610ce7565b908152602001604051809103902060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16838360405161065c929190610ce7565b60405180910390207f0a1cd6a1e0a7b200d28ead555f3cee96e0d2def049535fbcfdc2926bc4cec504426040516106939190610dbc565b60405180910390a3505050565b6106a9826102c4565b6106b28161072c565b6106bc8383610839565b50505050565b60007f01ffc9a7000000000000000000000000000000000000000000000000000000007bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916827bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916149050919050565b61073d81610738610831565b61092b565b50565b600061074c8383610469565b61082657600160008085815260200190815260200160002060000160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548160ff0219169083151502179055506107c3610831565b73ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16847f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a46001905061082b565b600090505b92915050565b600033905090565b60006108458383610469565b1561092057600080600085815260200190815260200160002060000160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548160ff0219169083151502179055506108bd610831565b73ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16847ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b60405160405180910390a460019050610925565b600090505b92915050565b6109358282610469565b6109785780826040517fe2517d3f00000000000000000000000000000000000000000000000000000000815260040161096f929190610dd7565b60405180910390fd5b5050565b600080fd5b600080fd5b60007fffffffff0000000000000000000000000000000000000000000000000000000082169050919050565b6109bb81610986565b81146109c657600080fd5b50565b6000813590506109d8816109b2565b92915050565b6000602082840312156109f4576109f361097c565b5b6000610a02848285016109c9565b91505092915050565b60008115159050919050565b610a2081610a0b565b82525050565b6000602082019050610a3b6000830184610a17565b92915050565b6000819050919050565b610a5481610a41565b8114610a5f57600080fd5b50565b600081359050610a7181610a4b565b92915050565b600060208284031215610a8d57610a8c61097c565b5b6000610a9b84828501610a62565b91505092915050565b610aad81610a41565b82525050565b6000602082019050610ac86000830184610aa4565b92915050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6000610af982610ace565b9050919050565b610b0981610aee565b8114610b1457600080fd5b50565b600081359050610b2681610b00565b92915050565b60008060408385031215610b4357610b4261097c565b5b6000610b5185828601610a62565b9250506020610b6285828601610b17565b9150509250929050565b600080fd5b600080fd5b600080fd5b60008083601f840112610b9157610b90610b6c565b5b8235905067ffffffffffffffff811115610bae57610bad610b71565b5b602083019150836001820283011115610bca57610bc9610b76565b5b9250929050565b60008060208385031215610be857610be761097c565b5b600083013567ffffffffffffffff811115610c0657610c05610981565b5b610c1285828601610b7b565b92509250509250929050565b610c2781610aee565b82525050565b6000602082019050610c426000830184610c1e565b92915050565b600080600060408486031215610c6157610c6061097c565b5b600084013567ffffffffffffffff811115610c7f57610c7e610981565b5b610c8b86828701610b7b565b93509350506020610c9e86828701610b17565b9150509250925092565b600081905092915050565b82818337600083830152505050565b6000610cce8385610ca8565b9350610cdb838584610cb3565b82840190509392505050565b6000610cf4828486610cc2565b91508190509392505050565b600082825260208201905092915050565b7f496e76616c696420636f6e7472616374206164647265737320666f722073636860008201527f656d654164647265737300000000000000000000000000000000000000000000602082015250565b6000610d6d602a83610d00565b9150610d7882610d11565b604082019050919050565b60006020820190508181036000830152610d9c81610d60565b9050919050565b6000819050919050565b610db681610da3565b82525050565b6000602082019050610dd16000830184610dad565b92915050565b6000604082019050610dec6000830185610c1e565b610df96020830184610aa4565b939250505056fea26469706673582212200fd2141a0811d466c063be6f357d7c7046e76652e7d7306440b1e0730e5a6f0764736f6c634300081c0033";
-var isSuperArgs8 = (xs) => xs.length > 1;
-var SignatureSchemeAddressProvider__factory = class extends ContractFactory2 {
-  constructor(...args) {
-    if (isSuperArgs8(args)) {
-      super(...args);
-    } else {
-      super(_abi21, _bytecode8, args[0]);
-    }
-  }
-  getDeployTransaction(overrides) {
-    return super.getDeployTransaction(overrides || {});
-  }
-  deploy(overrides) {
-    return super.deploy(overrides || {});
-  }
-  connect(runner) {
-    return super.connect(runner);
-  }
-  static {
-    this.bytecode = _bytecode8;
-  }
-  static {
-    this.abi = _abi21;
-  }
-  static createInterface() {
-    return new Interface2(_abi21);
-  }
-  static connect(address, runner) {
-    return new Contract2(
-      address,
-      _abi21,
-      runner
-    );
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/src/SimpleAuction__factory.ts
-var _abi22 = [
-  {
-    inputs: [
-      {
-        internalType: "uint256",
         name: "durationBlocks",
-        type: "uint256"
+        type: "uint256",
+        internalType: "uint256"
       },
       {
-        internalType: "uint256",
         name: "reservePrice",
-        type: "uint256"
+        type: "uint256",
+        internalType: "uint256"
       },
       {
-        internalType: "uint256",
         name: "highestBidPaymentWindowBlocks",
-        type: "uint256"
+        type: "uint256",
+        internalType: "uint256"
       },
       {
-        internalType: "address",
         name: "timelockContract",
-        type: "address"
+        type: "address",
+        internalType: "address"
       }
     ],
-    stateMutability: "nonpayable",
-    type: "constructor"
+    stateMutability: "nonpayable"
   },
   {
-    inputs: [],
-    name: "ReentrancyGuardReentrantCall",
-    type: "error"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "winner",
-        type: "address"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256"
-      }
-    ],
-    name: "AuctionEnded",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "bidID",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "bidder",
-        type: "address"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "unsealedAmount",
-        type: "uint256"
-      }
-    ],
-    name: "BidUnsealed",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "bidID",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "bytes",
-        name: "decryptionKey",
-        type: "bytes"
-      }
-    ],
-    name: "DecryptionKeyReceived",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "auctioneer",
-        type: "address"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256"
-      }
-    ],
-    name: "ForfeitedReserveClaimed",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "bidder",
-        type: "address"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256"
-      }
-    ],
-    name: "HighestBidFulfilled",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "bidID",
-        type: "uint256"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "bidder",
-        type: "address"
-      },
-      {
-        indexed: false,
-        internalType: "bytes",
-        name: "sealedAmount",
-        type: "bytes"
-      }
-    ],
-    name: "NewBid",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "claimant",
-        type: "address"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256"
-      }
-    ],
-    name: "ReserveClaimed",
-    type: "event"
-  },
-  {
-    inputs: [],
+    type: "function",
     name: "auctionEndBlock",
+    inputs: [],
     outputs: [
       {
-        internalType: "uint256",
         name: "",
-        type: "uint256"
+        type: "uint256",
+        internalType: "uint256"
       }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
   },
   {
-    inputs: [],
+    type: "function",
     name: "auctionState",
+    inputs: [],
     outputs: [
       {
-        internalType: "enum SimpleAuctionBase.AuctionState",
         name: "",
-        type: "uint8"
+        type: "uint8",
+        internalType: "enum SimpleAuctionBase.AuctionState"
       }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
   },
   {
-    inputs: [],
+    type: "function",
     name: "auctioneer",
+    inputs: [],
     outputs: [
       {
-        internalType: "address",
         name: "",
-        type: "address"
+        type: "address",
+        internalType: "address"
       }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
-    ],
+    type: "function",
     name: "bidderToBidID",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
     inputs: [
       {
-        internalType: "uint256",
         name: "",
-        type: "uint256"
+        type: "address",
+        internalType: "address"
       }
     ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
     name: "bidsById",
+    inputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
     outputs: [
       {
-        internalType: "uint256",
         name: "bidID",
-        type: "uint256"
+        type: "uint256",
+        internalType: "uint256"
       },
       {
-        internalType: "bytes",
         name: "sealedAmount",
-        type: "bytes"
+        type: "bytes",
+        internalType: "bytes"
       },
       {
-        internalType: "bytes",
         name: "decryptionKey",
-        type: "bytes"
+        type: "bytes",
+        internalType: "bytes"
       },
       {
-        internalType: "uint256",
         name: "unsealedAmount",
-        type: "uint256"
+        type: "uint256",
+        internalType: "uint256"
       },
       {
-        internalType: "address",
         name: "bidder",
-        type: "address"
+        type: "address",
+        internalType: "address"
       },
       {
-        internalType: "bool",
         name: "revealed",
-        type: "bool"
+        type: "bool",
+        internalType: "bool"
       }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
-    ],
+    type: "function",
     name: "depositedReservePrice",
-    outputs: [
+    inputs: [
       {
-        internalType: "uint256",
         name: "",
-        type: "uint256"
+        type: "address",
+        internalType: "address"
       }
     ],
-    stateMutability: "view",
-    type: "function"
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
   },
   {
-    inputs: [],
+    type: "function",
     name: "endAuction",
+    inputs: [],
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: "nonpayable"
   },
   {
-    inputs: [],
+    type: "function",
     name: "fulfilHighestBid",
+    inputs: [],
     outputs: [],
-    stateMutability: "payable",
-    type: "function"
+    stateMutability: "payable"
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "bidID",
-        type: "uint256"
-      }
-    ],
+    type: "function",
     name: "getBidWithBidID",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "bidID",
-            type: "uint256"
-          },
-          {
-            internalType: "bytes",
-            name: "sealedAmount",
-            type: "bytes"
-          },
-          {
-            internalType: "bytes",
-            name: "decryptionKey",
-            type: "bytes"
-          },
-          {
-            internalType: "uint256",
-            name: "unsealedAmount",
-            type: "uint256"
-          },
-          {
-            internalType: "address",
-            name: "bidder",
-            type: "address"
-          },
-          {
-            internalType: "bool",
-            name: "revealed",
-            type: "bool"
-          }
-        ],
-        internalType: "struct SimpleAuctionBase.Bid",
-        name: "",
-        type: "tuple"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
     inputs: [
       {
-        internalType: "address",
-        name: "bidder",
-        type: "address"
-      }
-    ],
-    name: "getBidWithBidder",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "bidID",
-            type: "uint256"
-          },
-          {
-            internalType: "bytes",
-            name: "sealedAmount",
-            type: "bytes"
-          },
-          {
-            internalType: "bytes",
-            name: "decryptionKey",
-            type: "bytes"
-          },
-          {
-            internalType: "uint256",
-            name: "unsealedAmount",
-            type: "uint256"
-          },
-          {
-            internalType: "address",
-            name: "bidder",
-            type: "address"
-          },
-          {
-            internalType: "bool",
-            name: "revealed",
-            type: "bool"
-          }
-        ],
-        internalType: "struct SimpleAuctionBase.Bid",
-        name: "",
-        type: "tuple"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "getHighestBid",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "getHighestBidder",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "highestBid",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "highestBidPaid",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "highestBidPaymentDeadlineBlock",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "highestBidder",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      },
-      {
-        internalType: "bytes",
-        name: "decryptionKey",
-        type: "bytes"
-      }
-    ],
-    name: "receiveBlocklock",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "reservePrice",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
         name: "bidID",
-        type: "uint256"
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [
+      {
+        name: "sealedAmount",
+        type: "bytes",
+        internalType: "bytes"
       },
       {
-        internalType: "uint256",
-        name: "unsealedAmount",
-        type: "uint256"
-      }
-    ],
-    name: "revealBid",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "revealedBidsCount",
-    outputs: [
+        name: "decryptionKey",
+        type: "bytes",
+        internalType: "bytes"
+      },
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
+        name: "unsealedAmount",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "bidder",
+        type: "address",
+        internalType: "address"
+      },
+      {
+        name: "revealed",
+        type: "bool",
+        internalType: "bool"
       }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
   },
   {
+    type: "function",
+    name: "getBidWithBidder",
     inputs: [
       {
-        internalType: "bytes",
+        name: "bidder",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [
+      {
         name: "sealedAmount",
-        type: "bytes"
+        type: "bytes",
+        internalType: "bytes"
+      },
+      {
+        name: "decryptionKey",
+        type: "bytes",
+        internalType: "bytes"
+      },
+      {
+        name: "unsealedAmount",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "_bidder",
+        type: "address",
+        internalType: "address"
+      },
+      {
+        name: "revealed",
+        type: "bool",
+        internalType: "bool"
       }
     ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "getHighestBid",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "getHighestBidder",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "highestBid",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "highestBidPaid",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "highestBidPaymentDeadlineBlock",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "highestBidder",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "receiveBlocklock",
+    inputs: [
+      {
+        name: "requestID",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "decryptionKey",
+        type: "bytes",
+        internalType: "bytes"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "reservePrice",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "revealBid",
+    inputs: [
+      {
+        name: "bidID",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "unsealedAmount",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "revealedBidsCount",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
     name: "sealedBid",
-    outputs: [
+    inputs: [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
+        name: "sealedAmount",
+        type: "bytes",
+        internalType: "bytes"
       }
     ],
-    stateMutability: "payable",
-    type: "function"
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "payable"
   },
   {
-    inputs: [],
+    type: "function",
     name: "timelock",
+    inputs: [],
     outputs: [
       {
-        internalType: "contract IBlocklockSender",
         name: "",
-        type: "address"
+        type: "address",
+        internalType: "contract IBlocklockSender"
       }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
   },
   {
-    inputs: [],
+    type: "function",
     name: "totalBids",
+    inputs: [],
     outputs: [
       {
-        internalType: "uint256",
         name: "",
-        type: "uint256"
+        type: "uint256",
+        internalType: "uint256"
       }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
   },
   {
-    inputs: [],
+    type: "function",
     name: "withdrawDeposit",
+    inputs: [],
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: "nonpayable"
   },
   {
-    inputs: [],
+    type: "function",
     name: "withdrawForfeitedDepositFromHighestBidder",
+    inputs: [],
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "event",
+    name: "AuctionEnded",
+    inputs: [
+      {
+        name: "winner",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "BidUnsealed",
+    inputs: [
+      {
+        name: "bidID",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      },
+      {
+        name: "bidder",
+        type: "address",
+        indexed: false,
+        internalType: "address"
+      },
+      {
+        name: "unsealedAmount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "DecryptionKeyReceived",
+    inputs: [
+      {
+        name: "bidID",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      },
+      {
+        name: "decryptionKey",
+        type: "bytes",
+        indexed: false,
+        internalType: "bytes"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "ForfeitedReserveClaimed",
+    inputs: [
+      {
+        name: "auctioneer",
+        type: "address",
+        indexed: false,
+        internalType: "address"
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "HighestBidFulfilled",
+    inputs: [
+      {
+        name: "bidder",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "NewBid",
+    inputs: [
+      {
+        name: "bidID",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      },
+      {
+        name: "bidder",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "sealedAmount",
+        type: "bytes",
+        indexed: false,
+        internalType: "bytes"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "ReserveClaimed",
+    inputs: [
+      {
+        name: "claimant",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "error",
+    name: "ReentrancyGuardReentrantCall",
+    inputs: []
   }
 ];
-var _bytecode9 = "0x608060405234801561001057600080fd5b50604051613841380380613841833981810160405281019061003291906101be565b83838383600160008190555033600260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550834361008b9190610254565b6003819055508160035461009f9190610254565b600481905550826009819055506000600160146101000a81548160ff021916908360018111156100d2576100d1610288565b5b021790555080600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050505050505050506102b7565b600080fd5b6000819050919050565b61013d8161012a565b811461014857600080fd5b50565b60008151905061015a81610134565b92915050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b600061018b82610160565b9050919050565b61019b81610180565b81146101a657600080fd5b50565b6000815190506101b881610192565b92915050565b600080600080608085870312156101d8576101d7610125565b5b60006101e68782880161014b565b94505060206101f78782880161014b565b93505060406102088782880161014b565b9250506060610219878288016101a9565b91505092959194509250565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b600061025f8261012a565b915061026a8361012a565b925082820190508082111561028257610281610225565b5b92915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602160045260246000fd5b61357b806102c66000396000f3fe6080604052600436106101655760003560e01c80638b034136116100d1578063b15fafb21161008a578063d6c955eb11610064578063d6c955eb146104f1578063db2e1eed1461051c578063e895fc7a14610547578063fe67a54b1461058957610165565b8063b15fafb214610470578063d33219b41461049b578063d57bde79146104c657610165565b80638b0341361461033857806391f9015714610363578063a0c844ea1461038e578063a1d3150d146103cb578063a5622cd814610408578063b11e99291461043357610165565b80634979440a116101235780634979440a146102285780635d941802146102535780635ec2c7bf1461027c5780637464b636146102a75780637a935370146102e45780637fb450991461030d57610165565b80623495a41461016a57806307d52fa814610195578063117df088146101c057806317a1788d146101d757806337e2a7d1146101e1578063476bffab14610211575b600080fd5b34801561017657600080fd5b5061017f6105a0565b60405161018c919061205b565b60405180910390f35b3480156101a157600080fd5b506101aa6105ca565b6040516101b7919061208f565b60405180910390f35b3480156101cc57600080fd5b506101d56105d0565b005b6101df61085f565b005b6101fb60048036038101906101f69190612119565b610ba3565b604051610208919061208f565b60405180910390f35b34801561021d57600080fd5b50610226610f00565b005b34801561023457600080fd5b5061023d611296565b60405161024a919061208f565b60405180910390f35b34801561025f57600080fd5b5061027a60048036038101906102759190612192565b6112a0565b005b34801561028857600080fd5b5061029161149e565b60405161029e919061205b565b60405180910390f35b3480156102b357600080fd5b506102ce60048036038101906102c9919061221e565b6114c4565b6040516102db919061208f565b60405180910390f35b3480156102f057600080fd5b5061030b6004803603810190610306919061224b565b6114dc565b005b34801561031957600080fd5b5061032261160c565b60405161032f9190612302565b60405180910390f35b34801561034457600080fd5b5061034d61161f565b60405161035a919061208f565b60405180910390f35b34801561036f57600080fd5b50610378611625565b604051610385919061205b565b60405180910390f35b34801561039a57600080fd5b506103b560048036038101906103b0919061221e565b61164b565b6040516103c2919061208f565b60405180910390f35b3480156103d757600080fd5b506103f260048036038101906103ed919061221e565b611663565b6040516103ff9190612476565b60405180910390f35b34801561041457600080fd5b5061041d611878565b60405161042a919061208f565b60405180910390f35b34801561043f57600080fd5b5061045a60048036038101906104559190612498565b61187e565b6040516104679190612476565b60405180910390f35b34801561047c57600080fd5b50610485611a54565b604051610492919061208f565b60405180910390f35b3480156104a757600080fd5b506104b0611a5a565b6040516104bd9190612524565b60405180910390f35b3480156104d257600080fd5b506104db611a80565b6040516104e8919061208f565b60405180910390f35b3480156104fd57600080fd5b50610506611a86565b604051610513919061254e565b60405180910390f35b34801561052857600080fd5b50610531611a99565b60405161053e919061208f565b60405180910390f35b34801561055357600080fd5b5061056e60048036038101906105699190612498565b611a9f565b604051610580969594939291906125b3565b60405180910390f35b34801561059557600080fd5b5061059e611c18565b005b6000600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905090565b60035481565b600354431015610615576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161060c9061267f565b60405180910390fd5b6005546006541461065b576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610652906126eb565b60405180910390fd5b610663611d8b565b600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16036106f3576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016106ea9061277d565b60405180910390fd5b6000600b60003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205490506000811161077a576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610771906127e9565b60405180910390fd5b6000600b60003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020819055503373ffffffffffffffffffffffffffffffffffffffff166108fc829081150290604051600060405180830381858888f19350505050158015610805573d6000803e3d6000fd5b503373ffffffffffffffffffffffffffffffffffffffff167fb17956903b0eeaf0b3d7594ff05a22faab59523d7c39363c95ca9dab6b249da48260405161084c919061208f565b60405180910390a25061085d611dd1565b565b6003544310156108a4576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161089b9061267f565b60405180910390fd5b600554600654146108ea576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016108e1906126eb565b60405180910390fd5b6108f2611d8b565b600060085411610937576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161092e90612855565b60405180910390fd5b600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146109c7576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016109be906128e7565b60405180910390fd5b600454431115610a0c576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610a0390612953565b60405180910390fd5b600a60009054906101000a900460ff1615610a5c576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610a53906129e5565b60405180910390fd5b600954600854610a6c9190612a34565b3414610aad576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610aa490612ada565b60405180910390fd5b6001600a60006101000a81548160ff021916908315150217905550600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166108fc60095434610b129190612afa565b9081150290604051600060405180830381858888f19350505050158015610b3d573d6000803e3d6000fd5b503373ffffffffffffffffffffffffffffffffffffffff167fa258a92d844674cb1512f274179ac75ba9fb6552b2d412f1959575f09eba20d960095434610b849190612afa565b604051610b91919061208f565b60405180910390a2610ba1611dd1565b565b60006003544310610be9576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610be090612b7a565b60405180910390fd5b6009543414610c2d576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610c2490612c0c565b60405180910390fd5b6000610c398484611ddb565b90506000600c60008381526020019081526020016000206000015414610c94576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610c8b90612c78565b60405180910390fd5b60006040518060c0016040528083815260200186868080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508152602001604051806020016040528060008152508152602001600081526020013373ffffffffffffffffffffffffffffffffffffffff16815260200160001515815250905080600c6000848152602001908152602001600020600082015181600001556020820151816001019081610d659190612ec9565b506040820151816002019081610d7b9190612ec9565b506060820151816003015560808201518160040160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060a08201518160040160146101000a81548160ff02191690831515021790555090505081600d60003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208190555034600b60003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000828254610e839190612afa565b92505081905550600160056000828254610e9d9190612afa565b925050819055503373ffffffffffffffffffffffffffffffffffffffff16827f0aebdeac202f28be37e4f9405aceae67b58f4e341186d0dcb3d4443b306043b78787604051610eed929190612fd7565b60405180910390a3819250505092915050565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614610f90576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610f8790613047565b60405180910390fd5b600354431015610fd5576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610fcc9061267f565b60405180910390fd5b6005546006541461101b576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401611012906126eb565b60405180910390fd5b611023611d8b565b6004544311611067576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161105e906130b3565b60405180910390fd5b600a60009054906101000a900460ff16156110b7576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016110ae906129e5565b60405180910390fd5b6000600b6000600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054905060008111611160576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016111579061311f565b60405180910390fd5b6000600b6000600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002081905550600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166108fc829081150290604051600060405180830381858888f1935050505015801561122f573d6000803e3d6000fd5b507f7fcda5f5ce3b9e27603d730b417763d75adf0fde9eb5028108b7025b2a43b7cb600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff168260405161128392919061313f565b60405180910390a150611294611dd1565b565b6000600854905090565b6003544310156112e5576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016112dc9061267f565b60405180910390fd5b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614611375576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161136c906131da565b60405180910390fd5b6000600c600085815260200190815260200160002060000154036113ce576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016113c590613246565b60405180910390fd5b6000600c600085815260200190815260200160002060020180546113f190612cf6565b905014611433576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161142a906132d8565b60405180910390fd5b6000600c60008581526020019081526020016000209050828282600201918261145d929190613303565b50837fa5f1764be51d58f1aac944b323918d8559629995354901df835f530ee808d30c8484604051611490929190612fd7565b60405180910390a250505050565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600d6020528060005260406000206000915090505481565b6000600c60008481526020019081526020016000206000015403611535576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161152c90613246565b60405180910390fd5b600c600083815260200190815260200160002060040160149054906101000a900460ff1615611599576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016115909061341f565b60405180910390fd5b6000600c600084815260200190815260200160002060020180546115bc90612cf6565b9050116115fe576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016115f5906134b1565b60405180910390fd5b6116088282611e8e565b5050565b600160149054906101000a900460ff1681565b60055481565b600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600b6020528060005260406000206000915090505481565b61166b611fcc565b600c6000600d60008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205481526020019081526020016000206040518060c0016040529081600082015481526020016001820180546116e290612cf6565b80601f016020809104026020016040519081016040528092919081815260200182805461170e90612cf6565b801561175b5780601f106117305761010080835404028352916020019161175b565b820191906000526020600020905b81548152906001019060200180831161173e57829003601f168201915b5050505050815260200160028201805461177490612cf6565b80601f01602080910402602001604051908101604052809291908181526020018280546117a090612cf6565b80156117ed5780601f106117c2576101008083540402835291602001916117ed565b820191906000526020600020905b8154815290600101906020018083116117d057829003601f168201915b50505050508152602001600382015481526020016004820160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020016004820160149054906101000a900460ff1615151515815250509050919050565b60065481565b611886611fcc565b600c60008381526020019081526020016000206040518060c0016040529081600082015481526020016001820180546118be90612cf6565b80601f01602080910402602001604051908101604052809291908181526020018280546118ea90612cf6565b80156119375780601f1061190c57610100808354040283529160200191611937565b820191906000526020600020905b81548152906001019060200180831161191a57829003601f168201915b5050505050815260200160028201805461195090612cf6565b80601f016020809104026020016040519081016040528092919081815260200182805461197c90612cf6565b80156119c95780601f1061199e576101008083540402835291602001916119c9565b820191906000526020600020905b8154815290600101906020018083116119ac57829003601f168201915b50505050508152602001600382015481526020016004820160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020016004820160149054906101000a900460ff1615151515815250509050919050565b60045481565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60085481565b600a60009054906101000a900460ff1681565b60095481565b600c602052806000526040600020600091509050806000015490806001018054611ac890612cf6565b80601f0160208091040260200160405190810160405280929190818152602001828054611af490612cf6565b8015611b415780601f10611b1657610100808354040283529160200191611b41565b820191906000526020600020905b815481529060010190602001808311611b2457829003601f168201915b505050505090806002018054611b5690612cf6565b80601f0160208091040260200160405190810160405280929190818152602001828054611b8290612cf6565b8015611bcf5780601f10611ba457610100808354040283529160200191611bcf565b820191906000526020600020905b815481529060010190602001808311611bb257829003601f168201915b5050505050908060030154908060040160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16908060040160149054906101000a900460ff16905086565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614611ca8576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401611c9f90613047565b60405180910390fd5b600354431015611ced576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401611ce49061267f565b60405180910390fd5b60018060146101000a81548160ff02191690836001811115611d1257611d1161228b565b5b0217905550600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167fdaec4582d5d9595688c8c98545fdd1c696d41c6aeaeb636737e84ed2f5c00eda600854604051611d81919061208f565b60405180910390a2565b600260005403611dc7576040517f3ee5aeb500000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6002600081905550565b6001600081905550565b600080600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663d03e66bc60035486866040518463ffffffff1660e01b8152600401611e3f939291906134d1565b6020604051808303816000875af1158015611e5e573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190611e829190613518565b90508091505092915050565b6000600c6000848152602001908152602001600020905081816003018190555060018160040160146101000a81548160ff021916908315150217905550600160066000828254611ede9190612afa565b9250508190555060085482118015611ef7575060095482115b15611f6957816008819055508060040160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16600760006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505b827f9bd9ee70ac98944a5affad7da09d461cd3069adc461ce1c3db5b3d310ca5b39d8260040160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1684604051611fbf92919061313f565b60405180910390a2505050565b6040518060c0016040528060008152602001606081526020016060815260200160008152602001600073ffffffffffffffffffffffffffffffffffffffff1681526020016000151581525090565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b60006120458261201a565b9050919050565b6120558161203a565b82525050565b6000602082019050612070600083018461204c565b92915050565b6000819050919050565b61208981612076565b82525050565b60006020820190506120a46000830184612080565b92915050565b600080fd5b600080fd5b600080fd5b600080fd5b600080fd5b60008083601f8401126120d9576120d86120b4565b5b8235905067ffffffffffffffff8111156120f6576120f56120b9565b5b602083019150836001820283011115612112576121116120be565b5b9250929050565b600080602083850312156121305761212f6120aa565b5b600083013567ffffffffffffffff81111561214e5761214d6120af565b5b61215a858286016120c3565b92509250509250929050565b61216f81612076565b811461217a57600080fd5b50565b60008135905061218c81612166565b92915050565b6000806000604084860312156121ab576121aa6120aa565b5b60006121b98682870161217d565b935050602084013567ffffffffffffffff8111156121da576121d96120af565b5b6121e6868287016120c3565b92509250509250925092565b6121fb8161203a565b811461220657600080fd5b50565b600081359050612218816121f2565b92915050565b600060208284031215612234576122336120aa565b5b600061224284828501612209565b91505092915050565b60008060408385031215612262576122616120aa565b5b60006122708582860161217d565b92505060206122818582860161217d565b9150509250929050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602160045260246000fd5b600281106122cb576122ca61228b565b5b50565b60008190506122dc826122ba565b919050565b60006122ec826122ce565b9050919050565b6122fc816122e1565b82525050565b600060208201905061231760008301846122f3565b92915050565b61232681612076565b82525050565b600081519050919050565b600082825260208201905092915050565b60005b8381101561236657808201518184015260208101905061234b565b60008484015250505050565b6000601f19601f8301169050919050565b600061238e8261232c565b6123988185612337565b93506123a8818560208601612348565b6123b181612372565b840191505092915050565b6123c58161203a565b82525050565b60008115159050919050565b6123e0816123cb565b82525050565b600060c0830160008301516123fe600086018261231d565b50602083015184820360208601526124168282612383565b915050604083015184820360408601526124308282612383565b9150506060830151612445606086018261231d565b50608083015161245860808601826123bc565b5060a083015161246b60a08601826123d7565b508091505092915050565b6000602082019050818103600083015261249081846123e6565b905092915050565b6000602082840312156124ae576124ad6120aa565b5b60006124bc8482850161217d565b91505092915050565b6000819050919050565b60006124ea6124e56124e08461201a565b6124c5565b61201a565b9050919050565b60006124fc826124cf565b9050919050565b600061250e826124f1565b9050919050565b61251e81612503565b82525050565b60006020820190506125396000830184612515565b92915050565b612548816123cb565b82525050565b6000602082019050612563600083018461253f565b92915050565b600082825260208201905092915050565b60006125858261232c565b61258f8185612569565b935061259f818560208601612348565b6125a881612372565b840191505092915050565b600060c0820190506125c86000830189612080565b81810360208301526125da818861257a565b905081810360408301526125ee818761257a565b90506125fd6060830186612080565b61260a608083018561204c565b61261760a083018461253f565b979650505050505050565b600082825260208201905092915050565b7f41756374696f6e206973207374696c6c206f6e676f696e672e00000000000000600082015250565b6000612669601983612622565b915061267482612633565b602082019050919050565b600060208201905081810360008301526126988161265c565b9050919050565b7f4e6f7420616c6c20626964732068617665206265656e2072657665616c65642e600082015250565b60006126d5602083612622565b91506126e08261269f565b602082019050919050565b60006020820190508181036000830152612704816126c8565b9050919050565b7f48696768657374206269646465722063616e6e6f7420636c61696d207468652060008201527f726573657276652e000000000000000000000000000000000000000000000000602082015250565b6000612767602883612622565b91506127728261270b565b604082019050919050565b600060208201905081810360008301526127968161275a565b9050919050565b7f4e6f207265736572766520616d6f756e7420746f20636c61696d2e0000000000600082015250565b60006127d3601b83612622565b91506127de8261279d565b602082019050919050565b60006020820190508181036000830152612802816127c6565b9050919050565b7f4869676865737420626964206973207a65726f2e000000000000000000000000600082015250565b600061283f601483612622565b915061284a82612809565b602082019050919050565b6000602082019050818103600083015261286e81612832565b9050919050565b7f4f6e6c79207468652068696768657374206269646465722063616e20636f6d7060008201527f6c65746520746865207061796d656e742e000000000000000000000000000000602082015250565b60006128d1603183612622565b91506128dc82612875565b604082019050919050565b60006020820190508181036000830152612900816128c4565b9050919050565b7f5061796d656e7420646561646c696e6520686173207061737365642e00000000600082015250565b600061293d601c83612622565b915061294882612907565b602082019050919050565b6000602082019050818103600083015261296c81612930565b9050919050565b7f5061796d656e742068617320616c7265616479206265656e20636f6d706c657460008201527f65642e0000000000000000000000000000000000000000000000000000000000602082015250565b60006129cf602383612622565b91506129da82612973565b604082019050919050565b600060208201905081810360008301526129fe816129c2565b9050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b6000612a3f82612076565b9150612a4a83612076565b9250828203905081811115612a6257612a61612a05565b5b92915050565b7f5061796d656e74206d75737420626520657175616c20746f206869676865737460008201527f20626964206d696e757320746865207265736572766520616d6f756e742e0000602082015250565b6000612ac4603e83612622565b9150612acf82612a68565b604082019050919050565b60006020820190508181036000830152612af381612ab7565b9050919050565b6000612b0582612076565b9150612b1083612076565b9250828201905080821115612b2857612b27612a05565b5b92915050565b7f41756374696f6e2068617320616c726561647920656e6465642e000000000000600082015250565b6000612b64601a83612622565b9150612b6f82612b2e565b602082019050919050565b60006020820190508181036000830152612b9381612b57565b9050919050565b7f426964206d757374206265206163636f6d70616e69656420627920612064657060008201527f6f73697420657175616c20746f2074686520726573657276652070726963652e602082015250565b6000612bf6604083612622565b9150612c0182612b9a565b604082019050919050565b60006020820190508181036000830152612c2581612be9565b9050919050565b7f426964204944206d75737420626520756e697175650000000000000000000000600082015250565b6000612c62601583612622565b9150612c6d82612c2c565b602082019050919050565b60006020820190508181036000830152612c9181612c55565b9050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b60006002820490506001821680612d0e57607f821691505b602082108103612d2157612d20612cc7565b5b50919050565b60008190508160005260206000209050919050565b60006020601f8301049050919050565b600082821b905092915050565b600060088302612d897fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff82612d4c565b612d938683612d4c565b95508019841693508086168417925050509392505050565b6000612dc6612dc1612dbc84612076565b6124c5565b612076565b9050919050565b6000819050919050565b612de083612dab565b612df4612dec82612dcd565b848454612d59565b825550505050565b600090565b612e09612dfc565b612e14818484612dd7565b505050565b5b81811015612e3857612e2d600082612e01565b600181019050612e1a565b5050565b601f821115612e7d57612e4e81612d27565b612e5784612d3c565b81016020851015612e66578190505b612e7a612e7285612d3c565b830182612e19565b50505b505050565b600082821c905092915050565b6000612ea060001984600802612e82565b1980831691505092915050565b6000612eb98383612e8f565b9150826002028217905092915050565b612ed28261232c565b67ffffffffffffffff811115612eeb57612eea612c98565b5b612ef58254612cf6565b612f00828285612e3c565b600060209050601f831160018114612f335760008415612f21578287015190505b612f2b8582612ead565b865550612f93565b601f198416612f4186612d27565b60005b82811015612f6957848901518255600182019150602085019450602081019050612f44565b86831015612f865784890151612f82601f891682612e8f565b8355505b6001600288020188555050505b505050505050565b82818337600083830152505050565b6000612fb68385612569565b9350612fc3838584612f9b565b612fcc83612372565b840190509392505050565b60006020820190508181036000830152612ff2818486612faa565b90509392505050565b7f4f6e6c792061756374696f6e6565722063616e2063616c6c20746869732e0000600082015250565b6000613031601e83612622565b915061303c82612ffb565b602082019050919050565b6000602082019050818103600083015261306081613024565b9050919050565b7f5061796d656e7420646561646c696e6520686173206e6f74207061737365642e600082015250565b600061309d602083612622565b91506130a882613067565b602082019050919050565b600060208201905081810360008301526130cc81613090565b9050919050565b7f4e6f20666f72666569746564207265736572766520746f20636c61696d2e0000600082015250565b6000613109601e83612622565b9150613114826130d3565b602082019050919050565b60006020820190508181036000830152613138816130fc565b9050919050565b6000604082019050613154600083018561204c565b6131616020830184612080565b9392505050565b7f4f6e6c792074696d656c6f636b20636f6e74726163742063616e2063616c6c2060008201527f746869732e000000000000000000000000000000000000000000000000000000602082015250565b60006131c4602583612622565b91506131cf82613168565b604082019050919050565b600060208201905081810360008301526131f3816131b7565b9050919050565b7f42696420494420646f6573206e6f742065786973742e00000000000000000000600082015250565b6000613230601683612622565b915061323b826131fa565b602082019050919050565b6000602082019050818103600083015261325f81613223565b9050919050565b7f4269642064656372797074696f6e206b657920616c726561647920726563656960008201527f7665642066726f6d2074696d656c6f636b20636f6e74726163742e0000000000602082015250565b60006132c2603b83612622565b91506132cd82613266565b604082019050919050565b600060208201905081810360008301526132f1816132b5565b9050919050565b600082905092915050565b61330d83836132f8565b67ffffffffffffffff81111561332657613325612c98565b5b6133308254612cf6565b61333b828285612e3c565b6000601f83116001811461336a5760008415613358578287013590505b6133628582612ead565b8655506133ca565b601f19841661337886612d27565b60005b828110156133a05784890135825560018201915060208501945060208101905061337b565b868310156133bd57848901356133b9601f891682612e8f565b8355505b6001600288020188555050505b50505050505050565b7f42696420616c72656164792072657665616c65642e0000000000000000000000600082015250565b6000613409601583612622565b9150613414826133d3565b602082019050919050565b60006020820190508181036000830152613438816133fc565b9050919050565b7f4269642064656372797074696f6e206b6579206e6f742072656365697665642060008201527f66726f6d2074696d656c6f636b20636f6e74726163742e000000000000000000602082015250565b600061349b603783612622565b91506134a68261343f565b604082019050919050565b600060208201905081810360008301526134ca8161348e565b9050919050565b60006040820190506134e66000830186612080565b81810360208301526134f9818486612faa565b9050949350505050565b60008151905061351281612166565b92915050565b60006020828403121561352e5761352d6120aa565b5b600061353c84828501613503565b9150509291505056fea264697066735822122029dfb2387c850ccd82dcf7adde4c3f8ad4be77c49d5566a6a45f04e45fcc897a64736f6c634300081c0033";
-var isSuperArgs9 = (xs) => xs.length > 1;
-var SimpleAuction__factory = class extends ContractFactory2 {
+var _bytecode5 = "0x608060405234801561001057600080fd5b5060405161253038038061253083398101604081905261002f91610098565b6001600055600280546001600160a01b031916331790558383838361005484436100e7565b60038190556100649083906100e7565b60045560099290925550600180546001600160a81b0319166001600160a01b039092169190911790555061010e9350505050565b600080600080608085870312156100ae57600080fd5b845160208601516040870151606088015192965090945092506001600160a01b03811681146100dc57600080fd5b939692955090935050565b8082018082111561010857634e487b7160e01b600052601160045260246000fd5b92915050565b6124138061011d6000396000f3fe6080604052600436106101955760003560e01c80638b034136116100e1578063b15fafb21161008a578063d6c955eb11610064578063d6c955eb14610474578063db2e1eed1461049e578063e895fc7a146104b4578063fe67a54b146104e657600080fd5b8063b15fafb21461041b578063d33219b414610431578063d57bde791461045e57600080fd5b8063a1d3150d116100bb578063a1d3150d146103b4578063a5622cd8146103e5578063b11e9929146103fb57600080fd5b80638b0341361461034457806391f901571461035a578063a0c844ea1461038757600080fd5b80634979440a116101435780637464b6361161011d5780637464b636146102b85780637a935370146102e55780637fb450991461030557600080fd5b80634979440a146102565780635d9418021461026b5780635ec2c7bf1461028b57600080fd5b806317a1788d1161017457806317a1788d1461022657806337e2a7d11461022e578063476bffab1461024157600080fd5b80623495a41461019a57806307d52fa8146101eb578063117df0881461020f575b600080fd5b3480156101a657600080fd5b5060075473ffffffffffffffffffffffffffffffffffffffff165b60405173ffffffffffffffffffffffffffffffffffffffff90911681526020015b60405180910390f35b3480156101f757600080fd5b5061020160035481565b6040519081526020016101e2565b34801561021b57600080fd5b506102246104fb565b005b610224610715565b61020161023c366004611d83565b610abd565b34801561024d57600080fd5b50610224610db2565b34801561026257600080fd5b50600854610201565b34801561027757600080fd5b50610224610286366004611dc5565b6110c0565b34801561029757600080fd5b506002546101c19073ffffffffffffffffffffffffffffffffffffffff1681565b3480156102c457600080fd5b506102016102d3366004611e11565b600d6020526000908152604090205481565b3480156102f157600080fd5b50610224610300366004611e4e565b6112eb565b34801561031157600080fd5b506001546103379074010000000000000000000000000000000000000000900460ff1681565b6040516101e29190611e70565b34801561035057600080fd5b5061020160055481565b34801561036657600080fd5b506007546101c19073ffffffffffffffffffffffffffffffffffffffff1681565b34801561039357600080fd5b506102016103a2366004611e11565b600b6020526000908152604090205481565b3480156103c057600080fd5b506103d46103cf366004611e11565b6114c8565b6040516101e2959493929190611f15565b3480156103f157600080fd5b5061020160065481565b34801561040757600080fd5b506103d4610416366004611f70565b6116bf565b34801561042757600080fd5b5061020160045481565b34801561043d57600080fd5b506001546101c19073ffffffffffffffffffffffffffffffffffffffff1681565b34801561046a57600080fd5b5061020160085481565b34801561048057600080fd5b50600a5461048e9060ff1681565b60405190151581526020016101e2565b3480156104aa57600080fd5b5061020160095481565b3480156104c057600080fd5b506104d46104cf366004611f70565b61185e565b6040516101e296959493929190611f89565b3480156104f257600080fd5b506102246119d0565b6003544310156105525760405162461bcd60e51b815260206004820152601960248201527f41756374696f6e206973207374696c6c206f6e676f696e672e0000000000000060448201526064015b60405180910390fd5b600554600654146105a55760405162461bcd60e51b815260206004820181905260248201527f4e6f7420616c6c20626964732068617665206265656e2072657665616c65642e6044820152606401610549565b6105ad611b1b565b60075473ffffffffffffffffffffffffffffffffffffffff16330361063a5760405162461bcd60e51b815260206004820152602860248201527f48696768657374206269646465722063616e6e6f7420636c61696d207468652060448201527f726573657276652e0000000000000000000000000000000000000000000000006064820152608401610549565b336000908152600b6020526040902054806106975760405162461bcd60e51b815260206004820152601b60248201527f4e6f207265736572766520616d6f756e7420746f20636c61696d2e00000000006044820152606401610549565b336000818152600b60205260408082208290555183156108fc0291849190818181858888f193505050501580156106d2573d6000803e3d6000fd5b5060405181815233907fb17956903b0eeaf0b3d7594ff05a22faab59523d7c39363c95ca9dab6b249da49060200160405180910390a2506107136001600055565b565b6003544310156107675760405162461bcd60e51b815260206004820152601960248201527f41756374696f6e206973207374696c6c206f6e676f696e672e000000000000006044820152606401610549565b600554600654146107ba5760405162461bcd60e51b815260206004820181905260248201527f4e6f7420616c6c20626964732068617665206265656e2072657665616c65642e6044820152606401610549565b6107c2611b1b565b6000600854116108145760405162461bcd60e51b815260206004820152601460248201527f4869676865737420626964206973207a65726f2e0000000000000000000000006044820152606401610549565b60075473ffffffffffffffffffffffffffffffffffffffff1633146108a15760405162461bcd60e51b815260206004820152603160248201527f4f6e6c79207468652068696768657374206269646465722063616e20636f6d7060448201527f6c65746520746865207061796d656e742e0000000000000000000000000000006064820152608401610549565b6004544311156108f35760405162461bcd60e51b815260206004820152601c60248201527f5061796d656e7420646561646c696e6520686173207061737365642e000000006044820152606401610549565b600a5460ff161561096c5760405162461bcd60e51b815260206004820152602360248201527f5061796d656e742068617320616c7265616479206265656e20636f6d706c657460448201527f65642e00000000000000000000000000000000000000000000000000000000006064820152608401610549565b60095460085461097c919061201a565b34146109f05760405162461bcd60e51b815260206004820152603e60248201527f5061796d656e74206d75737420626520657175616c20746f206869676865737460448201527f20626964206d696e757320746865207265736572766520616d6f756e742e00006064820152608401610549565b600a80547fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0016600117905560025460095473ffffffffffffffffffffffffffffffffffffffff909116906108fc90610a48903461202d565b6040518115909202916000818181858888f19350505050158015610a70573d6000803e3d6000fd5b5060095433907fa258a92d844674cb1512f274179ac75ba9fb6552b2d412f1959575f09eba20d990610aa2903461202d565b60405190815260200160405180910390a26107136001600055565b60006003544310610b105760405162461bcd60e51b815260206004820152601a60248201527f41756374696f6e2068617320616c726561647920656e6465642e0000000000006044820152606401610549565b6009543414610b89576040805162461bcd60e51b81526020600482015260248101919091527f426964206d757374206265206163636f6d70616e69656420627920612064657060448201527f6f73697420657175616c20746f2074686520726573657276652070726963652e6064820152608401610549565b6000610b958484611b5e565b6000818152600c602052604090205490915015610bf45760405162461bcd60e51b815260206004820152601560248201527f426964204944206d75737420626520756e6971756500000000000000000000006044820152606401610549565b60006040518060c0016040528083815260200186868080601f016020809104026020016040519081016040528093929190818152602001838380828437600092018290525093855250506040805160208181018352848252808601919091528185018490523360608601526080909401839052868352600c845290912083518155918301519293508392600183019150610c8e9082612111565b5060408201516002820190610ca39082612111565b506060820151600382015560808201516004909101805460a090930151151574010000000000000000000000000000000000000000027fffffffffffffffffffffff00000000000000000000000000000000000000000090931673ffffffffffffffffffffffffffffffffffffffff90921691909117919091179055336000908152600d60209081526040808320859055600b90915281208054349290610d4b90849061202d565b92505081905550600160056000828254610d65919061202d565b9091555050604051339083907f0aebdeac202f28be37e4f9405aceae67b58f4e341186d0dcb3d4443b306043b790610da09089908990612273565b60405180910390a35090505b92915050565b60025473ffffffffffffffffffffffffffffffffffffffff163314610e195760405162461bcd60e51b815260206004820152601e60248201527f4f6e6c792061756374696f6e6565722063616e2063616c6c20746869732e00006044820152606401610549565b600354431015610e6b5760405162461bcd60e51b815260206004820152601960248201527f41756374696f6e206973207374696c6c206f6e676f696e672e000000000000006044820152606401610549565b60055460065414610ebe5760405162461bcd60e51b815260206004820181905260248201527f4e6f7420616c6c20626964732068617665206265656e2072657665616c65642e6044820152606401610549565b610ec6611b1b565b6004544311610f175760405162461bcd60e51b815260206004820181905260248201527f5061796d656e7420646561646c696e6520686173206e6f74207061737365642e6044820152606401610549565b600a5460ff1615610f905760405162461bcd60e51b815260206004820152602360248201527f5061796d656e742068617320616c7265616479206265656e20636f6d706c657460448201527f65642e00000000000000000000000000000000000000000000000000000000006064820152608401610549565b60075473ffffffffffffffffffffffffffffffffffffffff166000908152600b6020526040902054806110055760405162461bcd60e51b815260206004820152601e60248201527f4e6f20666f72666569746564207265736572766520746f20636c61696d2e00006044820152606401610549565b60075473ffffffffffffffffffffffffffffffffffffffff9081166000908152600b6020526040808220829055600254905192169183156108fc0291849190818181858888f19350505050158015611061573d6000803e3d6000fd5b506002546040805173ffffffffffffffffffffffffffffffffffffffff9092168252602082018390527f7fcda5f5ce3b9e27603d730b417763d75adf0fde9eb5028108b7025b2a43b7cb910160405180910390a1506107136001600055565b6003544310156111125760405162461bcd60e51b815260206004820152601960248201527f41756374696f6e206973207374696c6c206f6e676f696e672e000000000000006044820152606401610549565b60015473ffffffffffffffffffffffffffffffffffffffff16331461119f5760405162461bcd60e51b815260206004820152602560248201527f4f6e6c792074696d656c6f636b20636f6e74726163742063616e2063616c6c2060448201527f746869732e0000000000000000000000000000000000000000000000000000006064820152608401610549565b6000838152600c602052604081205490036111fc5760405162461bcd60e51b815260206004820152601660248201527f42696420494420646f6573206e6f742065786973742e000000000000000000006044820152606401610549565b6000838152600c6020526040902060020180546112189061206f565b15905061128d5760405162461bcd60e51b815260206004820152603b60248201527f4269642064656372797074696f6e206b657920616c726561647920726563656960448201527f7665642066726f6d2074696d656c6f636b20636f6e74726163742e00000000006064820152608401610549565b6000838152600c60205260409020600281016112aa838583612287565b50837fa5f1764be51d58f1aac944b323918d8559629995354901df835f530ee808d30c84846040516112dd929190612273565b60405180910390a250505050565b60025473ffffffffffffffffffffffffffffffffffffffff1633146113525760405162461bcd60e51b815260206004820152601e60248201527f4f6e6c792061756374696f6e6565722063616e2063616c6c20746869732e00006044820152606401610549565b6000828152600c602052604081205490036113af5760405162461bcd60e51b815260206004820152601660248201527f42696420494420646f6573206e6f742065786973742e000000000000000000006044820152606401610549565b6000828152600c602052604090206004015474010000000000000000000000000000000000000000900460ff16156114295760405162461bcd60e51b815260206004820152601560248201527f42696420616c72656164792072657665616c65642e00000000000000000000006044820152606401610549565b6000828152600c6020526040812060020180546114459061206f565b9050116114ba5760405162461bcd60e51b815260206004820152603760248201527f4269642064656372797074696f6e206b6579206e6f742072656365697665642060448201527f66726f6d2074696d656c6f636b20636f6e74726163742e0000000000000000006064820152608401610549565b6114c48282611c09565b5050565b73ffffffffffffffffffffffffffffffffffffffff81166000908152600d60209081526040808320548352600c9091528120600101805460609283929091829182916115139061206f565b80601f016020809104026020016040519081016040528092919081815260200182805461153f9061206f565b801561158c5780601f106115615761010080835404028352916020019161158c565b820191906000526020600020905b81548152906001019060200180831161156f57829003601f168201915b5050505073ffffffffffffffffffffffffffffffffffffffff88166000908152600d60209081526040808320548352600c90915290206002018054929750916115d5915061206f565b80601f01602080910402602001604051908101604052809291908181526020018280546116019061206f565b801561164e5780601f106116235761010080835404028352916020019161164e565b820191906000526020600020905b81548152906001019060200180831161163157829003601f168201915b5050505073ffffffffffffffffffffffffffffffffffffffff9788166000908152600d60209081526040808320548352600c90915290206003810154600490910154979992989097908116965074010000000000000000000000000000000000000000900460ff1694509092505050565b6060806000806000600c600087815260200190815260200160002060010180546116e89061206f565b80601f01602080910402602001604051908101604052809291908181526020018280546117149061206f565b80156117615780601f1061173657610100808354040283529160200191611761565b820191906000526020600020905b81548152906001019060200180831161174457829003601f168201915b5050506000898152600c602052604090206002018054939850926117879250905061206f565b80601f01602080910402602001604051908101604052809291908181526020018280546117b39061206f565b80156118005780601f106117d557610100808354040283529160200191611800565b820191906000526020600020905b8154815290600101906020018083116117e357829003601f168201915b50505060009889525050600c602052604090962060038101546004909101549597909573ffffffffffffffffffffffffffffffffffffffff8116955074010000000000000000000000000000000000000000900460ff169350915050565b600c60205260009081526040902080546001820180549192916118809061206f565b80601f01602080910402602001604051908101604052809291908181526020018280546118ac9061206f565b80156118f95780601f106118ce576101008083540402835291602001916118f9565b820191906000526020600020905b8154815290600101906020018083116118dc57829003601f168201915b50505050509080600201805461190e9061206f565b80601f016020809104026020016040519081016040528092919081815260200182805461193a9061206f565b80156119875780601f1061195c57610100808354040283529160200191611987565b820191906000526020600020905b81548152906001019060200180831161196a57829003601f168201915b50505050600383015460049093015491929173ffffffffffffffffffffffffffffffffffffffff8116915074010000000000000000000000000000000000000000900460ff1686565b60025473ffffffffffffffffffffffffffffffffffffffff163314611a375760405162461bcd60e51b815260206004820152601e60248201527f4f6e6c792061756374696f6e6565722063616e2063616c6c20746869732e00006044820152606401610549565b600354431015611a895760405162461bcd60e51b815260206004820152601960248201527f41756374696f6e206973207374696c6c206f6e676f696e672e000000000000006044820152606401610549565b600180547fffffffffffffffffffffff00ffffffffffffffffffffffffffffffffffffffff1674010000000000000000000000000000000000000000179055600754600854604080519182525173ffffffffffffffffffffffffffffffffffffffff909216917fdaec4582d5d9595688c8c98545fdd1c696d41c6aeaeb636737e84ed2f5c00eda9181900360200190a2565b600260005403611b57576040517f3ee5aeb500000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6002600055565b6001546003546040517fd03e66bc000000000000000000000000000000000000000000000000000000008152600092839273ffffffffffffffffffffffffffffffffffffffff9091169163d03e66bc91611bbe91889088906004016123a1565b6020604051808303816000875af1158015611bdd573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190611c0191906123c4565b949350505050565b6000828152600c60205260408120600381018390556004810180547fffffffffffffffffffffff00ffffffffffffffffffffffffffffffffffffffff1674010000000000000000000000000000000000000000179055600680549192600192611c7390849061202d565b909155505060085482118015611c8a575060095482115b15611cde5760088290556004810154600780547fffffffffffffffffffffffff00000000000000000000000000000000000000001673ffffffffffffffffffffffffffffffffffffffff9092169190911790555b60048101546040805173ffffffffffffffffffffffffffffffffffffffff90921682526020820184905284917f9bd9ee70ac98944a5affad7da09d461cd3069adc461ce1c3db5b3d310ca5b39d910160405180910390a2505050565b60008083601f840112611d4c57600080fd5b50813567ffffffffffffffff811115611d6457600080fd5b602083019150836020828501011115611d7c57600080fd5b9250929050565b60008060208385031215611d9657600080fd5b823567ffffffffffffffff811115611dad57600080fd5b611db985828601611d3a565b90969095509350505050565b600080600060408486031215611dda57600080fd5b83359250602084013567ffffffffffffffff811115611df857600080fd5b611e0486828701611d3a565b9497909650939450505050565b600060208284031215611e2357600080fd5b813573ffffffffffffffffffffffffffffffffffffffff81168114611e4757600080fd5b9392505050565b60008060408385031215611e6157600080fd5b50508035926020909101359150565b6020810160028310611eab577f4e487b7100000000000000000000000000000000000000000000000000000000600052602160045260246000fd5b91905290565b6000815180845260005b81811015611ed757602081850181015186830182015201611ebb565b5060006020828601015260207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0601f83011685010191505092915050565b60a081526000611f2860a0830188611eb1565b8281036020840152611f3a8188611eb1565b6040840196909652505073ffffffffffffffffffffffffffffffffffffffff929092166060830152151560809091015292915050565b600060208284031215611f8257600080fd5b5035919050565b86815260c060208201526000611fa260c0830188611eb1565b8281036040840152611fb48188611eb1565b6060840196909652505073ffffffffffffffffffffffffffffffffffffffff929092166080830152151560a0909101529392505050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b81810381811115610dac57610dac611feb565b80820180821115610dac57610dac611feb565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b600181811c9082168061208357607f821691505b6020821081036120bc577f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b50919050565b601f82111561210c57806000526020600020601f840160051c810160208510156120e95750805b601f840160051c820191505b8181101561210957600081556001016120f5565b50505b505050565b815167ffffffffffffffff81111561212b5761212b612040565b61213f81612139845461206f565b846120c2565b6020601f821160018114612191576000831561215b5750848201515b7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff600385901b1c1916600184901b178455612109565b6000848152602081207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08516915b828110156121df57878501518255602094850194600190920191016121bf565b508482101561221b57868401517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff600387901b60f8161c191681555b50505050600190811b01905550565b8183528181602085013750600060208284010152600060207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0601f840116840101905092915050565b602081526000611c0160208301848661222a565b67ffffffffffffffff83111561229f5761229f612040565b6122b3836122ad835461206f565b836120c2565b6000601f84116001811461230557600085156122cf5750838201355b7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff600387901b1c1916600186901b178355612109565b6000838152602090207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0861690835b828110156123545786850135825560209485019460019092019101612334565b508682101561238f577fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff60f88860031b161c19848701351681555b505060018560011b0183555050505050565b8381526040602082015260006123bb60408301848661222a565b95945050505050565b6000602082840312156123d657600080fd5b505191905056fea2646970667358221220bc8551685685ce03f100413e9f823683d0bb41d58fa14c158c2db63a272e470164736f6c634300081c0033";
+var isSuperArgs5 = (xs) => xs.length > 1;
+var SimpleAuction__factory = class extends ContractFactory {
   constructor(...args) {
-    if (isSuperArgs9(args)) {
+    if (isSuperArgs5(args)) {
       super(...args);
     } else {
-      super(_abi22, _bytecode9, args[0]);
+      super(_abi5, _bytecode5, args[0]);
     }
   }
   getDeployTransaction(durationBlocks2, reservePrice2, highestBidPaymentWindowBlocks2, timelockContract, overrides) {
@@ -50814,618 +42250,13 @@ var SimpleAuction__factory = class extends ContractFactory2 {
   connect(runner) {
     return super.connect(runner);
   }
-  static {
-    this.bytecode = _bytecode9;
-  }
-  static {
-    this.abi = _abi22;
-  }
+  static bytecode = _bytecode5;
+  static abi = _abi5;
   static createInterface() {
-    return new Interface2(_abi22);
+    return new Interface(_abi5);
   }
   static connect(address, runner) {
-    return new Contract2(address, _abi22, runner);
-  }
-};
-
-// ../smart-contracts/typechain-types/factories/src/SimpleAuctionBase__factory.ts
-var _abi23 = [
-  {
-    inputs: [],
-    name: "ReentrancyGuardReentrantCall",
-    type: "error"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "winner",
-        type: "address"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256"
-      }
-    ],
-    name: "AuctionEnded",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "bidID",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "bidder",
-        type: "address"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "unsealedAmount",
-        type: "uint256"
-      }
-    ],
-    name: "BidUnsealed",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "bidID",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "bytes",
-        name: "decryptionKey",
-        type: "bytes"
-      }
-    ],
-    name: "DecryptionKeyReceived",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "auctioneer",
-        type: "address"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256"
-      }
-    ],
-    name: "ForfeitedReserveClaimed",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "bidder",
-        type: "address"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256"
-      }
-    ],
-    name: "HighestBidFulfilled",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "bidID",
-        type: "uint256"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "bidder",
-        type: "address"
-      },
-      {
-        indexed: false,
-        internalType: "bytes",
-        name: "sealedAmount",
-        type: "bytes"
-      }
-    ],
-    name: "NewBid",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "claimant",
-        type: "address"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256"
-      }
-    ],
-    name: "ReserveClaimed",
-    type: "event"
-  },
-  {
-    inputs: [],
-    name: "auctionEndBlock",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "auctionState",
-    outputs: [
-      {
-        internalType: "enum SimpleAuctionBase.AuctionState",
-        name: "",
-        type: "uint8"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "auctioneer",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
-    ],
-    name: "bidderToBidID",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    name: "bidsById",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "bidID",
-        type: "uint256"
-      },
-      {
-        internalType: "bytes",
-        name: "sealedAmount",
-        type: "bytes"
-      },
-      {
-        internalType: "bytes",
-        name: "decryptionKey",
-        type: "bytes"
-      },
-      {
-        internalType: "uint256",
-        name: "unsealedAmount",
-        type: "uint256"
-      },
-      {
-        internalType: "address",
-        name: "bidder",
-        type: "address"
-      },
-      {
-        internalType: "bool",
-        name: "revealed",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
-    ],
-    name: "depositedReservePrice",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "endAuction",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "fulfilHighestBid",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "bidID",
-        type: "uint256"
-      }
-    ],
-    name: "getBidWithBidID",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "bidID",
-            type: "uint256"
-          },
-          {
-            internalType: "bytes",
-            name: "sealedAmount",
-            type: "bytes"
-          },
-          {
-            internalType: "bytes",
-            name: "decryptionKey",
-            type: "bytes"
-          },
-          {
-            internalType: "uint256",
-            name: "unsealedAmount",
-            type: "uint256"
-          },
-          {
-            internalType: "address",
-            name: "bidder",
-            type: "address"
-          },
-          {
-            internalType: "bool",
-            name: "revealed",
-            type: "bool"
-          }
-        ],
-        internalType: "struct SimpleAuctionBase.Bid",
-        name: "",
-        type: "tuple"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "bidder",
-        type: "address"
-      }
-    ],
-    name: "getBidWithBidder",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "bidID",
-            type: "uint256"
-          },
-          {
-            internalType: "bytes",
-            name: "sealedAmount",
-            type: "bytes"
-          },
-          {
-            internalType: "bytes",
-            name: "decryptionKey",
-            type: "bytes"
-          },
-          {
-            internalType: "uint256",
-            name: "unsealedAmount",
-            type: "uint256"
-          },
-          {
-            internalType: "address",
-            name: "bidder",
-            type: "address"
-          },
-          {
-            internalType: "bool",
-            name: "revealed",
-            type: "bool"
-          }
-        ],
-        internalType: "struct SimpleAuctionBase.Bid",
-        name: "",
-        type: "tuple"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "getHighestBid",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "getHighestBidder",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "highestBid",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "highestBidPaid",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "highestBidPaymentDeadlineBlock",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "highestBidder",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256"
-      },
-      {
-        internalType: "bytes",
-        name: "decryptionKey",
-        type: "bytes"
-      }
-    ],
-    name: "receiveBlocklock",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "reservePrice",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "bidID",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "unsealedAmount",
-        type: "uint256"
-      }
-    ],
-    name: "revealBid",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "revealedBidsCount",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes",
-        name: "sealedAmount",
-        type: "bytes"
-      }
-    ],
-    name: "sealedBid",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "payable",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "timelock",
-    outputs: [
-      {
-        internalType: "contract IBlocklockSender",
-        name: "",
-        type: "address"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "totalBids",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "withdrawDeposit",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "withdrawForfeitedDepositFromHighestBidder",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  }
-];
-var SimpleAuctionBase__factory = class {
-  static {
-    this.abi = _abi23;
-  }
-  static createInterface() {
-    return new Interface2(_abi23);
-  }
-  static connect(address, runner) {
-    return new Contract2(address, _abi23, runner);
+    return new Contract(address, _abi5, runner);
   }
 };
 
@@ -51433,21 +42264,21 @@ var SimpleAuctionBase__factory = class {
 var program2 = new Command();
 var defaultPort = "8080";
 var defaultRPC = "http://localhost:8545";
-var defaultPrivateKey = "0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46";
+var defaultPrivateKey = "0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a";
 var defaultBlsKey = "0x58aabbe98959c4dcb96c44c53be7e3bb980791fc7a9e03445c4af612a45ac906";
 program2.addOption(
-  new Option("--port <port>", "The port to host the healthcheck on").default(defaultPort).env("RANDOMNESS_PORT")
+  new Option("--port <port>", "The port to host the healthcheck on").default(defaultPort).env("TIMELOCK_PORT")
 ).addOption(
-  new Option("--rpc-url <rpc-url>", "The websockets URL to connect to the blockchain from").default(defaultRPC).env("RANDOMNESS_RPC_URL")
+  new Option("--rpc-url <rpc-url>", "The websockets URL to connect to the blockchain from").default(defaultRPC).env("TIMELOCK_RPC_URL")
 ).addOption(
-  new Option("--private-key <private-key>", "The private key to use for execution").default(defaultPrivateKey).env("RANDOMNESS_PRIVATE_KEY")
+  new Option("--private-key <private-key>", "The private key to use for execution").default(defaultPrivateKey).env("TIMELOCK_PRIVATE_KEY")
 ).addOption(
-  new Option("--bls-key <bls-key>", "The BLS private key to use for signing").default(defaultBlsKey).env("RANDOMNESS_BLS_PRIVATE_KEY")
+  new Option("--bls-key <bls-key>", "The BLS private key to use for signing").default(defaultBlsKey).env("TIMELOCK_BLS_PRIVATE_KEY")
 );
 var options = program2.parse().opts();
 var SCHEME_ID = "BN254-BLS-BLOCKLOCK";
 var DST = "IBE_BN254G1_XMD:KECCAK-256_SVDW_RO_H1_";
-var durationBlocks = 10;
+var durationBlocks = 50;
 var reservePrice = 0.1;
 var reservePriceInWei = ethers_exports.parseEther(reservePrice.toString(10));
 var highestBidPaymentWindowBlocks = 5;
@@ -51472,13 +42303,18 @@ async function main() {
   console.log(`blocklock contract deployed to ${blocklockContractAddr}`);
   const auctionContract = await deployAuction(wallet, blocklockContractAddr);
   const auctionContractAddr = await auctionContract.getAddress();
-  console.log(`auction contract deployed to ${auctionContractAddr}`);
+  console.log(`simple auction contract deployed to ${auctionContractAddr}`);
+  console.log("\nsimple auction contract configuration parameters");
+  console.log("Auction duration in blocks:", durationBlocks);
+  console.log("Auction end block number:", await auctionContract.auctionEndBlock());
+  console.log("Auction reserve price in ether:", reservePrice);
+  console.log("Window for fulfilling highest bid in blocks post-auction:", highestBidPaymentWindowBlocks);
   const blocklockNumbers = /* @__PURE__ */ new Map();
   await signatureSenderContract.addListener("SignatureRequested", createSignatureListener(bls2, blocklockNumbers));
   http2.createServer((_, res) => {
     res.writeHead(200);
     res.end();
-  }).listen(port, "0.0.0.0", () => console.log(`randomness writer running on port ${port}`));
+  }).listen(port, "0.0.0.0", () => console.log(`timelock writer running on port ${port}`));
   rpc.pollingInterval = 1e3;
   rpc.on("block", async (blockHeight) => {
     const res = blocklockNumbers.get(BigInt(blockHeight));
@@ -51494,9 +42330,9 @@ async function main() {
     const nonce = await wallet.getNonce("latest");
     for (let i = 0; i < ids.length; i++) {
       try {
-        const id4 = ids[i];
-        console.log(`fulfilling signature request ${id4}`);
-        txs.push(await signatureSenderContract.fulfilSignatureRequest(id4, sigBytes, { nonce: nonce + i }));
+        const id3 = ids[i];
+        console.log(`fulfilling signature request ${id3}`);
+        txs.push(await signatureSenderContract.fulfilSignatureRequest(id3, sigBytes, { nonce: nonce + i }));
       } catch (e) {
         console.log(e);
       }
@@ -51708,7 +42544,4 @@ aes-js/lib.esm/aes.js:
 
 @noble/curves/esm/bn254.js:
   (*! noble-curves - MIT License (c) 2022 Paul Miller (paulmillr.com) *)
-
-@noble/hashes/esm/utils.js:
-  (*! noble-hashes - MIT License (c) 2022 Paul Miller (paulmillr.com) *)
 */
