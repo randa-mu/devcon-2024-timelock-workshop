@@ -1,5 +1,6 @@
 # 🏦 DeFi Safety Workshop: Timelock Encryption 🛡️
 
+
 Welcome to the **DeFi Safety Workshop: Timelock Encryption**! This repository contains all the resources, code, and materials needed for a hands-on developer workshop focused on improving security in decentralized finance (DeFi) using timelock encryption. Timelock encryption enables data to be encrypted and decrypted only after a specified time period or condition is met. This approach is valuable for delaying access to sensitive information, securing transactions, and mitigating front-running attacks.
 
 ## 📋 Table of Contents
