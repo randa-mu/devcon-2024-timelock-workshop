@@ -1,0 +1,28 @@
+name: bash
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    paths:
+      - .github/workflows/lint-bash.yml
+      - "**.sh"
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}-lintbash
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ["randamu-self-hosted-default"]
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🧹 Lint bash scripts
+        uses: ludeeus/action-shellcheck@2.0.0
+        env:
+          SHELLCHECK_OPTS: --shell=sh
+        with:
+          ignore_paths: '**/openzeppelin-contracts/**/*'
