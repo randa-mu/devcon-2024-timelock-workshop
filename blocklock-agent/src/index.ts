@@ -51,7 +51,7 @@ const options = program
 
 const SCHEME_ID = "BN254-BLS-BLOCKLOCK";
 const DST = "IBE_BN254G1_XMD:KECCAK-256_SVDW_RO_H1_";
-// Auction contract configuration parameters
+// Auction smart contract configuration parameters
 const durationBlocks = 50; // blocks
 const reservePrice = 0.1; // ether
 const reservePriceInWei = ethers.parseEther(reservePrice.toString(10))
@@ -60,7 +60,7 @@ const highestBidPaymentWindowBlocks = 5; // blocks
 async function main() {
     // set up all our plumbing
     const port = parseInt(options.port)
-    console.log("deploying contracts - relax, this will take a minute...")
+    console.log("deploying all required smart contracts ...")
     const bls = await BlsBn254.create()
     const { pubKey, secretKey } = bls.createKeyPair(options.blsKey)
 

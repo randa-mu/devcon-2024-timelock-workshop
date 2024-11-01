@@ -16,7 +16,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/randa-mu/marshmono.git"
+        "url": "git+https://github.com/randa-mu/devcon-2024-timelock-workshop.git"
     },
     "keywords": [
         "encryption",
@@ -26,9 +26,9 @@
     "author": "azixus",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/randa-mu/marshmono/issues"
+        "url": "https://github.com/randa-mu/devcon-2024-timelock-workshop/issues"
     },
-    "homepage": "https://github.com/randa-mu/marshmono#readme",
+    "homepage": "https://github.com/randa-mu/devcon-2024-timelock-workshop#readme",
     "dependencies": {
         "@randamo/marshmallow-js": "file:../client-js",
         "@randamu/bls-bn254-js": "file:../bls-bn254-js",

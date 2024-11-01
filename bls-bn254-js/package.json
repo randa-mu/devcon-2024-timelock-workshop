@@ -23,9 +23,9 @@
   "author": "CluEleSsUK",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/randa-mu/marshmono/issues"
+    "url": "https://github.com/randa-mu/devcon-2024-timelock-workshop/issues"
   },
-  "homepage": "https://github.com/randa-mu/marshmono#readme",
+  "homepage": "https://github.com/randa-mu/devcon-2024-timelock-workshop#readme",
   "dependencies": {
     "@noble/curves": "^1.6.0",
     "asn1js": "^3.0.5",

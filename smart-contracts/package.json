@@ -1,6 +1,6 @@
 {
   "name": "smart-contracts",
-  "description": "solidity smart contracts for demonstrating timelock encryption",
+  "description": "solidity smart contracts for demonstrating timelock encryption using a simple auction use case",
   "license": "MIT",
   "version": "1.0.0",
   "directories": {
@@ -69,6 +69,11 @@
       "@trivago/prettier-plugin-sort-imports"
     ]
   },
+  "author": "najienka",
+  "bugs": {
+    "url": "https://github.com/randa-mu/devcon-2024-timelock-workshop/issues"
+  },
+  "homepage": "https://github.com/randa-mu/devcon-2024-timelock-workshop#readme",
   "dependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
     "@nomicfoundation/hardhat-ethers": "^3.0.0",

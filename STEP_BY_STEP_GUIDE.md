@@ -86,6 +86,17 @@ We will run the next set of tasks in another terminal window.
    --private-key 0xd4153f5547461a9f34a6da4de803c651c19794f62375d559a888b0d7aac38b63
    ```
 
+We can also check the wallet addresses for bidder A and B using the following command with their private keys:
+```bash
+cast wallet address --private-key <replace this with the private key to convert to a wallet address>
+```
+
+e.g., for bidder A:
+```bash
+cast wallet address --private-key 0xe46f7a0c8e6110e8386242cad3491bd38fb794a28dfa751e826a03c8818fe282
+```
+
+
 ### Step 6: Verify Submitted Sealed Bids
 
 1. **View Sealed Bids**:
@@ -220,3 +231,30 @@ As per the above outputs, the smart contract has not received any decryption key
       * `bool revealed` - a boolean true or false indicating whether the bid has been unsealed or not.
 
    We can now see that the `unsealedAmount` is the amount in Wei and the `revealed` flag in the bid data has been set to `true` for both bidders.
+
+6. **View Highest Bid Amount and Highest Bidder Address**:
+   ```bash
+   cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getHighestBid()" 
+   ```
+
+   Decode the output from the above command:
+   ```
+   cast abi-decode "getHighestBid()(address)" <place output from command above here>
+   ```
+
+   ```bash
+   cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getHighestBidder()" 
+   ```
+
+   Decode the output from the above command:
+   ```
+   cast abi-decode "getHighestBidder()(address)" <place output from command above here>
+   ```
+
+7. **Fulfil Highest Bid**:
+   To finish off the auction process, bidder B can fulfil the highest bid by paying 0.3 ether which is the difference between the highest bid amount of 0.4 ether and the reserve price of 0.1 ether paid by all bidders during the sealed bid transaction.
+   ```bash
+   cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "fulfilHighestBid()" \
+   --value 0.3ether \
+   --private-key 0xd4153f5547461a9f34a6da4de803c651c19794f62375d559a888b0d7aac38b63
+   ```
