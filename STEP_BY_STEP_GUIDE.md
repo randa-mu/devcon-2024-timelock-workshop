@@ -251,6 +251,11 @@ As per the above outputs, the smart contract has not received any decryption key
    cast abi-decode "getHighestBidder()(address)" <place output from command above here>
    ```
 
+   We can confirm the highest bidder is bidder B using B's private key from Step 5:
+   ```bash
+   cast wallet address --private-key 0xe46f7a0c8e6110e8386242cad3491bd38fb794a28dfa751e826a03c8818fe282
+   ```
+
 7. **Fulfil Highest Bid**:
    To finish off the auction process, bidder B can fulfil the highest bid by paying 0.3 ether which is the difference between the highest bid amount of 0.4 ether and the reserve price of 0.1 ether paid by all bidders during the sealed bid transaction.
    ```bash
