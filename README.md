@@ -21,18 +21,6 @@ Participants will:
 - Understand the potential vulnerabilities that timelock encryption addresses to enhance the security of DeFi protocols.
 - Implement a simple smart contract that incorporates timelock functionalities.
 
-
-## Prerequisites
-
-Before participating in the workshop, ensure you have the following:
-- **Basic knowledge of Ethereum smart contracts** and Solidity programming.
-- **Foundry, Node.js (>= 22.3.0)** and **yarn** installed on your local machine.
-- Familiarity with **Foundry** for smart contract development will be beneficial but not compulsory.
-
-### Recommended Tools
-- **VS Code** or another code editor.
-
-
 ## Workshop Agenda
 
 1. **Introduction to Timelock Encryption**
