@@ -11,8 +11,8 @@ async function main() {
     const X_G2 = bn254.G2.ProjectivePoint.BASE.multiply(x).toAffine()
     const sig = identity_g1.multiply(x).toAffine()
 
-    const ct = await encrypt_towards_identity_g1(m, identity, X_G2)
-    const m2 = await decrypt_towards_identity_g1(ct, sig)
+    const ct = encrypt_towards_identity_g1(m, identity, X_G2)
+    const m2 = decrypt_towards_identity_g1(ct, sig)
     console.log("ciphertext as hex:", hexlify(serializeCiphertext(ct)))
     console.log("\ndecrypted message as hex:", hexlify(m2))
     console.log("\ndecrypted message as plain text:", hexToString(hexlify(m2))) // returns 'IBE BN254 Consistency Test'

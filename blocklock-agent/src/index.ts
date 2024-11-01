@@ -55,7 +55,7 @@ const DST = "IBE_BN254G1_XMD:KECCAK-256_SVDW_RO_H1_";
 const durationBlocks = 50; // blocks
 const reservePrice = 0.1; // ether
 const reservePriceInWei = ethers.parseEther(reservePrice.toString(10))
-const highestBidPaymentWindowBlocks = 5; // blocks
+const highestBidPaymentWindowBlocks = 10; // blocks
 
 async function main() {
     // set up all our plumbing

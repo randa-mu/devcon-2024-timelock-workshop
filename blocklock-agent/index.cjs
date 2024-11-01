@@ -42287,10 +42287,10 @@ var DST = "IBE_BN254G1_XMD:KECCAK-256_SVDW_RO_H1_";
 var durationBlocks = 50;
 var reservePrice = 0.1;
 var reservePriceInWei = ethers_exports.parseEther(reservePrice.toString(10));
-var highestBidPaymentWindowBlocks = 5;
+var highestBidPaymentWindowBlocks = 10;
 async function main() {
   const port = parseInt(options.port);
-  console.log("deploying contracts - relax, this will take a minute...");
+  console.log("deploying all required smart contracts ...");
   const bls2 = await BlsBn254.create();
   const { pubKey, secretKey } = bls2.createKeyPair(options.blsKey);
   const rpc = await createProviderWithRetry(options.rpcUrl);
