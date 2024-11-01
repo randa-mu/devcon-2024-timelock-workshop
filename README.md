@@ -1,6 +1,6 @@
 # 🏦 DeFi Safety Workshop: Timelock Encryption 🛡️
 
-Welcome to the **DeFi Safety Workshop: Timelock Encryption**! This repository contains all the resources, code, and materials needed for a hands-on developer workshop focused on improving security in decentralized finance (DeFi) using timelock encryption techniques.
+Welcome to the **DeFi Safety Workshop: Timelock Encryption**! This repository contains all the resources, code, and materials needed for a hands-on developer workshop focused on improving security in decentralized finance (DeFi) using timelock encryption. Timelock encryption enables data to be encrypted and decrypted only after a specified time period or condition is met. This approach is valuable for delaying access to sensitive information, securing transactions, and mitigating front-running attacks.
 
 ## 📋 Table of Contents
 1. [About the Workshop](#about-the-workshop)
@@ -14,10 +14,10 @@ Welcome to the **DeFi Safety Workshop: Timelock Encryption**! This repository co
 
 ## About the Workshop
 
-In this workshop, we explore how the security of smart contracts and DeFi applications can be enhanced using **timelock encryption**. Timelock encryption allows for data to be encrypted and then decrypted only after a specified time period (or condition being met), which is useful for delaying access to sensitive data, securing transactions, and mitigating front-running attacks.
+In this workshop, we explore how the security of smart contracts and DeFi applications can be enhanced using **timelock encryption**.
 
 Participants will:
-- Learn the fundamentals of timelock encryption and its applications in DeFi.
+- Learn the fundamentals of timelock encryption and its applications in DeFi. It is worth mentioning that this differs from [Timelock smart contracts](https://www.lcx.com/introduction-to-timelock-smart-contracts/), also known as time-based or delayed contracts, which are a specialized type of smart contract that introduces a delay or time-based constraint on the execution of certain actions or transactions.
 - Understand the potential vulnerabilities that timelock encryption addresses to enhance the security of DeFi protocols.
 - Implement a simple smart contract that incorporates timelock functionalities.
 
