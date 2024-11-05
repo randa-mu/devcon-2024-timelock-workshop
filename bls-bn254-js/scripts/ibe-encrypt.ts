@@ -1,6 +1,5 @@
-import { hexlify, getBytes } from 'ethers'
-import { encrypt_towards_identity_g1, serializeCiphertext, decrypt_towards_identity_g1, get_identity_g1 } from '../src'
-import { bn254 } from "../src/crypto/bn254"
+import { hexlify } from 'ethers'
+import { encrypt_towards_identity_g1, serializeCiphertext } from '../src'
 import { Command } from 'commander'
 
 // Encrypt message with Identity-based Encryption (IBE)
