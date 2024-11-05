@@ -4,10 +4,9 @@
 ## Prerequisites
 
 Install [Foundry](https://book.getfoundry.sh/getting-started/installation), and ensure you have:
-* [moon](https://moonrepo.dev/docs/install). moon can also be installed with [Homebrew](https://formulae.brew.sh/formula/moon), likewise npm, node and yarn. Homebrew installation guide can be found [here](https://brew.sh/).
+* [moon](https://moonrepo.dev/docs/install). moon can also be installed with [Homebrew](https://formulae.brew.sh/formula/moon), likewise npm, and node. Homebrew installation guide can be found [here](https://brew.sh/).
 * [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) version >= 10.9.0
 * [node](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) version >= 22.3.0
-* [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
 
 
 ## Workshop Steps
@@ -57,14 +56,14 @@ We will run the next set of tasks in another terminal window.
    ```bash
    cast to-wei 0.3   # Result: 300000000000000000
    cd bls-bn254-js
-   yarn ibe:encrypt --message 300000000000000000 --blocknumber 56
+   npm run ibe:encrypt -- --message=300000000000000000 --blocknumber=56
    ```
    - This will generate the ciphertext to use for Bidder A’s sealed bid with the auction ending block number to ensure that the bid amount can only be decrypted once this block has been mined. Please make note of it.
 
 2. **Encrypt the bid amount for Bidder B (0.4 ETH)**:
    ```bash
    cast to-wei 0.4   # Result: 400000000000000000
-   yarn ibe:encrypt --message 400000000000000000 --blocknumber 56
+   npm run ibe:encrypt -- --message=400000000000000000 --blocknumber=56
    ```
    - This generates the ciphertext for Bidder B's bid amount of 0.4 ether, making Bidder B the highest bidder. Please make note of it.
 
@@ -178,7 +177,7 @@ As per the above outputs, the smart contract has not received any decryption key
 
 2. **Decrypt Bid Amounts Using Decryption Keys (Signature over Ciphertext)**:
    ```bash
-   yarn ibe:decrypt --ciphertext <replace with ciphertext from decoded output> --signature <replace with signature or decryption key from decoded output>
+   npm run ibe:decrypt -- --ciphertext <replace with ciphertext from decoded output> --signature <replace with signature or decryption key from decoded output>
    ```
 
    For example, if the output from the decode step is as follows:
@@ -192,7 +191,7 @@ As per the above outputs, the smart contract has not received any decryption key
 
    We can decrypt as follows:
    ```bash
-   yarn ibe:decrypt --ciphertext 0x3081c530818c304402200eed73a85cc36f2a5db49aa51ff569719f7c121288fb0ce0e5fad0e0089a7761022011d784a04eb5a5f225eb67db8cefa103920d3cc6bfab06ac4bafd753fcf2dd613044022021ac63607b8e90518db9e3f0f14c32650275904a374ce0c8cbdca8468fd77aaa0220224478938ae7511a30211f7d6c1fb216dafdf507d89a763303c36932a4f22a2d0420ff7b5124b22ffbaae6ae25bd03bc1d86b0bb8bebb2326005085ff9c4d2d01468041284378407738c7564d6c2422d542d8b0d690e --signature 0x2378d9fcdcaf7c6471cef67e6108463c8ab8ee60cf7774625321569ada5eddff232cced183a044890ef628fd529ec5a1d44a37b0f24fa4dbea6a5a1c236f9ec4
+   npm run ibe:decrypt -- --ciphertext 0x3081c530818c304402200eed73a85cc36f2a5db49aa51ff569719f7c121288fb0ce0e5fad0e0089a7761022011d784a04eb5a5f225eb67db8cefa103920d3cc6bfab06ac4bafd753fcf2dd613044022021ac63607b8e90518db9e3f0f14c32650275904a374ce0c8cbdca8468fd77aaa0220224478938ae7511a30211f7d6c1fb216dafdf507d89a763303c36932a4f22a2d0420ff7b5124b22ffbaae6ae25bd03bc1d86b0bb8bebb2326005085ff9c4d2d01468041284378407738c7564d6c2422d542d8b0d690e --signature 0x2378d9fcdcaf7c6471cef67e6108463c8ab8ee60cf7774625321569ada5eddff232cced183a044890ef628fd529ec5a1d44a37b0f24fa4dbea6a5a1c236f9ec4
    ```
 
    When we decrypt the sealed bid for Bidder A with Bid ID 1 we should see the following decrypted data in the console:
