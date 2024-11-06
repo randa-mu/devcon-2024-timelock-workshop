@@ -27,8 +27,7 @@ Install [Foundry](https://book.getfoundry.sh/getting-started/installation), and 
 
 1. Start the Anvil local blockchain with the following command:
    ```bash
-   chmod +x bls-bn254-js/scripts/anvil-start.sh
-   ./bls-bn254-js/scripts/anvil-start.sh
+   npm run start:anvil
    ```
 
 ### Step 3: Start Timelock Agent
@@ -131,10 +130,9 @@ As per the above outputs, the smart contract has not received any decryption key
 
    The current block number is still less than the auction ending block number which is `56` from Step 3. Since we are on a local blockchain, we can mine the number of blocks between the current block number and our target block number to skip to the auction ending block number. 
 
-2. Run the following to skip blocks to the block after the auction end:
+2. Run the following to skip blocks to the block after the auction end (block number `57):
    ```bash
-   chmod +x bls-bn254-js/scripts/anvil-skip-to-block.sh
-   ./bls-bn254-js/scripts/anvil-skip-to-block.sh 57
+   npm run skip:to-block 57
    ```
 
 3. **Verify Fulfilled Timelock Requests**:
