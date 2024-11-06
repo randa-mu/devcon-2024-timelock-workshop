@@ -1,0 +1,10 @@
+{
+    "name": "defi-timelock-workshop",
+    "version": "1.0.0",
+    "scripts": {
+      "start:timelock-agent": "npm --prefix ./blocklock-agent run start",
+      "timelock:encrypt": "npm --prefix ./bls-bn254-js run ibe:encrypt --",
+      "timelock:decrypt": "npm --prefix ./bls-bn254-js run ibe:decrypt --"
+    }
+  }
+  
