@@ -180,7 +180,7 @@ we should see a new transaction being sent at block `58` in the Anvil blockchain
 
 ### Step 6: End the Auction
 
-1. Use the deployer (auctioneer) private key to end the auction:
+1. Use the auction smart contract deployer (auctioneer) private key to end the auction:
    ```bash
    cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "endAuction()" \
    --private-key 0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46 \
