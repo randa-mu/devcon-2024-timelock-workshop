@@ -52,11 +52,16 @@ COPY --from=skeleton /app/.moon/docker/workspace .
 # Install project dependencies
 RUN moon docker setup
 
+RUN npm install -g esbuild
+
 # Copy project sources from skeleton
 COPY --from=skeleton /app/.moon/docker/sources .
 
 # Build the project
 RUN moon run bls-bn254-js:build
+
+# Prune extraneous dependencies
+RUN rm -rf /root/.npm/_logs/* && npm cache clean --force
 
 #### START STAGE
 #### Runs the project.

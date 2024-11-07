@@ -56,6 +56,9 @@ COPY --from=skeleton /app/.moon/docker/sources .
 # Build the project
 RUN moon run blocklock-agent:build
 
+# Prune extraneous dependencies
+RUN rm -rf /root/.npm/_logs/* && npm cache clean --force
+
 #### START STAGE
 #### Runs the project.
 
