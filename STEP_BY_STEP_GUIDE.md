@@ -1,5 +1,31 @@
 # Developer Workshop: Secure Sealed-Bid Auction with Timelock Encryption
 
+In this workshop, we are working with a **Simple Auction Smart Contract** that utilizes **sealed bids** and **timelock encryption** for enhanced security and privacy.
+
+#### Key Concepts:
+
+- **Sealed Bids**: Bidders submit their offers in a "sealed" manner, meaning the bid amount is hidden until the auction ends. This ensures that participants cannot alter their bids based on others' offers, maintaining fairness.
+  
+- **Timelock Encryption**: To ensure the confidentiality of the bids, they are secured with **timelock encryption**. This encryption scheme ensures that the bid remains confidential until a specified block number, preventing any unauthorized access or manipulation before that time.
+
+#### How it works:
+
+1. **Bid Submission**: Participants submit their bids, which are encrypted using a **timelock encryption scheme** (based on the BLS-BN254 curve). The encryption ensures that only the correct bid can be revealed at the right time.
+
+2. **Auction Duration**: The auction runs for a set number of blocks (e.g., 50 blocks). During this period, participants cannot view or change their bids.
+
+3. **End of Auction**: Once the auction duration ends, the smart contract receives the decryption keys for each bid which can then be used to reveals the highest bid and the winning participant.
+
+4. **Signature Verification**: The system uses **BLS-BN254 signatures** for validating and revealing bids securely. The smart contract verifies the signatures to ensure that the correct bids are revealed after the timelock is satisfied.
+
+#### Advantages:
+- **Fairness**: No participant can alter their bid based on others’ offers.
+- **Security**: The use of BLS signatures and timelock encryption prevents unauthorized tampering or early revelation of bids.
+- **Confidentiality**: Bids are hidden until the auction concludes, ensuring privacy for all participants.
+
+This approach offers a technique for implementing privacy-preserving auctions in a decentralized environment, leveraging cryptographic techniques to ensure security and fairness.
+
+
 
 ### Step 1: Docker Services Overview 
 
