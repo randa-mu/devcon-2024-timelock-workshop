@@ -52,6 +52,7 @@ COPY --from=skeleton /app/.moon/docker/workspace .
 # Install project dependencies
 RUN moon docker setup
 
+# Install the esbuild package
 RUN npm install -g esbuild
 
 # Copy project sources from skeleton

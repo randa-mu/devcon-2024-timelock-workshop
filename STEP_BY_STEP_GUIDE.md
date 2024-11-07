@@ -27,7 +27,7 @@ This approach offers a technique for implementing privacy-preserving auctions in
 
 
 
-### Step 1: Docker Services Overview 
+### Step 1: Docker services overview 
 
 The following services are defined within the `docker-compose.yml` file:
 
@@ -65,7 +65,7 @@ Let's open an interactive bash shell or terminal window in the container named `
 docker exec -it bls-bn254-js-container bash
 ```
 
-### Step 2: Encrypt Bids for Sealed-Bid Auction
+### Step 2: Encrypt bids for sealed-bid auction
 
 1. **Encrypt the bid amount for Bidder A (0.3 ETH)**:
    ```bash
@@ -81,7 +81,7 @@ docker exec -it bls-bn254-js-container bash
    ```
    - This generates the ciphertext for Bidder B's bid amount of 0.4 ether, making Bidder B the highest bidder. Please make note of it.
 
-### Step 3: Submit Sealed Bids to the Auction Contract
+### Step 3: Submit sealed bids to the auction contract with bidders as signers
 
 1. **Bidder A submits sealed bid (0.3 ETH)**:
    ```bash
@@ -126,9 +126,9 @@ cast wallet address --private-key 0xe46f7a0c8e6110e8386242cad3491bd38fb794a28dfa
 ```
 
 
-### Step 4: Verify Submitted Sealed Bids
+### Step 4: Verify submitted sealed bids
 
-1. **View Sealed Bids**:
+1. **View sealed bids**:
    - For **Bidder A** with bidID 1:
      ```bash
      cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getBidWithBidID(uint256)" 1 --rpc-url $RPC_URL
@@ -151,7 +151,7 @@ cast wallet address --private-key 0xe46f7a0c8e6110e8386242cad3491bd38fb794a28dfa
    cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getBidWithBidID(uint256)" 2 --rpc-url $RPC_URL
    ```
 
-### Step 5: Skip to Auction End Block
+### Step 5: Skip to blocks to end the auction
 
 As per the above outputs, the smart contract has not received any decryption keys for the sealed bids. This is because the bids were encrypted with the auction ending block number which is `56` as in Step 3 and this block number has not reached or been mined on the local Anvil blockchain. Therefore, without the decryption keys, none of the bids can be unsealed by the auctioneer. 
 
@@ -167,18 +167,19 @@ As per the above outputs, the smart contract has not received any decryption key
    npm run skip:to-block 57 $RPC_URL
    ```
 
-3. **Verify Fulfilled Timelock Requests**:
+3. **Verify fulfilled timelock requests**:
 When we check the logs for the timelock service from the project root folder:
 ```bash
 docker compose logs blocklock
 ```
 we should see a new transaction being sent at block `58` in the Anvil blockchain logs as well as the following logs in the timelock agent console showing that the timelock encryption agent has now signed the Ciphertexts from the two earlier sealed bid events and sent the decryption key to the `SignatureSender` smart contract which forwards the signature to the `SimpleAuction` smart contract via the `BlocklockSender` contract:
      ```
+     creating a timelock signature for block 56
      fulfilling signature request 1
      fulfilled signature request
      ```
 
-### Step 6: End the Auction
+### Step 6: End the auction
 
 1. Use the auction smart contract deployer (auctioneer) private key to end the auction:
    ```bash
@@ -187,9 +188,9 @@ we should see a new transaction being sent at block `58` in the Anvil blockchain
    --rpc-url $RPC_URL
    ```
 
-### Step 7: Reveal Bids and Verify Data
+### Step 7: Reveal bids and verify data
 
-1. **View Bid Data and Get Decryption Key**:
+1. **View bid data and retrieve decryption key**:
    - Retrieve and decode data for Bidder A to view the `decryptionKey` and check the `revealed` status and `unsealedAmount`:
      ```bash
      cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getBidWithBidID(uint256)" 1 --rpc-url $RPC_URL
@@ -199,6 +200,7 @@ we should see a new transaction being sent at block `58` in the Anvil blockchain
    ```
    cast abi-decode "getBidWithBidID(uint256)(bytes,bytes,uint256,address,bool)" <place output from command above here>
    ```
+
    This should return five outputs on separate lines. These are:
       * `bytes sealedAmount` - the ciphertext representing the (timelock encrypted) sealed bid.
       * `bytes decryptionKey` - the decryption key used to decrypt the sealedAmount.
@@ -208,7 +210,7 @@ we should see a new transaction being sent at block `58` in the Anvil blockchain
 
    We can now see that the decryptionKey has been sent to the auction smart contract after the auction end block number was identified by the timelock agent. The decryptionKey is no longer an empty byte string `0x`. Using the ciphertext and decryption key from the output above, we can decrypt the sealed bid to reveal the bid amount and confirm that the amount is the same as the amounts we encrypted to ciphertexts earlier for each bidder - Bidder A and Bidder B.
 
-2. **Decrypt Bid Amounts Using Decryption Keys (Signature over Ciphertext)**:
+2. **Decrypt bid amounts with decryption keys (i.e., signature over the Ciphertext)**:
    ```bash
    npm run timelock:decrypt -- --ciphertext <replace with ciphertext from decoded output> --signature <replace with signature or decryption key from decoded output>
    ```
@@ -235,15 +237,15 @@ we should see a new transaction being sent at block `58` in the Anvil blockchain
 
    We can repeat the same steps for Bidder B's sealed bid.
 
-3. **Convert Decrypted Value from Wei to Ether**:
+3. **Convert decrypted value from Wei to Ether**:
    If we convert the decrypted value from wei to ether, we should get 0.3 ether which we encrypted as wei earlier for Bidder A in Step 4.
    ```bash
    cast from-wei 300000000000000000
    ```
    We can repeat the decryption steps for Bidder B and confirm the decrypted amount.
 
-4. **Reveal Bid Amounts on-chain with Auctioneer Key**:
-   Now the auctioneer can reveal the bid amounts in the smart contract and with the decryption keys, anyone can verify the revealed amounts are correct with the decryption keys which have only been made available after the auction ending block number.
+4. **Reveal bid amounts on-chain with auctioneer as transaction signer**:
+   Now the auctioneer can reveal the bid amounts in the smart contract and with the decryption keys, and anyone can verify that the revealed amounts are correct with the decryption keys which are now on-chain and have only been made available to the auction smart contract after the auction ending block number.
 
    Reveal bid amounts -
    - For **Bidder A**:
@@ -251,7 +253,7 @@ we should see a new transaction being sent at block `58` in the Anvil blockchain
      cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "revealBid(uint256,uint256)" \
      1 \
      300000000000000000 \
-     --private-key 0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46 \ 
+     --private-key 0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46 \
      --rpc-url $RPC_URL
      ```
    - For **Bidder B**:
@@ -259,11 +261,11 @@ we should see a new transaction being sent at block `58` in the Anvil blockchain
      cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "revealBid(uint256,uint256)" \
      2 \
      400000000000000000 \
-     --private-key 0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46 \ 
+     --private-key 0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46 \
      --rpc-url $RPC_URL
      ```
 
-5. **View Revealed Bid Data**:
+5. **View revealed bid data**:
    - Retrieve and decode data for Bidder A to confirm `revealed` status and `unsealedAmount`:
      ```bash
      cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getBidWithBidID(uint256)" 1 --rpc-url $RPC_URL
@@ -282,7 +284,7 @@ we should see a new transaction being sent at block `58` in the Anvil blockchain
 
    We can now see that the `unsealedAmount` is the amount in Wei that was encrypted in Step 4 and the `revealed` flag in the bid data has now been set to `true` for both bidders.
 
-6. **View Highest Bid Amount and Highest Bidder Address**:
+6. **View highest bid amount and highest bidder address**:
    ```bash
    cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getHighestBid()" --rpc-url $RPC_URL
    ```
@@ -310,7 +312,7 @@ we should see a new transaction being sent at block `58` in the Anvil blockchain
 
 ### Step 8: Optional extra tasks to finalise the auction process.
 
-1. **Fulfil Highest Bid**:
+1. **Fulfil highest bid**:
    To finish off the auction process, bidder B can fulfil the highest bid by paying 0.3 ether which is the difference between the highest bid amount of 0.4 ether and the reserve price of 0.1 ether paid by all bidders during the sealed bid transaction.
    ```bash
    cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "fulfilHighestBid()" \
@@ -327,8 +329,13 @@ we should see a new transaction being sent at block `58` in the Anvil blockchain
    --rpc-url $RPC_URL 
    ```
 
-### Step 9: Tidying Up
-We can stop all the running services / containers from the project root folder:
+### Step 9: Tidying up
+We can exit the terminal window running within the `bls-bn254-js` container, with the following commans:
+```bash
+exit
+```
+
+We can also stop all the running services / containers from the project root folder:
 ```bash
 docker compose down
 ```
