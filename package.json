@@ -1,14 +1,13 @@
 {
   "name": "defi-timelock-workshop",
-  "version": "1.0.0",
-  "scripts": {
-    "start:timelock-agent": "npm --prefix ./blocklock-agent run start",
-    "timelock:encrypt": "npm --prefix ./bls-bn254-js run timelock:encrypt --",
-    "timelock:decrypt": "npm --prefix ./bls-bn254-js run timelock:decrypt --",
-    "start:anvil": "chmod +x ./bls-bn254-js/scripts/anvil-start.sh && ./bls-bn254-js/scripts/anvil-start.sh",
-    "skip:to-block": "chmod +x ./bls-bn254-js/scripts/anvil-skip-to-block.sh && ./bls-bn254-js/scripts/anvil-skip-to-block.sh"
-  },
+  "version": "0.0.1",
   "engines": {
     "node": "22.3.0"
-  }
+  },
+  "workspaces": [
+    "blocklock-agent",
+    "anvil",
+    "bls-bn254-js",
+    "smart-contracts"
+  ]
 }

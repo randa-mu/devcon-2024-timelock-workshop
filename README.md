@@ -1,7 +1,6 @@
-# 🏦 DeFi Safety Workshop: Timelock Encryption 🛡️
+# 🏦 DeFi Safety Workshop on Timelock Encryption 🛡️
 
-
-Welcome to the **DeFi Safety Workshop: Timelock Encryption**! This repository contains all the resources, code, and materials needed for a hands-on developer workshop focused on improving security in decentralized finance (DeFi) using timelock encryption. [Timelock](https://randa.mu/features/timelock-encryption-on-chain) encryption enables data to be encrypted and decrypted only after a specified time period or condition is met. This approach is valuable for delaying access to sensitive information, securing transactions, and mitigating front-running attacks.
+Welcome to the **DeFi Safety Workshop on Timelock Encryption**! This repository contains all the resources, code, and materials needed for a hands-on developer workshop focused on improving security in decentralized finance (DeFi) using timelock encryption. [Timelock](https://randa.mu/features/timelock-encryption-on-chain) encryption enables data to be encrypted and decrypted only after a specified time period or condition is met. This approach is valuable for delaying access to sensitive information, securing transactions, and mitigating front-running attacks.
 
 ## 📋 Table of Contents
 1. [About the Workshop](#about-the-workshop)
@@ -41,6 +40,17 @@ By the end of the workshop, participants will be able to:
 - Implement and deploy Solidity smart contracts with timelock functionality.
 
 
+## Prerequisites
+
+Before getting started, ensure you have the following tools installed:
+
+1. **Docker**: Make sure Docker is installed on your system. You can download Docker from [Docker's official website](https://www.docker.com/get-started).
+   
+2. **Docker Compose**: Docker Compose is usually included with Docker Desktop installations. To verify its installation, run the following command:
+   ```bash
+   docker compose version
+   ```
+
 ## Setup Instructions
 
 Follow these steps to set up your local environment for the workshop:
@@ -48,9 +58,27 @@ Follow these steps to set up your local environment for the workshop:
 1. **Clone the Repository**
     ```bash
     git clone https://github.com/randa-mu/devcon-2024-timelock-workshop.git
+    cd devcon-2024-timelock-workshop
     ```
 
-Upon cloning the repository, please follow the steps for the hands-on exercise detailed [here](STEP_BY_STEP_GUIDE.md). 
+2. **Start Services Using Docker Compose**: The `docker-compose.yml` file defines all the services that are required to run the project. To start these services in detached mode (background), run the following command:
+    ```bash
+    docker-compose up -d
+    ```
+    Docker Compose will automatically:
+    - Create all required images.
+    - Build the services as needed.
+    - Set up networks and volumes.
+
+3. **Verify Running Containers
+To check that all services are running correctly, use**:
+    ```bash
+    docker-compose ps
+    ```
+
+    This will show a list of all containers and their current status. Ensure that each service defined in `docker-compose.yml` is listed and is running.
+
+Once you've verified that all the required services are up and running, please follow the [step-by-step guide](STEP_BY_STEP_GUIDE.md) provided for the hands-on exercise. 
 
 
 ## Resources

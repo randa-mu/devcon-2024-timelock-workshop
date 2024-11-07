@@ -1,13 +1,6 @@
 # Developer Workshop: Secure Sealed-Bid Auction with Timelock Encryption
 
-## Prerequisites
 
-Install Docker. Please see the Docker installation [guide](https://www.docker.com/products/docker-desktop/).
-
-Install [Foundry](https://book.getfoundry.sh/getting-started/installation), and ensure you have:
-* [moon](https://moonrepo.dev/docs/install). moon can also be installed with [Homebrew](https://formulae.brew.sh/formula/moon), likewise npm, and node. Homebrew installation guide can be found [here](https://brew.sh/).
-* [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) version >= 10.9.0
-* [node](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) version >= 22.3.0
 
 
 ## Workshop Steps
