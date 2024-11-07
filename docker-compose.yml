@@ -1,0 +1,48 @@
+services:
+  anvil:
+    platform: linux/x86_64
+    build:
+      context: ./anvil
+    container_name: anvil-container
+    image: custom-anvil-image:latest
+    ports:
+      - "8545:8545" 
+    networks:
+      - timelock-net
+
+  blocklock:
+    platform: linux/x86_64
+    build:
+      context: .
+      dockerfile: blocklock-agent/Dockerfile
+    container_name: blocklock-container
+    image: custom-blocklock-image:latest
+    ports:
+      - "8081:8080"
+    environment:
+      BLOCKLOCK_RPC_URL: http://anvil:8545
+      BLOCKLOCK_PRIVATE_KEY: "0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46"
+      BLOCKLOCK_PORT: 8080
+    depends_on:
+      - anvil
+    networks:
+      - timelock-net
+
+  bls-bn254-js:
+    platform: linux/x86_64
+    build:
+      context: .
+      dockerfile: bls-bn254-js/Dockerfile
+    container_name: bls-bn254-js-container
+    image: custom-bls-bn254-js-image:latest
+    depends_on:
+      - anvil
+      - blocklock
+    networks:
+      - timelock-net
+    environment:
+      RPC_URL: http://anvil:8545
+
+networks:
+  timelock-net:
+    driver: bridge

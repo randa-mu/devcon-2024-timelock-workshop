@@ -5,7 +5,7 @@ import { Command } from 'commander'
 // Decrypt message with Identity-based Encryption (IBE)
 //
 // Usage
-//  yarn ibe:decrypt --ciphertext "the ciphertext to decrypt" --signature "the signature over the ciphertext which is the decryption key"
+//  yarn timelock:decrypt --ciphertext "the ciphertext to decrypt" --signature "the signature over the ciphertext which is the decryption key"
 
 // Define the CLI command and arguments using `commander`
 const program = new Command()

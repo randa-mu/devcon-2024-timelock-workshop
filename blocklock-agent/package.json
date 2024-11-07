@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "Agent for uploading signature for blocklock to EVM chains",
     "type": "module",
-    "main": "index.js",
+    "main": "index.cjs",
     "scripts": {
         "start": "npm run build && node ./index.cjs",
         "test": "echo no tests",
@@ -30,9 +30,7 @@
     },
     "homepage": "https://github.com/randa-mu/devcon-2024-timelock-workshop#readme",
     "dependencies": {
-        "@randamo/marshmallow-js": "file:../client-js",
         "@randamu/bls-bn254-js": "file:../bls-bn254-js",
-        "@randamu/randomness-js": "file:../randomness-js",
         "@typechain/ethers-v6": "^0.5.1",
         "commander": "^12.1.0",
         "ethers": "^6.13.4",

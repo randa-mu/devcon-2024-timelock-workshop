@@ -1,6 +1,6 @@
 import * as http from "node:http"
 import { Command, Option } from "commander"
-import { ethers, AbiCoder, AddressLike, getBytes, isHexString, toUtf8Bytes, Wallet, ContractTransactionResponse } from "ethers"
+import { ethers, AbiCoder, AddressLike, getBytes, isHexString, toUtf8Bytes, Wallet, ContractTransactionResponse, NonceManager, AbstractSigner } from "ethers"
 import { G1, G2 } from "mcl-wasm"
 import { BlsBn254 } from "@randamu/bls-bn254-js/src"
 import { type TypedContractEvent, TypedListener } from "./generated/common"
@@ -29,19 +29,19 @@ const defaultBlsKey = "0x58aabbe98959c4dcb96c44c53be7e3bb980791fc7a9e03445c4af61
 program
     .addOption(new Option("--port <port>", "The port to host the healthcheck on")
         .default(defaultPort)
-        .env("TIMELOCK_PORT")
+        .env("BLOCKLOCK_PORT")
     )
     .addOption(new Option("--rpc-url <rpc-url>", "The websockets URL to connect to the blockchain from")
         .default(defaultRPC)
-        .env("TIMELOCK_RPC_URL")
+        .env("BLOCKLOCK_RPC_URL")
     )
     .addOption(new Option("--private-key <private-key>", "The private key to use for execution")
         .default(defaultPrivateKey)
-        .env("TIMELOCK_PRIVATE_KEY")
+        .env("BLOCKLOCK_PRIVATE_KEY")
     )
     .addOption(new Option("--bls-key <bls-key>", "The BLS private key to use for signing")
         .default(defaultBlsKey)
-        .env("TIMELOCK_BLS_PRIVATE_KEY")
+        .env("BLOCKLOCK_BLS_PRIVATE_KEY")
     )
 
 const options = program
@@ -65,7 +65,7 @@ async function main() {
     const { pubKey, secretKey } = bls.createKeyPair(options.blsKey)
 
     const rpc = await createProviderWithRetry(options.rpcUrl)
-    const wallet = new Wallet(options.privateKey, rpc)
+    const wallet = new NonceManager(new Wallet(options.privateKey, rpc))
 
     // deploy the contracts and start listening for signature requests
     const schemeProviderContract = await deploySchemeProvider(wallet)
@@ -198,7 +198,7 @@ function createSignatureListener(
 /**
  * Deploy the signature scheme address provider contract
  */
-async function deploySchemeProvider(wallet: Wallet): Promise<SignatureSchemeAddressProvider> {
+async function deploySchemeProvider(wallet: AbstractSigner): Promise<SignatureSchemeAddressProvider> {
     const contract = await new SignatureSchemeAddressProvider__factory(wallet).deploy()
     return contract.waitForDeployment()
 }
@@ -206,7 +206,7 @@ async function deploySchemeProvider(wallet: Wallet): Promise<SignatureSchemeAddr
 /**
  * Deploy the blocklock signature scheme contract, and register it in the scheme provider
  */
-async function deployBlocklockScheme(wallet: Wallet, schemeProviderContract: SignatureSchemeAddressProvider): Promise<BlocklockSignatureScheme> {
+async function deployBlocklockScheme(wallet: AbstractSigner, schemeProviderContract: SignatureSchemeAddressProvider): Promise<BlocklockSignatureScheme> {
     const contract = await new BlocklockSignatureScheme__factory(wallet).deploy()
     const scheme = await contract.waitForDeployment()
 
@@ -220,7 +220,7 @@ async function deployBlocklockScheme(wallet: Wallet, schemeProviderContract: Sig
 /**
  * Deploy the signature sender contract
  */
-async function deploySignatureSender(bls: BlsBn254, wallet: Wallet, blsPublicKey: G2, schemeProvider: AddressLike): Promise<SignatureSender> {
+async function deploySignatureSender(bls: BlsBn254, wallet: AbstractSigner, blsPublicKey: G2, schemeProvider: AddressLike): Promise<SignatureSender> {
     const [x1, x2, y1, y2] = bls.serialiseG2Point(blsPublicKey)
     const contract = await new SignatureSender__factory(wallet).deploy([x1, x2], [y1, y2], schemeProvider)
     return contract.waitForDeployment()
@@ -229,7 +229,7 @@ async function deploySignatureSender(bls: BlsBn254, wallet: Wallet, blsPublicKey
 /**
  * Deploy the blocklock contract
  */
-async function deployBlocklock(wallet: Wallet, signatureSenderContractAddr: AddressLike): Promise<BlocklockSender> {
+async function deployBlocklock(wallet: AbstractSigner, signatureSenderContractAddr: AddressLike): Promise<BlocklockSender> {
     const contract = await new BlocklockSender__factory(wallet).deploy(signatureSenderContractAddr)
     return contract.waitForDeployment()
 }
@@ -237,7 +237,7 @@ async function deployBlocklock(wallet: Wallet, signatureSenderContractAddr: Addr
 /**
  * Deploy the auction contract
  */
-async function deployAuction(wallet: Wallet, blocklockContractAddr: AddressLike): Promise<SimpleAuction> {
+async function deployAuction(wallet: AbstractSigner, blocklockContractAddr: AddressLike): Promise<SimpleAuction> {
     const contract = await new SimpleAuction__factory(wallet).deploy(
         durationBlocks, 
         reservePriceInWei, 

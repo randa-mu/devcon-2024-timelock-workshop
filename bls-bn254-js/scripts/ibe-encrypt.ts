@@ -5,7 +5,7 @@ import { Command } from 'commander'
 // Encrypt message with Identity-based Encryption (IBE)
 //
 // Usage
-//  yarn ibe:encrypt --message "plaintext message to timelock encrypt" --blocknumber "block number when message can be decrypted"
+//  yarn timelock:encrypt --message "plaintext message to timelock encrypt" --blocknumber "block number when message can be decrypted"
 
 // Define the CLI command and arguments using `commander`
 const program = new Command()
