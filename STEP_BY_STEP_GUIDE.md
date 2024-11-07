@@ -1,49 +1,45 @@
 # Developer Workshop: Secure Sealed-Bid Auction with Timelock Encryption
 
 
+### Step 1: Docker Services Overview 
 
+The following services are defined within the `docker-compose.yml` file:
 
-## Workshop Steps
+* **anvil**: runs a local Anvil. Anvil is a fast and lightweight Ethereum-compatible blockchain client designed to help developers run their own local Ethereum network. It is primarily used in development environments to simulate an Ethereum-like blockchain for testing smart contracts and decentralized applications (dApps) without having to interact with the main Ethereum network or testnets.
 
-### Step 1: Project Setup
+* **blocklock**: runs a timelock agent which deploys the necessary smart contracts to the Anvil network, monitors timelock encryption request events from these contracts, and fulfills requests by generating signatures over the ciphertexts in each request at a specified block number. These signatures, which serve as decryption keys for the ciphertexts, remain unknown until the designated block number is reached. This process establishes the core functionality of timelock encryption.
 
-1. Navigate to the project root folder:
-    ```bash
-    cd devcon-2024-timelock-workshop
-    ```
+* **bls-bn254-js**: is used to generate Ciphertexts and decrypt the Ciphertexts using the decryption keys sent to the smart contract by the timelock agent. We will also use this container to interact with the smart contracts deployed on Anvil.
 
-2. Run the build command for the project:
-   ```bash
-   moon run :build
-   ```
+By running the following command, 
+```bash
+docker compose logs blocklock
+```
 
-### Step 2: Start Anvil
-
-1. Start the Anvil local blockchain with the following command:
-   ```bash
-   npm run start:anvil
-   ```
-
-### Step 3: Start Timelock Agent
-The timelock agent deploys the necessary smart contracts to the Anvil network, monitors timelock encryption request events from these contracts, and fulfills requests by generating signatures over the ciphertexts in each request at a specified block number. These signatures, which serve as decryption keys for the ciphertexts, remain unknown until the designated block number is reached. This process establishes the core functionality of timelock encryption.
-
-1. Start the timelock agent in a new terminal window, separate from the Anvil window:
-   ```bash
-   npm run start:timelock-agent
-   ```
-   **Note**: If you get any `nonce` related errors, restart the Anvil local blockchain and retry starting the agent.
-
-   Upon deployment of the smart contracts, you will notice the following deployment deployment configurations for the Simple Auction smart contract as part of the logs in the timelock agent console:
+at the end of the smart contract deployment process, we will see the following deployment configurations for the Simple Auction smart contract as part of the logs in the timelock agent console:
    - Contract Address: `0xa945472E43646254913578f0dc0adb0c73a5F584`
    - Configuration:
      - Auction Duration (blocks): `50`
      - Auction End Block Number: `56`
      - Auction Reserve Price: `0.1 ETH`
-     - Bid Fulfillment Window (post-auction, blocks): `10` // The highest bid can be fulfilled by the highest bidder after the auction end block and up until block 66 (end block 56 + 10 additional blocks).
+     - Bid Fulfillment Window (post-auction, blocks): `10` // The highest bid can be fulfilled by the highest bidder after the auction end block and up until block 66 (i.e., end block 56 + 10 additional blocks).
 
-We will run the next set of tasks in another terminal window.
+We can also check the logs for the other services, e.g., `blocklock`, by running the following command, 
+```bash
+docker compose logs anvil
+```
 
-### Step 4: Encrypt Bids for Sealed-Bid Auction
+and `bls-bn254-js`, by running the following command, 
+```bash
+docker compose logs bls-bn254-js
+```
+
+Let's open an interactive bash shell or terminal window in the container named `bls-bn254-js-container`. We will run the rest of the commands from this container:
+```bash
+docker exec -it bls-bn254-js-container bash
+```
+
+### Step 2: Encrypt Bids for Sealed-Bid Auction
 
 1. **Encrypt the bid amount for Bidder A (0.3 ETH)**:
    ```bash
@@ -59,22 +55,38 @@ We will run the next set of tasks in another terminal window.
    ```
    - This generates the ciphertext for Bidder B's bid amount of 0.4 ether, making Bidder B the highest bidder. Please make note of it.
 
-### Step 5: Submit Sealed Bids to the Auction Contract
+### Step 3: Submit Sealed Bids to the Auction Contract
 
 1. **Bidder A submits sealed bid (0.3 ETH)**:
    ```bash
    cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "sealedBid(bytes)" \
    <replace this with the Ciphertext from Step 4 for Bidder A> \
    --value 0.1ether \
-   --private-key 0xe46f7a0c8e6110e8386242cad3491bd38fb794a28dfa751e826a03c8818fe282
+   --private-key 0xe46f7a0c8e6110e8386242cad3491bd38fb794a28dfa751e826a03c8818fe282 \
+   --rpc-url $RPC_URL
    ```
+
+   e.g., 
+   ```bash
+   cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "sealedBid(bytes)" "0x3081c530818c304402200a75ff722a7068e0b6d2a2fe6f641d8594b6589f22384f7ce0071705a562a910022007a4dcf257e7743af834722d62dc8ac4078e999931156b589d8d52436af0f5bf30440220284fd0a0d7628b22da0a0235cee13a51f912a1f2c1a879f462b4744748933f2b022004fc8d51c98e47d2ea9ebedb11229dcabb8d23f82d99e09127bd10ed5f5e112e0420f31b88d71239180be5e4dc3e48e568e58f97c0b35aa4434978239153cb0817f70412105d71e9ebfbbdf263be32aa0c9ecf7b5e26" --value 0.1ether --private-key 0xe46f7a0c8e6110e8386242cad3491bd38fb794a28dfa751e826a03c8818fe282 --rpc-url $RPC_URL
+   ```
+
+`Cast` is Foundry’s command-line tool for performing Ethereum RPC calls. We can make smart contract calls, send transactions, or retrieve any type of chain data - all from the command-line.
+
+The `--rpc-url $RPC_URL` option added to the cast commands, tells `cast` to connect to Anvil using the `RPC_URL` environment variable set within the `docker-compose.yml` file. This is the endpoint which the Anvil JSON-RPC server running within our anvil container will be listening to for requests,  allowing clients and other applications to interact with the blockchain through remote procedure calls (RPC).
 
 2. **Bidder B submits sealed bid (0.4 ETH)**:
    ```bash
    cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "sealedBid(bytes)" \
    <replace this with the Ciphertext from Step 4 for Bidder B> \
    --value 0.1ether \
-   --private-key 0xd4153f5547461a9f34a6da4de803c651c19794f62375d559a888b0d7aac38b63
+   --private-key 0xd4153f5547461a9f34a6da4de803c651c19794f62375d559a888b0d7aac38b63 \
+   --rpc-url $RPC_URL
+   ```
+
+   e.g., 
+   ```bash
+   cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "sealedBid(bytes)" "0x3081c530818c3044022009efca99f6d3e57c0ce8434656d5f58e062c2bc0b72a5640c50da16731faafa1022002798b37da61540fb20ca7f13b68af9fb086ca1e4bda375b75f4c7a35fa51700304402201e20f17cd07cd32b08421e3e871c42b62944a85ea30dd215d8fc07f130d6d83d0220269212744e14d1de96c7ca139a341df1e126647fff12f49ae8756d7546efe263042069830ffc5cdaa0a1ae0fcd792399d940afe618ac10c1d1b2d5c14c1fa56eecd90412afda0555f0d20151ac18ee324cd7464b9e62" --value 0.1ether --private-key 0xd4153f5547461a9f34a6da4de803c651c19794f62375d559a888b0d7aac38b63 --rpc-url $RPC_URL
    ```
 
 We can also check the wallet addresses for bidder A and B using the following command with their private keys:
@@ -88,12 +100,12 @@ cast wallet address --private-key 0xe46f7a0c8e6110e8386242cad3491bd38fb794a28dfa
 ```
 
 
-### Step 6: Verify Submitted Sealed Bids
+### Step 4: Verify Submitted Sealed Bids
 
 1. **View Sealed Bids**:
    - For **Bidder A** with bidID 1:
      ```bash
-     cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getBidWithBidID(uint256)" 1
+     cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getBidWithBidID(uint256)" 1 --rpc-url $RPC_URL
      ```
    - Decode the returned bytes to view the bid data.
    ```
@@ -110,46 +122,51 @@ cast wallet address --private-key 0xe46f7a0c8e6110e8386242cad3491bd38fb794a28dfa
    
    We can repeat the step above to get the current on-chain bid data for **Bidder B** but changing the bidID to 2, i.e., 
    ```bash
-   cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getBidWithBidID(uint256)" 2
+   cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getBidWithBidID(uint256)" 2 --rpc-url $RPC_URL
    ```
 
-### Step 7: Skip to Auction End Block
+### Step 5: Skip to Auction End Block
 
 As per the above outputs, the smart contract has not received any decryption keys for the sealed bids. This is because the bids were encrypted with the auction ending block number which is `56` as in Step 3 and this block number has not reached or been mined on the local Anvil blockchain. Therefore, without the decryption keys, none of the bids can be unsealed by the auctioneer. 
 
 1. Check the current block number:
    ```bash
-   cast block-number
+   cast block-number --rpc-url $RPC_URL
    ```
 
    The current block number is still less than the auction ending block number which is `56` from Step 3. Since we are on a local blockchain, we can mine the number of blocks between the current block number and our target block number to skip to the auction ending block number. 
 
-2. Run the following to skip blocks to the block after the auction end (block number `57):
+2. Run the following command to skip blocks to the block after the auction end (block number `57):
    ```bash
-   npm run skip:to-block 57
+   npm run skip:to-block 57 $RPC_URL
    ```
 
 3. **Verify Fulfilled Timelock Requests**:
-   - You should see a new transaction being sent at block `58` in the Anvil blockchain logs as well as the following logs in the timelock agent console showing that the timelock encryption agent has now signed the ciphertexts from the two earlier sealed bid events and sent the decryption key to the `SignatureSender` smart contract which forwards the signature to the `SimpleAuction` smart contract via the `BlocklockSender` contract:
+When we check the logs for the timelock service from the project root folder:
+```bash
+docker compose logs blocklock
+```
+we should see a new transaction being sent at block `58` in the Anvil blockchain logs as well as the following logs in the timelock agent console showing that the timelock encryption agent has now signed the Ciphertexts from the two earlier sealed bid events and sent the decryption key to the `SignatureSender` smart contract which forwards the signature to the `SimpleAuction` smart contract via the `BlocklockSender` contract:
      ```
      fulfilling signature request 1
      fulfilled signature request
      ```
 
-### Step 8: End the Auction
+### Step 6: End the Auction
 
 1. Use the deployer (auctioneer) private key to end the auction:
    ```bash
    cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "endAuction()" \
-   --private-key 0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46
+   --private-key 0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46 \
+   --rpc-url $RPC_URL
    ```
 
-### Step 9: Reveal Bids and Verify Data
+### Step 7: Reveal Bids and Verify Data
 
 1. **View Bid Data and Get Decryption Key**:
    - Retrieve and decode data for Bidder A to view the `decryptionKey` and check the `revealed` status and `unsealedAmount`:
      ```bash
-     cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getBidWithBidID(uint256)" 1
+     cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getBidWithBidID(uint256)" 1 --rpc-url $RPC_URL
      ```
 
    - Decode the returned bytes to view the bid data.
@@ -208,20 +225,22 @@ As per the above outputs, the smart contract has not received any decryption key
      cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "revealBid(uint256,uint256)" \
      1 \
      300000000000000000 \
-     --private-key 0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46
+     --private-key 0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46 \ 
+     --rpc-url $RPC_URL
      ```
    - For **Bidder B**:
      ```bash
      cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "revealBid(uint256,uint256)" \
      2 \
      400000000000000000 \
-     --private-key 0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46
+     --private-key 0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46 \ 
+     --rpc-url $RPC_URL
      ```
 
 5. **View Revealed Bid Data**:
    - Retrieve and decode data for Bidder A to confirm `revealed` status and `unsealedAmount`:
      ```bash
-     cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getBidWithBidID(uint256)" 1
+     cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getBidWithBidID(uint256)" 1 --rpc-url $RPC_URL
      ```
 
    - Decode the returned bytes to view the bid data.
@@ -239,7 +258,7 @@ As per the above outputs, the smart contract has not received any decryption key
 
 6. **View Highest Bid Amount and Highest Bidder Address**:
    ```bash
-   cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getHighestBid()" 
+   cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getHighestBid()" --rpc-url $RPC_URL
    ```
 
    Decode the output from the above command:
@@ -250,7 +269,7 @@ As per the above outputs, the smart contract has not received any decryption key
 
    Next, let us get the address of the highest bidder from the auction smart contract:
    ```bash
-   cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getHighestBidder()" 
+   cast call 0xa945472E43646254913578f0dc0adb0c73a5F584 "getHighestBidder()" --rpc-url $RPC_URL
    ```
 
    Decode the output from the above command:
@@ -263,19 +282,36 @@ As per the above outputs, the smart contract has not received any decryption key
    cast wallet address --private-key 0xd4153f5547461a9f34a6da4de803c651c19794f62375d559a888b0d7aac38b63
    ```
 
-### Step 10: Optional extra tasks to finalise the auction process.
+### Step 8: Optional extra tasks to finalise the auction process.
 
 1. **Fulfil Highest Bid**:
    To finish off the auction process, bidder B can fulfil the highest bid by paying 0.3 ether which is the difference between the highest bid amount of 0.4 ether and the reserve price of 0.1 ether paid by all bidders during the sealed bid transaction.
    ```bash
    cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "fulfilHighestBid()" \
    --value 0.3ether \
-   --private-key 0xd4153f5547461a9f34a6da4de803c651c19794f62375d559a888b0d7aac38b63 
+   --private-key 0xd4153f5547461a9f34a6da4de803c651c19794f62375d559a888b0d7aac38b63 \
+   --rpc-url $RPC_URL 
    ```
 
 2. **Withdraw paid reserve price**
    The non-winning bidder, bidder A can also withdraw the reserve price of 0.1 ether paid as part of the sealed bid transaction.
    ```bash
    cast send 0xa945472E43646254913578f0dc0adb0c73a5F584 "withdrawDeposit()" \
-   --private-key 0xe46f7a0c8e6110e8386242cad3491bd38fb794a28dfa751e826a03c8818fe282 
+   --private-key 0xe46f7a0c8e6110e8386242cad3491bd38fb794a28dfa751e826a03c8818fe282 \
+   --rpc-url $RPC_URL 
    ```
+
+### Step 9: Tidying Up
+We can stop all the running services / containers from the project root folder:
+```bash
+docker compose down
+```
+This command will:
+   * Stop and remove all containers.
+   * Remove networks and volumes (if configured).
+   * Retain the images and other build artifacts for future use.
+
+and bring the servies back up again if needed:
+```bash
+docker compose up -d
+```

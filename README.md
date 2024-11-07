@@ -63,7 +63,7 @@ Follow these steps to set up your local environment for the workshop:
 
 2. **Start Services Using Docker Compose**: The `docker-compose.yml` file defines all the services that are required to run the project. To start these services in detached mode (background), run the following command:
     ```bash
-    docker-compose up -d
+    docker compose up -d
     ```
     Docker Compose will automatically:
     - Create all required images.
@@ -73,7 +73,7 @@ Follow these steps to set up your local environment for the workshop:
 3. **Verify Running Containers
 To check that all services are running correctly, use**:
     ```bash
-    docker-compose ps
+    docker compose ps
     ```
 
     This will show a list of all containers and their current status. Ensure that each service defined in `docker-compose.yml` is listed and is running.

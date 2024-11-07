@@ -104,7 +104,7 @@ async function main() {
 
     // Triggered on each block to check if there was a blocklock request for that round
     // We may skip some blocks depending on the rpc.pollingInterval value
-    rpc.pollingInterval = 1000//ms
+    rpc.pollingInterval = 500 // ms
     rpc.on("block", async (blockHeight: number) => {
         const res = blocklockNumbers.get(BigInt(blockHeight))
         if (!res) {
