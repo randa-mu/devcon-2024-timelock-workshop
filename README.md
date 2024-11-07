@@ -68,7 +68,7 @@ Follow these steps to set up your local environment for the workshop:
     Docker Compose will automatically:
     - Create all required images.
     - Build the services as needed.
-    - Set up networks and volumes.
+    - Set up networks and containers.
 
 3. **Verify Running Containers
 To check that all services are running correctly, use**:
