@@ -105,7 +105,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
     /**
      * @notice Allows participants to submit a sealed bid during the ongoing auction.
      *
-     * @dev This function accepts a sealed bid, represented as an encrypted or hashed value,
+     * @dev This function accepts a sealed bid, represented as an encrypted value,
      *      to maintain bid confidentiality. The function requires the caller to send an
      *      exact reserve price with the bid, which is held for deposit and refunded if
      *      the bid is not the highest. This is a virtual function intended to be
@@ -119,7 +119,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
      * Returns:
      * - A unique `uint256` bid ID to represent and retrieve the bid.
      *
-     * @param sealedAmount A `bytes` value that represents the caller’s encrypted or hashed bid amount,
+     * @param sealedAmount A `bytes` value that represents the caller’s encrypted bid amount,
      *        which conceals the actual bid until it is unsealed later.
      * @return uint256 A unique identifier (`bidID`) generated for tracking the bid.
      */
@@ -413,7 +413,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
      *
      * @dev Called internally during bid submission to create a bid ID that is locked until unsealing.
      *
-     * @param sealedAmount The encrypted or hashed value of the bid amount.
+     * @param sealedAmount The encrypted value of the bid amount.
      * @return The unique identifier for the generated bid.
      */
     function generateBidID(bytes calldata sealedAmount) internal returns (uint256) {

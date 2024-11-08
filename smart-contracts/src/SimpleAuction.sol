@@ -39,7 +39,7 @@ contract SimpleAuction is SimpleAuctionBase {
      * - `NewBid`: Emitted when a new bid is successfully submitted, containing the `bidID`, `msg.sender`,
      *   and `sealedAmount`.
      *
-     * @param sealedAmount A `bytes` value representing the hashed or encrypted bid amount, ensuring bid privacy.
+     * @param sealedAmount A `bytes` value representing the encrypted bid amount, ensuring bid privacy.
      * @return bidID The unique identifier generated for the submitted bid.
      */
     function sealedBid(bytes calldata sealedAmount)
