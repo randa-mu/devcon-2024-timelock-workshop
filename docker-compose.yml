@@ -4,7 +4,7 @@ services:
     build:
       context: ./anvil
     container_name: anvil-container
-    image: custom-anvil-image:latest
+    image: ghcr.io/randa-mu/devcon-2024-timelock-workshop/anvil:latest
     ports:
       - "8545:8545" 
     networks:
@@ -12,11 +12,11 @@ services:
 
   blocklock:
     platform: linux/x86_64
-    build:
+    build:  
       context: .
       dockerfile: blocklock-agent/Dockerfile
     container_name: blocklock-container
-    image: custom-blocklock-image:latest
+    image: ghcr.io/randa-mu/devcon-2024-timelock-workshop/blocklock-agent:latest
     ports:
       - "8081:8080"
     environment:
@@ -34,7 +34,7 @@ services:
       context: .
       dockerfile: bls-bn254-js/Dockerfile
     container_name: bls-bn254-js-container
-    image: custom-bls-bn254-js-image:latest
+    image: ghcr.io/randa-mu/devcon-2024-timelock-workshop/bls-bn254-js:latest
     depends_on:
       - anvil
       - blocklock
