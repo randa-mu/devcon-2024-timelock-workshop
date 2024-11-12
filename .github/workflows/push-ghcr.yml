@@ -39,8 +39,7 @@ jobs:
       - name: Build and push anvil
         uses: docker/build-push-action@v4
         with:
-          context: .
-          file: ./anvil/Dockerfile
+          context: ./anvil/
           push: true
           tags: |
             ghcr.io/${{ github.repository }}/anvil:latest
