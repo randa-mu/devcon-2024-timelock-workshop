@@ -34,6 +34,7 @@ FROM base AS skeleton
 
 # Copy the entire repository and scaffold
 COPY . .
+COPY /.git ./.
 RUN moon docker scaffold blocklock-agent
 
 #### BUILD STAGE
@@ -52,6 +53,7 @@ RUN moon docker setup
 
 # Copy project sources from skeleton
 COPY --from=skeleton /app/.moon/docker/sources .
+COPY --from=skeleton /app/.git /app/.git
 
 # Build the project
 RUN moon run blocklock-agent:build
