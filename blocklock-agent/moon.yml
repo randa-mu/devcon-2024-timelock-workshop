@@ -1,0 +1,32 @@
+dependsOn:
+  - smart-contracts
+language: 'typescript'
+
+tasks:
+  build:
+    command: 'npm run build'
+    inputs:
+      - 'src/**/*'
+      - 'tsconfig.json'
+      - 'package.json'
+      - 'foundry.toml'
+    outputs:
+      - 'index.cjs'
+    deps:
+      - smart-contracts:build
+
+  test:
+    command: 'npm run test'
+    inputs:
+      - 'src/**/*'
+      - 'test/**/*'
+      - 'tsconfig.json'
+      - 'package.json'
+    deps:
+      - build
+      - lint
+
+  lint:
+    command: 'npm run lint'
+    deps:
+      - build

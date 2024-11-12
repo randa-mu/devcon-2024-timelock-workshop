@@ -1,0 +1,38 @@
+language: 'typescript'
+
+dependsOn:
+  - 'bls-bn254-js'
+
+tasks:
+  build:
+    command: 'npm run build'
+    inputs:
+      - 'abi/**/*'
+      - 'lib/**/*'
+      - 'src/**/*'
+      - 'tsconfig.json'
+      - 'package.json'
+      - 'foundry.toml'
+    outputs:
+      - 'cache/**/*'
+      - 'cache_hardhat/**/*'
+      - 'out'
+      - 'artifacts'
+      - 'typechain-types/**/*'
+    deps:
+      - lint
+
+  test:
+    command: 'npm run test'
+    inputs:
+      - 'src/**/*'
+      - 'test/**/*'
+      - 'tsconfig.json'
+      - 'package.json'
+    deps:
+      - bls-bn254-js:build
+      - build
+      - lint
+
+  lint:
+    command: 'npm run lint'
