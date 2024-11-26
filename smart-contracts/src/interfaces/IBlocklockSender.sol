@@ -25,5 +25,10 @@ interface IBlocklockSender {
      */
     function getRequest(uint256 requestId) external view returns (TypesLib.BlocklockRequest memory);
 
+    /**
+     * Decrypt a ciphertext into a plaintext using a decryption key.
+     * @param ciphertext The ciphertext to decrypt.
+     * @param decryptionKey The decryption key that can be used to decrypt the ciphertext.
+     */
     function decrypt(TypesLib.Ciphertext calldata ciphertext, bytes calldata decryptionKey) external view returns (bytes memory);
 }

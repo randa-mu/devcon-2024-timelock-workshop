@@ -103,9 +103,7 @@ contract BlocklockSender is IBlocklockSender, DecryptionReceiverBase, AccessCont
     }
 
     /**
-     * Decrypt a ciphertext into a plaintext using a decryption key.
-     * @param ciphertext The ciphertext to decrypt.
-     * @param decryptionKey The decryption key that can be used to decrypt the ciphertext.
+     * @dev See {IBlocklockSender-decrypt}.
      */
     function decrypt(TypesLib.Ciphertext calldata ciphertext, bytes calldata decryptionKey)
         public
