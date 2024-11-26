@@ -273,28 +273,9 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
         uint256 decryptedSealedBidAmount = abi.decode(timelock.decrypt(bid.sealedAmount, decryptionKey), (uint256));
         bid.unsealedAmount = decryptedSealedBidAmount;
 
+        updateHighestBid(requestID, decryptedSealedBidAmount);
+
         emit DecryptionKeyReceived(requestID, decryptionKey);
-    }
-
-    /**
-     * @notice Reveals a sealed bid by setting its unsealed amount and updating the highest bid if applicable.
-     *
-     * @dev Allows a bidder to reveal their bid, provided the bid has a valid decryption key.
-     *
-     * Requirements:
-     * - The bid ID must exist.
-     * - The bid must not have been previously revealed.
-     * - The bid must have a decryption key.
-     *
-     * @param bidID The unique identifier for the bid to be revealed.
-     * @param unsealedAmount The actual bid amount to be revealed.
-     */
-    function revealBid(uint256 bidID, uint256 unsealedAmount) external onlyAuctioneer {
-        require(bidsById[bidID].bidID != 0, "Bid ID does not exist.");
-        require(!bidsById[bidID].revealed, "Bid already revealed.");
-        require(bidsById[bidID].decryptionKey.length > 0, "Bid decryption key not received from timelock contract.");
-
-        updateHighestBid(bidID, unsealedAmount);
     }
 
     // ** Internal Functions **
