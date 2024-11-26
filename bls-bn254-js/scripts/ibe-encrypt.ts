@@ -38,7 +38,14 @@ async function main() {
     const encodedMessage = new Uint8Array(Buffer.from(msg))
     const encodedBlockNumber = blockHeightToBEBytes(BigInt(blocknumber))
     const ciphertext =  encrypt_towards_identity_g1(encodedMessage, encodedBlockNumber, COMMITTEE_PK)
-    console.log("Ciphertext", hexlify(serializeCiphertext(ciphertext)))
+    console.log("Ciphertext as struct")
+    console.log({
+        "U": ciphertext.U,
+        "V": hexlify(ciphertext.V),
+        "W": hexlify(ciphertext.W)
+    })
+    console.log("\nCiphertext as hex")
+    console.log(hexlify(serializeCiphertext(ciphertext)))
 }
 
 function blockHeightToBEBytes(blockHeight: bigint) {
