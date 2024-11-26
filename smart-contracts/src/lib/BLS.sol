@@ -30,6 +30,10 @@ library BLS {
     // go-ethereum/crypto/bn256/cloudflare/constants.go
     uint256 private constant N = 21888242871839275222246405745257275088696311157297823662689037894645226208583;
 
+    // Generator of G1
+    uint256 private constant G1_X = 1;
+    uint256 private constant G1_Y = 2;
+
     // Negated generator of G1
     uint256 private constant N_G1_X = 1;
     uint256 private constant N_G1_Y = 21888242871839275222246405745257275088696311157297823662689037894645226208581;
@@ -473,6 +477,78 @@ library BLS {
         return out;
     }
 
+    function expandMsg(bytes memory DST, bytes memory message, uint8 n_bytes) internal pure returns (bytes memory) {
+        uint256 domainLen = DST.length;
+        if (domainLen > 255) {
+            revert InvalidDSTLength(DST);
+        }
+        bytes memory zpad = new bytes(136);
+        bytes memory b_0 = abi.encodePacked(zpad, message, uint8(0), n_bytes, uint8(0), DST, uint8(domainLen));
+        bytes32 b0 = keccak256(b_0);
+
+        bytes memory b_i = abi.encodePacked(b0, uint8(1), DST, uint8(domainLen));
+        bytes32 bi = keccak256(b_i);
+        bytes memory out = new bytes(n_bytes);
+        uint256 ell = (n_bytes + uint256(31)) >> 5;
+        for (uint256 i = 1; i < ell; i++) {
+            b_i = abi.encodePacked(b0 ^ bi, uint8(1 + i), DST, uint8(domainLen));
+            assembly {
+                let p := add(32, out)
+                p := add(p, mul(32, sub(i, 1)))
+                mstore(p, bi)
+            }
+            bi = keccak256(b_i);
+        }
+        assembly {
+            let p := add(32, out)
+            p := add(p, mul(32, sub(ell, 1)))
+            mstore(p, bi)
+        }
+        return out;
+    }
+
+    function hashToFieldSingle(bytes memory domain, bytes memory message) internal pure returns (uint256) {
+        bytes memory _msg = expandMsg(domain, message, 48);
+        uint256 u0;
+        uint256 u1;
+        uint256 a0;
+        // solium-disable-next-line security/no-inline-assembly
+        assembly {
+            let p := add(_msg, 24)
+            u1 := and(mload(p), MASK24)
+            p := add(_msg, 48)
+            u0 := and(mload(p), MASK24)
+            a0 := addmod(mulmod(u1, T24, N), u0, N)
+        }
+        return a0;
+    }
+
+    function scalarMulG1Base(uint256 s) internal view returns (PointG1 memory r) {
+        uint256[3] memory input;
+        input[0] = G1_X;
+        input[1] = G1_Y;
+        input[2] = s;
+        bool success;
+        assembly {
+            success := staticcall(sub(gas(), 2000), 7, input, 0x80, r, 0x60)
+        }
+        require(success, "G1 scalar multiplication failed");
+    }
+
+    function verifyEqualityG1G2(PointG1 memory rG1, PointG2 memory rG2)
+        internal
+        view
+        returns (bool pairingSuccess, bool callSuccess)
+    {
+        uint256[12] memory input =
+            [rG1.x, rG1.y, N_G2_X1, N_G2_X0, N_G2_Y1, N_G2_Y0, G1_X, G1_Y, rG2.x[1], rG2.x[0], rG2.y[1], rG2.y[0]];
+        uint256[1] memory out;
+        assembly {
+            callSuccess := staticcall(sub(gas(), 2000), 8, input, 384, out, 0x20)
+        }
+        return (out[0] != 0, callSuccess);
+    }
+    
     /// @notice Map field element to E using SvdW
     /// @param u Field element to map
     /// @return p Point on curve

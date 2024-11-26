@@ -3,6 +3,9 @@ pragma solidity 0.8.28;
 
 import "../lib/TypesLib.sol";
 
+// todo subscription and payments
+// todo we could embed the following for subscription and payments - subscriptionID, numberOfRequestTxConfirmations, callbackGasLimit, numRandomValues
+// todo check for potential gaps in using uint256 as id compared to bytes32
 interface IBlocklockSender {
     /**
      * @notice Requests the generation of a blocklock decryption key at a specific blockHeight.
@@ -10,7 +13,9 @@ interface IBlocklockSender {
      * The blocklock decryption key will be generated once the chain reaches the specified `blockHeight`.
      * @return requestID The unique identifier assigned to this blocklock request.
      */
-    function requestBlocklock(uint256 blockHeight, bytes calldata ciphertext) external returns (uint256 requestID);
+    function requestBlocklock(uint256 blockHeight, TypesLib.Ciphertext calldata ciphertext)
+        external
+        returns (uint256 requestID);
 
     /**
      * @notice Retrieves a specific request by its ID.

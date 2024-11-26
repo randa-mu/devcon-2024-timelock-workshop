@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.28;
 
+import {BLS} from "../lib/BLS.sol";
+
 /// @title TypesLib
 /// @notice Library containing types used for secure, blockchain-related requests.
 /// @dev Provides definitions for request structures used in cryptographic operations,
@@ -10,8 +12,8 @@ library TypesLib {
     /// @dev This struct holds information necessary for generating decryption keys
     ///      tied to a specific block height.
     struct BlocklockRequest {
-        /// @notice Unique identifier for the signature request.
-        uint256 signatureRequestID;
+        /// @notice Unique identifier for the decryption request.
+        uint256 decryptionRequestID;
         /// @notice The specific block height at which the decryption operation is intended.
         /// @dev Provides temporal context to ensure that the request is only signed at or after
         ///      the specified block height.
@@ -19,7 +21,7 @@ library TypesLib {
         /// @notice Encrypted data payload associated with the request.
         /// @dev The ciphertext is securely processed, ensuring that data remains private
         ///      until the intended decryption conditions are met.
-        bytes ciphertext;
+        Ciphertext ciphertext;
         /// @notice Digital signature validating the authenticity of the request.
         /// @dev Used to confirm the origin and integrity of the `BlocklockRequest`.
         bytes signature;
@@ -47,6 +49,22 @@ library TypesLib {
         /// @notice Callback address of the requester to notify upon signing completion.
         /// @dev This address must implement the `ISignatureReceiver` interface for handling
         ///      the callback, ensuring compatibility with the expected signing result.
+        address callback;
+    }
+
+    struct Ciphertext {
+        BLS.PointG2 u;
+        bytes v;
+        bytes w;
+    }
+
+    // Decryption request stores details for each decryption request
+    struct DecryptionRequest {
+        string schemeID; // signature scheme id, e.g., "BN254", "BLS12-381", "TESS"
+        bytes ciphertext;
+        bytes condition;
+        bytes decryptionKey;
+        bytes signature;
         address callback;
     }
 }
