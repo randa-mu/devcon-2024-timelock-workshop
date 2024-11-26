@@ -269,7 +269,10 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
         );
         Bid storage bid = bidsById[requestID];
         bid.decryptionKey = decryptionKey;
-        
+
+        uint256 decryptedSealedBidAmount = abi.decode(timelock.decrypt(bid.sealedAmount, decryptionKey), (uint256));
+        bid.unsealedAmount = decryptedSealedBidAmount;
+
         emit DecryptionKeyReceived(requestID, decryptionKey);
     }
 
