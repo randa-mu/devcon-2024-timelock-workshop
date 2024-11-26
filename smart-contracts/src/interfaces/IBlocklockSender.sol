@@ -3,9 +3,6 @@ pragma solidity 0.8.28;
 
 import "../lib/TypesLib.sol";
 
-// todo subscription and payments
-// todo we could embed the following for subscription and payments - subscriptionID, numberOfRequestTxConfirmations, callbackGasLimit, numRandomValues
-// todo check for potential gaps in using uint256 as id compared to bytes32
 interface IBlocklockSender {
     /**
      * @notice Requests the generation of a blocklock decryption key at a specific blockHeight.
