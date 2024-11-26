@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.28;
 
+import {TypesLib} from "./lib/TypesLib.sol";
 import {SimpleAuctionBase} from "./SimpleAuctionBase.sol";
 
 contract SimpleAuction is SimpleAuctionBase {
@@ -42,7 +43,7 @@ contract SimpleAuction is SimpleAuctionBase {
      * @param sealedAmount A `bytes` value representing the encrypted bid amount, ensuring bid privacy.
      * @return bidID The unique identifier generated for the submitted bid.
      */
-    function sealedBid(bytes calldata sealedAmount)
+    function sealedBid(TypesLib.Ciphertext calldata sealedAmount)
         external
         payable
         override

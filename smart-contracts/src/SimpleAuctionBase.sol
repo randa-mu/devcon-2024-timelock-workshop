@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.28;
 
+import {TypesLib} from "./lib/TypesLib.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {IBlocklockSender} from "./interfaces/IBlocklockSender.sol";
 import {IBlocklockReceiver} from "./interfaces/IBlocklockReceiver.sol";
@@ -10,7 +11,7 @@ import {IBlocklockReceiver} from "./interfaces/IBlocklockReceiver.sol";
 abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
     struct Bid {
         uint256 bidID; // Unique identifier for the bid
-        bytes sealedAmount; // Encrypted / sealed bid amount
+        TypesLib.Ciphertext sealedAmount; // Encrypted / sealed bid amount
         bytes decryptionKey; // The timelock decryption key used to unseal the sealed bid
         uint256 unsealedAmount; // Decrypted/unsealed bid amount, revealed after auction end
         address bidder; // Address of the bidder
@@ -42,7 +43,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
     mapping(address => uint256) public bidderToBidID; // Mapping of bidders to their bid IDs
 
     // ** Events **
-    event NewBid(uint256 indexed bidID, address indexed bidder, bytes sealedAmount);
+    event NewBid(uint256 indexed bidID, address indexed bidder, TypesLib.Ciphertext sealedAmount);
     event AuctionEnded(address indexed winner, uint256 amount);
     event BidUnsealed(uint256 indexed bidID, address bidder, uint256 unsealedAmount);
     event HighestBidFulfilled(address indexed bidder, uint256 amount);
@@ -123,7 +124,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
      *        which conceals the actual bid until it is unsealed later.
      * @return uint256 A unique identifier (`bidID`) generated for tracking the bid.
      */
-    function sealedBid(bytes calldata sealedAmount)
+    function sealedBid(TypesLib.Ciphertext calldata sealedAmount)
         external
         payable
         virtual
@@ -268,6 +269,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
         );
         Bid storage bid = bidsById[requestID];
         bid.decryptionKey = decryptionKey;
+        
         emit DecryptionKeyReceived(requestID, decryptionKey);
     }
 
@@ -364,7 +366,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
         external
         view
         returns (
-            bytes memory sealedAmount,
+            TypesLib.Ciphertext memory sealedAmount,
             bytes memory decryptionKey,
             uint256 unsealedAmount,
             address _bidder,
@@ -392,7 +394,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
         external
         view
         returns (
-            bytes memory sealedAmount,
+            TypesLib.Ciphertext memory sealedAmount,
             bytes memory decryptionKey,
             uint256 unsealedAmount,
             address bidder,
@@ -416,7 +418,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
      * @param sealedAmount The encrypted value of the bid amount.
      * @return The unique identifier for the generated bid.
      */
-    function generateBidID(bytes calldata sealedAmount) internal returns (uint256) {
+    function generateBidID(TypesLib.Ciphertext calldata sealedAmount) internal returns (uint256) {
         uint256 bidID = timelock.requestBlocklock(auctionEndBlock, sealedAmount);
         return bidID;
     }

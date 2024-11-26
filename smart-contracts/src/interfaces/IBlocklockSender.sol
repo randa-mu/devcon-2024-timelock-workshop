@@ -24,4 +24,6 @@ interface IBlocklockSender {
      * @return The Request struct corresponding to the given requestId.
      */
     function getRequest(uint256 requestId) external view returns (TypesLib.BlocklockRequest memory);
+
+    function decrypt(TypesLib.Ciphertext calldata ciphertext, bytes calldata decryptionKey) external view returns (bytes memory);
 }
