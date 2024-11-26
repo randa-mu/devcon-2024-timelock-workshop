@@ -10,6 +10,7 @@ import {SignatureSender} from "../../src/signature-requests/SignatureSender.sol"
 import {BlocklockSender} from "../../src/blocklock/BlocklockSender.sol";
 import {BlocklockSignatureScheme} from "../../src/blocklock/BlocklockSignatureScheme.sol";
 import {BLS} from "../../src/lib/BLS.sol";
+import {TypesLib} from "../../src/lib/TypesLib.sol";
 
 contract SimpleAuctionTest is Test {
     SimpleAuction public auction;
