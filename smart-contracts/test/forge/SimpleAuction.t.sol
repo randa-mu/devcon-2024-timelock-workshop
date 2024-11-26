@@ -17,6 +17,9 @@ contract SimpleAuctionTest is Test {
     SimpleAuction public auction;
     SignatureSender public sigSender;
     DecryptionSender public decryptionSender;
+    BlocklockSender public tlock;
+
+    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
     uint256 public durationBlocks = 10;
     uint256 public reservePrice = 0.1 ether;
@@ -52,17 +55,24 @@ contract SimpleAuctionTest is Test {
 
         decryptionSender = new DecryptionSender(pk.x, pk.y, owner, address(sigAddrProvider));
 
-        BlocklockSender tlock = new BlocklockSender(address(decryptionSender));
+        tlock = new BlocklockSender(address(decryptionSender));
         auction = new SimpleAuction(durationBlocks, reservePrice, highestBidPaymentWindowBlocks, address(tlock));
 
         vm.stopPrank();
     }
 
-    // function test_DeploymentConfigurations() public {
-    //     assertEq(auction.auctioneer(), auctioneer);
-    //     assertGt(auction.auctionEndBlock(), block.number);
-    //     assertEq(auction.highestBidPaymentDeadlineBlock(), auction.auctionEndBlock() + highestBidPaymentWindowBlocks);
-    // }
+    function test_SkipBlocks() public {
+        assert(block.number == 1);
+        vm.roll(5);
+        assert(block.number == 5);
+    }
+
+    function test_DeploymentConfigurations() public view {
+        assertEq(auction.auctioneer(), auctioneer);
+        assertGt(auction.auctionEndBlock(), block.number);
+        assertEq(auction.highestBidPaymentDeadlineBlock(), auction.auctionEndBlock() + highestBidPaymentWindowBlocks);
+        assertTrue(decryptionSender.hasRole(ADMIN_ROLE, auctioneer));
+    }
 
     // function test_BidPlacement() public {
     //     // Simulate bidding
