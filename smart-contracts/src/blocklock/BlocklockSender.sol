@@ -95,7 +95,8 @@ contract BlocklockSender is IBlocklockSender, DecryptionReceiverBase, AccessCont
             abi.encodeWithSelector(IBlocklockReceiver.receiveBlocklock.selector, decryptionRequestID, decryptionKey)
         );
         if (!success) {
-            emit BlocklockCallbackFailed(decryptionRequestID, r.blockHeight, r.ciphertext, decryptionKey);
+            revert();
+            // emit BlocklockCallbackFailed(decryptionRequestID, r.blockHeight, r.ciphertext, decryptionKey);
         } else {
             emit BlocklockCallbackSuccess(decryptionRequestID, r.blockHeight, r.ciphertext, decryptionKey);
         }
@@ -137,7 +138,8 @@ contract BlocklockSender is IBlocklockSender, DecryptionReceiverBase, AccessCont
         (bool equal, bool success) = BLS.verifyEqualityG1G2(rG1, ciphertext.u);
         // Assuming that the validity of the decryptionKey has been verified,
         // decryption fails if the ciphertext has been wrongly registered.
-        require(equal == success == true, "invalid ciphertext registered");
+        // require(equal == success == true, "invalid ciphertext registered");
+        require(equal && success, "invalid ciphertext registered");
 
         return m2;
     }

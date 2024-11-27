@@ -13,7 +13,6 @@ import {IDecryptionSender} from "../interfaces/IDecryptionSender.sol";
 import {IDecryptionReceiver} from "../interfaces/IDecryptionReceiver.sol";
 
 import {ISignatureReceiver} from "../interfaces/ISignatureReceiver.sol";
-import {ISignatureSender} from "../interfaces/ISignatureSender.sol";
 import {ISignatureScheme} from "../interfaces/ISignatureScheme.sol";
 import {ISignatureSchemeAddressProvider} from "../interfaces/ISignatureSchemeAddressProvider.sol";
 
@@ -126,7 +125,8 @@ contract DecryptionSender is IDecryptionSender, AccessControl, Multicall {
         );
 
         if (!success) {
-            emit DecryptionReceiverCallbackFailed(requestID, decryptionKey, signature);
+            // emit DecryptionReceiverCallbackFailed(requestID, decryptionKey, signature);
+            revert();
         } else {
             emit DecryptionReceiverCallbackSuccess(requestID, decryptionKey, signature);
         }

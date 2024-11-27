@@ -1,4 +1,4 @@
-import { decrypt_towards_identity_g1, deserializeCiphertext } from '../src'
+import { decrypt_towards_identity_g1, deserializeCiphertext } from '../src/crypto'
 import { hexlify, getBytes } from 'ethers'
 import { Command } from 'commander'
 
