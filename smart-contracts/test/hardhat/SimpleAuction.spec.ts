@@ -162,48 +162,49 @@ describe("SimpleAuction Contract", function () {
   let bidder1: Signer;
   let bidder2: Signer;
 
-  const ADMIN_ROLE = toUtf8Bytes("ADMIN_ROLE");
   const durationBlocks = 10;
   const reservePrice = ethers.parseEther("0.1"); // 0.1 ETH converted to wei
   const highestBidPaymentWindowBlocks = 50;
   const SCHEME_ID = "BN254-BLS-BLOCKLOCK";
-  const DST = "BLOCKLOCK_BN254G1_XMD:KECCAK-256_SVDW_RO_H1_";
 
   beforeEach(async () => {
     [owner, bidder1, bidder2] = await ethers.getSigners();
 
-    // schemeProvider = await ethers.deployContract("SignatureSchemeAddressProvider");
-    // await schemeProvider.waitForDeployment();
+    schemeProvider = await ethers.deployContract("SignatureSchemeAddressProvider", [
+      await owner.getAddress()
+    ]);
+    await schemeProvider.waitForDeployment();
 
-    // blocklockScheme = await ethers.deployContract("BlocklockSignatureScheme");
-    // await blocklockScheme.waitForDeployment();
-    // await schemeProvider.updateSignatureScheme(SCHEME_ID, await blocklockScheme.getAddress());
+    blocklockScheme = await ethers.deployContract("BlocklockSignatureScheme");
+    await blocklockScheme.waitForDeployment();
+    await schemeProvider.updateSignatureScheme(SCHEME_ID, await blocklockScheme.getAddress());
 
-    // sigSender = await ethers.deployContract("SignatureSender", [
-    //   [BLOCKLOCK_DEFAULT_PUBLIC_KEY.x.c0, BLOCKLOCK_DEFAULT_PUBLIC_KEY.x.c1],
-    //   [BLOCKLOCK_DEFAULT_PUBLIC_KEY.y.c0, BLOCKLOCK_DEFAULT_PUBLIC_KEY.y.c1],
-    //   await schemeProvider.getAddress(),
-    // ]);
-    // await sigSender.waitForDeployment();
+    sigSender = await ethers.deployContract("SignatureSender", [
+      [BLOCKLOCK_DEFAULT_PUBLIC_KEY.x.c0, BLOCKLOCK_DEFAULT_PUBLIC_KEY.x.c1],
+      [BLOCKLOCK_DEFAULT_PUBLIC_KEY.y.c0, BLOCKLOCK_DEFAULT_PUBLIC_KEY.y.c1],
+      await owner.getAddress(),
+      await schemeProvider.getAddress(),
+    ]);
+    await sigSender.waitForDeployment();
 
-    // decryptionSender = await ethers.deployContract("DecryptionSender", [
-    //   [BLOCKLOCK_DEFAULT_PUBLIC_KEY.x.c0, BLOCKLOCK_DEFAULT_PUBLIC_KEY.x.c1],
-    //   [BLOCKLOCK_DEFAULT_PUBLIC_KEY.y.c0, BLOCKLOCK_DEFAULT_PUBLIC_KEY.y.c1],
-    //   await owner.getAddress(),
-    //   await schemeProvider.getAddress(),
-    // ]);
-    // await decryptionSender.waitForDeployment();
+    decryptionSender = await ethers.deployContract("DecryptionSender", [
+      [BLOCKLOCK_DEFAULT_PUBLIC_KEY.x.c0, BLOCKLOCK_DEFAULT_PUBLIC_KEY.x.c1],
+      [BLOCKLOCK_DEFAULT_PUBLIC_KEY.y.c0, BLOCKLOCK_DEFAULT_PUBLIC_KEY.y.c1],
+      await owner.getAddress(),
+      await schemeProvider.getAddress(),
+    ]);
+    await decryptionSender.waitForDeployment();
 
-    // blocklock = await ethers.deployContract("BlocklockSender", [await decryptionSender.getAddress()]);
-    // await blocklock.waitForDeployment();
+    blocklock = await ethers.deployContract("BlocklockSender", [await decryptionSender.getAddress()]);
+    await blocklock.waitForDeployment();
 
-    // auction = await ethers.deployContract("SimpleAuction", [
-    //   durationBlocks,
-    //   reservePrice,
-    //   highestBidPaymentWindowBlocks,
-    //   await blocklock.getAddress(),
-    // ]);
-    // await auction.waitForDeployment();
+    auction = await ethers.deployContract("SimpleAuction", [
+      durationBlocks,
+      reservePrice,
+      highestBidPaymentWindowBlocks,
+      await blocklock.getAddress(),
+    ]);
+    await auction.waitForDeployment();
   });
 
   async function encryptAndRegister(message: Uint8Array, blockHeight: bigint, pk: G2 = BLOCKLOCK_DEFAULT_PUBLIC_KEY): Promise<{
@@ -228,7 +229,7 @@ describe("SimpleAuction Contract", function () {
     }
 }
 
-  it.only("can request blocklock decryption", async function () {
+  it("can request blocklock decryption", async function () {
     const blocklock_default_pk = {
       x: {
           c0: BigInt("0x2691d39ecc380bfa873911a0b848c77556ee948fb8ab649137d3d3e78153f6ca"),
@@ -315,19 +316,25 @@ describe("SimpleAuction Contract", function () {
 
     const decryption_key = preprocess_decryption_key_g1(parsedCiphertext, { x: sig[0], y: sig[1] }, BLOCKLOCK_IBE_OPTS);
     let tx = await decryptionSender.connect(owner).fulfilDecryptionRequest(requestID, decryption_key, sigBytes);
-    
-    const [, , , condition, ciphertext] = extractSingleLog(
-      decryptionSenderIface,
-      receipt,
-      await decryptionSender.getAddress(),
-      decryptionSenderIface.getEvent("DecryptionRequested"),
-    );
+    const txreceipt = await tx.wait(1)
+    if (!txreceipt) {
+      throw new Error("transaction has not been mined")
+    }
 
-    // Try to decrypt using the blocklock contract
-    console.log(await blocklock.decrypt(parseSolidityCiphertextStruct(ciphertext), getBytes(decryption_key)))
-    // const decryptedM2 = getBytes(await blocklock.decrypt(ciphertext, decryption_key))
-    // console.log(decryptedM2)
-    // expect(m).toEqual(decryptedM2)
+    const iface = BlocklockSender__factory.createInterface()
+    const [, , cipherT, decryptionK] = extractSingleLog(
+      iface, txreceipt, 
+      await blocklock.getAddress(), 
+      iface.getEvent("BlocklockCallbackSuccess")
+    )
+    let test_ct: BlocklockTypes.CiphertextStruct = {
+      u: {x: [...req.ciphertext.u.x], y: [...req.ciphertext.u.y]},
+      v: req.ciphertext.v,
+      w: req.ciphertext.w,
+  }
+    const decryptedM2 = getBytes(await blocklock.decrypt(test_ct, decryptionK));
+
+    expect(Array.from(getBytes(encodedMessage))).to.have.members(Array.from(decryptedM2));
   });
 
   it("Should deploy the contracts with non zero addresses", async function () {
@@ -353,6 +360,11 @@ describe("SimpleAuction Contract", function () {
     // Submit a sealed bid from bidder1
     const tx = await auction.connect(bidder1).sealedBid(sealedAmount, { value: reservePrice });
     const receipt = await tx.wait(1);
+
+    if (!receipt) {
+      throw new Error("transaction has not been mined")
+    }
+
     const [bidID, bidder, sealedAmountFromEvent] = extractSingleLog(
       iface,
       receipt,
@@ -443,8 +455,8 @@ describe("SimpleAuction Contract", function () {
     const msgBytes = AbiCoder.defaultAbiCoder().encode(["uint256"], [msg])
     const encodedMessage = getBytes(msgBytes)
 
-    const blocknumber = await auction.auctionEndBlock();
-    const identity = blockHeightToBEBytes(BigInt(blocknumber));
+    const auctionEndBlock = await auction.auctionEndBlock();
+    const identity = blockHeightToBEBytes(BigInt(auctionEndBlock));
     const ct = encrypt_towards_identity_g1(encodedMessage, identity, BLOCKLOCK_DEFAULT_PUBLIC_KEY, BLOCKLOCK_IBE_OPTS);
 
     const sealedAmount = encodeCiphertextToSolidity(ct);
@@ -453,6 +465,9 @@ describe("SimpleAuction Contract", function () {
     const tx = await auction.connect(bidder1).sealedBid(sealedAmount, { value: reservePrice });
     const receipt = await tx.wait(1);
 
+    if (!receipt) {
+      throw new Error("transaction has not been mined")
+    }
     const iface = SimpleAuctionBase__factory.createInterface();
     const [bidID, bidder, sealedAmountFromEvent] = extractSingleLog(
       iface,
@@ -475,8 +490,6 @@ describe("SimpleAuction Contract", function () {
     const blsKey = "0x58aabbe98959c4dcb96c44c53be7e3bb980791fc7a9e03445c4af612a45ac906";
     const bls = await BlsBn254.create();
     const { pubKey, secretKey } = bls.createKeyPair(blsKey);
-    // console.log(bls.serialiseG2Point(pubKey))
-    // console.log(BLOCKLOCK_DEFAULT_PUBLIC_KEY)
 
     const conditionBytes = isHexString(condition) ? getBytes(condition) : toUtf8Bytes(condition);
     const m = bls.hashToPoint(BLOCKLOCK_IBE_OPTS.dsts.H1_G1, conditionBytes);
@@ -489,7 +502,7 @@ describe("SimpleAuction Contract", function () {
     const parsedCiphertext = parseSolidityCiphertextString(ciphertext);
 
     // Skip to the end block number
-    await ethers.provider.send("hardhat_mine", [Number(blocknumber) + 1]);
+    await ethers.provider.send("hardhat_mine", [Number(auctionEndBlock) + 1]);
     console.log(await auction.auctionEndBlock());
 
     // Ship blocklock signature & decryption key
@@ -503,7 +516,6 @@ describe("SimpleAuction Contract", function () {
     await decryptionSender.connect(owner).fulfilDecryptionRequest(requestID, decryption_key, sigBytes);
     
     console.log(await auction.getBidWithBidID(1));
-  
   });
 
 });
