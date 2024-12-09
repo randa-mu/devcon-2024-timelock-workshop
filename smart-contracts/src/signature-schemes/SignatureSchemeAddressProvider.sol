@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.28;
+pragma solidity 0.8.24;
 
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {ISignatureSchemeAddressProvider} from "../interfaces/ISignatureSchemeAddressProvider.sol";
@@ -15,9 +15,12 @@ contract SignatureSchemeAddressProvider is ISignatureSchemeAddressProvider, Acce
         _;
     }
 
-    constructor() {
-        require(_grantRole(DEFAULT_ADMIN_ROLE, msg.sender), "Grant role failed");
-        require(_grantRole(ADMIN_ROLE, msg.sender), "Grant role failed");
+    constructor(address owner) {
+        if (owner == address(0)) {
+            owner = msg.sender;
+        }
+        require(_grantRole(DEFAULT_ADMIN_ROLE, owner), "Grant role failed");
+        require(_grantRole(ADMIN_ROLE, owner), "Grant role failed");
     }
 
     /**

@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.28;
+pragma solidity 0.8.24;
 
-import {TypesLib} from "../lib/TypesLib.sol";
+import "../lib/TypesLib.sol";
+
 import {BLS} from "../lib/BLS.sol";
 import {IBlocklockSender} from "../interfaces/IBlocklockSender.sol";
 import {IBlocklockReceiver} from "../interfaces/IBlocklockReceiver.sol";
@@ -14,6 +15,8 @@ import {IDecryptionSender} from "../interfaces/IDecryptionSender.sol";
 
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 
+import {console} from "forge-std/console.sol";
+
 contract BlocklockSender is IBlocklockSender, DecryptionReceiverBase, AccessControl {
     string public constant SCHEME_ID = "BN254-BLS-BLOCKLOCK";
     bytes public constant DST_H1_G1 = "BLOCKLOCK_BN254G1_XMD:KECCAK-256_SVDW_RO_H1_";
@@ -23,15 +26,6 @@ contract BlocklockSender is IBlocklockSender, DecryptionReceiverBase, AccessCont
 
     // Mapping from decryption requestID to blocklock status
     mapping(uint256 => TypesLib.BlocklockRequest) public blocklockRequests;
-
-    // Request identifiers
-    uint256 public lastRequestID = 0;
-
-    // Mapping from signature requestID to blocklock requestID(s)
-    mapping(uint256 => uint256[]) public signaturesToBlocklock;
-
-    // Mapping from blockHeight to signature requestID
-    mapping(uint256 => uint256) public signatureRequests;
 
     event BlocklockRequested(
         uint256 indexed requestID,
@@ -95,16 +89,20 @@ contract BlocklockSender is IBlocklockSender, DecryptionReceiverBase, AccessCont
             abi.encodeWithSelector(IBlocklockReceiver.receiveBlocklock.selector, decryptionRequestID, decryptionKey)
         );
         if (!success) {
-            revert("reverts in blocklock sender");
-            // emit BlocklockCallbackFailed(decryptionRequestID, r.blockHeight, r.ciphertext, decryptionKey);
+            emit BlocklockCallbackFailed(decryptionRequestID, r.blockHeight, r.ciphertext, decryptionKey);
         } else {
             emit BlocklockCallbackSuccess(decryptionRequestID, r.blockHeight, r.ciphertext, decryptionKey);
         }
+        // todo review - if request callback fails, should it be deleted and treated as fulfilled?
+        // caller might not be contract implementing right interface
+        // or malicious contract that just reverts
         delete blocklockRequests[decryptionRequestID];
     }
 
     /**
-     * @dev See {IBlocklockSender-decrypt}.
+     * Decrypt a ciphertext into a plaintext using a decryption key.
+     * @param ciphertext The ciphertext to decrypt.
+     * @param decryptionKey The decryption key that can be used to decrypt the ciphertext.
      */
     function decrypt(TypesLib.Ciphertext calldata ciphertext, bytes calldata decryptionKey)
         public
@@ -139,7 +137,6 @@ contract BlocklockSender is IBlocklockSender, DecryptionReceiverBase, AccessCont
         // Assuming that the validity of the decryptionKey has been verified,
         // decryption fails if the ciphertext has been wrongly registered.
         require(equal == success == true, "invalid ciphertext registered");
-        // require(equal && success, "invalid ciphertext registered");
 
         return m2;
     }

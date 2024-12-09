@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.28;
+pragma solidity 0.8.24;
 
 import {TypesLib} from "./lib/TypesLib.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
@@ -278,10 +278,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
         emit DecryptionKeyReceived(requestID, decryptionKey);
     }
 
-    function revealBid(uint256 requestID)
-        external
-        onlyAfterEnded
-    {
+    function revealBid(uint256 requestID) external onlyAfterEnded {
         require(bidsById[requestID].bidID != 0, "Bid ID does not exist.");
         require(
             bidsById[requestID].decryptionKey.length != 0, "Bid decryption key not received from timelock contract."
@@ -293,7 +290,6 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
 
         updateHighestBid(requestID, decryptedSealedBidAmount);
     }
-    
 
     // ** Internal Functions **
 

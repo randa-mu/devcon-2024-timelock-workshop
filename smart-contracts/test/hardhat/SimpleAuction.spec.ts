@@ -17,6 +17,7 @@ import {
   SimpleAuction__factory,
   SimpleAuctionBase__factory,
   DecryptionSender__factory,
+  BlocklockSender__factory
 } from "../../typechain-types";
 import { TypesLib as BlocklockTypes } from "../../typechain-types/src/blocklock/BlocklockSender";
 import { keccak_256 } from "@noble/hashes/sha3";
@@ -144,6 +145,11 @@ function extractSingleLog<T extends Interface, E extends EventFragment>(
   return events[0];
 }
 
+function encrypt(message: Uint8Array, blockHeight: bigint, pk: G2 = BLOCKLOCK_DEFAULT_PUBLIC_KEY): Ciphertext {
+  const identity = blockHeightToBEBytes(blockHeight)
+  return encrypt_towards_identity_g1(message, identity, pk, BLOCKLOCK_IBE_OPTS)
+}
+
 describe("SimpleAuction Contract", function () {
   let auction: SimpleAuction;
   let blocklock: BlocklockSender;
@@ -151,21 +157,92 @@ describe("SimpleAuction Contract", function () {
   let decryptionSender: DecryptionSender;
   let schemeProvider: SignatureSchemeAddressProvider;
   let blocklockScheme: BlocklockSignatureScheme;
-  const ADMIN_ROLE = toUtf8Bytes("ADMIN_ROLE");
+
   let owner: Signer;
   let bidder1: Signer;
   let bidder2: Signer;
+
+  const ADMIN_ROLE = toUtf8Bytes("ADMIN_ROLE");
   const durationBlocks = 10;
   const reservePrice = ethers.parseEther("0.1"); // 0.1 ETH converted to wei
   const highestBidPaymentWindowBlocks = 50;
-
   const SCHEME_ID = "BN254-BLS-BLOCKLOCK";
   const DST = "BLOCKLOCK_BN254G1_XMD:KECCAK-256_SVDW_RO_H1_";
 
   beforeEach(async () => {
     [owner, bidder1, bidder2] = await ethers.getSigners();
 
-    schemeProvider = await ethers.deployContract("SignatureSchemeAddressProvider");
+    // schemeProvider = await ethers.deployContract("SignatureSchemeAddressProvider");
+    // await schemeProvider.waitForDeployment();
+
+    // blocklockScheme = await ethers.deployContract("BlocklockSignatureScheme");
+    // await blocklockScheme.waitForDeployment();
+    // await schemeProvider.updateSignatureScheme(SCHEME_ID, await blocklockScheme.getAddress());
+
+    // sigSender = await ethers.deployContract("SignatureSender", [
+    //   [BLOCKLOCK_DEFAULT_PUBLIC_KEY.x.c0, BLOCKLOCK_DEFAULT_PUBLIC_KEY.x.c1],
+    //   [BLOCKLOCK_DEFAULT_PUBLIC_KEY.y.c0, BLOCKLOCK_DEFAULT_PUBLIC_KEY.y.c1],
+    //   await schemeProvider.getAddress(),
+    // ]);
+    // await sigSender.waitForDeployment();
+
+    // decryptionSender = await ethers.deployContract("DecryptionSender", [
+    //   [BLOCKLOCK_DEFAULT_PUBLIC_KEY.x.c0, BLOCKLOCK_DEFAULT_PUBLIC_KEY.x.c1],
+    //   [BLOCKLOCK_DEFAULT_PUBLIC_KEY.y.c0, BLOCKLOCK_DEFAULT_PUBLIC_KEY.y.c1],
+    //   await owner.getAddress(),
+    //   await schemeProvider.getAddress(),
+    // ]);
+    // await decryptionSender.waitForDeployment();
+
+    // blocklock = await ethers.deployContract("BlocklockSender", [await decryptionSender.getAddress()]);
+    // await blocklock.waitForDeployment();
+
+    // auction = await ethers.deployContract("SimpleAuction", [
+    //   durationBlocks,
+    //   reservePrice,
+    //   highestBidPaymentWindowBlocks,
+    //   await blocklock.getAddress(),
+    // ]);
+    // await auction.waitForDeployment();
+  });
+
+  async function encryptAndRegister(message: Uint8Array, blockHeight: bigint, pk: G2 = BLOCKLOCK_DEFAULT_PUBLIC_KEY): Promise<{
+    id: string,
+    receipt: any,
+    ct: Ciphertext
+}> {
+    const ct = encrypt(message, blockHeight, pk)
+    const tx = await blocklock.requestBlocklock(blockHeight, encodeCiphertextToSolidity(ct))
+        const receipt = await tx.wait(1)
+        if (!receipt) {
+            throw new Error("transaction has not been mined")
+        }
+        
+        const iface = BlocklockSender__factory.createInterface()
+        const [requestID] = extractSingleLog(iface, receipt, await blocklock.getAddress(), iface.getEvent("BlocklockRequested"))
+
+    return {
+        id: requestID.toString(),
+        receipt: receipt,
+        ct,
+    }
+}
+
+  it.only("can request blocklock decryption", async function () {
+    const blocklock_default_pk = {
+      x: {
+          c0: BigInt("0x2691d39ecc380bfa873911a0b848c77556ee948fb8ab649137d3d3e78153f6ca"),
+          c1: BigInt("0x2863e20a5125b098108a5061b31f405e16a069e9ebff60022f57f4c4fd0237bf"),
+      },
+      y: {
+          c0: BigInt("0x193513dbe180d700b189c529754f650b7b7882122c8a1e242a938d23ea9f765c"),
+          c1: BigInt("0x11c939ea560caf31f552c9c4879b15865d38ba1dfb0f7a7d2ac46a4f0cae25ba"),
+      },
+    };
+
+    schemeProvider = await ethers.deployContract("SignatureSchemeAddressProvider", [
+      await owner.getAddress()
+    ]);
     await schemeProvider.waitForDeployment();
 
     blocklockScheme = await ethers.deployContract("BlocklockSignatureScheme");
@@ -173,15 +250,16 @@ describe("SimpleAuction Contract", function () {
     await schemeProvider.updateSignatureScheme(SCHEME_ID, await blocklockScheme.getAddress());
 
     sigSender = await ethers.deployContract("SignatureSender", [
-      [BLOCKLOCK_DEFAULT_PUBLIC_KEY.x.c0, BLOCKLOCK_DEFAULT_PUBLIC_KEY.x.c1],
-      [BLOCKLOCK_DEFAULT_PUBLIC_KEY.y.c0, BLOCKLOCK_DEFAULT_PUBLIC_KEY.y.c1],
+      [blocklock_default_pk.x.c0, blocklock_default_pk.x.c1],
+      [blocklock_default_pk.y.c0, blocklock_default_pk.y.c1],
+      await owner.getAddress(),
       await schemeProvider.getAddress(),
     ]);
     await sigSender.waitForDeployment();
 
     decryptionSender = await ethers.deployContract("DecryptionSender", [
-      [BLOCKLOCK_DEFAULT_PUBLIC_KEY.x.c0, BLOCKLOCK_DEFAULT_PUBLIC_KEY.x.c1],
-      [BLOCKLOCK_DEFAULT_PUBLIC_KEY.y.c0, BLOCKLOCK_DEFAULT_PUBLIC_KEY.y.c1],
+      [blocklock_default_pk.x.c0, blocklock_default_pk.x.c1],
+      [blocklock_default_pk.y.c0, blocklock_default_pk.y.c1],
       await owner.getAddress(),
       await schemeProvider.getAddress(),
     ]);
@@ -189,14 +267,32 @@ describe("SimpleAuction Contract", function () {
 
     blocklock = await ethers.deployContract("BlocklockSender", [await decryptionSender.getAddress()]);
     await blocklock.waitForDeployment();
+    
+    const blockHeight = await ethers.provider.getBlockNumber()
+    console.log(blockHeight)
 
-    auction = await ethers.deployContract("SimpleAuction", [
-      durationBlocks,
-      reservePrice,
-      highestBidPaymentWindowBlocks,
-      await blocklock.getAddress(),
-    ]);
-    await auction.waitForDeployment();
+    const m = new Uint8Array(Buffer.from("Hello World!"))
+    const {id, receipt } = await encryptAndRegister(m, BigInt(blockHeight + 2), blocklock_default_pk)
+    console.log(id)
+    expect(BigInt(id) > BigInt(0)).to.be.equal(true)
+
+    let req = await blocklock.getRequest(BigInt(id))
+    expect(req.blockHeight).to.be.equal(BigInt(blockHeight + 2))
+
+    const decryptionSenderIface = DecryptionSender__factory.createInterface();
+    const [requestID, callback, schemeID, condition, ciphertext] = extractSingleLog(
+      decryptionSenderIface,
+      receipt,
+      await decryptionSender.getAddress(),
+      decryptionSenderIface.getEvent("DecryptionRequested"),
+    );
+
+    // await ethers.provider.send("evm_mine", []);
+    // expect(await ethers.provider.getBlockNumber()).to.be.equal(blockHeight + 2)
+
+    // await ethers.provider.send("evm_mine", []);
+    // expect(await ethers.provider.getBlockNumber()).to.be.equal(blockHeight + 3)
+
   });
 
   it("Should deploy the contracts with non zero addresses", async function () {
@@ -370,18 +466,4 @@ describe("SimpleAuction Contract", function () {
   
   });
 
-  it.only("can request blocklock decryption", async function () {
-    const blocklock_default_pk = {
-      x: {
-          c0: BigInt("0x2691d39ecc380bfa873911a0b848c77556ee948fb8ab649137d3d3e78153f6ca"),
-          c1: BigInt("0x2863e20a5125b098108a5061b31f405e16a069e9ebff60022f57f4c4fd0237bf"),
-      },
-      y: {
-          c0: BigInt("0x193513dbe180d700b189c529754f650b7b7882122c8a1e242a938d23ea9f765c"),
-          c1: BigInt("0x11c939ea560caf31f552c9c4879b15865d38ba1dfb0f7a7d2ac46a4f0cae25ba"),
-      },
-  }
-
-  
-  });
 });

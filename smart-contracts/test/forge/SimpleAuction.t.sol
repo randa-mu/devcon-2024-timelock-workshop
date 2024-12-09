@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.28;
+pragma solidity 0.8.24;
 
 import {Test, console} from "forge-std/Test.sol";
 
@@ -135,7 +135,7 @@ contract SimpleAuctionTest is Test {
         bytes memory decryptionKey = hex"eeeaea41ee67536459b8de19894b94e2dfc9f8c67be979f9d6a7df7141c62576";
         // vm.expectRevert("invalid ciphertext registered");
         decryptionSender.fulfilDecryptionRequest(bidID, decryptionKey, signature);
-        
+
         auction.revealBid(1);
         vm.stopPrank();
 

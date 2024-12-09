@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.28;
+pragma solidity 0.8.24;
 
 import {BLS} from "../lib/BLS.sol";
 import {TypesLib} from "../lib/TypesLib.sol";
@@ -13,6 +13,7 @@ import {IDecryptionSender} from "../interfaces/IDecryptionSender.sol";
 import {IDecryptionReceiver} from "../interfaces/IDecryptionReceiver.sol";
 
 import {ISignatureReceiver} from "../interfaces/ISignatureReceiver.sol";
+import {ISignatureSender} from "../interfaces/ISignatureSender.sol";
 import {ISignatureScheme} from "../interfaces/ISignatureScheme.sol";
 import {ISignatureSchemeAddressProvider} from "../interfaces/ISignatureSchemeAddressProvider.sol";
 
@@ -125,8 +126,7 @@ contract DecryptionSender is IDecryptionSender, AccessControl, Multicall {
         );
 
         if (!success) {
-            // emit DecryptionReceiverCallbackFailed(requestID, decryptionKey, signature);
-            revert("reverts in decryption sender");
+            emit DecryptionReceiverCallbackFailed(requestID, decryptionKey, signature);
         } else {
             emit DecryptionReceiverCallbackSuccess(requestID, decryptionKey, signature);
         }
