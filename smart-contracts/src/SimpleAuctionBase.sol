@@ -278,6 +278,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
         emit DecryptionKeyReceived(requestID, decryptionKey);
     }
 
+    
     function revealBid(uint256 requestID) external onlyAfterEnded {
         require(bidsById[requestID].bidID != 0, "Bid ID does not exist.");
         require(

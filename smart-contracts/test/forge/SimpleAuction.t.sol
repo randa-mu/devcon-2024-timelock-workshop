@@ -63,7 +63,7 @@ contract SimpleAuctionTest is Test {
 
         vm.startPrank(auctioneer);
 
-        SignatureSchemeAddressProvider sigAddrProvider = new SignatureSchemeAddressProvider();
+        SignatureSchemeAddressProvider sigAddrProvider = new SignatureSchemeAddressProvider(owner);
         BlocklockSignatureScheme tlockScheme = new BlocklockSignatureScheme();
         sigAddrProvider.updateSignatureScheme(SCHEME_ID, address(tlockScheme));
 
@@ -77,7 +77,7 @@ contract SimpleAuctionTest is Test {
                 8044854403167346152897273335539146380878155193886184396711544300199836788154
             ]
         });
-        sigSender = new SignatureSender(pk.x, pk.y, address(sigAddrProvider));
+        sigSender = new SignatureSender(pk.x, pk.y, owner, address(sigAddrProvider));
 
         decryptionSender = new DecryptionSender(pk.x, pk.y, owner, address(sigAddrProvider));
 
