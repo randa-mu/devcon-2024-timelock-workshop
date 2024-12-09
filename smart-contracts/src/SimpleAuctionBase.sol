@@ -270,13 +270,30 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
         Bid storage bid = bidsById[requestID];
         bid.decryptionKey = decryptionKey;
 
-        uint256 decryptedSealedBidAmount = abi.decode(timelock.decrypt(bid.sealedAmount, decryptionKey), (uint256));
-        bid.unsealedAmount = decryptedSealedBidAmount;
+        // uint256 decryptedSealedBidAmount = abi.decode(timelock.decrypt(bid.sealedAmount, decryptionKey), (uint256));
+        // bid.unsealedAmount = decryptedSealedBidAmount;
 
-        updateHighestBid(requestID, decryptedSealedBidAmount);
+        // updateHighestBid(requestID, decryptedSealedBidAmount);
 
         emit DecryptionKeyReceived(requestID, decryptionKey);
     }
+
+    function revealBid(uint256 requestID)
+        external
+        onlyAfterEnded
+    {
+        require(bidsById[requestID].bidID != 0, "Bid ID does not exist.");
+        require(
+            bidsById[requestID].decryptionKey.length != 0, "Bid decryption key not received from timelock contract."
+        );
+        Bid storage bid = bidsById[requestID];
+
+        uint256 decryptedSealedBidAmount = abi.decode(timelock.decrypt(bid.sealedAmount, bid.decryptionKey), (uint256));
+        bid.unsealedAmount = decryptedSealedBidAmount;
+
+        updateHighestBid(requestID, decryptedSealedBidAmount);
+    }
+    
 
     // ** Internal Functions **
 

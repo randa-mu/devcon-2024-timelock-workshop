@@ -116,6 +116,7 @@ contract SimpleAuctionTest is Test {
 
     function test_RevealBid() public {
         uint256 bidAmount = 3 ether;
+        console.log(bidAmount);
 
         // First, place a bid
         vm.deal(bidder1, 1 ether);
@@ -134,7 +135,8 @@ contract SimpleAuctionTest is Test {
         bytes memory decryptionKey = hex"eeeaea41ee67536459b8de19894b94e2dfc9f8c67be979f9d6a7df7141c62576";
         // vm.expectRevert("invalid ciphertext registered");
         decryptionSender.fulfilDecryptionRequest(bidID, decryptionKey, signature);
-
+        
+        auction.revealBid(1);
         vm.stopPrank();
 
         // (,,, address bidderAddressWithBidID,) = auction.getBidWithBidID(bidID);

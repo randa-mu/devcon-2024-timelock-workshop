@@ -307,8 +307,9 @@ describe("SimpleAuction Contract", function () {
     expect(totalBids).to.equal(1);
   });
 
-  it.only("should update the highest bid after decrypting a sealed bid", async function () {
+  it("should update the highest bid after decrypting a sealed bid", async function () {
     const msg = ethers.parseEther("3");
+    console.log(msg)
     const blocknumber = await auction.auctionEndBlock();
     const encodedMessage = new Uint8Array(Buffer.from(msg.toString()));
     const identity = blockHeightToBEBytes(BigInt(blocknumber));
@@ -342,6 +343,8 @@ describe("SimpleAuction Contract", function () {
     const blsKey = "0x58aabbe98959c4dcb96c44c53be7e3bb980791fc7a9e03445c4af612a45ac906";
     const bls = await BlsBn254.create();
     const { pubKey, secretKey } = bls.createKeyPair(blsKey);
+    // console.log(bls.serialiseG2Point(pubKey))
+    // console.log(BLOCKLOCK_DEFAULT_PUBLIC_KEY)
 
     const conditionBytes = isHexString(condition) ? getBytes(condition) : toUtf8Bytes(condition);
     const m = bls.hashToPoint(BLOCKLOCK_IBE_OPTS.dsts.H1_G1, conditionBytes);
@@ -362,5 +365,23 @@ describe("SimpleAuction Contract", function () {
 
     const decryption_key = preprocess_decryption_key_g1(parsedCiphertext, { x: sig[0], y: sig[1] }, BLOCKLOCK_IBE_OPTS);
     await decryptionSender.connect(owner).fulfilDecryptionRequest(requestID, decryption_key, sigBytes);
+    
+    console.log(await auction.getBidWithBidID(1));
+  
+  });
+
+  it.only("can request blocklock decryption", async function () {
+    const blocklock_default_pk = {
+      x: {
+          c0: BigInt("0x2691d39ecc380bfa873911a0b848c77556ee948fb8ab649137d3d3e78153f6ca"),
+          c1: BigInt("0x2863e20a5125b098108a5061b31f405e16a069e9ebff60022f57f4c4fd0237bf"),
+      },
+      y: {
+          c0: BigInt("0x193513dbe180d700b189c529754f650b7b7882122c8a1e242a938d23ea9f765c"),
+          c1: BigInt("0x11c939ea560caf31f552c9c4879b15865d38ba1dfb0f7a7d2ac46a4f0cae25ba"),
+      },
+  }
+
+  
   });
 });
