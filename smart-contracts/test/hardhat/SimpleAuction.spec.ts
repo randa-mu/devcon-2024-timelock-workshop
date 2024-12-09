@@ -440,9 +440,10 @@ describe("SimpleAuction Contract", function () {
 
   it("should update the highest bid after decrypting a sealed bid", async function () {
     const msg = ethers.parseEther("3");
-    console.log(msg)
+    const msgBytes = AbiCoder.defaultAbiCoder().encode(["uint256"], [msg])
+    const encodedMessage = getBytes(msgBytes)
+
     const blocknumber = await auction.auctionEndBlock();
-    const encodedMessage = new Uint8Array(Buffer.from(msg.toString()));
     const identity = blockHeightToBEBytes(BigInt(blocknumber));
     const ct = encrypt_towards_identity_g1(encodedMessage, identity, BLOCKLOCK_DEFAULT_PUBLIC_KEY, BLOCKLOCK_IBE_OPTS);
 
@@ -487,7 +488,11 @@ describe("SimpleAuction Contract", function () {
     // Deserialize the ciphertext
     const parsedCiphertext = parseSolidityCiphertextString(ciphertext);
 
+    // Skip to the end block number
+    await ethers.provider.send("hardhat_mine", [Number(blocknumber) + 1]);
     console.log(await auction.auctionEndBlock());
+
+    // Ship blocklock signature & decryption key
     console.log(`creating a blocklock signature for block ${blockHeight}`);
 
     const signature = bls.sign(m, secretKey).signature;
