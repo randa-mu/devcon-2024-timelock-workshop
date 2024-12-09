@@ -268,11 +268,18 @@ describe("SimpleAuction Contract", function () {
     blocklock = await ethers.deployContract("BlocklockSender", [await decryptionSender.getAddress()]);
     await blocklock.waitForDeployment();
     
-    const blockHeight = await ethers.provider.getBlockNumber()
+    let blockHeight = await ethers.provider.getBlockNumber()
     console.log(blockHeight)
 
-    const m = new Uint8Array(Buffer.from("Hello World!"))
-    const {id, receipt } = await encryptAndRegister(m, BigInt(blockHeight + 2), blocklock_default_pk)
+    // const m = new Uint8Array(Buffer.from("Hello World!"))
+
+    const msg = ethers.parseEther("3");
+    const msgBytes = AbiCoder.defaultAbiCoder().encode(["uint256"], [msg])
+    const encodedMessage = getBytes(msgBytes)
+
+    // encodedMessage = 0x00000000000000000000000000000000000000000000000029a2241af62c0000
+
+    const {id, receipt, ct } = await encryptAndRegister(encodedMessage, BigInt(blockHeight + 2), blocklock_default_pk)
     console.log(id)
     expect(BigInt(id) > BigInt(0)).to.be.equal(true)
 
@@ -287,12 +294,40 @@ describe("SimpleAuction Contract", function () {
       decryptionSenderIface.getEvent("DecryptionRequested"),
     );
 
-    // await ethers.provider.send("evm_mine", []);
-    // expect(await ethers.provider.getBlockNumber()).to.be.equal(blockHeight + 2)
+    console.log(`received decryption request ${requestID}`);
+    console.log(`call back address ${callback}, scheme id ${schemeID}`);
 
-    // await ethers.provider.send("evm_mine", []);
-    // expect(await ethers.provider.getBlockNumber()).to.be.equal(blockHeight + 3)
+    const blsKey = "0x58aabbe98959c4dcb96c44c53be7e3bb980791fc7a9e03445c4af612a45ac906";
+    const bls = await BlsBn254.create();
+    const { pubKey, secretKey } = bls.createKeyPair(blsKey);
 
+    const conditionBytes = isHexString(condition) ? getBytes(condition) : toUtf8Bytes(condition);
+    const m = bls.hashToPoint(BLOCKLOCK_IBE_OPTS.dsts.H1_G1, conditionBytes);
+    
+    const hexCondition = Buffer.from(conditionBytes).toString("hex");
+    blockHeight = BigInt("0x" + hexCondition);
+
+    const parsedCiphertext = parseSolidityCiphertextString(ciphertext);
+
+    const signature = bls.sign(m, secretKey).signature;
+    const sig = bls.serialiseG1Point(signature);
+    const sigBytes = AbiCoder.defaultAbiCoder().encode(["uint256", "uint256"], [sig[0], sig[1]]);
+
+    const decryption_key = preprocess_decryption_key_g1(parsedCiphertext, { x: sig[0], y: sig[1] }, BLOCKLOCK_IBE_OPTS);
+    let tx = await decryptionSender.connect(owner).fulfilDecryptionRequest(requestID, decryption_key, sigBytes);
+    
+    const [, , , condition, ciphertext] = extractSingleLog(
+      decryptionSenderIface,
+      receipt,
+      await decryptionSender.getAddress(),
+      decryptionSenderIface.getEvent("DecryptionRequested"),
+    );
+
+    // Try to decrypt using the blocklock contract
+    console.log(await blocklock.decrypt(parseSolidityCiphertextStruct(ciphertext), getBytes(decryption_key)))
+    // const decryptedM2 = getBytes(await blocklock.decrypt(ciphertext, decryption_key))
+    // console.log(decryptedM2)
+    // expect(m).toEqual(decryptedM2)
   });
 
   it("Should deploy the contracts with non zero addresses", async function () {

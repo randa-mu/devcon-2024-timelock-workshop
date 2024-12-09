@@ -89,7 +89,8 @@ contract BlocklockSender is IBlocklockSender, DecryptionReceiverBase, AccessCont
             abi.encodeWithSelector(IBlocklockReceiver.receiveBlocklock.selector, decryptionRequestID, decryptionKey)
         );
         if (!success) {
-            emit BlocklockCallbackFailed(decryptionRequestID, r.blockHeight, r.ciphertext, decryptionKey);
+            revert();
+            // emit BlocklockCallbackFailed(decryptionRequestID, r.blockHeight, r.ciphertext, decryptionKey);
         } else {
             emit BlocklockCallbackSuccess(decryptionRequestID, r.blockHeight, r.ciphertext, decryptionKey);
         }

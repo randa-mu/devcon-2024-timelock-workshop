@@ -126,7 +126,8 @@ contract DecryptionSender is IDecryptionSender, AccessControl, Multicall {
         );
 
         if (!success) {
-            emit DecryptionReceiverCallbackFailed(requestID, decryptionKey, signature);
+            revert();
+            // emit DecryptionReceiverCallbackFailed(requestID, decryptionKey, signature);
         } else {
             emit DecryptionReceiverCallbackSuccess(requestID, decryptionKey, signature);
         }
