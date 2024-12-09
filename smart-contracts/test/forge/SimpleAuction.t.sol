@@ -133,19 +133,18 @@ contract SimpleAuctionTest is Test {
         bytes memory signature =
             hex"02b3b2fa2c402d59e22a2f141e32a092603862a06a695cbfb574c440372a72cd0636ba8092f304e7701ae9abe910cb474edf0408d9dd78ea7f6f97b7f2464711";
         bytes memory decryptionKey = hex"7ec49d8f06b34d8d6b2e060ea41652f25b1325fafb041bba9cf24f094fbca259";
-        // vm.expectRevert("invalid ciphertext registered");
         decryptionSender.fulfilDecryptionRequest(bidID, decryptionKey, signature);
 
         auction.revealBid(1);
         vm.stopPrank();
 
-        // (,,, address bidderAddressWithBidID,) = auction.getBidWithBidID(bidID);
-        // (,,, address bidderAddressWithBidder,) = auction.getBidWithBidder(bidder1);
+        (,,, address bidderAddressWithBidID,) = auction.getBidWithBidID(bidID);
+        (,,, address bidderAddressWithBidder,) = auction.getBidWithBidder(bidder1);
 
-        // assertEq(auction.highestBidder(), bidder1, "Highest bidder should be bidder1");
-        // assertEq(bidderAddressWithBidID, bidder1, "Bidder for bid ID 1 should be bidder1");
-        // assertEq(bidderAddressWithBidder, bidder1, "Bidder for bid ID 1 should be bidder 1");
-        // assertEq(auction.highestBid(), bidAmount, "Highest bid should be 1000");
+        assertEq(auction.highestBidder(), bidder1, "Highest bidder should be bidder1");
+        assertEq(bidderAddressWithBidID, bidder1, "Bidder for bid ID 1 should be bidder1");
+        assertEq(bidderAddressWithBidder, bidder1, "Bidder for bid ID 1 should be bidder 1");
+        assertEq(auction.highestBid(), bidAmount, "Highest bid should be bid amount");
     }
 
     // function test_FulfillHighestBid() public {
