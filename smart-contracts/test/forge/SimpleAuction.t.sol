@@ -22,7 +22,7 @@ contract SimpleAuctionTest is Test {
 
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
-    uint256 public durationBlocks = 10;
+    uint256 public durationBlocks = 12;
     uint256 public reservePrice = 0.1 ether;
     uint256 public highestBidPaymentWindowBlocks = 5;
 
@@ -41,16 +41,16 @@ contract SimpleAuctionTest is Test {
     TypesLib.Ciphertext sealedBidBidder1 = TypesLib.Ciphertext({
         u: BLS.PointG2({
             x: [
-                5047133470638996909189692600237005959627764473389521001823226791807642270514,
-                8846497303048436123512087964102035855348118949070517600371106437472276734159
+                405154225049914176078045612467494128619039017729626341168211154282134679672,
+                11397302231842381551031836040800530310165027464616959867265369704635545372817
             ],
             y: [
-                18327187565402116422741902201597668960839249719735039611854877449219577179955,
-                21516135030986330584263082370828048028273368275484006144837333710758044661528
+                5618230031367461186013945322261245081328080556553036143722271869675427823657,
+                10755713202705074404365568653231335684591521348051341663691182061969866563602
             ]
         }),
-        v: "0x335e450096c91f6fc9b8cd1e7b1214e32dcfa507d1e8788c4d5982634987de70",
-        w: "0x6d3e9c090e26a8974aeb512b63897ebbb5ca0b"
+        v: hex"36f3e9579a1f6b2a026dc0682401262782ed9bdac23089fea3aa67601e155e77",
+        w: hex"99474e2518df2c9a761085b3c612ef218a8055"
     });
 
     // todo create signatures or decryption keys for both bids for block number 11
@@ -131,8 +131,8 @@ contract SimpleAuctionTest is Test {
         // This should also decrypt the sealed bid
         vm.startPrank(auctioneer);
         bytes memory signature =
-            hex"0b4c9ccbd26d55bf43ef59e64aed0e641f387e2500ec80ccb8e517f31442fc212e1f62ff2b0162ae66e4818829a7755e508d757c52da4b140b691c252d7192b9";
-        bytes memory decryptionKey = hex"eeeaea41ee67536459b8de19894b94e2dfc9f8c67be979f9d6a7df7141c62576";
+            hex"02b3b2fa2c402d59e22a2f141e32a092603862a06a695cbfb574c440372a72cd0636ba8092f304e7701ae9abe910cb474edf0408d9dd78ea7f6f97b7f2464711";
+        bytes memory decryptionKey = hex"16398323e7eb3a5c6f44b257e9bccca6de7dcac5d9970dfab2a0566e5453740c";
         // vm.expectRevert("invalid ciphertext registered");
         decryptionSender.fulfilDecryptionRequest(bidID, decryptionKey, signature);
 
