@@ -41,6 +41,8 @@ contract DecryptionSender is IDecryptionSender, AccessControl, Multicall {
     );
     event DecryptionReceiverCallbackSuccess(uint256 indexed requestID, bytes decryptionKey, bytes signature);
 
+    error DecryptionReceiverCallbackFailed(uint256 requestID); 
+
     modifier onlyOwner() {
         _checkRole(ADMIN_ROLE);
         _;
@@ -92,15 +94,6 @@ contract DecryptionSender is IDecryptionSender, AccessControl, Multicall {
         return lastRequestID;
     }
 
-    // todo restricted to only owner for now.
-    // todo will we allow operators call this function themselves or some aggregator node???
-    // todo will we do some verification to check threshold requirement for signatures is met??
-    // todo will we do some verification to check if operator caller is part of committeeID specified in signature request??
-    // todo will committeeIDs be made public somehow or for efficiency, should we randomly allocate requests ourseleves to committees??
-    // todo use modifier for fulfiling signature requests to check if caller is operator
-    // registered for a scheme??
-    // todo we can also have another modifier to check if operator is part of a committeeID speficied
-    // in signature request
     /**
      * @dev See {IDecryptionSender-fulfilSignatureRequest}.
      */
@@ -125,7 +118,7 @@ contract DecryptionSender is IDecryptionSender, AccessControl, Multicall {
         );
 
         if (!success) {
-            revert("Decryption Receiver Callback Failed");
+            revert DecryptionReceiverCallbackFailed(requestID);
         } else {
             emit DecryptionReceiverCallbackSuccess(requestID, decryptionKey, signature);
             delete requestsInFlight[requestID];

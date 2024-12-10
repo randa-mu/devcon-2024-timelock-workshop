@@ -37,9 +37,8 @@ contract BlocklockSender is IBlocklockSender, DecryptionReceiverBase, AccessCont
     event BlocklockCallbackSuccess(
         uint256 indexed requestID, uint256 blockHeight, TypesLib.Ciphertext ciphertext, bytes decryptionKey
     );
-    event BlocklockCallbackFailed(
-        uint256 indexed requestID, uint256 blockHeight, TypesLib.Ciphertext ciphertext, bytes decryptionKey
-    );
+
+    error BlocklockCallbackFailed(uint256 requestID);
 
     constructor(address _decryptionSender) DecryptionReceiverBase(_decryptionSender) {}
 
@@ -89,7 +88,7 @@ contract BlocklockSender is IBlocklockSender, DecryptionReceiverBase, AccessCont
             abi.encodeWithSelector(IBlocklockReceiver.receiveBlocklock.selector, decryptionRequestID, decryptionKey)
         );
         if (!success) {
-            revert("Blocklock Callback Failed");
+            revert BlocklockCallbackFailed(decryptionRequestID);
         } else {
             emit BlocklockCallbackSuccess(decryptionRequestID, r.blockHeight, r.ciphertext, decryptionKey);
             delete blocklockRequests[decryptionRequestID];
