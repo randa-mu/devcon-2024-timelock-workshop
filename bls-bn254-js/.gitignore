@@ -3,3 +3,4 @@ index.js
 dist
 **/**.d.ts
 **/*.js.map
+src/generated/**
