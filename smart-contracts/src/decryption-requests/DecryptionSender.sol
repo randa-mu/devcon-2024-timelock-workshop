@@ -41,7 +41,7 @@ contract DecryptionSender is IDecryptionSender, AccessControl, Multicall {
     );
     event DecryptionReceiverCallbackSuccess(uint256 indexed requestID, bytes decryptionKey, bytes signature);
 
-    error DecryptionReceiverCallbackFailed(uint256 requestID); 
+    error DecryptionReceiverCallbackFailed(uint256 requestID);
 
     modifier onlyOwner() {
         _checkRole(ADMIN_ROLE);

@@ -93,7 +93,6 @@ contract BlocklockSender is IBlocklockSender, DecryptionReceiverBase, AccessCont
             emit BlocklockCallbackSuccess(decryptionRequestID, r.blockHeight, r.ciphertext, decryptionKey);
             delete blocklockRequests[decryptionRequestID];
         }
-        
     }
 
     /**

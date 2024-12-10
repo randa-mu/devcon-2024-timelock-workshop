@@ -116,7 +116,6 @@ contract SignatureSender is ISignatureSender, AccessControl, Multicall {
             emit SignatureRequestFulfilled(requestID);
             delete requestsInFlight[requestID];
         }
-        
     }
 
     /**
