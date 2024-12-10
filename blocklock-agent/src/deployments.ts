@@ -1,9 +1,10 @@
-import {AbstractSigner, AddressLike} from "ethers"
+import {AbstractSigner, AddressLike, ethers} from "ethers"
 import {
     BlocklockSender__factory,
     BlocklockSignatureScheme__factory,
     BlsBn254,
     DecryptionSender__factory,
+    SimpleAuction__factory,
     deployContract,
     getCreate2Address,
     isDeployed,
@@ -32,6 +33,39 @@ export async function deploySchemeProvider(signer: AbstractSigner): Promise<stri
 
     if (await isDeployed(computedAddr, signer.provider)) {
         console.log("signature scheme addresses provider contract already deployed")
+        return computedAddr
+    }
+    const result = await deployContract({...creationParams, signer})
+    return result.address
+}
+
+/**
+ * Deploy the sealed bid auction contract
+ */
+export async function deployAuction(signer: AbstractSigner, blocklockContractAddr: AddressLike): Promise<string> {
+    // Auction smart contract configuration parameters
+    const durationBlocks = 50; // blocks
+    const reservePrice = 0.1; // ether
+    const reservePriceInWei = ethers.parseEther(reservePrice.toString(10))
+    const highestBidPaymentWindowBlocks = 10; // blocks
+
+    if (!signer.provider) {
+        throw Error("`Signer` must have a valid RPC provider")
+    }
+    const owner = await signer.getAddress()
+    const creationParams = {
+        salt,
+        contractBytecode: SimpleAuction__factory.bytecode,
+        constructorTypes: SimpleAuction__factory.createInterface().deploy.inputs,
+        constructorArgs: [owner, durationBlocks, 
+            reservePriceInWei, 
+            highestBidPaymentWindowBlocks,
+            blocklockContractAddr],
+    }
+    const computedAddr = getCreate2Address(creationParams)
+
+    if (await isDeployed(computedAddr, signer.provider)) {
+        console.log("auction contract already deployed")
         return computedAddr
     }
     const result = await deployContract({...creationParams, signer})

@@ -26,6 +26,7 @@ import {
 import {TypedContractEvent, TypedListener} from "@randamu/bls-bn254-js/src/generated/common"
 import {
     BLOCKLOCK_SCHEME_ID,
+    deployAuction,
     deployBlocklock,
     deployBlocklockScheme,
     deployDecryptionSender,
@@ -108,6 +109,9 @@ async function main() {
 
     const blocklockAddr = await deployBlocklock(wallet, decryptionSenderAddr)
     console.log(`blocklock contract deployed to ${blocklockAddr}`)
+
+    const auctionAddr = await deployAuction(wallet, blocklockAddr)
+    console.log(`auction contract deployed to ${auctionAddr}`)
 
     const blocklockNumbers = new Map()
     await decryptionSenderContract.addListener("DecryptionRequested", createDecryptionListener(bls, blocklockNumbers))
