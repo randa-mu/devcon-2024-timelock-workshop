@@ -31,13 +31,9 @@ contract SimpleAuctionTest is Test {
     address bidder1;
     address bidder2;
 
-    // todo try bytes input for ciphertext and run tests again
-
     // create ciphertexts for bid amounts
+    // bidder1
     // e.g., bid amount - 3 ether - 3000000000000000000 wei
-    // block number - durationBlocks + 1 = 11
-    // yarn timelock:encrypt --message 3000000000000000000 --blocknumber 11
-    // 3 ether for bidder 1 and 4 ether for bidder 2
     TypesLib.Ciphertext sealedBidBidder1 = TypesLib.Ciphertext({
         u: BLS.PointG2({
             x: [
@@ -52,8 +48,30 @@ contract SimpleAuctionTest is Test {
         v: hex"63f745f4240f4708db37b0fa0e40309a37ab1a65f9b1be4ac716a347d4fe57fe",
         w: hex"e8aadd66a9a67c00f134b1127b7ef85046308c340f2bb7cee431bd7bfe950bd4"
     });
+    bytes signatureBidder1 =
+            hex"02b3b2fa2c402d59e22a2f141e32a092603862a06a695cbfb574c440372a72cd0636ba8092f304e7701ae9abe910cb474edf0408d9dd78ea7f6f97b7f2464711";
+    bytes decryptionKeyBidder1 = hex"7ec49d8f06b34d8d6b2e060ea41652f25b1325fafb041bba9cf24f094fbca259";
 
-    // todo create signatures or decryption keys for both bids for block number 11
+    // bidder2
+    // e.g., bid amount - 4 ether - 4000000000000000000 wei
+    TypesLib.Ciphertext sealedBidBidder2 = TypesLib.Ciphertext({
+        u: BLS.PointG2({
+            x: [
+                1191337915086721647096601261396096889614570162960213535063361568373751083570n,
+                13056886821433466326289451255305361556160321654068459672142799079868002657175n
+            ],
+            y: [
+                13436582126067570211195108102055578013895933899998079037133721719650551278539n,
+                3464851225502595980385489082899634183893435659833581498999927105783231959813n
+            ]
+        }),
+        v: hex"04172c3a6caca5ef0c7af8785a3fec01602944bdf293b94578e95027c62152f6",
+        w: hex"bf81746c2d82488009ba907f5de92112e8cace91bd8f461aa04a40be517e58f9"
+    });
+    bytes signatureBidder2 =
+            hex"18fa3976821616ad11d88955f296fcfde336ef7bee75a81e0bd2fec62bf3f66718cd40587a6ae6bf6680e4eca84e07a9cb1e5eadaa5fab4a055d73986ebfebb0";
+    bytes decryptionKeyBidder2 = hex"96a021515382be7f638e4aee2c48975d4966f7da91e8b587fcb7ec0567c78480";
+
 
     function setUp() public {
         auctioneer = vm.addr(1);
@@ -116,7 +134,6 @@ contract SimpleAuctionTest is Test {
 
     function test_RevealBid() public {
         uint256 bidAmount = 3 ether;
-        console.log(bidAmount);
 
         // First, place a bid
         vm.deal(bidder1, 1 ether);
@@ -130,10 +147,8 @@ contract SimpleAuctionTest is Test {
         // Receive the decryption key for the bid id from the timelock contract
         // This should also decrypt the sealed bid
         vm.startPrank(auctioneer);
-        bytes memory signature =
-            hex"02b3b2fa2c402d59e22a2f141e32a092603862a06a695cbfb574c440372a72cd0636ba8092f304e7701ae9abe910cb474edf0408d9dd78ea7f6f97b7f2464711";
-        bytes memory decryptionKey = hex"7ec49d8f06b34d8d6b2e060ea41652f25b1325fafb041bba9cf24f094fbca259";
-        decryptionSender.fulfilDecryptionRequest(bidID, decryptionKey, signature);
+        
+        decryptionSender.fulfilDecryptionRequest(bidID, decryptionKeyBidder1, signatureBidder1);
 
         auction.revealBid(1);
         vm.stopPrank();

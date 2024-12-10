@@ -20,7 +20,7 @@ contract SimpleAuctionScript is Script {
         vm.startBroadcast();
 
         address owner = msg.sender;
-        
+
         // Deploy signature scheme address provider
         SignatureSchemeAddressProvider sigAddrProvider = new SignatureSchemeAddressProvider(owner);
         console.log("SignatureSchemeAddressProvider deployed to:", address(sigAddrProvider));

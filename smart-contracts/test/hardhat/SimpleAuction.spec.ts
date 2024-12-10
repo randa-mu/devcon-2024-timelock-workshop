@@ -213,6 +213,7 @@ describe("SimpleAuction Contract", function () {
     ct: Ciphertext
 }> {
     const ct = encrypt(message, blockHeight, pk)
+
     const tx = await blocklock.requestBlocklock(blockHeight, encodeCiphertextToSolidity(ct))
         const receipt = await tx.wait(1)
         if (!receipt) {
@@ -229,7 +230,7 @@ describe("SimpleAuction Contract", function () {
     }
 }
 
-  it("can request blocklock decryption", async function () {
+  it.only("can request blocklock decryption", async function () {
     const blocklock_default_pk = {
       x: {
           c0: BigInt("0x2691d39ecc380bfa873911a0b848c77556ee948fb8ab649137d3d3e78153f6ca"),
@@ -274,7 +275,7 @@ describe("SimpleAuction Contract", function () {
 
     // const m = new Uint8Array(Buffer.from("Hello World!"))
 
-    const msg = ethers.parseEther("3");
+    const msg = ethers.parseEther("4");
     const msgBytes = AbiCoder.defaultAbiCoder().encode(["uint256"], [msg])
     const encodedMessage = getBytes(msgBytes)
 
@@ -282,6 +283,7 @@ describe("SimpleAuction Contract", function () {
 
     const {id, receipt, ct } = await encryptAndRegister(encodedMessage, BigInt(blockHeight + 2), blocklock_default_pk)
     console.log(id)
+    
     expect(BigInt(id) > BigInt(0)).to.be.equal(true)
 
     let req = await blocklock.getRequest(BigInt(id))
@@ -309,7 +311,7 @@ describe("SimpleAuction Contract", function () {
     blockHeight = BigInt("0x" + hexCondition);
 
     const parsedCiphertext = parseSolidityCiphertextString(ciphertext);
-
+    
     const signature = bls.sign(m, secretKey).signature;
     const sig = bls.serialiseG1Point(signature);
     const sigBytes = AbiCoder.defaultAbiCoder().encode(["uint256", "uint256"], [sig[0], sig[1]]);
@@ -332,6 +334,8 @@ describe("SimpleAuction Contract", function () {
       v: req.ciphertext.v,
       w: req.ciphertext.w,
   }
+
+  // console.log(test_ct, decryptionK, sigBytes)
     const decryptedM2 = getBytes(await blocklock.decrypt(test_ct, decryptionK));
 
     expect(Array.from(getBytes(encodedMessage))).to.have.members(Array.from(decryptedM2));
@@ -451,7 +455,7 @@ describe("SimpleAuction Contract", function () {
   });
 
   it("should update the highest bid after decrypting a sealed bid", async function () {
-    const msg = ethers.parseEther("3");
+    const msg = ethers.parseEther("4");
     const msgBytes = AbiCoder.defaultAbiCoder().encode(["uint256"], [msg])
     const encodedMessage = getBytes(msgBytes)
 
