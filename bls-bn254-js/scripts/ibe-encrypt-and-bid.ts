@@ -3,6 +3,7 @@ import { encrypt_towards_identity_g1, IbeOpts, G2, Ciphertext } from '../src'
 import { Command } from 'commander'
 import { keccak_256 } from "@noble/hashes/sha3"
 import {SimpleAuction__factory} from "../src/generated"
+import {TypesLib as BlocklockTypes} from "../src/generated/BlocklockSender"
 
 // Encrypt message with Identity-based Encryption (IBE)
 //
@@ -103,7 +104,7 @@ async function encryptAndRegister(
         throw new Error("transaction has not been mined");
       }
       const iface = SimpleAuction__factory.createInterface();
-      const [bidID, , sealedAmountFromEvent] = extractSingleLog(
+      const [bidID, , ] = extractSingleLog(
         iface,
         receipt,
         await auctionContract.getAddress(),
@@ -113,7 +114,7 @@ async function encryptAndRegister(
     return {
       id: bidID.toString(),
       receipt: receipt,
-      ct: sealedAmountFromEvent,
+      ct,
     };
   }
 
@@ -125,7 +126,9 @@ async function main() {
 
     const blockHeight = BigInt(blocknumber)
     const { id, receipt, ct } = await encryptAndRegister(encodedMessage, blockHeight, BLOCKLOCK_DEFAULT_PUBLIC_KEY);
-    console.log(id, receipt, ct)
+    console.log(`request id: ${id}`)
+    console.log(`bid transaction receipt: ${receipt}`)
+    console.log(`Ciphertext: ${ct}`)
 }   
 
 main()
