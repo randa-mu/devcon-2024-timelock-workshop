@@ -1,6 +1,5 @@
 import {
   Ciphertext,
-  decrypt_g1_with_preprocess,
   encrypt_towards_identity_g1,
   G2,
   IbeOpts,
@@ -14,7 +13,6 @@ import {
   BlocklockSender,
   BlocklockSignatureScheme,
   DecryptionSender,
-  SimpleAuction__factory,
   SimpleAuctionBase__factory,
   DecryptionSender__factory,
   BlocklockSender__factory,
@@ -23,21 +21,15 @@ import { TypesLib as BlocklockTypes } from "../../typechain-types/src/blocklock/
 import { keccak_256 } from "@noble/hashes/sha3";
 import {
   getBytes,
-  Provider,
   Signer,
-  keccak256,
-  hexlify,
   ZeroAddress,
   Interface,
   TransactionReceipt,
   isHexString,
-  id,
   AbiCoder,
-  ParamType,
   EventFragment,
   Result,
   toUtf8Bytes,
-  ContractTransactionReceipt,
 } from "ethers";
 
 const { expect } = require("chai");
@@ -276,18 +268,13 @@ describe("SimpleAuction Contract", function () {
     await blocklock.waitForDeployment();
 
     let blockHeight = await ethers.provider.getBlockNumber();
-    console.log(blockHeight);
-
-    // const m = new Uint8Array(Buffer.from("Hello World!"))
 
     const msg = ethers.parseEther("4");
     const msgBytes = AbiCoder.defaultAbiCoder().encode(["uint256"], [msg]);
     const encodedMessage = getBytes(msgBytes);
-
     // encodedMessage = 0x00000000000000000000000000000000000000000000000029a2241af62c0000
 
-    const { id, receipt, ct } = await encryptAndRegister(encodedMessage, BigInt(blockHeight + 2), blocklock_default_pk);
-    console.log(id);
+    const { id, receipt } = await encryptAndRegister(encodedMessage, BigInt(blockHeight + 2), blocklock_default_pk);
 
     expect(BigInt(id) > BigInt(0)).to.be.equal(true);
 
@@ -329,7 +316,7 @@ describe("SimpleAuction Contract", function () {
     }
 
     const iface = BlocklockSender__factory.createInterface();
-    const [, , cipherT, decryptionK] = extractSingleLog(
+    const [, , , decryptionK] = extractSingleLog(
       iface,
       txreceipt,
       await blocklock.getAddress(),
@@ -341,7 +328,6 @@ describe("SimpleAuction Contract", function () {
       w: req.ciphertext.w,
     };
 
-    console.log(test_ct, decryptionK, sigBytes)
     const decryptedM2 = getBytes(await blocklock.decrypt(test_ct, decryptionK));
 
     expect(Array.from(getBytes(encodedMessage))).to.have.members(Array.from(decryptedM2));
@@ -496,6 +482,8 @@ describe("SimpleAuction Contract", function () {
       decryptionSenderIface.getEvent("DecryptionRequested"),
     );
 
+    expect(bidID).to.equal(requestID);
+
     console.log(`received decryption request ${requestID}`);
     console.log(`${callback}, ${schemeID}`);
 
@@ -523,7 +511,7 @@ describe("SimpleAuction Contract", function () {
     const signature = bls.sign(m, secretKey).signature;
     const sig = bls.serialiseG1Point(signature);
     const sigBytes = AbiCoder.defaultAbiCoder().encode(["uint256", "uint256"], [sig[0], sig[1]]);
-    
+
     // receive decryption key after auction end block
     const decryption_key = preprocess_decryption_key_g1(parsedCiphertext, { x: sig[0], y: sig[1] }, BLOCKLOCK_IBE_OPTS);
     await decryptionSender.connect(owner).fulfilDecryptionRequest(requestID, decryption_key, sigBytes);
@@ -555,7 +543,7 @@ describe("SimpleAuction Contract", function () {
     // Submit a sealed bid from bidder1
     let tx = await auction.connect(bidder1).sealedBid(sealedAmount1, { value: reservePrice });
     let receipt = await tx.wait(1);
-    
+
     if (!receipt) {
       throw new Error("transaction has not been mined");
     }
@@ -579,7 +567,7 @@ describe("SimpleAuction Contract", function () {
     // Submit a sealed bid from bidder1
     tx = await auction.connect(bidder2).sealedBid(sealedAmount2, { value: reservePrice });
     receipt = await tx.wait(1);
-    
+
     if (!receipt) {
       throw new Error("transaction has not been mined");
     }
@@ -616,14 +604,21 @@ describe("SimpleAuction Contract", function () {
     const signature = bls.sign(m, secretKey).signature;
     const sig = bls.serialiseG1Point(signature);
     const sigBytes = AbiCoder.defaultAbiCoder().encode(["uint256", "uint256"], [sig[0], sig[1]]);
-    
+
     // receive decryption key after auction end block
-    const decryption_key1 = preprocess_decryption_key_g1(parsedCiphertext1, { x: sig[0], y: sig[1] }, BLOCKLOCK_IBE_OPTS);
+    const decryption_key1 = preprocess_decryption_key_g1(
+      parsedCiphertext1,
+      { x: sig[0], y: sig[1] },
+      BLOCKLOCK_IBE_OPTS,
+    );
     await decryptionSender.connect(owner).fulfilDecryptionRequest(requestID1, decryption_key1, sigBytes);
 
-    const decryption_key2 = preprocess_decryption_key_g1(parsedCiphertext2, { x: sig[0], y: sig[1] }, BLOCKLOCK_IBE_OPTS);
+    const decryption_key2 = preprocess_decryption_key_g1(
+      parsedCiphertext2,
+      { x: sig[0], y: sig[1] },
+      BLOCKLOCK_IBE_OPTS,
+    );
     await decryptionSender.connect(owner).fulfilDecryptionRequest(requestID2, decryption_key2, sigBytes);
-
 
     // reveal bid with decryption key
     await auction.revealBid(requestID1);
