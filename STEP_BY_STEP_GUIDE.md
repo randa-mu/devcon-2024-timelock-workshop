@@ -5,7 +5,7 @@ In this workshop, we are working with a **Simple Auction Smart Contract** that u
 #### Key Concepts:
 
 - **Sealed Bids**: Bidders submit their offers in a "sealed" manner, meaning the bid amount is hidden until the auction ends. This ensures that participants cannot alter their bids based on others' offers, maintaining fairness.
-  
+
 - **Timelock Encryption**: To ensure the confidentiality of the bids, they are secured with **timelock encryption**. This encryption scheme ensures that the bid remains confidential until a specified block number, preventing any unauthorized access or manipulation before that time.
 
 #### How it works:

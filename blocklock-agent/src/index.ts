@@ -1,37 +1,66 @@
 import * as http from "node:http"
-import { Command, Option } from "commander"
-import { ethers, AbiCoder, AddressLike, getBytes, isHexString, toUtf8Bytes, Wallet, ContractTransactionResponse, NonceManager, AbstractSigner } from "ethers"
-import { G1, G2 } from "mcl-wasm"
-import { BlsBn254 } from "@randamu/bls-bn254-js/src"
-import { type TypedContractEvent, TypedListener } from "./generated/common"
-import { createProviderWithRetry } from "./provider"
+import {Command, Option} from "commander"
 import {
-    BlocklockSender,
-    BlocklockSender__factory,
-    BlocklockSignatureScheme,
-    BlocklockSignatureScheme__factory,
-    SignatureSchemeAddressProvider,
+    AbiCoder,
+    BigNumberish,
+    getBytes,
+    getBigInt,
+    isHexString,
+    toUtf8Bytes,
+    Wallet,
+    NonceManager,
+    ContractTransactionResponse,
+} from "ethers"
+import {G1} from "mcl-wasm"
+import {
+    BlsBn254,
+    Ciphertext,
+    connectDeployer,
+    createProviderWithRetry,
+    DecryptionSender__factory,
+    factoryAddress,
+    IbeOpts,
+    preprocess_decryption_key_g1,
     SignatureSchemeAddressProvider__factory,
-    SignatureSender,
-    SignatureSender__factory,
-    SimpleAuction,
-    SimpleAuction__factory
-} from "./generated"
-import { SignatureRequestedEvent } from "./generated/SignatureSender"
+} from "@randamu/bls-bn254-js/src"
+import {TypedContractEvent, TypedListener} from "@randamu/bls-bn254-js/src/generated/common"
+import {
+    BLOCKLOCK_SCHEME_ID,
+    deployBlocklock,
+    deployBlocklockScheme,
+    deployDecryptionSender,
+    deploySchemeProvider,
+} from "./deployments"
+import { keccak_256 } from "@noble/hashes/sha3"
+import { DecryptionRequestedEvent } from "@randamu/bls-bn254-js/src/generated/DecryptionSender"
+import { TypesLib as BlocklockTypes } from "@randamu/bls-bn254-js/src/generated/BlocklockSender"
+
 
 const program = new Command()
 
 const defaultPort = "8080"
 const defaultRPC = "http://localhost:8545"
-const defaultPrivateKey = "0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46"
+const defaultPrivateKey = "0x8620b257c2e9f6cbe96f3c181f89dd89bbba56c3dcd2d6315a726850b28fea5c"
 const defaultBlsKey = "0x58aabbe98959c4dcb96c44c53be7e3bb980791fc7a9e03445c4af612a45ac906"
+
+export const BLOCKLOCK_IBE_OPTS: IbeOpts = {
+    hash: keccak_256,
+    k: 128,
+    expand_fn: "xmd",
+    dsts: {
+        H1_G1: Buffer.from('BLOCKLOCK_BN254G1_XMD:KECCAK-256_SVDW_RO_H1_'),
+        H2: Buffer.from('BLOCKLOCK_BN254_XMD:KECCAK-256_H2_'),
+        H3: Buffer.from('BLOCKLOCK_BN254_XMD:KECCAK-256_H3_'),
+        H4: Buffer.from('BLOCKLOCK_BN254_XMD:KECCAK-256_H4_'),
+    }
+}
 
 program
     .addOption(new Option("--port <port>", "The port to host the healthcheck on")
         .default(defaultPort)
         .env("BLOCKLOCK_PORT")
     )
-    .addOption(new Option("--rpc-url <rpc-url>", "The websockets URL to connect to the blockchain from")
+    .addOption(new Option("--rpc-url <rpc-url>", "The websockets/HTTP URL to connect to the blockchain from")
         .default(defaultRPC)
         .env("BLOCKLOCK_RPC_URL")
     )
@@ -49,98 +78,84 @@ const options = program
     .opts()
 
 
-const SCHEME_ID = "BN254-BLS-BLOCKLOCK";
-const DST = "IBE_BN254G1_XMD:KECCAK-256_SVDW_RO_H1_";
-// Auction smart contract configuration parameters
-const durationBlocks = 50; // blocks
-const reservePrice = 0.1; // ether
-const reservePriceInWei = ethers.parseEther(reservePrice.toString(10))
-const highestBidPaymentWindowBlocks = 10; // blocks
-
 async function main() {
     // set up all our plumbing
     const port = parseInt(options.port)
-    console.log("deploying all required smart contracts ...")
-    const bls = await BlsBn254.create()
-    const { pubKey, secretKey } = bls.createKeyPair(options.blsKey)
-
-    const rpc = await createProviderWithRetry(options.rpcUrl)
+    const rpc = await createProviderWithRetry(options.rpcUrl, {pollingInterval: 1000})
     const wallet = new NonceManager(new Wallet(options.privateKey, rpc))
 
+    console.log("waiting for contract deployment - relax, this will take a minute...")
+    await connectDeployer(factoryAddress, wallet)
+    console.log("deployer connected")
+    
+    const bls = await BlsBn254.create()
+    const {pubKey, secretKey} = bls.createKeyPair(options.blsKey)
+    
     // deploy the contracts and start listening for signature requests
-    const schemeProviderContract = await deploySchemeProvider(wallet)
-    const schemeProviderAddress = await schemeProviderContract.getAddress()
-    console.log(`scheme contract deployed to ${schemeProviderAddress}`)
+    const schemeProviderAddr = await deploySchemeProvider(wallet)
 
-    const blocklockSchemeContract = await deployBlocklockScheme(wallet, schemeProviderContract)
-    const blocklockSchemeContractAddr = await blocklockSchemeContract.getAddress()
-    console.log(`blocklock scheme contract deployed to ${blocklockSchemeContractAddr}`)
+    const schemeProviderContract = SignatureSchemeAddressProvider__factory.connect(schemeProviderAddr, wallet)
+    console.log(`scheme contract deployed to ${schemeProviderAddr}`)
 
-    const signatureSenderContract = await deploySignatureSender(bls, wallet, pubKey, schemeProviderAddress)
-    const signatureSenderContractAddr = await signatureSenderContract.getAddress()
-    console.log(`signature sender contract deployed to ${signatureSenderContractAddr}`)
+    const blocklockSchemeAddr = await deployBlocklockScheme(wallet)
+    const tx = await schemeProviderContract.updateSignatureScheme(BLOCKLOCK_SCHEME_ID, blocklockSchemeAddr)
+    await tx.wait(1)
+    console.log(`blocklock scheme contract deployed to ${blocklockSchemeAddr}`)
 
-    const blocklockContract = await deployBlocklock(wallet, signatureSenderContractAddr)
-    const blocklockContractAddr = await blocklockContract.getAddress()
-    console.log(`blocklock contract deployed to ${blocklockContractAddr}`)
+    const decryptionSenderAddr = await deployDecryptionSender(bls, wallet, pubKey, schemeProviderAddr)
+    const decryptionSenderContract = DecryptionSender__factory.connect(decryptionSenderAddr, wallet)
+    console.log(`decryption sender contract deployed to ${decryptionSenderAddr}`)
 
-    const auctionContract = await deployAuction(wallet, blocklockContractAddr)
-    const auctionContractAddr = await auctionContract.getAddress()
-    console.log(`simple auction contract deployed to ${auctionContractAddr}`)
-    console.log("\nsimple auction contract configuration parameters");
-    console.log("Auction duration in blocks:", durationBlocks);
-    console.log("Auction end block number:", await auctionContract.auctionEndBlock());
-    console.log("Auction reserve price in ether:", reservePrice);
-    console.log("Window for fulfilling highest bid in blocks post-auction:", highestBidPaymentWindowBlocks);
+    const blocklockAddr = await deployBlocklock(wallet, decryptionSenderAddr)
+    console.log(`blocklock contract deployed to ${blocklockAddr}`)
 
     const blocklockNumbers = new Map()
-    await signatureSenderContract.addListener("SignatureRequested", createSignatureListener(bls, blocklockNumbers))
-
-    // spin up a healthcheck HTTP server
-    http.createServer((_, res) => {
-        res.writeHead(200)
-        res.end()
-    }).listen(port, "0.0.0.0", () => console.log(`timelock writer running on port ${port}`))
+    await decryptionSenderContract.addListener("DecryptionRequested", createDecryptionListener(bls, blocklockNumbers))
 
     // Triggered on each block to check if there was a blocklock request for that round
     // We may skip some blocks depending on the rpc.pollingInterval value
-    rpc.pollingInterval = 500 // ms
-    rpc.on("block", async (blockHeight: number) => {
-        const res = blocklockNumbers.get(BigInt(blockHeight))
+    await rpc.on("block", async (blockHeight: BigNumberish) => {
+        const res = blocklockNumbers.get(getBigInt(blockHeight))
         if (!res) {
             // no requests for this block
-            console.log(`no timelock requests for block ${blockHeight}`)
             return
         }
 
-        const { m, ids } = res
+        const { m, reqs } = res
 
-        console.log(`creating a timelock signature for block ${blockHeight}`)
+        console.log(`creating a blocklock signature for block ${blockHeight}`)
         const signature = bls.sign(m, secretKey).signature
         const sig = bls.serialiseG1Point(signature)
         const sigBytes = AbiCoder.defaultAbiCoder().encode(["uint256", "uint256"], [sig[0], sig[1]])
         // Fulfil each request
         const txs: ContractTransactionResponse[] = []
         const nonce = await wallet.getNonce("latest");
-        for (let i = 0; i < ids.length; i++) {
+        for (let i = 0; i < reqs.length; i++) {
             try {
-                const id = ids[i]
-                console.log(`fulfilling signature request ${id}`)
-                txs.push(await signatureSenderContract.fulfilSignatureRequest(id, sigBytes, { nonce: nonce + i }))
+                const {id, ct} = reqs[i]
+                console.log(`fulfilling decryption request ${id}`)
+                const decryption_key = preprocess_decryption_key_g1(ct, {x: sig[0], y: sig[1]}, BLOCKLOCK_IBE_OPTS)
+                txs.push(await decryptionSenderContract.fulfilDecryptionRequest(id, decryption_key, sigBytes, { nonce: nonce + i }))
             } catch (e) {
-                console.log(e)
+                console.error(`Error fulfilling decryption request ${e}`)
             }
-        }
+        } 
 
         for (const tx of txs) {
             try {
                 await tx.wait(1)
-                console.log(`fulfilled signature request`)
+                console.log(`fulfilled decryption request`)
             } catch (e) {
-                console.log(e)
+                console.error(`Error fulfilling decryption request: ${e}`)
             }
         }
     })
+
+    // spin up a healthcheck HTTP server
+    http.createServer((_, res) => {
+        res.writeHead(200)
+        res.end()
+    }).listen(port, "0.0.0.0", () => console.log(`blocklock writer running on port ${port}`))
 
     await keepAlive()
 }
@@ -148,103 +163,60 @@ async function main() {
 /**
  * Listen for blocklock signature request for the BN254-BLS-BLOCKLOCK scheme
  */
-function createSignatureListener(
+function createDecryptionListener(
     bls: BlsBn254,
-    requestedBlocklocks: Map<bigint, { m: G1, ids: bigint[] }>,
+    requestedBlocklocks: Map<bigint, { m: G1, reqs: {ct: Ciphertext, id: bigint}[] }>,
 ): TypedListener<TypedContractEvent<
-    SignatureRequestedEvent.InputTuple,
-    SignatureRequestedEvent.OutputTuple,
-    SignatureRequestedEvent.OutputObject
+    DecryptionRequestedEvent.InputTuple,
+    DecryptionRequestedEvent.OutputTuple,
+    DecryptionRequestedEvent.OutputObject
 >> {
-    return async (requestID, callback, schemeID, message, messageHashToSign, condition,) => {
-        if (schemeID != SCHEME_ID) {
-            // Silently ignore requests of an unsupported scheme id
+    return async (requestID, callback, schemeID, condition, ciphertext) => {
+        if (schemeID != BLOCKLOCK_SCHEME_ID) {
+            // Ignore requests of an unsupported scheme id
+            console.log(`ignoring decryption request for unsupported scheme id (\`${schemeID}\`)`)
             return;
         }
 
-        console.log(`received signature request ${requestID}`)
+        console.log(`received decryption request ${requestID}`)
         console.log(`${callback}, ${schemeID}`)
-        if (message != condition) {
-            console.log(`received signature request with message != condition`)
-            return
-        }
 
-        const msgBytes = isHexString(message) ? getBytes(message) : toUtf8Bytes(message)
-        const m = bls.hashToPoint(Buffer.from(DST), msgBytes)
-        const serM = bls.serialiseG1Point(m)
-        const mBytes = AbiCoder.defaultAbiCoder().encode(["uint256", "uint256"], [serM[0], serM[1]])
-        if (mBytes != messageHashToSign) {
-            console.log(`received signature request with H(message) != messageHashToSign`)
-            return
-        }
+        const conditionBytes = isHexString(condition) ? getBytes(condition) : toUtf8Bytes(condition)
+        const m = bls.hashToPoint(BLOCKLOCK_IBE_OPTS.dsts.H1_G1, conditionBytes)
 
         // Decode the condition into a blockHeight
-        const hexCondition = isHexString(condition) ? condition : Buffer.from(toUtf8Bytes(condition)).toString('hex')
-        const blockHeight = BigInt(hexCondition)
+        const hexCondition = Buffer.from(conditionBytes).toString("hex")
+        const blockHeight = BigInt("0x" + hexCondition)
+
+        // Deserialize the ciphertext
+        const ct = parseSolidityCiphertext(ciphertext)
 
         // Get a reference to the object in the map
         const requests = requestedBlocklocks.get(blockHeight)
         if (!requests) {
             // Store new object
-            requestedBlocklocks.set(blockHeight, { m, ids: [requestID] })
+            requestedBlocklocks.set(blockHeight, {m, reqs: [{ct, id: requestID }]})
         } else {
             // Update the array object in the map
-            requests.ids.push(requestID)
+            requests.reqs.push({ct, id: requestID})
         }
-        console.log(`registered signature request \`${requestID}\` at blockHeight \`${blockHeight.toString()}\``)
+        console.log(`registered decryption request \`${requestID}\` at blockHeight \`${blockHeight.toString(10)}\``)
     }
 }
 
-/**
- * Deploy the signature scheme address provider contract
- */
-async function deploySchemeProvider(wallet: AbstractSigner): Promise<SignatureSchemeAddressProvider> {
-    const contract = await new SignatureSchemeAddressProvider__factory(wallet).deploy()
-    return contract.waitForDeployment()
-}
-
-/**
- * Deploy the blocklock signature scheme contract, and register it in the scheme provider
- */
-async function deployBlocklockScheme(wallet: AbstractSigner, schemeProviderContract: SignatureSchemeAddressProvider): Promise<BlocklockSignatureScheme> {
-    const contract = await new BlocklockSignatureScheme__factory(wallet).deploy()
-    const scheme = await contract.waitForDeployment()
-
-    console.log("registering blocklock scheme")
-    const tx = await schemeProviderContract.updateSignatureScheme(SCHEME_ID, await scheme.getAddress())
-    await tx.wait(1)
-
-    return scheme
-}
-
-/**
- * Deploy the signature sender contract
- */
-async function deploySignatureSender(bls: BlsBn254, wallet: AbstractSigner, blsPublicKey: G2, schemeProvider: AddressLike): Promise<SignatureSender> {
-    const [x1, x2, y1, y2] = bls.serialiseG2Point(blsPublicKey)
-    const contract = await new SignatureSender__factory(wallet).deploy([x1, x2], [y1, y2], schemeProvider)
-    return contract.waitForDeployment()
-}
-
-/**
- * Deploy the blocklock contract
- */
-async function deployBlocklock(wallet: AbstractSigner, signatureSenderContractAddr: AddressLike): Promise<BlocklockSender> {
-    const contract = await new BlocklockSender__factory(wallet).deploy(signatureSenderContractAddr)
-    return contract.waitForDeployment()
-}
-
-/**
- * Deploy the auction contract
- */
-async function deployAuction(wallet: AbstractSigner, blocklockContractAddr: AddressLike): Promise<SimpleAuction> {
-    const contract = await new SimpleAuction__factory(wallet).deploy(
-        durationBlocks, 
-        reservePriceInWei, 
-        highestBidPaymentWindowBlocks,
-        blocklockContractAddr
-    )
-    return contract.waitForDeployment()
+function parseSolidityCiphertext(ciphertext: string): Ciphertext {
+    const ctBytes = getBytes(ciphertext)
+    const ct: BlocklockTypes.CiphertextStructOutput = AbiCoder.defaultAbiCoder().decode(["tuple(tuple(uint256[2] x, uint256[2] y) u, bytes v, bytes w)"], ctBytes)[0]
+    
+    const uX0 = ct.u.x[0]
+    const uX1 = ct.u.x[1]
+    const uY0 = ct.u.y[0]
+    const uY1 = ct.u.y[1]
+    return {
+        U: {x: {c0: uX0, c1: uX1}, y: {c0: uY0, c1: uY1}},
+        V: getBytes(ct.v),
+        W: getBytes(ct.w),
+    }
 }
 
 async function keepAlive() {

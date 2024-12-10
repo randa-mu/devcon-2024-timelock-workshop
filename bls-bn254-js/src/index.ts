@@ -1,4 +1,6 @@
 export * from "./crypto"
+export * from "./generated"
+export * from "./contract"
 
 export function withTimeout<T>(inner: Promise<T>, timeoutMs: number, message = "timed out"): Promise<T> {
     return Promise.race([
