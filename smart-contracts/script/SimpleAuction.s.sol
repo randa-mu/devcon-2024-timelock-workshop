@@ -45,7 +45,7 @@ contract SimpleAuctionScript is Script {
 
         // Deploy simple auction
         SimpleAuction simpleAuction =
-            new SimpleAuction(durationBlocks, reservePrice, highestBidPaymentWindowBlocks, address(tlock));
+            new SimpleAuction(owner, durationBlocks, reservePrice, highestBidPaymentWindowBlocks, address(tlock));
 
         console.log("\nSimpleAuction configuration parameters");
         console.log("Simple Auction contract deployed to:", address(simpleAuction));

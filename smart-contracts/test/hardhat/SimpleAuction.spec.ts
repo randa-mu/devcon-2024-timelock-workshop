@@ -189,6 +189,7 @@ describe("SimpleAuction Contract", function () {
     await blocklock.waitForDeployment();
 
     auction = await ethers.deployContract("SimpleAuction", [
+      owner,
       durationBlocks,
       reservePrice,
       highestBidPaymentWindowBlocks,

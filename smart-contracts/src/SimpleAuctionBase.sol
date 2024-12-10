@@ -88,12 +88,13 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
     /// @param highestBidPaymentWindowBlocks Number of blocks allowed for the highest bid payment after auction end
     /// @param timelockContract The address of the timelock encryption smart contract
     constructor(
+        address owner,
         uint256 durationBlocks,
         uint256 _reservePrice,
         uint256 highestBidPaymentWindowBlocks,
         address timelockContract
     ) {
-        auctioneer = msg.sender;
+        auctioneer = owner;
         auctionEndBlock = block.number + durationBlocks;
         highestBidPaymentDeadlineBlock = auctionEndBlock + highestBidPaymentWindowBlocks;
         reservePrice = _reservePrice;

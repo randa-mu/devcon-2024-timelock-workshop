@@ -79,7 +79,7 @@ contract SimpleAuctionTest is Test {
         decryptionSender = new DecryptionSender(pk.x, pk.y, owner, address(sigAddrProvider));
 
         tlock = new BlocklockSender(address(decryptionSender));
-        auction = new SimpleAuction(durationBlocks, reservePrice, highestBidPaymentWindowBlocks, address(tlock));
+        auction = new SimpleAuction(owner, durationBlocks, reservePrice, highestBidPaymentWindowBlocks, address(tlock));
 
         vm.stopPrank();
     }
