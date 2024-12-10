@@ -341,7 +341,7 @@ describe("SimpleAuction Contract", function () {
       w: req.ciphertext.w,
     };
 
-    // console.log(test_ct, decryptionK, sigBytes)
+    console.log(test_ct, decryptionK, sigBytes)
     const decryptedM2 = getBytes(await blocklock.decrypt(test_ct, decryptionK));
 
     expect(Array.from(getBytes(encodedMessage))).to.have.members(Array.from(decryptedM2));
@@ -360,9 +360,11 @@ describe("SimpleAuction Contract", function () {
   it("should allow a user to submit a valid sealed bid", async function () {
     const iface = SimpleAuctionBase__factory.createInterface();
 
-    const msg = ethers.parseEther("3");
+    const msg = ethers.parseEther("4");
+    const msgBytes = AbiCoder.defaultAbiCoder().encode(["uint256"], [msg]);
+    const encodedMessage = getBytes(msgBytes);
+
     const blocknumber = 11;
-    const encodedMessage = new Uint8Array(Buffer.from(msg.toString()));
     const identity = blockHeightToBEBytes(BigInt(blocknumber));
     const ct = encrypt_towards_identity_g1(encodedMessage, identity, BLOCKLOCK_DEFAULT_PUBLIC_KEY, BLOCKLOCK_IBE_OPTS);
 

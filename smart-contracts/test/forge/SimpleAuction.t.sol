@@ -49,29 +49,8 @@ contract SimpleAuctionTest is Test {
         w: hex"e8aadd66a9a67c00f134b1127b7ef85046308c340f2bb7cee431bd7bfe950bd4"
     });
     bytes signatureBidder1 =
-            hex"02b3b2fa2c402d59e22a2f141e32a092603862a06a695cbfb574c440372a72cd0636ba8092f304e7701ae9abe910cb474edf0408d9dd78ea7f6f97b7f2464711";
+        hex"02b3b2fa2c402d59e22a2f141e32a092603862a06a695cbfb574c440372a72cd0636ba8092f304e7701ae9abe910cb474edf0408d9dd78ea7f6f97b7f2464711";
     bytes decryptionKeyBidder1 = hex"7ec49d8f06b34d8d6b2e060ea41652f25b1325fafb041bba9cf24f094fbca259";
-
-    // bidder2
-    // e.g., bid amount - 4 ether - 4000000000000000000 wei
-    TypesLib.Ciphertext sealedBidBidder2 = TypesLib.Ciphertext({
-        u: BLS.PointG2({
-            x: [
-                1191337915086721647096601261396096889614570162960213535063361568373751083570n,
-                13056886821433466326289451255305361556160321654068459672142799079868002657175n
-            ],
-            y: [
-                13436582126067570211195108102055578013895933899998079037133721719650551278539n,
-                3464851225502595980385489082899634183893435659833581498999927105783231959813n
-            ]
-        }),
-        v: hex"04172c3a6caca5ef0c7af8785a3fec01602944bdf293b94578e95027c62152f6",
-        w: hex"bf81746c2d82488009ba907f5de92112e8cace91bd8f461aa04a40be517e58f9"
-    });
-    bytes signatureBidder2 =
-            hex"18fa3976821616ad11d88955f296fcfde336ef7bee75a81e0bd2fec62bf3f66718cd40587a6ae6bf6680e4eca84e07a9cb1e5eadaa5fab4a055d73986ebfebb0";
-    bytes decryptionKeyBidder2 = hex"96a021515382be7f638e4aee2c48975d4966f7da91e8b587fcb7ec0567c78480";
-
 
     function setUp() public {
         auctioneer = vm.addr(1);
@@ -147,119 +126,114 @@ contract SimpleAuctionTest is Test {
         // Receive the decryption key for the bid id from the timelock contract
         // This should also decrypt the sealed bid
         vm.startPrank(auctioneer);
-        
+
         decryptionSender.fulfilDecryptionRequest(bidID, decryptionKeyBidder1, signatureBidder1);
 
-        auction.revealBid(1);
+        auction.revealBid(bidID);
         vm.stopPrank();
 
-        (,,, address bidderAddressWithBidID,) = auction.getBidWithBidID(bidID);
+        (,, uint256 unsealedAmount, address bidderAddressWithBidID,) = auction.getBidWithBidID(bidID);
         (,,, address bidderAddressWithBidder,) = auction.getBidWithBidder(bidder1);
 
         assertEq(auction.highestBidder(), bidder1, "Highest bidder should be bidder1");
         assertEq(bidderAddressWithBidID, bidder1, "Bidder for bid ID 1 should be bidder1");
         assertEq(bidderAddressWithBidder, bidder1, "Bidder for bid ID 1 should be bidder 1");
         assertEq(auction.highestBid(), bidAmount, "Highest bid should be bid amount");
+        assertEq(unsealedAmount, bidAmount, "Unsealed amount should be bid amount");
     }
 
-    // function test_FulfillHighestBid() public {
-    //     // Bidder1 places a bid
-    //     uint256 bidAmount = 0.5 ether;
-    //     vm.deal(bidder1, 1 ether);
-    //     vm.startPrank(bidder1);
-    //     uint256 bidID = auction.sealedBid{value: auction.reservePrice()}(abi.encodePacked(bidAmount)); // Place a sealed bid of bidAmount
-    //     vm.stopPrank();
+    function test_FulfillHighestBid() public {
+        // Bidder places a bid
+        uint256 bidAmount = 3 ether;
+        vm.deal(bidder1, 5 ether);
+        vm.startPrank(bidder1);
+        uint256 bidID1 = auction.sealedBid{value: auction.reservePrice()}(sealedBidBidder1);
+        vm.stopPrank();
 
-    //     // Move to the auction end block to end the auction
-    //     vm.roll(auction.auctionEndBlock() + 1);
+        // Move to the auction end block to end the auction
+        vm.roll(auction.auctionEndBlock() + 1);
 
-    //     // Receive the decryption key for the bid id from the timelock contract
-    //     vm.startPrank(auctioneer);
-    //     bytes memory validSignature =
-    //         hex"140bec1c035d7a6d407c4a823faeea31de69769db8db9c86aaf7a9682daa23bb2fd2f8ecfe15552b488ba3fd075eff3f9739c44b299b8d0851c9e93e740925ab";
-    //     sigSender.fulfilSignatureRequest(bidID, validSignature);
+        // Receive the decryption key for the bid id from the timelock contract
+        vm.startPrank(auctioneer);
 
-    //     // Reveal the bid
-    //     auction.revealBid(bidID, bidAmount); // Reveal the bid
-    //     vm.stopPrank();
+        decryptionSender.fulfilDecryptionRequest(bidID1, decryptionKeyBidder1, signatureBidder1);
 
-    //     // Bidder1 fulfills the highest bid
-    //     vm.startPrank(bidder1); // Set bidder1 as the sender
-    //     auction.fulfilHighestBid{value: bidAmount - auction.reservePrice()}();
-    //     vm.stopPrank();
+        // Reveal the bids
+        auction.revealBid(bidID1);
 
-    //     assert(auction.highestBidPaid());
-    // }
+        vm.stopPrank();
 
-    // function test_WithdrawDeposit() public {
-    //     // Bidder1 places a bid
-    //     uint256 bidAmount = 0.5 ether;
-    //     vm.deal(bidder1, 1 ether);
-    //     vm.startPrank(bidder1);
-    //     uint256 bidID = auction.sealedBid{value: auction.reservePrice()}(abi.encodePacked(bidAmount)); // Place a sealed bid of bidAmount
-    //     vm.stopPrank();
+        // Bidder fulfills the highest bid
+        vm.startPrank(bidder1); // Set bidder1 as the sender
+        auction.fulfilHighestBid{value: bidAmount - auction.reservePrice()}();
+        vm.stopPrank();
 
-    //     // Bidder2 places a bid
-    //     uint256 bidAmount2 = 0.1 ether;
-    //     vm.deal(bidder2, 1 ether);
-    //     vm.startPrank(bidder2);
-    //     uint256 bidID2 = auction.sealedBid{value: auction.reservePrice()}(abi.encodePacked(bidAmount2)); // Place a sealed bid of bidAmount
-    //     vm.stopPrank();
+        assert(auction.highestBidPaid());
+    }
 
-    //     // Move to the auction end block to end the auction
-    //     vm.roll(auction.auctionEndBlock() + 1);
+    function test_WithdrawDeposit() public {
+        // Bidder places a bid
+        uint256 bidAmount = 3 ether;
+        vm.deal(bidder1, 5 ether);
+        vm.startPrank(bidder1);
+        uint256 bidID1 = auction.sealedBid{value: auction.reservePrice()}(sealedBidBidder1);
+        vm.stopPrank();
 
-    //     // Receive the decryption key for the bid ids from the timelock contract
-    //     vm.startPrank(auctioneer);
-    //     bytes memory validSignature =
-    //         hex"140bec1c035d7a6d407c4a823faeea31de69769db8db9c86aaf7a9682daa23bb2fd2f8ecfe15552b488ba3fd075eff3f9739c44b299b8d0851c9e93e740925ab";
-    //     sigSender.fulfilSignatureRequest(1, validSignature);
+        // Move to the auction end block to end the auction
+        vm.roll(auction.auctionEndBlock() + 1);
 
-    //     // Reveal the bid
-    //     auction.revealBid(bidID, bidAmount); // Reveal the bid
-    //     auction.revealBid(bidID2, bidAmount2);
+        // Receive the decryption key for the bid id from the timelock contract
+        vm.startPrank(auctioneer);
 
-    //     vm.stopPrank();
+        decryptionSender.fulfilDecryptionRequest(bidID1, decryptionKeyBidder1, signatureBidder1);
 
-    //     // Bidder1 cannot withdraw their deposit
-    //     vm.startPrank(bidder1); // Set bidder1 as the sender
-    //     vm.expectRevert("Highest bidder cannot claim the reserve.");
-    //     auction.withdrawDeposit();
-    //     vm.stopPrank();
+        // Reveal the bids
+        auction.revealBid(bidID1);
 
-    //     // Bidder2 can withdraw their deposit
-    //     vm.startPrank(bidder2); // Set bidder1 as the sender
-    //     auction.withdrawDeposit();
-    //     vm.stopPrank();
-    // }
+        vm.stopPrank();
 
-    // function test_WithdrawForfeitedDeposit() public {
-    //     // Bidder1 places a bid
-    //     uint256 bidAmount = 0.5 ether;
-    //     vm.deal(bidder1, 1 ether);
-    //     vm.startPrank(bidder1);
-    //     uint256 bidID = auction.sealedBid{value: auction.reservePrice()}(abi.encodePacked(bidAmount)); // Place a sealed bid of bidAmount
-    //     vm.stopPrank();
+        // Bidder fulfills the highest bid
+        vm.startPrank(bidder1); // Set bidder1 as the sender
+        auction.fulfilHighestBid{value: bidAmount - auction.reservePrice()}();
+        vm.stopPrank();
 
-    //     // Move to the auction end block to end the auction
-    //     vm.roll(auction.auctionEndBlock() + 1);
+        assert(auction.highestBidPaid());
 
-    //     // Receive the decryption key for the bid id from the timelock contract
-    //     vm.startPrank(auctioneer);
-    //     bytes memory validSignature =
-    //         hex"140bec1c035d7a6d407c4a823faeea31de69769db8db9c86aaf7a9682daa23bb2fd2f8ecfe15552b488ba3fd075eff3f9739c44b299b8d0851c9e93e740925ab";
-    //     sigSender.fulfilSignatureRequest(bidID, validSignature);
+        // Highest bidder cannot withdraw their deposit
+        vm.startPrank(bidder1); // Set bidder1 as the sender
+        vm.expectRevert("Highest bidder cannot claim the reserve.");
+        auction.withdrawDeposit();
+        vm.stopPrank();
+    }
 
-    //     // Reveal the bid
-    //     auction.revealBid(bidID, bidAmount); // Reveal the bid
-    //     vm.stopPrank();
+    function test_WithdrawForfeitedDeposit() public {
+        // Bidder places a bid
+        vm.deal(bidder1, 5 ether);
+        vm.startPrank(bidder1);
+        uint256 bidID1 = auction.sealedBid{value: auction.reservePrice()}(sealedBidBidder1);
+        vm.stopPrank();
 
-    //     // Bidder1 fails to fulfill the highest bid payment within payment window
-    //     vm.roll(block.number + highestBidPaymentWindowBlocks + 1); // Move past payment deadline
+        // Move to the auction end block to end the auction
+        vm.roll(auction.auctionEndBlock() + 1);
 
-    //     // Auctioneer tries to withdraw the forfeited deposit
-    //     vm.startPrank(auctioneer); // Set auctioneer as the sender
-    //     auction.withdrawForfeitedDepositFromHighestBidder();
-    //     vm.stopPrank();
-    // }
+        // Receive the decryption key for the bid id from the timelock contract
+        vm.startPrank(auctioneer);
+
+        decryptionSender.fulfilDecryptionRequest(bidID1, decryptionKeyBidder1, signatureBidder1);
+
+        // Reveal the bids
+        auction.revealBid(bidID1);
+
+        vm.stopPrank();
+
+        assert(!auction.highestBidPaid());
+
+        // Bidder1 fails to fulfill the highest bid payment within payment window
+        vm.roll(block.number + highestBidPaymentWindowBlocks + 1); // Move past payment deadline
+
+        // Auctioneer can withdraw the forfeited deposit
+        vm.startPrank(auctioneer); // Set auctioneer as the sender
+        auction.withdrawForfeitedDepositFromHighestBidder();
+        vm.stopPrank();
+    }
 }
