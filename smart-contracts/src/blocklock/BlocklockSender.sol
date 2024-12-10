@@ -89,15 +89,12 @@ contract BlocklockSender is IBlocklockSender, DecryptionReceiverBase, AccessCont
             abi.encodeWithSelector(IBlocklockReceiver.receiveBlocklock.selector, decryptionRequestID, decryptionKey)
         );
         if (!success) {
-            revert();
-            // emit BlocklockCallbackFailed(decryptionRequestID, r.blockHeight, r.ciphertext, decryptionKey);
+            revert("Blocklock Callback Failed");
         } else {
             emit BlocklockCallbackSuccess(decryptionRequestID, r.blockHeight, r.ciphertext, decryptionKey);
+            delete blocklockRequests[decryptionRequestID];
         }
-        // todo review - if request callback fails, should it be deleted and treated as fulfilled?
-        // caller might not be contract implementing right interface
-        // or malicious contract that just reverts
-        delete blocklockRequests[decryptionRequestID];
+        
     }
 
     /**

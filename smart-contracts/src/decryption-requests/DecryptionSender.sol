@@ -39,7 +39,6 @@ contract DecryptionSender is IDecryptionSender, AccessControl, Multicall {
         bytes ciphertext,
         uint256 requestedAt
     );
-    event DecryptionReceiverCallbackFailed(uint256 indexed requestID, bytes decryptionKey, bytes signature);
     event DecryptionReceiverCallbackSuccess(uint256 indexed requestID, bytes decryptionKey, bytes signature);
 
     modifier onlyOwner() {
@@ -126,15 +125,11 @@ contract DecryptionSender is IDecryptionSender, AccessControl, Multicall {
         );
 
         if (!success) {
-            revert();
-            // emit DecryptionReceiverCallbackFailed(requestID, decryptionKey, signature);
+            revert("Decryption Receiver Callback Failed");
         } else {
             emit DecryptionReceiverCallbackSuccess(requestID, decryptionKey, signature);
+            delete requestsInFlight[requestID];
         }
-        // todo review - if request callback fails, should it be deleted and treated as fulfilled?
-        // caller might not be contract implementing right interface
-        // or malicious contract that just reverts
-        delete requestsInFlight[requestID];
     }
 
     /**
