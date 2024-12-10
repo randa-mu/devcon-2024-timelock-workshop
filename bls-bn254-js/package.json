@@ -14,7 +14,6 @@
     "bls:sign": "ts-node scripts/sign.ts",
     "bls:hash": "ts-node scripts/hash.ts",
     "timelock:encrypt": "ts-node scripts/ibe-encrypt.ts",
-    "timelock:decrypt": "ts-node scripts/ibe-decrypt.ts",
     "skip:to-block": "chmod +x scripts/anvil-skip-to-block.sh && ./scripts/anvil-skip-to-block.sh",
     "ci": "npm run build && npm run lint && npm run test",
     "clean": "dist",
