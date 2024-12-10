@@ -1,7 +1,8 @@
-import { hexlify, AbiCoder, BytesLike, getBytes, isHexString, toUtf8Bytes } from 'ethers'
-import { BlsBn254, encrypt_towards_identity_g1, serializeCiphertext, IbeOpts, G2, Ciphertext, preprocess_decryption_key_g1, decrypt_g1_with_preprocess } from '../src'
+import { ethers, AbiCoder, getBytes, Interface, EventFragment, TransactionReceipt, Result } from 'ethers'
+import { encrypt_towards_identity_g1, IbeOpts, G2, Ciphertext } from '../src'
 import { Command } from 'commander'
 import { keccak_256 } from "@noble/hashes/sha3"
+import {SimpleAuction__factory} from "../src/generated"
 
 // Encrypt message with Identity-based Encryption (IBE)
 //
@@ -14,6 +15,9 @@ const program = new Command()
 program
     .requiredOption('--message <message>', 'Message to be encrypted')
     .requiredOption('--blocknumber <blocknumber>', 'Block number when message can be decrypted')
+    .requiredOption('--rpcURL <rpcURL>', 'RPC url used to connect to blockchain network')
+    .requiredOption('--privateKey <privateKey>', 'Private key used to send transaction as required to blockchain network')
+    .requiredOption('--contractAddr <contractAddr>', 'Deployed auction smart contract address required to blockchain network')
 
 program.parse(process.argv)
 
@@ -21,7 +25,9 @@ program.parse(process.argv)
 const options = program.opts()
 const message: string = options.message
 const blocknumber: string = options.blocknumber
-
+const rpcAddr: string = options.rpcURL
+const privateKey: string = options.privateKey
+const contractAddr: string = options.contractAddr
 
 const BLOCKLOCK_DEFAULT_PUBLIC_KEY = {
     x: {
@@ -46,49 +52,79 @@ const BLOCKLOCK_IBE_OPTS: IbeOpts = {
     }
 }
 
-const defaultBlsKey = "0x58aabbe98959c4dcb96c44c53be7e3bb980791fc7a9e03445c4af612a45ac906"
+function extractLogs<T extends Interface, E extends EventFragment>(
+    iface: T,
+    receipt: TransactionReceipt,
+    contractAddress: string,
+    event: E,
+  ): Array<Result> {
+    return receipt.logs
+      .filter((log) => log.address.toLowerCase() === contractAddress.toLowerCase())
+      .map((log) => iface.decodeEventLog(event, log.data, log.topics));
+  }
+
+function extractSingleLog<T extends Interface, E extends EventFragment>(
+    iface: T,
+    receipt: TransactionReceipt,
+    contractAddress: string,
+    event: E,
+  ): Result {
+    const events = extractLogs(iface, receipt, contractAddress, event);
+    if (events.length === 0) {
+      throw Error(`contract at ${contractAddress} didn't emit the ${event.name} event`);
+    }
+    return events[0];
+  }
+
+async function encryptAndRegister(
+    message: Uint8Array,
+    blockHeight: bigint,
+    pk: G2 = BLOCKLOCK_DEFAULT_PUBLIC_KEY,
+  ): Promise<{
+    id: string;
+    receipt: object;
+    ct: Ciphertext;
+  }> {
+    const ct = encrypt(message, blockHeight, pk);
+    const rpc = new ethers.JsonRpcProvider(rpcAddr)
+    const wallet = new ethers.Wallet(privateKey, rpc)
+
+    const auctionContract = SimpleAuction__factory.connect(contractAddr, rpc)
+
+    const lowerPrice = ethers.parseEther("0.01");
+    const tx = await auctionContract.connect(wallet).sealedBid(encodeCiphertextToSolidity(ct), { value: lowerPrice });
+    const receipt = await tx.wait(1);
+    if (!receipt) {
+      throw new Error("transaction has not been mined");
+    }
+
+    if (!receipt) {
+        throw new Error("transaction has not been mined");
+      }
+      const iface = SimpleAuction__factory.createInterface();
+      const [bidID, , sealedAmountFromEvent] = extractSingleLog(
+        iface,
+        receipt,
+        await auctionContract.getAddress(),
+        iface.getEvent("NewBid"),
+      );
+
+    return {
+      id: bidID.toString(),
+      receipt: receipt,
+      ct: sealedAmountFromEvent,
+    };
+  }
 
 async function main() {
-    const msg = message
-    const encodedMessage = new Uint8Array(Buffer.from(msg))
-    const identity = blockHeightToBEBytes(BigInt(blocknumber))
-    const ct = encrypt_towards_identity_g1(encodedMessage, identity, BLOCKLOCK_DEFAULT_PUBLIC_KEY, BLOCKLOCK_IBE_OPTS)
-    
-    console.log(ct)
-    // parseSolidityCiphertext is used to parse ciphertext from smart contract event
-    // encodeCiphertextToSolidity is used to create ciphertext solidity input with g2 point formatting
-    // ciphertext.U
-    console.log("Ciphertext as struct for solidity", encodeCiphertextToSolidity(ct))
+    const msg = ethers.parseEther(message.toString());
+    const msgBytes = AbiCoder.defaultAbiCoder().encode(["uint256"], [msg]);
+    const encodedMessage = getBytes(msgBytes);
 
-    console.log("Ciphertext as struct with hex for solidity", encodeCiphertextToSolidityWithHex(ct))
-
-    console.log("Ciphertext as hex", hexlify(serializeCiphertext(ct)))
-    
-    // todo separate decrypt step into its own script ibe-decrypt.ts
-    const bls = await BlsBn254.create()
-    const condition = "0x000000000000000000000000000000000000000000000000000000000000000b" // block number 11
-    const conditionBytes = isHexString(condition) ? getBytes(condition) : toUtf8Bytes(condition)
-    const m = bls.hashToPoint(BLOCKLOCK_IBE_OPTS.dsts.H1_G1, conditionBytes)
-    const hexCondition = Buffer.from(conditionBytes).toString("hex")
-    const blockHeight = BigInt("0x" + hexCondition)
-    console.log(`Creating signature and decryption key for block height ${blockHeight}`)
-
-    const {pubKey, secretKey} = bls.createKeyPair(defaultBlsKey)
-    const signature = bls.sign(m, secretKey).signature
-    const sig = bls.serialiseG1Point(signature)
-
-    const sigBytes = AbiCoder.defaultAbiCoder().encode(["uint256", "uint256"], [sig[0], sig[1]])
-    const decryption_key = preprocess_decryption_key_g1(ct, {x: sig[0], y: sig[1]}, BLOCKLOCK_IBE_OPTS)
-    console.log("signature", sigBytes)
-    console.log("decryption key bytes", hexlify(decryption_key))
-
-    console.log(decryption_key)
-    
-    const m2 = decrypt_g1_with_preprocess(ct, decryption_key, BLOCKLOCK_IBE_OPTS)
-
-    console.log(msg)
-    console.log(uint8ArrayToUTF8String(m2))
-}
+    const blockHeight = BigInt(blocknumber)
+    const { id, receipt, ct } = await encryptAndRegister(encodedMessage, blockHeight, BLOCKLOCK_DEFAULT_PUBLIC_KEY);
+    console.log(id, receipt, ct)
+}   
 
 main()
     .then(() => {
@@ -99,20 +135,6 @@ main()
         process.exit(1)
     })
     
-
-// helper functions
-function uint8ArrayToUTF8String(arr: Uint8Array) {
-    const textDecoder = new TextDecoder('utf-8');
-    const decodedString = textDecoder.decode(arr);
-    return decodedString
-}
-
-function uint8ArrayToHex(uint8Array: Uint8Array): string {
-    return "0x" + Array.from(uint8Array)
-        .map((byte: number) => byte.toString(16).padStart(2, "0")) // Explicitly typing byte as a number
-        .join("");
-}
-
 function encrypt(message: Uint8Array, blockHeight: bigint, pk: G2) {
     const identity = blockHeightToBEBytes(blockHeight)
     return encrypt_towards_identity_g1(message, identity, pk, BLOCKLOCK_IBE_OPTS)
@@ -128,19 +150,6 @@ function encodeCiphertextToSolidity(ciphertext: Ciphertext) {
         u,
         v: ciphertext.V,
         w: ciphertext.W,
-    }
-}
-
-function encodeCiphertextToSolidityWithHex(ciphertext: Ciphertext) {
-    const u: { x: [bigint, bigint], y: [bigint, bigint] } = {
-        x: [ciphertext.U.x.c0, ciphertext.U.x.c1],
-        y: [ciphertext.U.y.c0, ciphertext.U.y.c1]
-    }
-
-    return {
-        u,
-        v: hexlify(ciphertext.V),
-        w: hexlify(ciphertext.W),
     }
 }
 
