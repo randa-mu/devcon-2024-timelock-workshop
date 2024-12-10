@@ -523,10 +523,116 @@ describe("SimpleAuction Contract", function () {
     const signature = bls.sign(m, secretKey).signature;
     const sig = bls.serialiseG1Point(signature);
     const sigBytes = AbiCoder.defaultAbiCoder().encode(["uint256", "uint256"], [sig[0], sig[1]]);
-
+    
+    // receive decryption key after auction end block
     const decryption_key = preprocess_decryption_key_g1(parsedCiphertext, { x: sig[0], y: sig[1] }, BLOCKLOCK_IBE_OPTS);
     await decryptionSender.connect(owner).fulfilDecryptionRequest(requestID, decryption_key, sigBytes);
 
-    console.log(await auction.getBidWithBidID(1));
+    // reveal bid with decryption key
+    await auction.revealBid(requestID);
+
+    let bid1 = await auction.getBidWithBidID(requestID);
+    expect(bid1.unsealedAmount).to.be.equal(msg);
+
+    let highestBid = await auction.highestBid();
+    expect(highestBid).to.be.equal(msg);
+  });
+
+  it("should update the highest bid and highest bidder after decrypting a sealed bid post multiple bids", async function () {
+    const bidAmount1 = ethers.parseEther("4");
+    const bidAmount2 = ethers.parseEther("3");
+
+    // encrypt and send bid 1
+    let msgBytes = AbiCoder.defaultAbiCoder().encode(["uint256"], [bidAmount1]);
+    let encodedMessage = getBytes(msgBytes);
+
+    const auctionEndBlock = await auction.auctionEndBlock();
+    const identity = blockHeightToBEBytes(BigInt(auctionEndBlock));
+    const ct1 = encrypt_towards_identity_g1(encodedMessage, identity, BLOCKLOCK_DEFAULT_PUBLIC_KEY, BLOCKLOCK_IBE_OPTS);
+
+    const sealedAmount1 = encodeCiphertextToSolidity(ct1);
+
+    // Submit a sealed bid from bidder1
+    let tx = await auction.connect(bidder1).sealedBid(sealedAmount1, { value: reservePrice });
+    let receipt = await tx.wait(1);
+    
+    if (!receipt) {
+      throw new Error("transaction has not been mined");
+    }
+
+    const decryptionSenderIface = DecryptionSender__factory.createInterface();
+    let [requestID1, callback, schemeID, condition, ciphertext1] = extractSingleLog(
+      decryptionSenderIface,
+      receipt,
+      await decryptionSender.getAddress(),
+      decryptionSenderIface.getEvent("DecryptionRequested"),
+    );
+
+    // encrypt bid 2
+    msgBytes = AbiCoder.defaultAbiCoder().encode(["uint256"], [bidAmount2]);
+    encodedMessage = getBytes(msgBytes);
+
+    const ct2 = encrypt_towards_identity_g1(encodedMessage, identity, BLOCKLOCK_DEFAULT_PUBLIC_KEY, BLOCKLOCK_IBE_OPTS);
+
+    const sealedAmount2 = encodeCiphertextToSolidity(ct2);
+
+    // Submit a sealed bid from bidder1
+    tx = await auction.connect(bidder2).sealedBid(sealedAmount2, { value: reservePrice });
+    receipt = await tx.wait(1);
+    
+    if (!receipt) {
+      throw new Error("transaction has not been mined");
+    }
+
+    let [requestID2, , , , ciphertext2] = extractSingleLog(
+      decryptionSenderIface,
+      receipt,
+      await decryptionSender.getAddress(),
+      decryptionSenderIface.getEvent("DecryptionRequested"),
+    );
+
+    const blsKey = "0x58aabbe98959c4dcb96c44c53be7e3bb980791fc7a9e03445c4af612a45ac906";
+    const bls = await BlsBn254.create();
+    const { pubKey, secretKey } = bls.createKeyPair(blsKey);
+
+    const conditionBytes = isHexString(condition) ? getBytes(condition) : toUtf8Bytes(condition);
+    const m = bls.hashToPoint(BLOCKLOCK_IBE_OPTS.dsts.H1_G1, conditionBytes);
+
+    // Decode the condition into a blockHeight
+    const hexCondition = Buffer.from(conditionBytes).toString("hex");
+    const blockHeight = BigInt("0x" + hexCondition);
+
+    // Deserialize the ciphertext
+    const parsedCiphertext1 = parseSolidityCiphertextString(ciphertext1);
+    const parsedCiphertext2 = parseSolidityCiphertextString(ciphertext2);
+
+    // Skip to the end block number
+    await ethers.provider.send("hardhat_mine", [Number(auctionEndBlock) + 1]);
+    console.log(await auction.auctionEndBlock());
+
+    // Ship blocklock signature & decryption key
+    console.log(`creating a blocklock signature for block ${blockHeight}`);
+
+    const signature = bls.sign(m, secretKey).signature;
+    const sig = bls.serialiseG1Point(signature);
+    const sigBytes = AbiCoder.defaultAbiCoder().encode(["uint256", "uint256"], [sig[0], sig[1]]);
+    
+    // receive decryption key after auction end block
+    const decryption_key1 = preprocess_decryption_key_g1(parsedCiphertext1, { x: sig[0], y: sig[1] }, BLOCKLOCK_IBE_OPTS);
+    await decryptionSender.connect(owner).fulfilDecryptionRequest(requestID1, decryption_key1, sigBytes);
+
+    const decryption_key2 = preprocess_decryption_key_g1(parsedCiphertext2, { x: sig[0], y: sig[1] }, BLOCKLOCK_IBE_OPTS);
+    await decryptionSender.connect(owner).fulfilDecryptionRequest(requestID2, decryption_key2, sigBytes);
+
+
+    // reveal bid with decryption key
+    await auction.revealBid(requestID1);
+    await auction.revealBid(requestID2);
+
+    let bid1 = await auction.getBidWithBidID(requestID1);
+    expect(bid1.unsealedAmount).to.be.equal(bidAmount1);
+
+    let highestBid = await auction.highestBid();
+    expect(highestBid).to.be.equal(bidAmount1);
   });
 });
