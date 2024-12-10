@@ -237,7 +237,7 @@ describe("SimpleAuction Contract", function () {
     };
   }
 
-  it.only("can request blocklock decryption", async function () {
+  it("can request blocklock decryption", async function () {
     const blocklock_default_pk = {
       x: {
         c0: BigInt("0x2691d39ecc380bfa873911a0b848c77556ee948fb8ab649137d3d3e78153f6ca"),
