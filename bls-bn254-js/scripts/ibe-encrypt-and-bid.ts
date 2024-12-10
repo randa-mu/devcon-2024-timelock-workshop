@@ -7,7 +7,8 @@ import {SimpleAuction__factory} from "../src/generated"
 // Encrypt message with Identity-based Encryption (IBE)
 //
 // Usage
-//  yarn timelock:encrypt --message "plaintext message to timelock encrypt" --blocknumber "block number when message can be decrypted"
+//  yarn timelock:encrypt-and-bid --message "plaintext message to timelock encrypt, i.e., bid amount" --blocknumber "block number when message can be decrypted"
+// yarn timelock:encrypt-and-bid --message 3 --blocknumber 57 --rpcURL http://localhost:8545 --privateKey 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --contractAddr 0x9ffbd8531ac770df4ed8fcd02d76d328ee6cad91
 
 // Define the CLI command and arguments using `commander`
 const program = new Command()
@@ -91,7 +92,7 @@ async function encryptAndRegister(
 
     const auctionContract = SimpleAuction__factory.connect(contractAddr, rpc)
 
-    const lowerPrice = ethers.parseEther("0.01");
+    const lowerPrice = ethers.parseEther("0.1");
     const tx = await auctionContract.connect(wallet).sealedBid(encodeCiphertextToSolidity(ct), { value: lowerPrice });
     const receipt = await tx.wait(1);
     if (!receipt) {
@@ -118,6 +119,7 @@ async function encryptAndRegister(
 
 async function main() {
     const msg = ethers.parseEther(message.toString());
+    console.log(`encrypting bid amount ${message.toString()} ether as ${msg} wei`)
     const msgBytes = AbiCoder.defaultAbiCoder().encode(["uint256"], [msg]);
     const encodedMessage = getBytes(msgBytes);
 

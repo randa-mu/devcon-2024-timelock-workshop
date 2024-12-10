@@ -69,6 +69,7 @@ export async function deployAuction(signer: AbstractSigner, blocklockContractAdd
         return computedAddr
     }
     const result = await deployContract({...creationParams, signer})
+
     return result.address
 }
 

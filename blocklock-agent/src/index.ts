@@ -22,6 +22,7 @@ import {
     IbeOpts,
     preprocess_decryption_key_g1,
     SignatureSchemeAddressProvider__factory,
+    SimpleAuction__factory,
 } from "@randamu/bls-bn254-js/src"
 import {TypedContractEvent, TypedListener} from "@randamu/bls-bn254-js/src/generated/common"
 import {
@@ -41,7 +42,7 @@ const program = new Command()
 
 const defaultPort = "8080"
 const defaultRPC = "http://localhost:8545"
-const defaultPrivateKey = "0x8620b257c2e9f6cbe96f3c181f89dd89bbba56c3dcd2d6315a726850b28fea5c"
+const defaultPrivateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
 const defaultBlsKey = "0x58aabbe98959c4dcb96c44c53be7e3bb980791fc7a9e03445c4af612a45ac906"
 
 export const BLOCKLOCK_IBE_OPTS: IbeOpts = {
@@ -112,6 +113,9 @@ async function main() {
 
     const auctionAddr = await deployAuction(wallet, blocklockAddr)
     console.log(`auction contract deployed to ${auctionAddr}`)
+    
+    const auctionContract = SimpleAuction__factory.connect(auctionAddr, wallet)
+    console.log(`auction end block ${await auctionContract.auctionEndBlock()}`)
 
     const blocklockNumbers = new Map()
     await decryptionSenderContract.addListener("DecryptionRequested", createDecryptionListener(bls, blocklockNumbers))
