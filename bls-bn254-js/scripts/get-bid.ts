@@ -1,5 +1,24 @@
 import { ethers } from 'ethers';
 import { SimpleAuction__factory } from "../src/generated"
+import { Command, Option } from 'commander'
+
+// Define the CLI command and arguments using `commander`
+const program = new Command()
+
+const defaultRPC = "http://localhost:8545"
+
+program
+  .addOption(new Option("--rpc-url <rpc-url>", "The websockets/HTTP URL to connect to the blockchain from")
+    .default(defaultRPC)
+  )
+  .requiredOption('--contractAddr <contractAddr>', 'Deployed auction smart contract address required to blockchain network')
+
+program.parse(process.argv)
+
+// Extract parsed options
+const options = program.opts()
+const rpcAddr: string = options.rpcURL
+const contractAddr: string = options.contractAddr
 
 // Define Types
 interface PointG2 {
@@ -22,8 +41,9 @@ interface BidResponse {
 }
 
 async function getBidDetails(bidID: bigint) {
-    const rpc = new ethers.JsonRpcProvider("http://localhost:8545")
-const contract = SimpleAuction__factory.connect("0x6dc4c8e8d4369974206e64cfb3a2280e0eff133a", rpc)
+const rpc = new ethers.JsonRpcProvider(rpcAddr)
+
+const contract = SimpleAuction__factory.connect(contractAddr, rpc)
   // Call the getBidWithBidID function
   const bidDetails = await contract.getBidWithBidID(bidID);
 
