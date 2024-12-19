@@ -1,0 +1,18 @@
+{
+  "name": "sealed-bid-auction-workshop",
+  "private": true,
+  "engines": {
+    "node": "22.11.0"
+  },
+  "workspaces": [
+    "blocklock-agent",
+    "bls-bn254-js",
+    "smart-contracts"
+  ],
+  "devDependencies": {
+    "@moonrepo/cli": "1.29.4"
+  },
+  "scripts": {
+    "build:all": "npm run build --workspaces"
+  }
+}

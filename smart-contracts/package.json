@@ -28,7 +28,6 @@
         "@noble/curves": "^1.6.0",
         "@nomicfoundation/hardhat-foundry": "^1.1.2",
         "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-        "@openzeppelin/contracts-upgradeable": "^5.0.2",
         "@trivago/prettier-plugin-sort-imports": "^4.3.0",
         "@types/chai": "4",
         "@types/commander": "^2.12.2",
