@@ -1,6 +1,6 @@
 import { ethers, AbiCoder, getBytes, Interface, EventFragment, TransactionReceipt, Result } from 'ethers'
 import { encrypt_towards_identity_g1, IbeOpts, G2, Ciphertext } from '../src'
-import { Command } from 'commander'
+import { Command, Option } from 'commander'
 import { keccak_256 } from "@noble/hashes/sha3"
 import {SimpleAuction__factory} from "../src/generated"
 import {TypesLib as BlocklockTypes} from "../src/generated/BlocklockSender"
@@ -14,10 +14,14 @@ import {TypesLib as BlocklockTypes} from "../src/generated/BlocklockSender"
 // Define the CLI command and arguments using `commander`
 const program = new Command()
 
+const defaultRPC = "http://localhost:8545"
+
 program
     .requiredOption('--message <message>', 'Message to be encrypted')
     .requiredOption('--blocknumber <blocknumber>', 'Block number when message can be decrypted')
-    .requiredOption('--rpcURL <rpcURL>', 'RPC url used to connect to blockchain network')
+    .addOption(new Option("--rpc-url <rpc-url>", "The websockets/HTTP URL to connect to the blockchain from")
+        .default(defaultRPC)
+    )
     .requiredOption('--privateKey <privateKey>', 'Private key used to send transaction as required to blockchain network')
     .requiredOption('--contractAddr <contractAddr>', 'Deployed auction smart contract address required to blockchain network')
 
