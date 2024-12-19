@@ -501,10 +501,10 @@ var require_help = __commonJS({
         function formatList(textArray) {
           return textArray.join("\n").replace(/^/gm, " ".repeat(itemIndentWidth));
         }
-        let output3 = [`Usage: ${helper.commandUsage(cmd)}`, ""];
+        let output4 = [`Usage: ${helper.commandUsage(cmd)}`, ""];
         const commandDescription = helper.commandDescription(cmd);
         if (commandDescription.length > 0) {
-          output3 = output3.concat([
+          output4 = output4.concat([
             helper.wrap(commandDescription, helpWidth, 0),
             ""
           ]);
@@ -516,7 +516,7 @@ var require_help = __commonJS({
           );
         });
         if (argumentList.length > 0) {
-          output3 = output3.concat(["Arguments:", formatList(argumentList), ""]);
+          output4 = output4.concat(["Arguments:", formatList(argumentList), ""]);
         }
         const optionList = helper.visibleOptions(cmd).map((option) => {
           return formatItem(
@@ -525,7 +525,7 @@ var require_help = __commonJS({
           );
         });
         if (optionList.length > 0) {
-          output3 = output3.concat(["Options:", formatList(optionList), ""]);
+          output4 = output4.concat(["Options:", formatList(optionList), ""]);
         }
         if (this.showGlobalOptions) {
           const globalOptionList = helper.visibleGlobalOptions(cmd).map((option) => {
@@ -535,7 +535,7 @@ var require_help = __commonJS({
             );
           });
           if (globalOptionList.length > 0) {
-            output3 = output3.concat([
+            output4 = output4.concat([
               "Global Options:",
               formatList(globalOptionList),
               ""
@@ -549,9 +549,9 @@ var require_help = __commonJS({
           );
         });
         if (commandList.length > 0) {
-          output3 = output3.concat(["Commands:", formatList(commandList), ""]);
+          output4 = output4.concat(["Commands:", formatList(commandList), ""]);
         }
-        return output3.join("\n");
+        return output4.join("\n");
       }
       /**
        * Calculate the pad width from the maximum term length.
@@ -3159,9 +3159,9 @@ var require_buffer_util = __commonJS({
       }
       return target;
     }
-    function _mask(source, mask3, output3, offset, length) {
+    function _mask(source, mask3, output4, offset, length) {
       for (let i = 0; i < length; i++) {
-        output3[offset + i] = source[i] ^ mask3[i & 3];
+        output4[offset + i] = source[i] ^ mask3[i & 3];
       }
     }
     function _unmask(buffer, mask3) {
@@ -3199,9 +3199,9 @@ var require_buffer_util = __commonJS({
     if (!process.env.WS_NO_BUFFER_UTIL) {
       try {
         const bufferUtil = require("bufferutil");
-        module2.exports.mask = function(source, mask3, output3, offset, length) {
-          if (length < 48) _mask(source, mask3, output3, offset, length);
-          else bufferUtil.mask(source, mask3, output3, offset, length);
+        module2.exports.mask = function(source, mask3, output4, offset, length) {
+          if (length < 48) _mask(source, mask3, output4, offset, length);
+          else bufferUtil.mask(source, mask3, output4, offset, length);
         };
         module2.exports.unmask = function(buffer, mask3) {
           if (buffer.length < 32) _unmask(buffer, mask3);
@@ -7090,7 +7090,7 @@ var require_utils = __commonJS({
       let i = 0;
       let flag1 = 0;
       let flag2 = 0;
-      let output3 = "";
+      let output4 = "";
       const template = useUrlTemplate ? base64UrlTemplate : base64Template;
       if (skipLeadingZeros) {
         let nonZeroPosition = 0;
@@ -7125,19 +7125,19 @@ var require_utils = __commonJS({
         }
         if (skipPadding) {
           if (enc3 === 64) {
-            output3 += `${template.charAt(enc1)}${template.charAt(enc2)}`;
+            output4 += `${template.charAt(enc1)}${template.charAt(enc2)}`;
           } else {
             if (enc4 === 64) {
-              output3 += `${template.charAt(enc1)}${template.charAt(enc2)}${template.charAt(enc3)}`;
+              output4 += `${template.charAt(enc1)}${template.charAt(enc2)}${template.charAt(enc3)}`;
             } else {
-              output3 += `${template.charAt(enc1)}${template.charAt(enc2)}${template.charAt(enc3)}${template.charAt(enc4)}`;
+              output4 += `${template.charAt(enc1)}${template.charAt(enc2)}${template.charAt(enc3)}${template.charAt(enc4)}`;
             }
           }
         } else {
-          output3 += `${template.charAt(enc1)}${template.charAt(enc2)}${template.charAt(enc3)}${template.charAt(enc4)}`;
+          output4 += `${template.charAt(enc1)}${template.charAt(enc2)}${template.charAt(enc3)}${template.charAt(enc4)}`;
         }
       }
-      return output3;
+      return output4;
     }
     function fromBase64(input, useUrlTemplate = false, cutTailZeros = false) {
       const template = useUrlTemplate ? base64UrlTemplate : base64Template;
@@ -7152,7 +7152,7 @@ var require_utils = __commonJS({
         return incoming === 64 ? 0 : incoming;
       }
       let i = 0;
-      let output3 = "";
+      let output4 = "";
       while (i < input.length) {
         const enc1 = indexOf(input.charAt(i++));
         const enc2 = i >= input.length ? 0 : indexOf(input.charAt(i++));
@@ -7161,30 +7161,30 @@ var require_utils = __commonJS({
         const chr1 = test(enc1) << 2 | test(enc2) >> 4;
         const chr2 = (test(enc2) & 15) << 4 | test(enc3) >> 2;
         const chr3 = (test(enc3) & 3) << 6 | test(enc4);
-        output3 += String.fromCharCode(chr1);
+        output4 += String.fromCharCode(chr1);
         if (enc3 !== 64) {
-          output3 += String.fromCharCode(chr2);
+          output4 += String.fromCharCode(chr2);
         }
         if (enc4 !== 64) {
-          output3 += String.fromCharCode(chr3);
+          output4 += String.fromCharCode(chr3);
         }
       }
       if (cutTailZeros) {
-        const outputLength = output3.length;
+        const outputLength = output4.length;
         let nonZeroStart = -1;
         for (let i2 = outputLength - 1; i2 >= 0; i2--) {
-          if (output3.charCodeAt(i2) !== 0) {
+          if (output4.charCodeAt(i2) !== 0) {
             nonZeroStart = i2;
             break;
           }
         }
         if (nonZeroStart !== -1) {
-          output3 = output3.slice(0, nonZeroStart + 1);
+          output4 = output4.slice(0, nonZeroStart + 1);
         } else {
-          output3 = "";
+          output4 = "";
         }
       }
-      return output3;
+      return output4;
     }
     function arrayBufferToString(buffer) {
       let resultString = "";
@@ -7461,9 +7461,9 @@ var require_build2 = __commonJS({
         if (this.tagNumber < 31 && !this.isHexOnly) {
           const retView2 = new Uint8Array(1);
           if (!sizeOnly) {
-            let number3 = this.tagNumber;
-            number3 &= 31;
-            firstOctet |= number3;
+            let number4 = this.tagNumber;
+            number4 &= 31;
+            firstOctet |= number4;
             retView2[0] = firstOctet;
           }
           return retView2.buffer;
@@ -8868,11 +8868,11 @@ ${values.join("\n")}` : `${blockName} :`;
         while (bits.length % 7) {
           bits = "0" + bits;
         }
-        const bytes4 = new Uint8Array(bits.length / 7);
-        for (let i = 0; i < bytes4.length; i++) {
-          bytes4[i] = parseInt(bits.slice(i * 7, i * 7 + 7), 2) + (i + 1 < bytes4.length ? 128 : 0);
+        const bytes5 = new Uint8Array(bits.length / 7);
+        for (let i = 0; i < bytes5.length; i++) {
+          bytes5[i] = parseInt(bits.slice(i * 7, i * 7 + 7), 2) + (i + 1 < bytes5.length ? 128 : 0);
         }
-        this.fromBER(bytes4.buffer, 0, bytes4.length);
+        this.fromBER(bytes5.buffer, 0, bytes5.length);
       }
       toBER(sizeOnly) {
         if (this.isHexOnly) {
@@ -9671,8 +9671,8 @@ ${values.join("\n")}` : `${blockName} :`;
           timeString = inputString.substring(0, inputString.length - 1);
           isUTC = true;
         } else {
-          const number3 = new Number(inputString[inputString.length - 1]);
-          if (isNaN(number3.valueOf()))
+          const number4 = new Number(inputString[inputString.length - 1]);
+          if (isNaN(number4.valueOf()))
             throw new Error("Wrong input string for conversion");
           timeString = inputString;
         }
@@ -9694,15 +9694,15 @@ ${values.join("\n")}` : `${blockName} :`;
             timeString = timeString.substring(0, differencePosition);
             if (differenceString.length !== 2 && differenceString.length !== 4)
               throw new Error("Wrong input string for conversion");
-            let number3 = parseInt(differenceString.substring(0, 2), 10);
-            if (isNaN(number3.valueOf()))
+            let number4 = parseInt(differenceString.substring(0, 2), 10);
+            if (isNaN(number4.valueOf()))
               throw new Error("Wrong input string for conversion");
-            hourDifference = multiplier * number3;
+            hourDifference = multiplier * number4;
             if (differenceString.length === 4) {
-              number3 = parseInt(differenceString.substring(2, 4), 10);
-              if (isNaN(number3.valueOf()))
+              number4 = parseInt(differenceString.substring(2, 4), 10);
+              if (isNaN(number4.valueOf()))
                 throw new Error("Wrong input string for conversion");
-              minuteDifference = multiplier * number3;
+              minuteDifference = multiplier * number4;
             }
           }
         }
@@ -10423,9 +10423,9 @@ var require_buffer_util2 = __commonJS({
       }
       return target;
     }
-    function _mask(source, mask3, output3, offset, length) {
+    function _mask(source, mask3, output4, offset, length) {
       for (let i = 0; i < length; i++) {
-        output3[offset + i] = source[i] ^ mask3[i & 3];
+        output4[offset + i] = source[i] ^ mask3[i & 3];
       }
     }
     function _unmask(buffer, mask3) {
@@ -10463,9 +10463,9 @@ var require_buffer_util2 = __commonJS({
     if (!process.env.WS_NO_BUFFER_UTIL) {
       try {
         const bufferUtil = require("bufferutil");
-        module2.exports.mask = function(source, mask3, output3, offset, length) {
-          if (length < 48) _mask(source, mask3, output3, offset, length);
-          else bufferUtil.mask(source, mask3, output3, offset, length);
+        module2.exports.mask = function(source, mask3, output4, offset, length) {
+          if (length < 48) _mask(source, mask3, output4, offset, length);
+          else bufferUtil.mask(source, mask3, output4, offset, length);
         };
         module2.exports.unmask = function(buffer, mask3) {
           if (buffer.length < 32) _unmask(buffer, mask3);
@@ -13964,11 +13964,11 @@ var require_mcl_c = __commonJS({
             return new Uint8Array(buf.buffer, buf.byteOffset, buf.length);
           }
           var decoded = atob(s);
-          var bytes4 = new Uint8Array(decoded.length);
+          var bytes5 = new Uint8Array(decoded.length);
           for (var i = 0; i < decoded.length; ++i) {
-            bytes4[i] = decoded.charCodeAt(i);
+            bytes5[i] = decoded.charCodeAt(i);
           }
-          return bytes4;
+          return bytes5;
         }
         function tryParseAsDataURI(filename) {
           if (!isDataURI(filename)) {
@@ -16310,10 +16310,10 @@ function isBytesLike(value) {
 }
 var HexCharacters = "0123456789abcdef";
 function hexlify(data7) {
-  const bytes4 = getBytes(data7);
+  const bytes5 = getBytes(data7);
   let result = "0x";
-  for (let i = 0; i < bytes4.length; i++) {
-    const v = bytes4[i];
+  for (let i = 0; i < bytes5.length; i++) {
+    const v = bytes5[i];
     result += HexCharacters[(v & 240) >> 4] + HexCharacters[v & 15];
   }
   return result;
@@ -16328,36 +16328,36 @@ function dataLength(data7) {
   return getBytes(data7).length;
 }
 function dataSlice(data7, start, end) {
-  const bytes4 = getBytes(data7);
-  if (end != null && end > bytes4.length) {
+  const bytes5 = getBytes(data7);
+  if (end != null && end > bytes5.length) {
     assert(false, "cannot slice beyond data bounds", "BUFFER_OVERRUN", {
-      buffer: bytes4,
-      length: bytes4.length,
+      buffer: bytes5,
+      length: bytes5.length,
       offset: end
     });
   }
-  return hexlify(bytes4.slice(start == null ? 0 : start, end == null ? bytes4.length : end));
+  return hexlify(bytes5.slice(start == null ? 0 : start, end == null ? bytes5.length : end));
 }
 function stripZerosLeft(data7) {
-  let bytes4 = hexlify(data7).substring(2);
-  while (bytes4.startsWith("00")) {
-    bytes4 = bytes4.substring(2);
+  let bytes5 = hexlify(data7).substring(2);
+  while (bytes5.startsWith("00")) {
+    bytes5 = bytes5.substring(2);
   }
-  return "0x" + bytes4;
+  return "0x" + bytes5;
 }
 function zeroPad(data7, length, left) {
-  const bytes4 = getBytes(data7);
-  assert(length >= bytes4.length, "padding exceeds data length", "BUFFER_OVERRUN", {
-    buffer: new Uint8Array(bytes4),
+  const bytes5 = getBytes(data7);
+  assert(length >= bytes5.length, "padding exceeds data length", "BUFFER_OVERRUN", {
+    buffer: new Uint8Array(bytes5),
     length,
     offset: length + 1
   });
   const result = new Uint8Array(length);
   result.fill(0);
   if (left) {
-    result.set(bytes4, length - bytes4.length);
+    result.set(bytes5, length - bytes5.length);
   } else {
-    result.set(bytes4, 0);
+    result.set(bytes5, 0);
   }
   return hexlify(result);
 }
@@ -16545,15 +16545,15 @@ function getAlpha(letter) {
 var BN_02 = BigInt(0);
 var BN_58 = BigInt(58);
 function encodeBase58(_value) {
-  const bytes4 = getBytes(_value);
-  let value = toBigInt(bytes4);
+  const bytes5 = getBytes(_value);
+  let value = toBigInt(bytes5);
   let result = "";
   while (value) {
     result = Alphabet[Number(value % BN_58)] + result;
     value /= BN_58;
   }
-  for (let i = 0; i < bytes4.length; i++) {
-    if (bytes4[i]) {
+  for (let i = 0; i < bytes5.length; i++) {
+    if (bytes5[i]) {
       break;
     }
     result = Alphabet[0] + result;
@@ -16608,14 +16608,14 @@ var EventPayload = class {
 };
 
 // node_modules/ethers/lib.esm/utils/utf8.js
-function errorFunc(reason, offset, bytes4, output3, badCodepoint) {
-  assertArgument(false, `invalid codepoint at offset ${offset}; ${reason}`, "bytes", bytes4);
+function errorFunc(reason, offset, bytes5, output4, badCodepoint) {
+  assertArgument(false, `invalid codepoint at offset ${offset}; ${reason}`, "bytes", bytes5);
 }
-function ignoreFunc(reason, offset, bytes4, output3, badCodepoint) {
+function ignoreFunc(reason, offset, bytes5, output4, badCodepoint) {
   if (reason === "BAD_PREFIX" || reason === "UNEXPECTED_CONTINUE") {
     let i = 0;
-    for (let o = offset + 1; o < bytes4.length; o++) {
-      if (bytes4[o] >> 6 !== 2) {
+    for (let o = offset + 1; o < bytes5.length; o++) {
+      if (bytes5[o] >> 6 !== 2) {
         break;
       }
       i++;
@@ -16623,18 +16623,18 @@ function ignoreFunc(reason, offset, bytes4, output3, badCodepoint) {
     return i;
   }
   if (reason === "OVERRUN") {
-    return bytes4.length - offset - 1;
+    return bytes5.length - offset - 1;
   }
   return 0;
 }
-function replaceFunc(reason, offset, bytes4, output3, badCodepoint) {
+function replaceFunc(reason, offset, bytes5, output4, badCodepoint) {
   if (reason === "OVERLONG") {
     assertArgument(typeof badCodepoint === "number", "invalid bad code point for replacement", "badCodepoint", badCodepoint);
-    output3.push(badCodepoint);
+    output4.push(badCodepoint);
     return 0;
   }
-  output3.push(65533);
-  return ignoreFunc(reason, offset, bytes4, output3, badCodepoint);
+  output4.push(65533);
+  return ignoreFunc(reason, offset, bytes5, output4, badCodepoint);
 }
 var Utf8ErrorFuncs = Object.freeze({
   error: errorFunc,
@@ -16645,11 +16645,11 @@ function getUtf8CodePoints(_bytes, onError) {
   if (onError == null) {
     onError = Utf8ErrorFuncs.error;
   }
-  const bytes4 = getBytes(_bytes, "bytes");
+  const bytes5 = getBytes(_bytes, "bytes");
   const result = [];
   let i = 0;
-  while (i < bytes4.length) {
-    const c = bytes4[i++];
+  while (i < bytes5.length) {
+    const c = bytes5[i++];
     if (c >> 7 === 0) {
       result.push(c);
       continue;
@@ -16667,21 +16667,21 @@ function getUtf8CodePoints(_bytes, onError) {
       overlongMask = 65535;
     } else {
       if ((c & 192) === 128) {
-        i += onError("UNEXPECTED_CONTINUE", i - 1, bytes4, result);
+        i += onError("UNEXPECTED_CONTINUE", i - 1, bytes5, result);
       } else {
-        i += onError("BAD_PREFIX", i - 1, bytes4, result);
+        i += onError("BAD_PREFIX", i - 1, bytes5, result);
       }
       continue;
     }
-    if (i - 1 + extraLength >= bytes4.length) {
-      i += onError("OVERRUN", i - 1, bytes4, result);
+    if (i - 1 + extraLength >= bytes5.length) {
+      i += onError("OVERRUN", i - 1, bytes5, result);
       continue;
     }
     let res = c & (1 << 8 - extraLength - 1) - 1;
     for (let j = 0; j < extraLength; j++) {
-      let nextChar = bytes4[i];
+      let nextChar = bytes5[i];
       if ((nextChar & 192) != 128) {
-        i += onError("MISSING_CONTINUE", i, bytes4, result);
+        i += onError("MISSING_CONTINUE", i, bytes5, result);
         res = null;
         break;
       }
@@ -16693,15 +16693,15 @@ function getUtf8CodePoints(_bytes, onError) {
       continue;
     }
     if (res > 1114111) {
-      i += onError("OUT_OF_RANGE", i - 1 - extraLength, bytes4, result, res);
+      i += onError("OUT_OF_RANGE", i - 1 - extraLength, bytes5, result, res);
       continue;
     }
     if (res >= 55296 && res <= 57343) {
-      i += onError("UTF16_SURROGATE", i - 1 - extraLength, bytes4, result, res);
+      i += onError("UTF16_SURROGATE", i - 1 - extraLength, bytes5, result, res);
       continue;
     }
     if (res <= overlongMask) {
-      i += onError("OVERLONG", i - 1 - extraLength, bytes4, result, res);
+      i += onError("OVERLONG", i - 1 - extraLength, bytes5, result, res);
       continue;
     }
     result.push(res);
@@ -16748,8 +16748,8 @@ function _toUtf8String(codePoints) {
     return String.fromCharCode((codePoint >> 10 & 1023) + 55296, (codePoint & 1023) + 56320);
   }).join("");
 }
-function toUtf8String(bytes4, onError) {
-  return _toUtf8String(getUtf8CodePoints(bytes4, onError));
+function toUtf8String(bytes5, onError) {
+  return _toUtf8String(getUtf8CodePoints(bytes5, onError));
 }
 function toUtf8CodePoints(str, form) {
   return getUtf8CodePoints(toUtf8Bytes(str, form));
@@ -18290,10 +18290,10 @@ function parseEther(ether) {
 
 // node_modules/ethers/lib.esm/utils/uuid.js
 function uuidV4(randomBytes8) {
-  const bytes4 = getBytes(randomBytes8, "randomBytes");
-  bytes4[6] = bytes4[6] & 15 | 64;
-  bytes4[8] = bytes4[8] & 63 | 128;
-  const value = hexlify(bytes4);
+  const bytes5 = getBytes(randomBytes8, "randomBytes");
+  bytes5[6] = bytes5[6] & 15 | 64;
+  bytes5[8] = bytes5[8] & 63 | 128;
+  const value = hexlify(bytes5);
   return [
     value.substring(2, 10),
     value.substring(10, 14),
@@ -18564,12 +18564,12 @@ function checkResultErrors(result) {
   return errors;
 }
 function getValue(value) {
-  let bytes4 = toBeArray(value);
-  assert(bytes4.length <= WordSize, "value out-of-bounds", "BUFFER_OVERRUN", { buffer: bytes4, length: WordSize, offset: bytes4.length });
-  if (bytes4.length !== WordSize) {
-    bytes4 = getBytesCopy(concat([Padding.slice(bytes4.length % WordSize), bytes4]));
+  let bytes5 = toBeArray(value);
+  assert(bytes5.length <= WordSize, "value out-of-bounds", "BUFFER_OVERRUN", { buffer: bytes5, length: WordSize, offset: bytes5.length });
+  if (bytes5.length !== WordSize) {
+    bytes5 = getBytesCopy(concat([Padding.slice(bytes5.length % WordSize), bytes5]));
   }
-  return bytes4;
+  return bytes5;
 }
 var Coder = class {
   // The coder name:
@@ -18621,12 +18621,12 @@ var Writer = class {
   }
   // Arrayish item; pad on the right to *nearest* WordSize
   writeBytes(value) {
-    let bytes4 = getBytesCopy(value);
-    const paddingOffset = bytes4.length % WordSize;
+    let bytes5 = getBytesCopy(value);
+    const paddingOffset = bytes5.length % WordSize;
     if (paddingOffset) {
-      bytes4 = getBytesCopy(concat([bytes4, Padding.slice(paddingOffset)]));
+      bytes5 = getBytesCopy(concat([bytes5, Padding.slice(paddingOffset)]));
     }
-    return this.#writeData(bytes4);
+    return this.#writeData(bytes5);
   }
   // Numeric item; pad on the left *to* WordSize
   writeValue(value) {
@@ -18712,10 +18712,10 @@ var Reader = class _Reader {
   }
   // Read bytes
   readBytes(length, loose) {
-    let bytes4 = this.#peekBytes(0, length, !!loose);
+    let bytes5 = this.#peekBytes(0, length, !!loose);
     this.#incrementBytesRead(length);
-    this.#offset += bytes4.length;
-    return bytes4.slice(0, length);
+    this.#offset += bytes5.length;
+    return bytes5.slice(0, length);
   }
   // Read a numeric values
   readValue() {
@@ -18763,11 +18763,11 @@ function bytes(b3, ...lengths) {
   if (lengths.length > 0 && !lengths.includes(b3.length))
     throw new Error(`Expected Uint8Array of length ${lengths}, not of length=${b3.length}`);
 }
-function hash(hash3) {
-  if (typeof hash3 !== "function" || typeof hash3.create !== "function")
+function hash(hash4) {
+  if (typeof hash4 !== "function" || typeof hash4.create !== "function")
     throw new Error("Hash should be wrapped by utils.wrapConstructor");
-  number(hash3.outputLen);
-  number(hash3.blockLen);
+  number(hash4.outputLen);
+  number(hash4.blockLen);
 }
 function exists(instance, checkFinished = true) {
   if (instance.destroyed)
@@ -19022,9 +19022,9 @@ var Keccak = class _Keccak extends Hash {
       throw new Error("XOF is not possible for this instance");
     return this.writeInto(out);
   }
-  xof(bytes4) {
-    number(bytes4);
-    return this.xofInto(new Uint8Array(bytes4));
+  xof(bytes5) {
+    number(bytes5);
+    return this.xofInto(new Uint8Array(bytes5));
   }
   digestInto(out) {
     output(out, this);
@@ -19508,24 +19508,24 @@ var sha256 = /* @__PURE__ */ wrapConstructor(() => new SHA256());
 
 // node_modules/@noble/hashes/esm/hmac.js
 var HMAC = class extends Hash {
-  constructor(hash3, _key) {
+  constructor(hash4, _key) {
     super();
     this.finished = false;
     this.destroyed = false;
-    hash(hash3);
+    hash(hash4);
     const key = toBytes(_key);
-    this.iHash = hash3.create();
+    this.iHash = hash4.create();
     if (typeof this.iHash.update !== "function")
       throw new Error("Expected instance of class which extends utils.Hash");
     this.blockLen = this.iHash.blockLen;
     this.outputLen = this.iHash.outputLen;
     const blockLen = this.blockLen;
     const pad = new Uint8Array(blockLen);
-    pad.set(key.length > blockLen ? hash3.create().update(key).digest() : key);
+    pad.set(key.length > blockLen ? hash4.create().update(key).digest() : key);
     for (let i = 0; i < pad.length; i++)
       pad[i] ^= 54;
     this.iHash.update(pad);
-    this.oHash = hash3.create();
+    this.oHash = hash4.create();
     for (let i = 0; i < pad.length; i++)
       pad[i] ^= 54 ^ 92;
     this.oHash.update(pad);
@@ -19568,12 +19568,12 @@ var HMAC = class extends Hash {
     this.iHash.destroy();
   }
 };
-var hmac = (hash3, key, message) => new HMAC(hash3, key).update(message).digest();
-hmac.create = (hash3, key) => new HMAC(hash3, key);
+var hmac = (hash4, key, message) => new HMAC(hash4, key).update(message).digest();
+hmac.create = (hash4, key) => new HMAC(hash4, key);
 
 // node_modules/@noble/hashes/esm/pbkdf2.js
-function pbkdf2Init(hash3, _password, _salt, _opts) {
-  hash(hash3);
+function pbkdf2Init(hash4, _password, _salt, _opts) {
+  hash(hash4);
   const opts = checkOpts({ dkLen: 32, asyncTick: 10 }, _opts);
   const { c, dkLen, asyncTick } = opts;
   number(c);
@@ -19584,7 +19584,7 @@ function pbkdf2Init(hash3, _password, _salt, _opts) {
   const password = toBytes(_password);
   const salt2 = toBytes(_salt);
   const DK = new Uint8Array(dkLen);
-  const PRF = hmac.create(hash3, password);
+  const PRF = hmac.create(hash4, password);
   const PRFSalt = PRF._cloneInto().update(salt2);
   return { c, dkLen, asyncTick, DK, PRF, PRFSalt };
 }
@@ -19596,8 +19596,8 @@ function pbkdf2Output(PRF, PRFSalt, DK, prfW, u) {
   u.fill(0);
   return DK;
 }
-function pbkdf22(hash3, password, salt2, opts) {
-  const { c, dkLen, DK, PRF, PRFSalt } = pbkdf2Init(hash3, password, salt2, opts);
+function pbkdf22(hash4, password, salt2, opts) {
+  const { c, dkLen, DK, PRF, PRFSalt } = pbkdf2Init(hash4, password, salt2, opts);
   let prfW;
   const arr = new Uint8Array(4);
   const view = createView(arr);
@@ -19906,12 +19906,12 @@ var _1n2 = BigInt(1);
 var _2n2 = BigInt(2);
 var u8a2 = (a) => a instanceof Uint8Array;
 var hexes = /* @__PURE__ */ Array.from({ length: 256 }, (_, i) => i.toString(16).padStart(2, "0"));
-function bytesToHex(bytes4) {
-  if (!u8a2(bytes4))
+function bytesToHex(bytes5) {
+  if (!u8a2(bytes5))
     throw new Error("Uint8Array expected");
   let hex3 = "";
-  for (let i = 0; i < bytes4.length; i++) {
-    hex3 += hexes[bytes4[i]];
+  for (let i = 0; i < bytes5.length; i++) {
+    hex3 += hexes[bytes5[i]];
   }
   return hex3;
 }
@@ -19941,13 +19941,13 @@ function hexToBytes(hex3) {
   }
   return array;
 }
-function bytesToNumberBE(bytes4) {
-  return hexToNumber(bytesToHex(bytes4));
+function bytesToNumberBE(bytes5) {
+  return hexToNumber(bytesToHex(bytes5));
 }
-function bytesToNumberLE(bytes4) {
-  if (!u8a2(bytes4))
+function bytesToNumberLE(bytes5) {
+  if (!u8a2(bytes5))
     throw new Error("Uint8Array expected");
-  return hexToNumber(bytesToHex(Uint8Array.from(bytes4).reverse()));
+  return hexToNumber(bytesToHex(Uint8Array.from(bytes5).reverse()));
 }
 function numberToBytesBE(n3, len) {
   return hexToBytes(n3.toString(16).padStart(len * 2, "0"));
@@ -20129,11 +20129,11 @@ function pow2(x, power, modulo) {
   }
   return res;
 }
-function invert(number3, modulo) {
-  if (number3 === _0n3 || modulo <= _0n3) {
-    throw new Error(`invert: expected positive integers, got n=${number3} mod=${modulo}`);
+function invert(number4, modulo) {
+  if (number4 === _0n3 || modulo <= _0n3) {
+    throw new Error(`invert: expected positive integers, got n=${number4} mod=${modulo}`);
   }
-  let a = mod(number3, modulo);
+  let a = mod(number4, modulo);
   let b3 = modulo;
   let x = _0n3, y = _1n3, u = _1n3, v = _0n3;
   while (a !== _0n3) {
@@ -20330,10 +20330,10 @@ function Field(ORDER, bitLen4, isLE4 = false, redef = {}) {
     // We don't have const-time bigints anyway, so probably will be not very useful
     cmov: (a, b3, c) => c ? b3 : a,
     toBytes: (num) => isLE4 ? numberToBytesLE(num, BYTES) : numberToBytesBE(num, BYTES),
-    fromBytes: (bytes4) => {
-      if (bytes4.length !== BYTES)
-        throw new Error(`Fp.fromBytes: expected ${BYTES}, got ${bytes4.length}`);
-      return isLE4 ? bytesToNumberLE(bytes4) : bytesToNumberBE(bytes4);
+    fromBytes: (bytes5) => {
+      if (bytes5.length !== BYTES)
+        throw new Error(`Fp.fromBytes: expected ${BYTES}, got ${bytes5.length}`);
+      return isLE4 ? bytesToNumberLE(bytes5) : bytesToNumberBE(bytes5);
     }
   });
   return Object.freeze(f3);
@@ -20363,7 +20363,7 @@ function mapHashToField(key, fieldOrder, isLE4 = false) {
 var _0n4 = BigInt(0);
 var _1n4 = BigInt(1);
 function wNAF(c, bits) {
-  const constTimeNegate2 = (condition, item) => {
+  const constTimeNegate = (condition, item) => {
     const neg = item.negate();
     return condition ? neg : item;
   };
@@ -20373,7 +20373,7 @@ function wNAF(c, bits) {
     return { windows, windowSize };
   };
   return {
-    constTimeNegate: constTimeNegate2,
+    constTimeNegate,
     // non-const time multiplication ladder
     unsafeLadder(elm, n3) {
       let p = c.ZERO;
@@ -20439,9 +20439,9 @@ function wNAF(c, bits) {
         const cond1 = window2 % 2 !== 0;
         const cond2 = wbits < 0;
         if (wbits === 0) {
-          f3 = f3.add(constTimeNegate2(cond1, precomputes[offset1]));
+          f3 = f3.add(constTimeNegate(cond1, precomputes[offset1]));
         } else {
-          p = p.add(constTimeNegate2(cond2, precomputes[offset2]));
+          p = p.add(constTimeNegate(cond2, precomputes[offset2]));
         }
       }
       return { p, f: f3 };
@@ -20568,8 +20568,8 @@ function weierstrassPoints(opts) {
     const a = point.toAffine();
     return concatBytes2(Uint8Array.from([4]), Fp5.toBytes(a.x), Fp5.toBytes(a.y));
   });
-  const fromBytes = CURVE.fromBytes || ((bytes4) => {
-    const tail = bytes4.subarray(1);
+  const fromBytes = CURVE.fromBytes || ((bytes5) => {
+    const tail = bytes5.subarray(1);
     const x = Fp5.fromBytes(tail.subarray(0, Fp5.BYTES));
     const y = Fp5.fromBytes(tail.subarray(Fp5.BYTES, 2 * Fp5.BYTES));
     return { x, y };
@@ -20989,10 +20989,10 @@ function weierstrass(curveDef) {
         return cat(Uint8Array.from([4]), x, Fp5.toBytes(a.y));
       }
     },
-    fromBytes(bytes4) {
-      const len = bytes4.length;
-      const head = bytes4[0];
-      const tail = bytes4.subarray(1);
+    fromBytes(bytes5) {
+      const len = bytes5.length;
+      const head = bytes5[0];
+      const tail = bytes5.subarray(1);
       if (len === compressedLen && (head === 2 || head === 3)) {
         const x = bytesToNumberBE(tail);
         if (!isValidFieldElement(x))
@@ -21014,9 +21014,9 @@ function weierstrass(curveDef) {
     }
   });
   const numToNByteStr = (num) => bytesToHex(numberToBytesBE(num, CURVE.nByteLength));
-  function isBiggerThanHalfOrder(number3) {
+  function isBiggerThanHalfOrder(number4) {
     const HALF = CURVE_ORDER >> _1n5;
-    return number3 > HALF;
+    return number4 > HALF;
   }
   function normalizeS(s) {
     return isBiggerThanHalfOrder(s) ? modN(-s) : s;
@@ -21146,13 +21146,13 @@ function weierstrass(curveDef) {
     const b3 = Point3.fromHex(publicB);
     return b3.multiply(normPrivateKeyToScalar(privateA)).toRawBytes(isCompressed);
   }
-  const bits2int = CURVE.bits2int || function(bytes4) {
-    const num = bytesToNumberBE(bytes4);
-    const delta = bytes4.length * 8 - CURVE.nBitLength;
+  const bits2int = CURVE.bits2int || function(bytes5) {
+    const num = bytesToNumberBE(bytes5);
+    const delta = bytes5.length * 8 - CURVE.nBitLength;
     return delta > 0 ? num >> BigInt(delta) : num;
   };
-  const bits2int_modN = CURVE.bits2int_modN || function(bytes4) {
-    return modN(bits2int(bytes4));
+  const bits2int_modN = CURVE.bits2int_modN || function(bytes5) {
+    return modN(bits2int(bytes5));
   };
   const ORDER_MASK = bitMask(CURVE.nBitLength);
   function int2octets(num) {
@@ -21165,13 +21165,13 @@ function weierstrass(curveDef) {
   function prepSig(msgHash, privateKey, opts = defaultSigOpts) {
     if (["recovered", "canonical"].some((k) => k in opts))
       throw new Error("sign() legacy options not supported");
-    const { hash: hash3, randomBytes: randomBytes8 } = CURVE;
+    const { hash: hash4, randomBytes: randomBytes8 } = CURVE;
     let { lowS, prehash, extraEntropy: ent } = opts;
     if (lowS == null)
       lowS = true;
     msgHash = ensureBytes("msgHash", msgHash);
     if (prehash)
-      msgHash = ensureBytes("prehashed msgHash", hash3(msgHash));
+      msgHash = ensureBytes("prehashed msgHash", hash4(msgHash));
     const h1int = bits2int_modN(msgHash);
     const d = normPrivateKeyToScalar(privateKey);
     const seedArgs = [int2octets(d), int2octets(h1int)];
@@ -21270,15 +21270,15 @@ function weierstrass(curveDef) {
 }
 
 // node_modules/@noble/curves/esm/_shortw_utils.js
-function getHash(hash3) {
+function getHash(hash4) {
   return {
-    hash: hash3,
-    hmac: (key, ...msgs) => hmac(hash3, key, concatBytes(...msgs)),
+    hash: hash4,
+    hmac: (key, ...msgs) => hmac(hash4, key, concatBytes(...msgs)),
     randomBytes: randomBytes2
   };
 }
 function createCurve(curveDef, defHash) {
-  const create = (hash3) => weierstrass({ ...curveDef, ...getHash(hash3) });
+  const create = (hash4) => weierstrass({ ...curveDef, ...getHash(hash4) });
   return Object.freeze({ ...create(defHash), create });
 }
 
@@ -21601,19 +21601,19 @@ var Signature = class _Signature {
       return new _Signature(_guard3, ZeroHash, ZeroHash, 27);
     }
     if (typeof sig === "string") {
-      const bytes4 = getBytes(sig, "signature");
-      if (bytes4.length === 64) {
-        const r2 = hexlify(bytes4.slice(0, 32));
-        const s2 = bytes4.slice(32, 64);
+      const bytes5 = getBytes(sig, "signature");
+      if (bytes5.length === 64) {
+        const r2 = hexlify(bytes5.slice(0, 32));
+        const s2 = bytes5.slice(32, 64);
         const v2 = s2[0] & 128 ? 28 : 27;
         s2[0] &= 127;
         return new _Signature(_guard3, r2, hexlify(s2), v2);
       }
-      if (bytes4.length === 65) {
-        const r2 = hexlify(bytes4.slice(0, 32));
-        const s2 = bytes4.slice(32, 64);
+      if (bytes5.length === 65) {
+        const r2 = hexlify(bytes5.slice(0, 32));
+        const s2 = bytes5.slice(32, 64);
         assertError((s2[0] & 128) === 0, "non-canonical s");
-        const v2 = _Signature.getNormalizedV(bytes4[64]);
+        const v2 = _Signature.getNormalizedV(bytes5[64]);
         return new _Signature(_guard3, r2, hexlify(s2), v2);
       }
       assertError(false, "invalid raw signature length");
@@ -21630,9 +21630,9 @@ var Signature = class _Signature {
       }
       if (yParityAndS != null) {
         assertError(isHexString(yParityAndS, 32), "invalid yParityAndS");
-        const bytes4 = getBytes(yParityAndS);
-        bytes4[0] &= 127;
-        return hexlify(bytes4);
+        const bytes5 = getBytes(yParityAndS);
+        bytes5[0] &= 127;
+        return hexlify(bytes5);
       }
       assertError(false, "missing s");
     }(sig.s, sig.yParityAndS);
@@ -21771,18 +21771,18 @@ var SigningKey = class _SigningKey {
    *    //_result:
    */
   static computePublicKey(key, compressed) {
-    let bytes4 = getBytes(key, "key");
-    if (bytes4.length === 32) {
-      const pubKey = secp256k1.getPublicKey(bytes4, !!compressed);
+    let bytes5 = getBytes(key, "key");
+    if (bytes5.length === 32) {
+      const pubKey = secp256k1.getPublicKey(bytes5, !!compressed);
       return hexlify(pubKey);
     }
-    if (bytes4.length === 64) {
+    if (bytes5.length === 64) {
       const pub = new Uint8Array(65);
       pub[0] = 4;
-      pub.set(bytes4, 1);
-      bytes4 = pub;
+      pub.set(bytes5, 1);
+      bytes5 = pub;
     }
-    const point = secp256k1.ProjectivePoint.fromHex(bytes4);
+    const point = secp256k1.ProjectivePoint.fromHex(bytes5);
     return hexlify(point.toRawBytes(compressed));
   }
   /**
@@ -23148,10 +23148,10 @@ function id(value) {
 var COMPRESSED$1 = "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";
 var FENCED = /* @__PURE__ */ new Map([[8217, "apostrophe"], [8260, "fraction slash"], [12539, "middle dot"]]);
 var NSM_MAX = 4;
-function decode_arithmetic(bytes4) {
+function decode_arithmetic(bytes5) {
   let pos = 0;
   function u16() {
-    return bytes4[pos++] << 8 | bytes4[pos++];
+    return bytes5[pos++] << 8 | bytes5[pos++];
   }
   let symbol_count = u16();
   let total = 1;
@@ -23166,7 +23166,7 @@ function decode_arithmetic(bytes4) {
   let read_buffer = 0;
   function read_bit() {
     if (read_width == 0) {
-      read_buffer = read_buffer << 8 | bytes4[pos++];
+      read_buffer = read_buffer << 8 | bytes5[pos++];
       read_width = 8;
     }
     return read_buffer >> --read_width & 1;
@@ -23214,11 +23214,11 @@ function decode_arithmetic(bytes4) {
   return symbols.map((x) => {
     switch (x - offset) {
       case 3:
-        return offset + 65792 + (bytes4[pos_payload++] << 16 | bytes4[pos_payload++] << 8 | bytes4[pos_payload++]);
+        return offset + 65792 + (bytes5[pos_payload++] << 16 | bytes5[pos_payload++] << 8 | bytes5[pos_payload++]);
       case 2:
-        return offset + 256 + (bytes4[pos_payload++] << 8 | bytes4[pos_payload++]);
+        return offset + 256 + (bytes5[pos_payload++] << 8 | bytes5[pos_payload++]);
       case 1:
-        return offset + bytes4[pos_payload++];
+        return offset + bytes5[pos_payload++];
       default:
         return x - 1;
     }
@@ -23830,12 +23830,12 @@ function determine_group(unique) {
   return groups;
 }
 function flatten(split6) {
-  return split6.map(({ input, error, output: output3 }) => {
+  return split6.map(({ input, error, output: output4 }) => {
     if (error) {
       let msg = error.message;
       throw new Error(split6.length == 1 ? msg : `Invalid label ${bidi_qq(safe_str_from_cps(input, 63))}: ${msg}`);
     }
-    return str_from_cps(output3);
+    return str_from_cps(output4);
   }).join(STOP_CH);
 }
 function error_disallowed(cp) {
@@ -23937,21 +23937,21 @@ function checkComponent(comp) {
   return comp;
 }
 function ensNameSplit(name) {
-  const bytes4 = toUtf8Bytes(ensNormalize(name));
+  const bytes5 = toUtf8Bytes(ensNormalize(name));
   const comps = [];
   if (name.length === 0) {
     return comps;
   }
   let last = 0;
-  for (let i = 0; i < bytes4.length; i++) {
-    const d = bytes4[i];
+  for (let i = 0; i < bytes5.length; i++) {
+    const d = bytes5[i];
     if (d === 46) {
-      comps.push(checkComponent(bytes4.slice(last, i)));
+      comps.push(checkComponent(bytes5.slice(last, i)));
       last = i + 1;
     }
   }
-  assertArgument(last < bytes4.length, "invalid ENS name; empty component", "name", name);
-  comps.push(checkComponent(bytes4.slice(last)));
+  assertArgument(last < bytes5.length, "invalid ENS name; empty component", "name", name);
+  comps.push(checkComponent(bytes5.slice(last)));
   return comps;
 }
 function ensNormalize(name) {
@@ -23986,10 +23986,10 @@ function dnsEncode(name, _maxLength) {
   assertArgument(length <= 255, "DNS encoded label cannot exceed 255", "length", length);
   return hexlify(concat(ensNameSplit(name).map((comp) => {
     assertArgument(comp.length <= length, `label ${JSON.stringify(name)} exceeds ${length} bytes`, "name", name);
-    const bytes4 = new Uint8Array(comp.length + 1);
-    bytes4.set(comp, 1);
-    bytes4[0] = bytes4.length - 1;
-    return bytes4;
+    const bytes5 = new Uint8Array(comp.length + 1);
+    bytes5.set(comp, 1);
+    bytes5[0] = bytes5.length - 1;
+    return bytes5;
   }))) + "00";
 }
 
@@ -24048,12 +24048,12 @@ var BN_282 = BigInt(28);
 var BN_352 = BigInt(35);
 var BN_MAX_UINT = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 var BLOB_SIZE = 4096 * 32;
-function getVersionedHash(version3, hash3) {
+function getVersionedHash(version3, hash4) {
   let versioned = version3.toString(16);
   while (versioned.length < 2) {
     versioned = "0" + versioned;
   }
-  versioned += sha2562(hash3).substring(4);
+  versioned += sha2562(hash4).substring(4);
   return "0x" + versioned;
 }
 function handleAddress(value) {
@@ -25076,12 +25076,12 @@ var BN_08 = BigInt(0);
 var BN_15 = BigInt(1);
 var BN_MAX_UINT2562 = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 function hexPadRight(value) {
-  const bytes4 = getBytes(value);
-  const padOffset = bytes4.length % 32;
+  const bytes5 = getBytes(value);
+  const padOffset = bytes5.length % 32;
   if (padOffset) {
-    return concat([bytes4, padding.slice(padOffset)]);
+    return concat([bytes5, padding.slice(padOffset)]);
   }
-  return hexlify(bytes4);
+  return hexlify(bytes5);
 }
 var hexTrue = toBeHex(BN_15, 32);
 var hexFalse = toBeHex(BN_08, 32);
@@ -25124,9 +25124,9 @@ var domainChecks = {
     assertArgument(false, `invalid domain value "verifyingContract"`, "domain.verifyingContract", value);
   },
   salt: function(value) {
-    const bytes4 = getBytes(value, "domain.salt");
-    assertArgument(bytes4.length === 32, `invalid domain value "salt"`, "domain.salt", value);
-    return hexlify(bytes4);
+    const bytes5 = getBytes(value, "domain.salt");
+    assertArgument(bytes5.length === 32, `invalid domain value "salt"`, "domain.salt", value);
+    return hexlify(bytes5);
   }
 };
 function getBaseEncoder(type) {
@@ -25151,8 +25151,8 @@ function getBaseEncoder(type) {
       const width = parseInt(match[1]);
       assertArgument(width !== 0 && width <= 32 && match[1] === String(width), "invalid bytes width", "type", type);
       return function(value) {
-        const bytes4 = getBytes(value);
-        assertArgument(bytes4.length === width, `invalid length for ${type}`, "value", value);
+        const bytes5 = getBytes(value);
+        assertArgument(bytes5.length === width, `invalid length for ${type}`, "value", value);
         return hexPadRight(value);
       };
     }
@@ -26810,16 +26810,16 @@ function getBuiltinCallException(action, tx, data7, abiCoder) {
   let revert = null;
   if (data7) {
     message = "execution reverted";
-    const bytes4 = getBytes(data7);
+    const bytes5 = getBytes(data7);
     data7 = hexlify(data7);
-    if (bytes4.length === 0) {
+    if (bytes5.length === 0) {
       message += " (no data present; likely require(false) occurred";
       reason = "require(false)";
-    } else if (bytes4.length % 32 !== 4) {
+    } else if (bytes5.length % 32 !== 4) {
       message += " (could not decode reason; invalid data length)";
-    } else if (hexlify(bytes4.slice(0, 4)) === "0x08c379a0") {
+    } else if (hexlify(bytes5.slice(0, 4)) === "0x08c379a0") {
       try {
-        reason = abiCoder.decode(["string"], bytes4.slice(4))[0];
+        reason = abiCoder.decode(["string"], bytes5.slice(4))[0];
         revert = {
           signature: "Error(string)",
           name: "Error",
@@ -26829,9 +26829,9 @@ function getBuiltinCallException(action, tx, data7, abiCoder) {
       } catch (error) {
         message += " (could not decode reason; invalid string data)";
       }
-    } else if (hexlify(bytes4.slice(0, 4)) === "0x4e487b71") {
+    } else if (hexlify(bytes5.slice(0, 4)) === "0x4e487b71") {
       try {
-        const code = Number(abiCoder.decode(["uint256"], bytes4.slice(4))[0]);
+        const code = Number(abiCoder.decode(["uint256"], bytes5.slice(4))[0]);
         revert = {
           signature: "Panic(uint256)",
           name: "Panic",
@@ -26959,11 +26959,11 @@ var AbiCoder = class _AbiCoder {
 
 // node_modules/ethers/lib.esm/abi/bytes32.js
 function encodeBytes32String(text) {
-  const bytes4 = toUtf8Bytes(text);
-  if (bytes4.length > 31) {
+  const bytes5 = toUtf8Bytes(text);
+  if (bytes5.length > 31) {
     throw new Error("bytes32 string must be less than 32 bytes");
   }
-  return zeroPadBytes(bytes4, 32);
+  return zeroPadBytes(bytes5, 32);
 }
 function decodeBytes32String(_bytes) {
   const data7 = getBytes(_bytes, "bytes");
@@ -27111,8 +27111,8 @@ var Indexed = class {
   /**
    *  @_ignore:
    */
-  constructor(hash3) {
-    defineProperties(this, { hash: hash3, _isIndexed: true });
+  constructor(hash4) {
+    defineProperties(this, { hash: hash4, _isIndexed: true });
   }
 };
 var PanicReasons2 = {
@@ -27682,16 +27682,16 @@ var Interface = class _Interface {
       fragment = f3;
     }
     let message = "invalid length for result data";
-    const bytes4 = getBytesCopy(data7);
-    if (bytes4.length % 32 === 0) {
+    const bytes5 = getBytesCopy(data7);
+    if (bytes5.length % 32 === 0) {
       try {
-        return this.#abiCoder.decode(fragment.outputs, bytes4);
+        return this.#abiCoder.decode(fragment.outputs, bytes5);
       } catch (error) {
         message = "could not decode result data";
       }
     }
     assert(false, message, "BAD_DATA", {
-      value: hexlify(bytes4),
+      value: hexlify(bytes5),
       info: { method: fragment.name, signature: fragment.format() }
     });
   }
@@ -28274,7 +28274,7 @@ var Block = class {
    *  Returns a JSON-friendly value.
    */
   toJSON() {
-    const { baseFeePerGas, difficulty, extraData, gasLimit, gasUsed, hash: hash3, miner, prevRandao, nonce, number: number3, parentHash, parentBeaconBlockRoot, stateRoot, receiptsRoot, timestamp, transactions } = this;
+    const { baseFeePerGas, difficulty, extraData, gasLimit, gasUsed, hash: hash4, miner, prevRandao, nonce, number: number4, parentHash, parentBeaconBlockRoot, stateRoot, receiptsRoot, timestamp, transactions } = this;
     return {
       _type: "Block",
       baseFeePerGas: toJson(baseFeePerGas),
@@ -28284,11 +28284,11 @@ var Block = class {
       gasUsed: toJson(gasUsed),
       blobGasUsed: toJson(this.blobGasUsed),
       excessBlobGas: toJson(this.excessBlobGas),
-      hash: hash3,
+      hash: hash4,
       miner,
       prevRandao,
       nonce,
-      number: number3,
+      number: number4,
       parentHash,
       timestamp,
       parentBeaconBlockRoot,
@@ -28335,16 +28335,16 @@ var Block = class {
     if (typeof indexOrHash === "number") {
       tx = this.#transactions[indexOrHash];
     } else {
-      const hash3 = indexOrHash.toLowerCase();
+      const hash4 = indexOrHash.toLowerCase();
       for (const v of this.#transactions) {
         if (typeof v === "string") {
-          if (v !== hash3) {
+          if (v !== hash4) {
             continue;
           }
           tx = v;
           break;
         } else {
-          if (v.hash === hash3) {
+          if (v.hash === hash4) {
             continue;
           }
           tx = v;
@@ -28671,7 +28671,7 @@ var TransactionReceipt = class {
       to,
       from,
       contractAddress,
-      hash: hash3,
+      hash: hash4,
       index,
       blockHash,
       blockNumber,
@@ -28693,7 +28693,7 @@ var TransactionReceipt = class {
       blobGasUsed: toJson(this.blobGasUsed),
       blobGasPrice: toJson(this.blobGasPrice),
       gasUsed: toJson(this.gasUsed),
-      hash: hash3,
+      hash: hash4,
       index,
       logs,
       logsBloom,
@@ -28920,7 +28920,7 @@ var TransactionResponse = class _TransactionResponse {
    *  Returns a JSON-compatible representation of this transaction.
    */
   toJSON() {
-    const { blockNumber, blockHash, index, hash: hash3, type, to, from, nonce, data: data7, signature, accessList, blobVersionedHashes } = this;
+    const { blockNumber, blockHash, index, hash: hash4, type, to, from, nonce, data: data7, signature, accessList, blobVersionedHashes } = this;
     return {
       _type: "TransactionResponse",
       accessList,
@@ -28932,7 +28932,7 @@ var TransactionResponse = class _TransactionResponse {
       from,
       gasLimit: toJson(this.gasLimit),
       gasPrice: toJson(this.gasPrice),
-      hash: hash3,
+      hash: hash4,
       maxFeePerGas: toJson(this.maxFeePerGas),
       maxPriorityFeePerGas: toJson(this.maxPriorityFeePerGas),
       maxFeePerBlobGas: toJson(this.maxFeePerBlobGas),
@@ -29039,8 +29039,8 @@ var TransactionResponse = class _TransactionResponse {
         if (block == null) {
           return;
         }
-        for (const hash3 of block) {
-          if (hash3 === this.hash) {
+        for (const hash4 of block) {
+          if (hash4 === this.hash) {
             return;
           }
         }
@@ -30099,7 +30099,7 @@ var BaseContract = class _BaseContract {
   /**
    *  @_ignore:
    */
-  async queryTransaction(hash3) {
+  async queryTransaction(hash4) {
     throw new Error("@TODO");
   }
   /*
@@ -30387,17 +30387,17 @@ var ContractFactory = class _ContractFactory {
   /**
    *  Create a new **ContractFactory** from the standard Solidity JSON output.
    */
-  static fromSolidity(output3, runner) {
-    assertArgument(output3 != null, "bad compiler output", "output", output3);
-    if (typeof output3 === "string") {
-      output3 = JSON.parse(output3);
+  static fromSolidity(output4, runner) {
+    assertArgument(output4 != null, "bad compiler output", "output", output4);
+    if (typeof output4 === "string") {
+      output4 = JSON.parse(output4);
     }
-    const abi = output3.abi;
+    const abi = output4.abi;
     let bytecode = "";
-    if (output3.bytecode) {
-      bytecode = output3.bytecode;
-    } else if (output3.evm && output3.evm.bytecode) {
-      bytecode = output3.evm.bytecode;
+    if (output4.bytecode) {
+      bytecode = output4.bytecode;
+    } else if (output4.evm && output4.evm.bytecode) {
+      bytecode = output4.evm.bytecode;
     }
     return new this(abi, bytecode, runner);
   }
@@ -30731,9 +30731,9 @@ var EnsResolver = class _EnsResolver {
               try {
                 linkage.push({ type: "!metadata", value: response.bodyText });
               } catch (error2) {
-                const bytes4 = response.body;
-                if (bytes4) {
-                  linkage.push({ type: "!metadata", value: hexlify(bytes4) });
+                const bytes5 = response.body;
+                if (bytes5) {
+                  linkage.push({ type: "!metadata", value: hexlify(bytes5) });
                 }
                 return { url: null, linkage };
               }
@@ -31683,9 +31683,9 @@ var PollingTransactionSubscriber = class extends OnBlockSubscriber {
    *  Create a new **PollingTransactionSubscriber** attached to
    *  %%provider%%, listening for %%hash%%.
    */
-  constructor(provider, hash3) {
+  constructor(provider, hash4) {
     super(provider);
-    this.#hash = hash3;
+    this.#hash = hash4;
   }
   async _poll(blockNumber, provider) {
     const tx = await provider.getTransactionReceipt(this.#hash);
@@ -31839,8 +31839,8 @@ async function getSubscription(_event, provider) {
     }
   }
   if (isHexString(_event, 32)) {
-    const hash3 = _event.toLowerCase();
-    return { type: "transaction", tag: getTag("tx", { hash: hash3 }), hash: hash3 };
+    const hash4 = _event.toLowerCase();
+    return { type: "transaction", tag: getTag("tx", { hash: hash4 }), hash: hash4 };
   }
   if (_event.orphan) {
     const event = _event;
@@ -32451,7 +32451,7 @@ var AbstractProvider = class {
   }
   // Write
   async broadcastTransaction(signedTx) {
-    const { blockNumber, hash: hash3, network } = await resolveProperties({
+    const { blockNumber, hash: hash4, network } = await resolveProperties({
       blockNumber: this.getBlockNumber(),
       hash: this._perform({
         method: "broadcastTransaction",
@@ -32460,7 +32460,7 @@ var AbstractProvider = class {
       network: this.getNetwork()
     });
     const tx = Transaction.from(signedTx);
-    if (tx.hash !== hash3) {
+    if (tx.hash !== hash4) {
       throw new Error("@TODO: the returned hash did not match");
     }
     return this._wrapTransactionResponse(tx, network).replaceableTransaction(blockNumber);
@@ -32494,26 +32494,26 @@ var AbstractProvider = class {
     }
     return this._wrapBlock(params, network);
   }
-  async getTransaction(hash3) {
+  async getTransaction(hash4) {
     const { network, params } = await resolveProperties({
       network: this.getNetwork(),
-      params: this.#perform({ method: "getTransaction", hash: hash3 })
+      params: this.#perform({ method: "getTransaction", hash: hash4 })
     });
     if (params == null) {
       return null;
     }
     return this._wrapTransactionResponse(params, network);
   }
-  async getTransactionReceipt(hash3) {
+  async getTransactionReceipt(hash4) {
     const { network, params } = await resolveProperties({
       network: this.getNetwork(),
-      params: this.#perform({ method: "getTransactionReceipt", hash: hash3 })
+      params: this.#perform({ method: "getTransactionReceipt", hash: hash4 })
     });
     if (params == null) {
       return null;
     }
     if (params.gasPrice == null && params.effectiveGasPrice == null) {
-      const tx = await this.#perform({ method: "getTransaction", hash: hash3 });
+      const tx = await this.#perform({ method: "getTransaction", hash: hash4 });
       if (tx == null) {
         throw new Error("report this; could not find tx or effectiveGasPrice");
       }
@@ -32521,10 +32521,10 @@ var AbstractProvider = class {
     }
     return this._wrapTransactionReceipt(params, network);
   }
-  async getTransactionResult(hash3) {
+  async getTransactionResult(hash4) {
     const { result } = await resolveProperties({
       network: this.getNetwork(),
-      result: this.#perform({ method: "getTransactionResult", hash: hash3 })
+      result: this.#perform({ method: "getTransactionResult", hash: hash4 })
     });
     if (result == null) {
       return null;
@@ -32598,16 +32598,16 @@ var AbstractProvider = class {
     }
     return null;
   }
-  async waitForTransaction(hash3, _confirms, timeout) {
+  async waitForTransaction(hash4, _confirms, timeout) {
     const confirms = _confirms != null ? _confirms : 1;
     if (confirms === 0) {
-      return this.getTransactionReceipt(hash3);
+      return this.getTransactionReceipt(hash4);
     }
     return new Promise(async (resolve, reject) => {
       let timer = null;
       const listener = async (blockNumber) => {
         try {
-          const receipt = await this.getTransactionReceipt(hash3);
+          const receipt = await this.getTransactionReceipt(hash4);
           if (receipt != null) {
             if (blockNumber - receipt.blockNumber + 1 >= confirms) {
               resolve(receipt);
@@ -32971,9 +32971,9 @@ var AbstractProvider = class {
 };
 function _parseString(result, start) {
   try {
-    const bytes4 = _parseBytes(result, start);
-    if (bytes4) {
-      return toUtf8String(bytes4);
+    const bytes5 = _parseBytes(result, start);
+    if (bytes5) {
+      return toUtf8String(bytes5);
     }
   } catch (error) {
   }
@@ -33526,13 +33526,13 @@ var JsonRpcSigner = class extends AbstractSigner {
   }
   async sendTransaction(tx) {
     const blockNumber = await this.provider.getBlockNumber();
-    const hash3 = await this.sendUncheckedTransaction(tx);
+    const hash4 = await this.sendUncheckedTransaction(tx);
     return await new Promise((resolve, reject) => {
       const timeouts = [1e3, 100];
       let invalids = 0;
       const checkTx = async () => {
         try {
-          const tx2 = await this.provider.getTransaction(hash3);
+          const tx2 = await this.provider.getTransaction(hash4);
           if (tx2 != null) {
             resolve(tx2.replaceableTransaction(blockNumber));
             return;
@@ -33542,7 +33542,7 @@ var JsonRpcSigner = class extends AbstractSigner {
             if (error.info == null) {
               error.info = {};
             }
-            error.info.sendTransactionHash = hash3;
+            error.info.sendTransactionHash = hash4;
             reject(error);
             return;
           }
@@ -33551,7 +33551,7 @@ var JsonRpcSigner = class extends AbstractSigner {
             if (error.info == null) {
               error.info = {};
             }
-            error.info.sendTransactionHash = hash3;
+            error.info.sendTransactionHash = hash4;
             if (invalids > 10) {
               reject(error);
               return;
@@ -33639,8 +33639,8 @@ var JsonRpcApiProvider = class extends AbstractProvider {
             break;
           }
           batch.push(payloads.shift());
-          const bytes4 = JSON.stringify(batch.map((p) => p.payload));
-          if (bytes4.length > this.#options.batchMaxSize) {
+          const bytes5 = JSON.stringify(batch.map((p) => p.payload));
+          if (bytes5.length > this.#options.batchMaxSize) {
             payloads.unshift(batch.pop());
             break;
           }
@@ -36993,10 +36993,10 @@ var U1 = [0, 235474187, 470948374, 303765277, 941896748, 908933415, 607530554, 7
 var U2 = [0, 185469197, 370938394, 487725847, 741876788, 657861945, 975451694, 824852259, 1483753576, 1400783205, 1315723890, 1164071807, 1950903388, 2135319889, 1649704518, 1767536459, 2967507152, 3152976349, 2801566410, 2918353863, 2631447780, 2547432937, 2328143614, 2177544179, 3901806776, 3818836405, 4270639778, 4118987695, 3299409036, 3483825537, 3535072918, 3652904859, 2077965243, 1893020342, 1841768865, 1724457132, 1474502543, 1559041666, 1107234197, 1257309336, 598438867, 681933534, 901210569, 1052338372, 261314535, 77422314, 428819965, 310463728, 3409685355, 3224740454, 3710368113, 3593056380, 3875770207, 3960309330, 4045380933, 4195456072, 2471224067, 2554718734, 2237133081, 2388260884, 3212035895, 3028143674, 2842678573, 2724322336, 4138563181, 4255350624, 3769721975, 3955191162, 3667219033, 3516619604, 3431546947, 3347532110, 2933734917, 2782082824, 3099667487, 3016697106, 2196052529, 2313884476, 2499348523, 2683765030, 1179510461, 1296297904, 1347548327, 1533017514, 1786102409, 1635502980, 2087309459, 2003294622, 507358933, 355706840, 136428751, 53458370, 839224033, 957055980, 605657339, 790073846, 2373340630, 2256028891, 2607439820, 2422494913, 2706270690, 2856345839, 3075636216, 3160175349, 3573941694, 3725069491, 3273267108, 3356761769, 4181598602, 4063242375, 4011996048, 3828103837, 1033297158, 915985419, 730517276, 545572369, 296679730, 446754879, 129166120, 213705253, 1709610350, 1860738147, 1945798516, 2029293177, 1239331162, 1120974935, 1606591296, 1422699085, 4148292826, 4233094615, 3781033664, 3931371469, 3682191598, 3497509347, 3446004468, 3328955385, 2939266226, 2755636671, 3106780840, 2988687269, 2198438022, 2282195339, 2501218972, 2652609425, 1201765386, 1286567175, 1371368976, 1521706781, 1805211710, 1620529459, 2105887268, 1988838185, 533804130, 350174575, 164439672, 46346101, 870912086, 954669403, 636813900, 788204353, 2358957921, 2274680428, 2592523643, 2441661558, 2695033685, 2880240216, 3065962831, 3182487618, 3572145929, 3756299780, 3270937875, 3388507166, 4174560061, 4091327024, 4006521127, 3854606378, 1014646705, 930369212, 711349675, 560487590, 272786309, 457992840, 106852767, 223377554, 1678381017, 1862534868, 1914052035, 2031621326, 1211247597, 1128014560, 1580087799, 1428173050, 32283319, 182621114, 401639597, 486441376, 768917123, 651868046, 1003007129, 818324884, 1503449823, 1385356242, 1333838021, 1150208456, 1973745387, 2125135846, 1673061617, 1756818940, 2970356327, 3120694122, 2802849917, 2887651696, 2637442643, 2520393566, 2334669897, 2149987652, 3917234703, 3799141122, 4284502037, 4100872472, 3309594171, 3460984630, 3545789473, 3629546796, 2050466060, 1899603969, 1814803222, 1730525723, 1443857720, 1560382517, 1075025698, 1260232239, 575138148, 692707433, 878443390, 1062597235, 243256656, 91341917, 409198410, 325965383, 3403100636, 3252238545, 3704300486, 3620022987, 3874428392, 3990953189, 4042459122, 4227665663, 2460449204, 2578018489, 2226875310, 2411029155, 3198115200, 3046200461, 2827177882, 2743944855];
 var U3 = [0, 218828297, 437656594, 387781147, 875313188, 958871085, 775562294, 590424639, 1750626376, 1699970625, 1917742170, 2135253587, 1551124588, 1367295589, 1180849278, 1265195639, 3501252752, 3720081049, 3399941250, 3350065803, 3835484340, 3919042237, 4270507174, 4085369519, 3102249176, 3051593425, 2734591178, 2952102595, 2361698556, 2177869557, 2530391278, 2614737639, 3145456443, 3060847922, 2708326185, 2892417312, 2404901663, 2187128086, 2504130317, 2555048196, 3542330227, 3727205754, 3375740769, 3292445032, 3876557655, 3926170974, 4246310725, 4027744588, 1808481195, 1723872674, 1910319033, 2094410160, 1608975247, 1391201670, 1173430173, 1224348052, 59984867, 244860394, 428169201, 344873464, 935293895, 984907214, 766078933, 547512796, 1844882806, 1627235199, 2011214180, 2062270317, 1507497298, 1423022939, 1137477952, 1321699145, 95345982, 145085239, 532201772, 313773861, 830661914, 1015671571, 731183368, 648017665, 3175501286, 2957853679, 2807058932, 2858115069, 2305455554, 2220981195, 2474404304, 2658625497, 3575528878, 3625268135, 3473416636, 3254988725, 3778151818, 3963161475, 4213447064, 4130281361, 3599595085, 3683022916, 3432737375, 3247465558, 3802222185, 4020912224, 4172763771, 4122762354, 3201631749, 3017672716, 2764249623, 2848461854, 2331590177, 2280796200, 2431590963, 2648976442, 104699613, 188127444, 472615631, 287343814, 840019705, 1058709744, 671593195, 621591778, 1852171925, 1668212892, 1953757831, 2037970062, 1514790577, 1463996600, 1080017571, 1297403050, 3673637356, 3623636965, 3235995134, 3454686199, 4007360968, 3822090177, 4107101658, 4190530515, 2997825956, 3215212461, 2830708150, 2779915199, 2256734592, 2340947849, 2627016082, 2443058075, 172466556, 122466165, 273792366, 492483431, 1047239e3, 861968209, 612205898, 695634755, 1646252340, 1863638845, 2013908262, 1963115311, 1446242576, 1530455833, 1277555970, 1093597963, 1636604631, 1820824798, 2073724613, 1989249228, 1436590835, 1487645946, 1337376481, 1119727848, 164948639, 81781910, 331544205, 516552836, 1039717051, 821288114, 669961897, 719700128, 2973530695, 3157750862, 2871682645, 2787207260, 2232435299, 2283490410, 2667994737, 2450346104, 3647212047, 3564045318, 3279033885, 3464042516, 3980931627, 3762502690, 4150144569, 4199882800, 3070356634, 3121275539, 2904027272, 2686254721, 2200818878, 2384911031, 2570832044, 2486224549, 3747192018, 3528626907, 3310321856, 3359936201, 3950355702, 3867060991, 4049844452, 4234721005, 1739656202, 1790575107, 2108100632, 1890328081, 1402811438, 1586903591, 1233856572, 1149249077, 266959938, 48394827, 369057872, 418672217, 1002783846, 919489135, 567498868, 752375421, 209336225, 24197544, 376187827, 459744698, 945164165, 895287692, 574624663, 793451934, 1679968233, 1764313568, 2117360635, 1933530610, 1343127501, 1560637892, 1243112415, 1192455638, 3704280881, 3519142200, 3336358691, 3419915562, 3907448597, 3857572124, 4075877127, 4294704398, 3029510009, 3113855344, 2927934315, 2744104290, 2159976285, 2377486676, 2594734927, 2544078150];
 var U4 = [0, 151849742, 303699484, 454499602, 607398968, 758720310, 908999204, 1059270954, 1214797936, 1097159550, 1517440620, 1400849762, 1817998408, 1699839814, 2118541908, 2001430874, 2429595872, 2581445614, 2194319100, 2345119218, 3034881240, 3186202582, 2801699524, 2951971274, 3635996816, 3518358430, 3399679628, 3283088770, 4237083816, 4118925222, 4002861748, 3885750714, 1002142683, 850817237, 698445255, 548169417, 529487843, 377642221, 227885567, 77089521, 1943217067, 2061379749, 1640576439, 1757691577, 1474760595, 1592394909, 1174215055, 1290801793, 2875968315, 2724642869, 3111247143, 2960971305, 2405426947, 2253581325, 2638606623, 2487810577, 3808662347, 3926825029, 4044981591, 4162096729, 3342319475, 3459953789, 3576539503, 3693126241, 1986918061, 2137062819, 1685577905, 1836772287, 1381620373, 1532285339, 1078185097, 1229899655, 1040559837, 923313619, 740276417, 621982671, 439452389, 322734571, 137073913, 19308535, 3871163981, 4021308739, 4104605777, 4255800159, 3263785589, 3414450555, 3499326569, 3651041127, 2933202493, 2815956275, 3167684641, 3049390895, 2330014213, 2213296395, 2566595609, 2448830231, 1305906550, 1155237496, 1607244650, 1455525988, 1776460110, 1626319424, 2079897426, 1928707164, 96392454, 213114376, 396673818, 514443284, 562755902, 679998e3, 865136418, 983426092, 3708173718, 3557504664, 3474729866, 3323011204, 4180808110, 4030667424, 3945269170, 3794078908, 2507040230, 2623762152, 2272556026, 2390325492, 2975484382, 3092726480, 2738905026, 2857194700, 3973773121, 3856137295, 4274053469, 4157467219, 3371096953, 3252932727, 3673476453, 3556361835, 2763173681, 2915017791, 3064510765, 3215307299, 2156299017, 2307622919, 2459735317, 2610011675, 2081048481, 1963412655, 1846563261, 1729977011, 1480485785, 1362321559, 1243905413, 1126790795, 878845905, 1030690015, 645401037, 796197571, 274084841, 425408743, 38544885, 188821243, 3613494426, 3731654548, 3313212038, 3430322568, 4082475170, 4200115116, 3780097726, 3896688048, 2668221674, 2516901860, 2366882550, 2216610296, 3141400786, 2989552604, 2837966542, 2687165888, 1202797690, 1320957812, 1437280870, 1554391400, 1669664834, 1787304780, 1906247262, 2022837584, 265905162, 114585348, 499347990, 349075736, 736970802, 585122620, 972512814, 821712160, 2595684844, 2478443234, 2293045232, 2174754046, 3196267988, 3079546586, 2895723464, 2777952454, 3537852828, 3687994002, 3234156416, 3385345166, 4142626212, 4293295786, 3841024952, 3992742070, 174567692, 57326082, 410887952, 292596766, 777231668, 660510266, 1011452712, 893681702, 1108339068, 1258480242, 1343618912, 1494807662, 1715193156, 1865862730, 1948373848, 2100090966, 2701949495, 2818666809, 3004591147, 3122358053, 2235061775, 2352307457, 2535604243, 2653899549, 3915653703, 3764988233, 4219352155, 4067639125, 3444575871, 3294430577, 3746175075, 3594982253, 836553431, 953270745, 600235211, 718002117, 367585007, 484830689, 133361907, 251657213, 2041877159, 1891211689, 1806599355, 1654886325, 1568718495, 1418573201, 1335535747, 1184342925];
-function convertToInt32(bytes4) {
+function convertToInt32(bytes5) {
   const result = [];
-  for (let i = 0; i < bytes4.length; i += 4) {
-    result.push(bytes4[i] << 24 | bytes4[i + 1] << 16 | bytes4[i + 2] << 8 | bytes4[i + 3]);
+  for (let i = 0; i < bytes5.length; i += 4) {
+    result.push(bytes5[i] << 24 | bytes5[i + 1] << 16 | bytes5[i + 2] << 8 | bytes5[i + 3]);
   }
   return result;
 }
@@ -37636,8 +37636,8 @@ function zpad2(value, length) {
 function encodeBase58Check(_value) {
   const value = getBytes(_value);
   const check = dataSlice(sha2562(sha2562(value)), 0, 4);
-  const bytes4 = concat([value, check]);
-  return encodeBase58(bytes4);
+  const bytes5 = concat([value, check]);
+  return encodeBase58(bytes5);
 }
 var _guard6 = {};
 function ser_I(index, chainCode, publicKey, privateKey) {
@@ -37856,14 +37856,14 @@ var HDNodeWallet = class _HDNodeWallet extends BaseWallet {
    *  or full HD Node ([[HDNodeWallet) respectively.
    */
   static fromExtendedKey(extendedKey) {
-    const bytes4 = toBeArray(decodeBase58(extendedKey));
-    assertArgument(bytes4.length === 82 || encodeBase58Check(bytes4.slice(0, 78)) === extendedKey, "invalid extended key", "extendedKey", "[ REDACTED ]");
-    const depth = bytes4[4];
-    const parentFingerprint = hexlify(bytes4.slice(5, 9));
-    const index = parseInt(hexlify(bytes4.slice(9, 13)).substring(2), 16);
-    const chainCode = hexlify(bytes4.slice(13, 45));
-    const key = bytes4.slice(45, 78);
-    switch (hexlify(bytes4.slice(0, 4))) {
+    const bytes5 = toBeArray(decodeBase58(extendedKey));
+    assertArgument(bytes5.length === 82 || encodeBase58Check(bytes5.slice(0, 78)) === extendedKey, "invalid extended key", "extendedKey", "[ REDACTED ]");
+    const depth = bytes5[4];
+    const parentFingerprint = hexlify(bytes5.slice(5, 9));
+    const index = parseInt(hexlify(bytes5.slice(9, 13)).substring(2), 16);
+    const chainCode = hexlify(bytes5.slice(13, 45));
+    const key = bytes5.slice(45, 78);
+    switch (hexlify(bytes5.slice(0, 4))) {
       // Public Key
       case "0x0488b21e":
       case "0x043587cf": {
@@ -38648,7 +38648,7 @@ function loadWords3(locale) {
   let deltaOffset = 0;
   for (let i = 0; i < 2048; i++) {
     const s = style.indexOf(data3[i * 3]);
-    const bytes4 = [
+    const bytes5 = [
       228 + (s >> 2),
       128 + codes2.indexOf(data3[i * 3 + 1]),
       128 + codes2.indexOf(data3[i * 3 + 2])
@@ -38656,10 +38656,10 @@ function loadWords3(locale) {
     if (locale === "zh_tw") {
       const common = s % 4;
       for (let i2 = common; i2 < 3; i2++) {
-        bytes4[i2] = codes2.indexOf(deltaData[deltaOffset++]) + (i2 == 0 ? 228 : 128);
+        bytes5[i2] = codes2.indexOf(deltaData[deltaOffset++]) + (i2 == 0 ? 228 : 128);
       }
     }
-    wordlist17.push(toUtf8String(new Uint8Array(bytes4)));
+    wordlist17.push(toUtf8String(new Uint8Array(bytes5)));
   }
   const checksum13 = id(wordlist17.join("\n") + "\n");
   if (checksum13 !== Checks[locale]) {
@@ -38729,36 +38729,36 @@ var import_buffer = require("buffer");
 var asn1js = __toESM(require_build2());
 
 // ../bls-bn254-js/node_modules/@noble/hashes/esm/_assert.js
-function anumber(n3) {
+function number2(n3) {
   if (!Number.isSafeInteger(n3) || n3 < 0)
-    throw new Error("positive integer expected, got " + n3);
+    throw new Error(`positive integer expected, not ${n3}`);
 }
 function isBytes(a) {
-  return a instanceof Uint8Array || ArrayBuffer.isView(a) && a.constructor.name === "Uint8Array";
+  return a instanceof Uint8Array || a != null && typeof a === "object" && a.constructor.name === "Uint8Array";
 }
-function abytes(b3, ...lengths) {
+function bytes2(b3, ...lengths) {
   if (!isBytes(b3))
     throw new Error("Uint8Array expected");
   if (lengths.length > 0 && !lengths.includes(b3.length))
-    throw new Error("Uint8Array expected of length " + lengths + ", got length=" + b3.length);
+    throw new Error(`Uint8Array expected of length ${lengths}, not of length=${b3.length}`);
 }
-function ahash(h) {
+function hash2(h) {
   if (typeof h !== "function" || typeof h.create !== "function")
     throw new Error("Hash should be wrapped by utils.wrapConstructor");
-  anumber(h.outputLen);
-  anumber(h.blockLen);
+  number2(h.outputLen);
+  number2(h.blockLen);
 }
-function aexists(instance, checkFinished = true) {
+function exists2(instance, checkFinished = true) {
   if (instance.destroyed)
     throw new Error("Hash instance has been destroyed");
   if (checkFinished && instance.finished)
     throw new Error("Hash#digest() has already been called");
 }
-function aoutput(out, instance) {
-  abytes(out);
+function output2(out, instance) {
+  bytes2(out);
   const min = instance.outputLen;
   if (out.length < min) {
-    throw new Error("digestInto() expects output buffer of length at least " + min);
+    throw new Error(`digestInto() expects output buffer of length at least ${min}`);
   }
 }
 
@@ -38770,7 +38770,7 @@ var crypto3 = nc2 && typeof nc2 === "object" && "webcrypto" in nc2 ? nc2.webcryp
 var u322 = (arr) => new Uint32Array(arr.buffer, arr.byteOffset, Math.floor(arr.byteLength / 4));
 var createView2 = (arr) => new DataView(arr.buffer, arr.byteOffset, arr.byteLength);
 var rotr2 = (word, shift) => word << 32 - shift | word >>> shift;
-var isLE2 = /* @__PURE__ */ (() => new Uint8Array(new Uint32Array([287454020]).buffer)[0] === 68)();
+var isLE2 = new Uint8Array(new Uint32Array([287454020]).buffer)[0] === 68;
 var byteSwap = (word) => word << 24 & 4278190080 | word << 8 & 16711680 | word >>> 8 & 65280 | word >>> 24 & 255;
 function byteSwap32(arr) {
   for (let i = 0; i < arr.length; i++) {
@@ -38779,20 +38779,20 @@ function byteSwap32(arr) {
 }
 function utf8ToBytes3(str) {
   if (typeof str !== "string")
-    throw new Error("utf8ToBytes expected string, got " + typeof str);
+    throw new Error(`utf8ToBytes expected string, got ${typeof str}`);
   return new Uint8Array(new TextEncoder().encode(str));
 }
 function toBytes2(data7) {
   if (typeof data7 === "string")
     data7 = utf8ToBytes3(data7);
-  abytes(data7);
+  bytes2(data7);
   return data7;
 }
 function concatBytes3(...arrays) {
   let sum = 0;
   for (let i = 0; i < arrays.length; i++) {
     const a = arrays[i];
-    abytes(a);
+    bytes2(a);
     sum += a.length;
   }
   const res = new Uint8Array(sum);
@@ -38809,6 +38809,7 @@ var Hash2 = class {
     return this._cloneInto();
   }
 };
+var toStr2 = {}.toString;
 function wrapConstructor2(hashCons) {
   const hashC = (msg) => hashCons().update(toBytes2(msg)).digest();
   const tmp = hashCons();
@@ -38865,7 +38866,7 @@ var HashMD = class extends Hash2 {
     this.view = createView2(this.buffer);
   }
   update(data7) {
-    aexists(this);
+    exists2(this);
     const { view, buffer, blockLen } = this;
     data7 = toBytes2(data7);
     const len = data7.length;
@@ -38890,8 +38891,8 @@ var HashMD = class extends Hash2 {
     return this;
   }
   digestInto(out) {
-    aexists(this);
-    aoutput(out, this);
+    exists2(this);
+    output2(out, this);
     this.finished = true;
     const { buffer, view, blockLen, isLE: isLE4 } = this;
     let { pos } = this;
@@ -39089,37 +39090,37 @@ var sha2563 = /* @__PURE__ */ wrapConstructor2(() => new SHA2562());
 
 // ../bls-bn254-js/node_modules/@noble/hashes/esm/hmac.js
 var HMAC2 = class extends Hash2 {
-  constructor(hash3, _key) {
+  constructor(hash4, _key) {
     super();
     this.finished = false;
     this.destroyed = false;
-    ahash(hash3);
+    hash2(hash4);
     const key = toBytes2(_key);
-    this.iHash = hash3.create();
+    this.iHash = hash4.create();
     if (typeof this.iHash.update !== "function")
       throw new Error("Expected instance of class which extends utils.Hash");
     this.blockLen = this.iHash.blockLen;
     this.outputLen = this.iHash.outputLen;
     const blockLen = this.blockLen;
     const pad = new Uint8Array(blockLen);
-    pad.set(key.length > blockLen ? hash3.create().update(key).digest() : key);
+    pad.set(key.length > blockLen ? hash4.create().update(key).digest() : key);
     for (let i = 0; i < pad.length; i++)
       pad[i] ^= 54;
     this.iHash.update(pad);
-    this.oHash = hash3.create();
+    this.oHash = hash4.create();
     for (let i = 0; i < pad.length; i++)
       pad[i] ^= 54 ^ 92;
     this.oHash.update(pad);
     pad.fill(0);
   }
   update(buf) {
-    aexists(this);
+    exists2(this);
     this.iHash.update(buf);
     return this;
   }
   digestInto(out) {
-    aexists(this);
-    abytes(out, this.outputLen);
+    exists2(this);
+    bytes2(out, this.outputLen);
     this.finished = true;
     this.iHash.digestInto(out);
     this.oHash.update(out);
@@ -39149,15 +39150,15 @@ var HMAC2 = class extends Hash2 {
     this.iHash.destroy();
   }
 };
-var hmac2 = (hash3, key, message) => new HMAC2(hash3, key).update(message).digest();
-hmac2.create = (hash3, key) => new HMAC2(hash3, key);
+var hmac2 = (hash4, key, message) => new HMAC2(hash4, key).update(message).digest();
+hmac2.create = (hash4, key) => new HMAC2(hash4, key);
 
 // ../bls-bn254-js/node_modules/@noble/curves/esm/abstract/utils.js
 var utils_exports2 = {};
 __export(utils_exports2, {
   aInRange: () => aInRange,
   abool: () => abool,
-  abytes: () => abytes2,
+  abytes: () => abytes,
   bitGet: () => bitGet2,
   bitLen: () => bitLen2,
   bitMask: () => bitMask2,
@@ -39186,42 +39187,42 @@ var _0n7 = /* @__PURE__ */ BigInt(0);
 var _1n7 = /* @__PURE__ */ BigInt(1);
 var _2n6 = /* @__PURE__ */ BigInt(2);
 function isBytes2(a) {
-  return a instanceof Uint8Array || ArrayBuffer.isView(a) && a.constructor.name === "Uint8Array";
+  return a instanceof Uint8Array || a != null && typeof a === "object" && a.constructor.name === "Uint8Array";
 }
-function abytes2(item) {
+function abytes(item) {
   if (!isBytes2(item))
     throw new Error("Uint8Array expected");
 }
 function abool(title, value) {
   if (typeof value !== "boolean")
-    throw new Error(title + " boolean expected, got " + value);
+    throw new Error(`${title} must be valid boolean, got "${value}".`);
 }
 var hexes2 = /* @__PURE__ */ Array.from({ length: 256 }, (_, i) => i.toString(16).padStart(2, "0"));
-function bytesToHex2(bytes4) {
-  abytes2(bytes4);
+function bytesToHex2(bytes5) {
+  abytes(bytes5);
   let hex3 = "";
-  for (let i = 0; i < bytes4.length; i++) {
-    hex3 += hexes2[bytes4[i]];
+  for (let i = 0; i < bytes5.length; i++) {
+    hex3 += hexes2[bytes5[i]];
   }
   return hex3;
 }
 function numberToHexUnpadded2(num) {
   const hex3 = num.toString(16);
-  return hex3.length & 1 ? "0" + hex3 : hex3;
+  return hex3.length & 1 ? `0${hex3}` : hex3;
 }
 function hexToNumber2(hex3) {
   if (typeof hex3 !== "string")
     throw new Error("hex string expected, got " + typeof hex3);
-  return hex3 === "" ? _0n7 : BigInt("0x" + hex3);
+  return BigInt(hex3 === "" ? "0" : `0x${hex3}`);
 }
-var asciis = { _0: 48, _9: 57, A: 65, F: 70, a: 97, f: 102 };
-function asciiToBase16(ch) {
-  if (ch >= asciis._0 && ch <= asciis._9)
-    return ch - asciis._0;
-  if (ch >= asciis.A && ch <= asciis.F)
-    return ch - (asciis.A - 10);
-  if (ch >= asciis.a && ch <= asciis.f)
-    return ch - (asciis.a - 10);
+var asciis = { _0: 48, _9: 57, _A: 65, _F: 70, _a: 97, _f: 102 };
+function asciiToBase16(char) {
+  if (char >= asciis._0 && char <= asciis._9)
+    return char - asciis._0;
+  if (char >= asciis._A && char <= asciis._F)
+    return char - (asciis._A - 10);
+  if (char >= asciis._a && char <= asciis._f)
+    return char - (asciis._a - 10);
   return;
 }
 function hexToBytes2(hex3) {
@@ -39230,7 +39231,7 @@ function hexToBytes2(hex3) {
   const hl = hex3.length;
   const al = hl / 2;
   if (hl % 2)
-    throw new Error("hex string expected, got unpadded hex of length " + hl);
+    throw new Error("padded hex string expected, got unpadded hex of length " + hl);
   const array = new Uint8Array(al);
   for (let ai = 0, hi = 0; ai < al; ai++, hi += 2) {
     const n1 = asciiToBase16(hex3.charCodeAt(hi));
@@ -39243,12 +39244,12 @@ function hexToBytes2(hex3) {
   }
   return array;
 }
-function bytesToNumberBE2(bytes4) {
-  return hexToNumber2(bytesToHex2(bytes4));
+function bytesToNumberBE2(bytes5) {
+  return hexToNumber2(bytesToHex2(bytes5));
 }
-function bytesToNumberLE2(bytes4) {
-  abytes2(bytes4);
-  return hexToNumber2(bytesToHex2(Uint8Array.from(bytes4).reverse()));
+function bytesToNumberLE2(bytes5) {
+  abytes(bytes5);
+  return hexToNumber2(bytesToHex2(Uint8Array.from(bytes5).reverse()));
 }
 function numberToBytesBE2(n3, len) {
   return hexToBytes2(n3.toString(16).padStart(len * 2, "0"));
@@ -39265,23 +39266,23 @@ function ensureBytes2(title, hex3, expectedLength) {
     try {
       res = hexToBytes2(hex3);
     } catch (e) {
-      throw new Error(title + " must be hex string or Uint8Array, cause: " + e);
+      throw new Error(`${title} must be valid hex string, got "${hex3}". Cause: ${e}`);
     }
   } else if (isBytes2(hex3)) {
     res = Uint8Array.from(hex3);
   } else {
-    throw new Error(title + " must be hex string or Uint8Array");
+    throw new Error(`${title} must be hex string or Uint8Array`);
   }
   const len = res.length;
   if (typeof expectedLength === "number" && len !== expectedLength)
-    throw new Error(title + " of length " + expectedLength + " expected, got " + len);
+    throw new Error(`${title} expected ${expectedLength} bytes, got ${len}`);
   return res;
 }
 function concatBytes4(...arrays) {
   let sum = 0;
   for (let i = 0; i < arrays.length; i++) {
     const a = arrays[i];
-    abytes2(a);
+    abytes(a);
     sum += a.length;
   }
   const res = new Uint8Array(sum);
@@ -39302,7 +39303,7 @@ function equalBytes2(a, b3) {
 }
 function utf8ToBytes4(str) {
   if (typeof str !== "string")
-    throw new Error("string expected");
+    throw new Error(`utf8ToBytes expected string, got ${typeof str}`);
   return new Uint8Array(new TextEncoder().encode(str));
 }
 var isPosBig = (n3) => typeof n3 === "bigint" && _0n7 <= n3;
@@ -39311,7 +39312,7 @@ function inRange(n3, min, max) {
 }
 function aInRange(title, n3, min, max) {
   if (!inRange(n3, min, max))
-    throw new Error("expected valid " + title + ": " + min + " <= n < " + max + ", got " + n3);
+    throw new Error(`expected valid ${title}: ${min} <= n < ${max}, got ${typeof n3} ${n3}`);
 }
 function bitLen2(n3) {
   let len;
@@ -39391,12 +39392,12 @@ function validateObject2(object3, validators, optValidators = {}) {
   const checkField = (fieldName, type, isOptional) => {
     const checkVal = validatorFns2[type];
     if (typeof checkVal !== "function")
-      throw new Error("invalid validator function");
+      throw new Error(`Invalid validator "${type}", expected function`);
     const val = object3[fieldName];
     if (isOptional && val === void 0)
       return;
     if (!checkVal(val, object3)) {
-      throw new Error("param " + String(fieldName) + " is invalid. Expected " + type + ", got " + val);
+      throw new Error(`Invalid param ${String(fieldName)}=${val} (${typeof val}), expected ${type}`);
     }
   };
   for (const [fieldName, type] of Object.entries(validators))
@@ -39423,22 +39424,20 @@ function memoized(fn) {
 // ../bls-bn254-js/node_modules/@noble/curves/esm/abstract/modular.js
 var _0n8 = BigInt(0);
 var _1n8 = BigInt(1);
-var _2n7 = /* @__PURE__ */ BigInt(2);
-var _3n3 = /* @__PURE__ */ BigInt(3);
-var _4n3 = /* @__PURE__ */ BigInt(4);
-var _5n2 = /* @__PURE__ */ BigInt(5);
-var _8n2 = /* @__PURE__ */ BigInt(8);
-var _9n2 = /* @__PURE__ */ BigInt(9);
-var _16n2 = /* @__PURE__ */ BigInt(16);
+var _2n7 = BigInt(2);
+var _3n3 = BigInt(3);
+var _4n3 = BigInt(4);
+var _5n2 = BigInt(5);
+var _8n2 = BigInt(8);
+var _9n2 = BigInt(9);
+var _16n2 = BigInt(16);
 function mod2(a, b3) {
   const result = a % b3;
   return result >= _0n8 ? result : b3 + result;
 }
 function pow3(num, power, modulo) {
-  if (power < _0n8)
-    throw new Error("invalid exponent, negatives unsupported");
-  if (modulo <= _0n8)
-    throw new Error("invalid modulus");
+  if (modulo <= _0n8 || power < _0n8)
+    throw new Error("Expected power/modulo > 0");
   if (modulo === _1n8)
     return _0n8;
   let res = _1n8;
@@ -39450,12 +39449,11 @@ function pow3(num, power, modulo) {
   }
   return res;
 }
-function invert2(number3, modulo) {
-  if (number3 === _0n8)
-    throw new Error("invert: expected non-zero number");
-  if (modulo <= _0n8)
-    throw new Error("invert: expected positive modulus, got " + modulo);
-  let a = mod2(number3, modulo);
+function invert2(number4, modulo) {
+  if (number4 === _0n8 || modulo <= _0n8) {
+    throw new Error(`invert: expected positive integers, got n=${number4} mod=${modulo}`);
+  }
+  let a = mod2(number4, modulo);
   let b3 = modulo;
   let x = _0n8, y = _1n8, u = _1n8, v = _0n8;
   while (a !== _0n8) {
@@ -39475,10 +39473,8 @@ function tonelliShanks2(P) {
   let Q, S3, Z;
   for (Q = P - _1n8, S3 = 0; Q % _2n7 === _0n8; Q /= _2n7, S3++)
     ;
-  for (Z = _2n7; Z < P && pow3(Z, legendreC, P) !== P - _1n8; Z++) {
-    if (Z > 1e3)
-      throw new Error("Cannot find square root: likely non-prime P");
-  }
+  for (Z = _2n7; Z < P && pow3(Z, legendreC, P) !== P - _1n8; Z++)
+    ;
   if (S3 === 1) {
     const p1div4 = (P + _1n8) / _4n3;
     return function tonelliFast(Fp5, n3) {
@@ -39575,7 +39571,7 @@ function validateField2(field) {
 }
 function FpPow2(f3, num, power) {
   if (power < _0n8)
-    throw new Error("invalid exponent, negatives unsupported");
+    throw new Error("Expected power > 0");
   if (power === _0n8)
     return f3.ONE;
   if (power === _1n8)
@@ -39625,11 +39621,11 @@ function nLength2(n3, nBitLength) {
 }
 function Field2(ORDER, bitLen4, isLE4 = false, redef = {}) {
   if (ORDER <= _0n8)
-    throw new Error("invalid field: expected ORDER > 0, got " + ORDER);
+    throw new Error(`Expected Field ORDER > 0, got ${ORDER}`);
   const { nBitLength: BITS, nByteLength: BYTES } = nLength2(ORDER, bitLen4);
   if (BYTES > 2048)
-    throw new Error("invalid field: expected ORDER of <= 2048 bytes");
-  let sqrtP;
+    throw new Error("Field lengths over 2048 bytes are not supported");
+  const sqrtP = FpSqrt2(ORDER);
   const f3 = Object.freeze({
     ORDER,
     BITS,
@@ -39640,7 +39636,7 @@ function Field2(ORDER, bitLen4, isLE4 = false, redef = {}) {
     create: (num) => mod2(num, ORDER),
     isValid: (num) => {
       if (typeof num !== "bigint")
-        throw new Error("invalid field element: expected bigint, got " + typeof num);
+        throw new Error(`Invalid field element: expected bigint, got ${typeof num}`);
       return _0n8 <= num && num < ORDER;
     },
     is0: (num) => num === _0n8,
@@ -39659,20 +39655,16 @@ function Field2(ORDER, bitLen4, isLE4 = false, redef = {}) {
     subN: (lhs, rhs) => lhs - rhs,
     mulN: (lhs, rhs) => lhs * rhs,
     inv: (num) => invert2(num, ORDER),
-    sqrt: redef.sqrt || ((n3) => {
-      if (!sqrtP)
-        sqrtP = FpSqrt2(ORDER);
-      return sqrtP(f3, n3);
-    }),
+    sqrt: redef.sqrt || ((n3) => sqrtP(f3, n3)),
     invertBatch: (lst) => FpInvertBatch2(f3, lst),
     // TODO: do we really need constant cmov?
     // We don't have const-time bigints anyway, so probably will be not very useful
     cmov: (a, b3, c) => c ? b3 : a,
     toBytes: (num) => isLE4 ? numberToBytesLE2(num, BYTES) : numberToBytesBE2(num, BYTES),
-    fromBytes: (bytes4) => {
-      if (bytes4.length !== BYTES)
-        throw new Error("Field.fromBytes: expected " + BYTES + " bytes, got " + bytes4.length);
-      return isLE4 ? bytesToNumberLE2(bytes4) : bytesToNumberBE2(bytes4);
+    fromBytes: (bytes5) => {
+      if (bytes5.length !== BYTES)
+        throw new Error(`Fp.fromBytes: expected ${BYTES}, got ${bytes5.length}`);
+      return isLE4 ? bytesToNumberLE2(bytes5) : bytesToNumberBE2(bytes5);
     }
   });
   return Object.freeze(f3);
@@ -39692,7 +39684,7 @@ function mapHashToField2(key, fieldOrder, isLE4 = false) {
   const fieldLen = getFieldBytesLength2(fieldOrder);
   const minLen = getMinHashLength2(fieldOrder);
   if (len < 16 || len < minLen || len > 1024)
-    throw new Error("expected " + minLen + "-1024 bytes of input, got " + len);
+    throw new Error(`expected ${minLen}-1024 bytes of input, got ${len}`);
   const num = isLE4 ? bytesToNumberBE2(key) : bytesToNumberLE2(key);
   const reduced = mod2(num, fieldOrder - _1n8) + _1n8;
   return isLE4 ? numberToBytesLE2(reduced, fieldLen) : numberToBytesBE2(reduced, fieldLen);
@@ -39701,49 +39693,28 @@ function mapHashToField2(key, fieldOrder, isLE4 = false) {
 // ../bls-bn254-js/node_modules/@noble/curves/esm/abstract/curve.js
 var _0n9 = BigInt(0);
 var _1n9 = BigInt(1);
-function constTimeNegate(condition, item) {
-  const neg = item.negate();
-  return condition ? neg : item;
-}
-function validateW(W, bits) {
-  if (!Number.isSafeInteger(W) || W <= 0 || W > bits)
-    throw new Error("invalid window size, expected [1.." + bits + "], got W=" + W);
-}
-function calcWOpts(W, bits) {
-  validateW(W, bits);
-  const windows = Math.ceil(bits / W) + 1;
-  const windowSize = 2 ** (W - 1);
-  return { windows, windowSize };
-}
-function validateMSMPoints(points, c) {
-  if (!Array.isArray(points))
-    throw new Error("array expected");
-  points.forEach((p, i) => {
-    if (!(p instanceof c))
-      throw new Error("invalid point at index " + i);
-  });
-}
-function validateMSMScalars(scalars, field) {
-  if (!Array.isArray(scalars))
-    throw new Error("array of scalars expected");
-  scalars.forEach((s, i) => {
-    if (!field.isValid(s))
-      throw new Error("invalid scalar at index " + i);
-  });
-}
 var pointPrecomputes = /* @__PURE__ */ new WeakMap();
 var pointWindowSizes = /* @__PURE__ */ new WeakMap();
-function getW(P) {
-  return pointWindowSizes.get(P) || 1;
-}
 function wNAF2(c, bits) {
+  const constTimeNegate = (condition, item) => {
+    const neg = item.negate();
+    return condition ? neg : item;
+  };
+  const validateW = (W) => {
+    if (!Number.isSafeInteger(W) || W <= 0 || W > bits)
+      throw new Error(`Wrong window size=${W}, should be [1..${bits}]`);
+  };
+  const opts = (W) => {
+    validateW(W);
+    const windows = Math.ceil(bits / W) + 1;
+    const windowSize = 2 ** (W - 1);
+    return { windows, windowSize };
+  };
   return {
     constTimeNegate,
-    hasPrecomputes(elm) {
-      return getW(elm) !== 1;
-    },
     // non-const time multiplication ladder
-    unsafeLadder(elm, n3, p = c.ZERO) {
+    unsafeLadder(elm, n3) {
+      let p = c.ZERO;
       let d = elm;
       while (n3 > _0n9) {
         if (n3 & _1n9)
@@ -39761,12 +39732,10 @@ function wNAF2(c, bits) {
      * - 𝑊 is the window size
      * - 𝑛 is the bitlength of the curve order.
      * For a 256-bit curve and window size 8, the number of precomputed points is 128 * 33 = 4224.
-     * @param elm Point instance
-     * @param W window size
      * @returns precomputed point tables flattened to a single array
      */
     precomputeWindow(elm, W) {
-      const { windows, windowSize } = calcWOpts(W, bits);
+      const { windows, windowSize } = opts(W);
       const points = [];
       let p = elm;
       let base = p;
@@ -39789,7 +39758,7 @@ function wNAF2(c, bits) {
      * @returns real and fake (for const-time) points
      */
     wNAF(W, precomputes, n3) {
-      const { windows, windowSize } = calcWOpts(W, bits);
+      const { windows, windowSize } = opts(W);
       let p = c.ZERO;
       let f3 = c.BASE;
       const mask3 = BigInt(2 ** W - 1);
@@ -39815,88 +39784,52 @@ function wNAF2(c, bits) {
       }
       return { p, f: f3 };
     },
-    /**
-     * Implements ec unsafe (non const-time) multiplication using precomputed tables and w-ary non-adjacent form.
-     * @param W window size
-     * @param precomputes precomputed tables
-     * @param n scalar (we don't check here, but should be less than curve order)
-     * @param acc accumulator point to add result of multiplication
-     * @returns point
-     */
-    wNAFUnsafe(W, precomputes, n3, acc = c.ZERO) {
-      const { windows, windowSize } = calcWOpts(W, bits);
-      const mask3 = BigInt(2 ** W - 1);
-      const maxNumber = 2 ** W;
-      const shiftBy = BigInt(W);
-      for (let window2 = 0; window2 < windows; window2++) {
-        const offset = window2 * windowSize;
-        if (n3 === _0n9)
-          break;
-        let wbits = Number(n3 & mask3);
-        n3 >>= shiftBy;
-        if (wbits > windowSize) {
-          wbits -= maxNumber;
-          n3 += _1n9;
-        }
-        if (wbits === 0)
-          continue;
-        let curr = precomputes[offset + Math.abs(wbits) - 1];
-        if (wbits < 0)
-          curr = curr.negate();
-        acc = acc.add(curr);
-      }
-      return acc;
-    },
-    getPrecomputes(W, P, transform) {
+    wNAFCached(P, n3, transform) {
+      const W = pointWindowSizes.get(P) || 1;
       let comp = pointPrecomputes.get(P);
       if (!comp) {
         comp = this.precomputeWindow(P, W);
         if (W !== 1)
           pointPrecomputes.set(P, transform(comp));
       }
-      return comp;
-    },
-    wNAFCached(P, n3, transform) {
-      const W = getW(P);
-      return this.wNAF(W, this.getPrecomputes(W, P, transform), n3);
-    },
-    wNAFCachedUnsafe(P, n3, transform, prev) {
-      const W = getW(P);
-      if (W === 1)
-        return this.unsafeLadder(P, n3, prev);
-      return this.wNAFUnsafe(W, this.getPrecomputes(W, P, transform), n3, prev);
+      return this.wNAF(W, comp, n3);
     },
     // We calculate precomputes for elliptic curve point multiplication
     // using windowed method. This specifies window size and
     // stores precomputed values. Usually only base point would be precomputed.
     setWindowSize(P, W) {
-      validateW(W, bits);
+      validateW(W);
       pointWindowSizes.set(P, W);
       pointPrecomputes.delete(P);
     }
   };
 }
-function pippenger(c, fieldN, points, scalars) {
-  validateMSMPoints(points, c);
-  validateMSMScalars(scalars, fieldN);
-  if (points.length !== scalars.length)
+function pippenger(c, field, points, scalars) {
+  if (!Array.isArray(points) || !Array.isArray(scalars) || scalars.length !== points.length)
     throw new Error("arrays of points and scalars must have equal length");
-  const zero = c.ZERO;
+  scalars.forEach((s, i) => {
+    if (!field.isValid(s))
+      throw new Error(`wrong scalar at index ${i}`);
+  });
+  points.forEach((p, i) => {
+    if (!(p instanceof c))
+      throw new Error(`wrong point at index ${i}`);
+  });
   const wbits = bitLen2(BigInt(points.length));
   const windowSize = wbits > 12 ? wbits - 3 : wbits > 4 ? wbits - 2 : wbits ? 2 : 1;
   const MASK = (1 << windowSize) - 1;
-  const buckets = new Array(MASK + 1).fill(zero);
-  const lastBits = Math.floor((fieldN.BITS - 1) / windowSize) * windowSize;
-  let sum = zero;
+  const buckets = new Array(MASK + 1).fill(c.ZERO);
+  const lastBits = Math.floor((field.BITS - 1) / windowSize) * windowSize;
+  let sum = c.ZERO;
   for (let i = lastBits; i >= 0; i -= windowSize) {
-    buckets.fill(zero);
+    buckets.fill(c.ZERO);
     for (let j = 0; j < scalars.length; j++) {
       const scalar = scalars[j];
       const wbits2 = Number(scalar >> BigInt(i) & BigInt(MASK));
       buckets[wbits2] = buckets[wbits2].add(points[j]);
     }
-    let resI = zero;
-    for (let j = buckets.length - 1, sumI = zero; j > 0; j--) {
+    let resI = c.ZERO;
+    for (let j = buckets.length - 1, sumI = c.ZERO; j > 0; j--) {
       sumI = sumI.add(buckets[j]);
       resI = resI.add(sumI);
     }
@@ -39949,10 +39882,10 @@ function validatePointOpts2(curve) {
   const { endo, Fp: Fp5, a } = opts;
   if (endo) {
     if (!Fp5.eql(a, Fp5.ZERO)) {
-      throw new Error("invalid endomorphism, can only be defined for Koblitz curves that have a=0");
+      throw new Error("Endomorphism can only be defined for Koblitz curves that have a=0");
     }
     if (typeof endo !== "object" || typeof endo.beta !== "bigint" || typeof endo.splitScalar !== "function") {
-      throw new Error("invalid endomorphism, expected beta: bigint and splitScalar: function");
+      throw new Error("Expected endomorphism with beta: bigint and splitScalar: function");
     }
   }
   return Object.freeze({ ...opts });
@@ -39978,8 +39911,7 @@ var DER2 = {
       if (len.length / 2 & 128)
         throw new E("tlv.encode: long form length too big");
       const lenLen = dataLen > 127 ? numberToHexUnpadded2(len.length / 2 | 128) : "";
-      const t = numberToHexUnpadded2(tag);
-      return t + lenLen + len + data7;
+      return `${numberToHexUnpadded2(tag)}${lenLen}${len}${data7}`;
     },
     // v - value, l - left bytes (unparsed)
     decode(tag, data7) {
@@ -40030,36 +39962,34 @@ var DER2 = {
       if (Number.parseInt(hex3[0], 16) & 8)
         hex3 = "00" + hex3;
       if (hex3.length & 1)
-        throw new E("unexpected DER parsing assertion: unpadded hex");
+        throw new E("unexpected assertion");
       return hex3;
     },
     decode(data7) {
       const { Err: E } = DER2;
       if (data7[0] & 128)
-        throw new E("invalid signature integer: negative");
+        throw new E("Invalid signature integer: negative");
       if (data7[0] === 0 && !(data7[1] & 128))
-        throw new E("invalid signature integer: unnecessary leading zero");
+        throw new E("Invalid signature integer: unnecessary leading zero");
       return b2n2(data7);
     }
   },
   toSig(hex3) {
     const { Err: E, _int: int, _tlv: tlv } = DER2;
     const data7 = typeof hex3 === "string" ? h2b2(hex3) : hex3;
-    abytes2(data7);
+    abytes(data7);
     const { v: seqBytes, l: seqLeftBytes } = tlv.decode(48, data7);
     if (seqLeftBytes.length)
-      throw new E("invalid signature: left bytes after parsing");
+      throw new E("Invalid signature: left bytes after parsing");
     const { v: rBytes, l: rLeftBytes } = tlv.decode(2, seqBytes);
     const { v: sBytes, l: sLeftBytes } = tlv.decode(2, rLeftBytes);
     if (sLeftBytes.length)
-      throw new E("invalid signature: left bytes after parsing");
+      throw new E("Invalid signature: left bytes after parsing");
     return { r: int.decode(rBytes), s: int.decode(sBytes) };
   },
   hexFromSig(sig) {
     const { _tlv: tlv, _int: int } = DER2;
-    const rs = tlv.encode(2, int.encode(sig.r));
-    const ss = tlv.encode(2, int.encode(sig.s));
-    const seq = rs + ss;
+    const seq = `${tlv.encode(2, int.encode(sig.r))}${tlv.encode(2, int.encode(sig.s))}`;
     return tlv.encode(48, seq);
   }
 };
@@ -40076,8 +40006,8 @@ function weierstrassPoints2(opts) {
     const a = point.toAffine();
     return concatBytes4(Uint8Array.from([4]), Fp5.toBytes(a.x), Fp5.toBytes(a.y));
   });
-  const fromBytes = CURVE.fromBytes || ((bytes4) => {
-    const tail = bytes4.subarray(1);
+  const fromBytes = CURVE.fromBytes || ((bytes5) => {
+    const tail = bytes5.subarray(1);
     const x = Fp5.fromBytes(tail.subarray(0, Fp5.BYTES));
     const y = Fp5.fromBytes(tail.subarray(Fp5.BYTES, 2 * Fp5.BYTES));
     return { x, y };
@@ -40099,14 +40029,14 @@ function weierstrassPoints2(opts) {
       if (isBytes2(key))
         key = bytesToHex2(key);
       if (typeof key !== "string" || !lengths.includes(key.length))
-        throw new Error("invalid private key");
+        throw new Error("Invalid key");
       key = key.padStart(nByteLength * 2, "0");
     }
     let num;
     try {
       num = typeof key === "bigint" ? key : bytesToNumberBE2(ensureBytes2("private key", key, nByteLength));
     } catch (error) {
-      throw new Error("invalid private key, expected hex or " + nByteLength + " bytes, got " + typeof key);
+      throw new Error(`private key must be ${nByteLength} bytes, hex or bigint, not ${typeof key}`);
     }
     if (wrapPrivateKey)
       num = mod2(num, N5);
@@ -40350,15 +40280,15 @@ function weierstrassPoints2(opts) {
      * an exposed private key e.g. sig verification, which works over *public* keys.
      */
     multiplyUnsafe(sc) {
-      const { endo, n: N5 } = CURVE;
-      aInRange("scalar", sc, _0n10, N5);
+      aInRange("scalar", sc, _0n10, CURVE.n);
       const I = Point3.ZERO;
       if (sc === _0n10)
         return I;
-      if (this.is0() || sc === _1n10)
+      if (sc === _1n10)
         return this;
-      if (!endo || wnaf.hasPrecomputes(this))
-        return wnaf.wNAFCachedUnsafe(this, sc, Point3.normalizeZ);
+      const { endo } = CURVE;
+      if (!endo)
+        return wnaf.unsafeLadder(this, sc);
       let { k1neg, k1, k2neg, k2 } = endo.splitScalar(sc);
       let k1p = I;
       let k2p = I;
@@ -40501,10 +40431,10 @@ function weierstrass2(curveDef) {
         return cat(Uint8Array.from([4]), x, Fp5.toBytes(a.y));
       }
     },
-    fromBytes(bytes4) {
-      const len = bytes4.length;
-      const head = bytes4[0];
-      const tail = bytes4.subarray(1);
+    fromBytes(bytes5) {
+      const len = bytes5.length;
+      const head = bytes5[0];
+      const tail = bytes5.subarray(1);
       if (len === compressedLen && (head === 2 || head === 3)) {
         const x = bytesToNumberBE2(tail);
         if (!inRange(x, _1n10, Fp5.ORDER))
@@ -40527,16 +40457,14 @@ function weierstrass2(curveDef) {
         const y = Fp5.fromBytes(tail.subarray(Fp5.BYTES, 2 * Fp5.BYTES));
         return { x, y };
       } else {
-        const cl = compressedLen;
-        const ul = uncompressedLen;
-        throw new Error("invalid Point, expected length of " + cl + ", or uncompressed " + ul + ", got " + len);
+        throw new Error(`Point of length ${len} was invalid. Expected ${compressedLen} compressed bytes or ${uncompressedLen} uncompressed bytes`);
       }
     }
   });
   const numToNByteStr = (num) => bytesToHex2(numberToBytesBE2(num, CURVE.nByteLength));
-  function isBiggerThanHalfOrder(number3) {
+  function isBiggerThanHalfOrder(number4) {
     const HALF = CURVE_ORDER >> _1n10;
-    return number3 > HALF;
+    return number4 > HALF;
   }
   function normalizeS(s) {
     return isBiggerThanHalfOrder(s) ? modN(-s) : s;
@@ -40664,32 +40592,30 @@ function weierstrass2(curveDef) {
     const b3 = Point3.fromHex(publicB);
     return b3.multiply(normPrivateKeyToScalar(privateA)).toRawBytes(isCompressed);
   }
-  const bits2int = CURVE.bits2int || function(bytes4) {
-    if (bytes4.length > 8192)
-      throw new Error("input is too large");
-    const num = bytesToNumberBE2(bytes4);
-    const delta = bytes4.length * 8 - CURVE.nBitLength;
+  const bits2int = CURVE.bits2int || function(bytes5) {
+    const num = bytesToNumberBE2(bytes5);
+    const delta = bytes5.length * 8 - CURVE.nBitLength;
     return delta > 0 ? num >> BigInt(delta) : num;
   };
-  const bits2int_modN = CURVE.bits2int_modN || function(bytes4) {
-    return modN(bits2int(bytes4));
+  const bits2int_modN = CURVE.bits2int_modN || function(bytes5) {
+    return modN(bits2int(bytes5));
   };
   const ORDER_MASK = bitMask2(CURVE.nBitLength);
   function int2octets(num) {
-    aInRange("num < 2^" + CURVE.nBitLength, num, _0n10, ORDER_MASK);
+    aInRange(`num < 2^${CURVE.nBitLength}`, num, _0n10, ORDER_MASK);
     return numberToBytesBE2(num, CURVE.nByteLength);
   }
   function prepSig(msgHash, privateKey, opts = defaultSigOpts) {
     if (["recovered", "canonical"].some((k) => k in opts))
       throw new Error("sign() legacy options not supported");
-    const { hash: hash3, randomBytes: randomBytes8 } = CURVE;
+    const { hash: hash4, randomBytes: randomBytes8 } = CURVE;
     let { lowS, prehash, extraEntropy: ent } = opts;
     if (lowS == null)
       lowS = true;
     msgHash = ensureBytes2("msgHash", msgHash);
     validateSigVerOpts(opts);
     if (prehash)
-      msgHash = ensureBytes2("prehashed msgHash", hash3(msgHash));
+      msgHash = ensureBytes2("prehashed msgHash", hash4(msgHash));
     const h1int = bits2int_modN(msgHash);
     const d = normPrivateKeyToScalar(privateKey);
     const seedArgs = [int2octets(d), int2octets(h1int)];
@@ -40734,38 +40660,33 @@ function weierstrass2(curveDef) {
     const sg = signature;
     msgHash = ensureBytes2("msgHash", msgHash);
     publicKey = ensureBytes2("publicKey", publicKey);
-    const { lowS, prehash, format } = opts;
-    validateSigVerOpts(opts);
     if ("strict" in opts)
       throw new Error("options.strict was renamed to lowS");
-    if (format !== void 0 && format !== "compact" && format !== "der")
-      throw new Error("format must be compact or der");
-    const isHex = typeof sg === "string" || isBytes2(sg);
-    const isObj = !isHex && !format && typeof sg === "object" && sg !== null && typeof sg.r === "bigint" && typeof sg.s === "bigint";
-    if (!isHex && !isObj)
-      throw new Error("invalid signature, expected Uint8Array, hex string or Signature instance");
+    validateSigVerOpts(opts);
+    const { lowS, prehash } = opts;
     let _sig = void 0;
     let P;
     try {
-      if (isObj)
-        _sig = new Signature3(sg.r, sg.s);
-      if (isHex) {
+      if (typeof sg === "string" || isBytes2(sg)) {
         try {
-          if (format !== "compact")
-            _sig = Signature3.fromDER(sg);
+          _sig = Signature3.fromDER(sg);
         } catch (derError) {
           if (!(derError instanceof DER2.Err))
             throw derError;
-        }
-        if (!_sig && format !== "der")
           _sig = Signature3.fromCompact(sg);
+        }
+      } else if (typeof sg === "object" && typeof sg.r === "bigint" && typeof sg.s === "bigint") {
+        const { r: r2, s: s2 } = sg;
+        _sig = new Signature3(r2, s2);
+      } else {
+        throw new Error("PARSE");
       }
       P = Point3.fromHex(publicKey);
     } catch (error) {
+      if (error.message === "PARSE")
+        throw new Error(`signature must be Signature instance, Uint8Array or hex string`);
       return false;
     }
-    if (!_sig)
-      return false;
     if (lowS && _sig.hasHighS())
       return false;
     if (prehash)
@@ -40794,10 +40715,10 @@ function weierstrass2(curveDef) {
 }
 
 // ../bls-bn254-js/node_modules/@noble/curves/esm/_shortw_utils.js
-function getHash2(hash3) {
+function getHash2(hash4) {
   return {
-    hash: hash3,
-    hmac: (key, ...msgs) => hmac2(hash3, key, concatBytes3(...msgs)),
+    hash: hash4,
+    hmac: (key, ...msgs) => hmac2(hash4, key, concatBytes3(...msgs)),
     randomBytes: randomBytes4
   };
 }
@@ -40807,8 +40728,9 @@ var os2ip = bytesToNumberBE2;
 function i2osp(value, length) {
   anum(value);
   anum(length);
-  if (value < 0 || value >= 1 << 8 * length)
-    throw new Error("invalid I2OSP input: " + value);
+  if (value < 0 || value >= 1 << 8 * length) {
+    throw new Error(`bad I2OSP call: value=${value} length=${length}`);
+  }
   const res = Array.from({ length }).fill(0);
   for (let i = length - 1; i >= 0; i--) {
     res[i] = value & 255;
@@ -40828,8 +40750,8 @@ function anum(item) {
     throw new Error("number expected");
 }
 function expand_message_xmd(msg, DST, lenInBytes, H) {
-  abytes2(msg);
-  abytes2(DST);
+  abytes(msg);
+  abytes(DST);
   anum(lenInBytes);
   if (DST.length > 255)
     DST = H(concatBytes4(utf8ToBytes4("H2C-OVERSIZE-DST-"), DST));
@@ -40851,8 +40773,8 @@ function expand_message_xmd(msg, DST, lenInBytes, H) {
   return pseudo_random_bytes.slice(0, lenInBytes);
 }
 function expand_message_xof(msg, DST, lenInBytes, k, H) {
-  abytes2(msg);
-  abytes2(DST);
+  abytes(msg);
+  abytes(DST);
   anum(lenInBytes);
   if (DST.length > 255) {
     const dkLen = Math.ceil(2 * k / 8);
@@ -40870,8 +40792,8 @@ function hash_to_field(msg, count, options2) {
     k: "isSafeInteger",
     hash: "hash"
   });
-  const { p, k, m, hash: hash3, expand, DST: _DST } = options2;
-  abytes2(msg);
+  const { p, k, m, hash: hash4, expand, DST: _DST } = options2;
+  abytes(msg);
   anum(count);
   const DST = typeof _DST === "string" ? utf8ToBytes4(_DST) : _DST;
   const log2p = p.toString(2).length;
@@ -40879,9 +40801,9 @@ function hash_to_field(msg, count, options2) {
   const len_in_bytes = count * m * L;
   let prb;
   if (expand === "xmd") {
-    prb = expand_message_xmd(msg, DST, len_in_bytes, hash3);
+    prb = expand_message_xmd(msg, DST, len_in_bytes, hash4);
   } else if (expand === "xof") {
-    prb = expand_message_xof(msg, DST, len_in_bytes, k, hash3);
+    prb = expand_message_xof(msg, DST, len_in_bytes, k, hash4);
   } else if (expand === "_internal_pass") {
     prb = msg;
   } else {
@@ -40927,7 +40849,7 @@ function createHasher(Point3, mapToCurve, def) {
         throw new Error("mapToCurve: expected array of bigints");
       for (const i of scalars)
         if (typeof i !== "bigint")
-          throw new Error("mapToCurve: expected array of bigints");
+          throw new Error(`mapToCurve: expected array of bigints, got ${i} in array`);
       const P = Point3.fromAffine(mapToCurve(scalars)).clearCofactor();
       P.assertValidity();
       return P;
@@ -41128,12 +41050,9 @@ function bls(CURVE) {
     ]);
     return Fp122.eql(exp, Fp122.ONE);
   }
-  function aNonEmpty(arr) {
-    if (!Array.isArray(arr) || arr.length === 0)
-      throw new Error("expected non-empty array");
-  }
   function aggregatePublicKeys(publicKeys) {
-    aNonEmpty(publicKeys);
+    if (!publicKeys.length)
+      throw new Error("Expected non-empty array");
     const agg = publicKeys.map(normP1).reduce((sum, p) => sum.add(p), G13.ProjectivePoint.ZERO);
     const aggAffine = agg;
     if (publicKeys[0] instanceof G13.ProjectivePoint) {
@@ -41143,7 +41062,8 @@ function bls(CURVE) {
     return aggAffine.toRawBytes(true);
   }
   function aggregateSignatures(signatures) {
-    aNonEmpty(signatures);
+    if (!signatures.length)
+      throw new Error("Expected non-empty array");
     const agg = signatures.map(normP2).reduce((sum, s) => sum.add(s), G23.ProjectivePoint.ZERO);
     const aggAffine = agg;
     if (signatures[0] instanceof G23.ProjectivePoint) {
@@ -41153,7 +41073,8 @@ function bls(CURVE) {
     return Signature3.toRawBytes(aggAffine);
   }
   function aggregateShortSignatures(signatures) {
-    aNonEmpty(signatures);
+    if (!signatures.length)
+      throw new Error("Expected non-empty array");
     const agg = signatures.map(normP1).reduce((sum, s) => sum.add(s), G13.ProjectivePoint.ZERO);
     const aggAffine = agg;
     if (signatures[0] instanceof G13.ProjectivePoint) {
@@ -41163,9 +41084,10 @@ function bls(CURVE) {
     return ShortSignature.toRawBytes(aggAffine);
   }
   function verifyBatch(signature, messages, publicKeys, htfOpts) {
-    aNonEmpty(messages);
+    if (!messages.length)
+      throw new Error("Expected non-empty messages array");
     if (publicKeys.length !== messages.length)
-      throw new Error("amount of public keys and messages should be equal");
+      throw new Error("Pubkey count should equal msg count");
     const sig = normP2(signature);
     const nMessages = messages.map((i) => normP2Hash(i, htfOpts));
     const nPublicKeys = publicKeys.map(normP1);
@@ -41306,7 +41228,7 @@ function tower12(opts) {
   };
   const Fp2fromBigTuple = (tuple) => {
     if (tuple.length !== 2)
-      throw new Error("invalid tuple");
+      throw new Error("Invalid tuple");
     const fps = tuple.map((n3) => Fp5.create(n3));
     return { c0: fps[0], c1: fps[1] };
   };
@@ -41381,7 +41303,7 @@ function tower12(opts) {
     // Bytes util
     fromBytes(b3) {
       if (b3.length !== Fp24.BYTES)
-        throw new Error("fromBytes invalid length=" + b3.length);
+        throw new Error(`fromBytes wrong length=${b3.length}`);
       return { c0: Fp5.fromBytes(b3.subarray(0, Fp5.BYTES)), c1: Fp5.fromBytes(b3.subarray(Fp5.BYTES)) };
     },
     toBytes: ({ c0, c1 }) => concatBytes4(Fp5.toBytes(c0), Fp5.toBytes(c1)),
@@ -41483,7 +41405,7 @@ function tower12(opts) {
     // Bytes utils
     fromBytes: (b3) => {
       if (b3.length !== Fp62.BYTES)
-        throw new Error("fromBytes invalid length=" + b3.length);
+        throw new Error(`fromBytes wrong length=${b3.length}`);
       return {
         c0: Fp24.fromBytes(b3.subarray(0, Fp24.BYTES)),
         c1: Fp24.fromBytes(b3.subarray(Fp24.BYTES, 2 * Fp24.BYTES)),
@@ -41498,7 +41420,7 @@ function tower12(opts) {
     }),
     fromBigSix: (t) => {
       if (!Array.isArray(t) || t.length !== 6)
-        throw new Error("invalid Fp6 usage");
+        throw new Error("Invalid Fp6 usage");
       return {
         c0: Fp24.fromBigTuple(t.slice(0, 2)),
         c1: Fp24.fromBigTuple(t.slice(2, 4)),
@@ -41610,7 +41532,7 @@ function tower12(opts) {
     // Bytes utils
     fromBytes: (b3) => {
       if (b3.length !== Fp122.BYTES)
-        throw new Error("fromBytes invalid length=" + b3.length);
+        throw new Error(`fromBytes wrong length=${b3.length}`);
       return {
         c0: Fp62.fromBytes(b3.subarray(0, Fp62.BYTES)),
         c1: Fp62.fromBytes(b3.subarray(Fp62.BYTES))
@@ -41623,7 +41545,7 @@ function tower12(opts) {
     }),
     // Utils
     // toString() {
-    //   return '' + 'Fp12(' + this.c0 + this.c1 + '* w');
+    //   return `Fp12(${this.c0} + ${this.c1} * w)`;
     // },
     // fromTuple(c: [Fp6, Fp6]) {
     //   return new Fp12(...c);
@@ -41766,12 +41688,6 @@ var htfDefaults = Object.freeze({
   expand: "xmd",
   hash: sha2563
 });
-var _postPrecompute = (Rx, Ry, Rz, Qx, Qy, pointAdd) => {
-  const q = psi(Qx, Qy);
-  ({ Rx, Ry, Rz } = pointAdd(Rx, Ry, Rz, q[0], q[1]));
-  const q2 = psi(q[0], q[1]);
-  pointAdd(Rx, Ry, Rz, q2[0], Fp22.neg(q2[1]));
-};
 var bn254 = bls({
   // Fields
   fields: { Fp: Fp2, Fp2: Fp22, Fp6, Fp12, Fr },
@@ -41832,7 +41748,12 @@ var bn254 = bls({
   htfDefaults,
   hash: sha2563,
   randomBytes: randomBytes4,
-  postPrecompute: _postPrecompute
+  postPrecompute: (Rx, Ry, Rz, Qx, Qy, pointAdd) => {
+    const q = psi(Qx, Qy);
+    ({ Rx, Ry, Rz } = pointAdd(Rx, Ry, Rz, q[0], q[1]));
+    const q2 = psi(q[0], q[1]);
+    pointAdd(Rx, Ry, Rz, q2[0], Fp22.neg(q2[1]));
+  }
 });
 var bn254_weierstrass = weierstrass2({
   a: BigInt(0),
@@ -41945,7 +41866,7 @@ var Keccak2 = class _Keccak extends Hash2 {
     this.posOut = 0;
     this.finished = false;
     this.destroyed = false;
-    anumber(outputLen);
+    number2(outputLen);
     if (0 >= this.blockLen || this.blockLen >= 200)
       throw new Error("Sha3 supports only keccak-f1600 function");
     this.state = new Uint8Array(200);
@@ -41961,7 +41882,7 @@ var Keccak2 = class _Keccak extends Hash2 {
     this.pos = 0;
   }
   update(data7) {
-    aexists(this);
+    exists2(this);
     const { blockLen, state } = this;
     data7 = toBytes2(data7);
     const len = data7.length;
@@ -41986,8 +41907,8 @@ var Keccak2 = class _Keccak extends Hash2 {
     this.keccak();
   }
   writeInto(out) {
-    aexists(this, false);
-    abytes(out);
+    exists2(this, false);
+    bytes2(out);
     this.finish();
     const bufferOut = this.state;
     const { blockLen } = this;
@@ -42006,12 +41927,12 @@ var Keccak2 = class _Keccak extends Hash2 {
       throw new Error("XOF is not possible for this instance");
     return this.writeInto(out);
   }
-  xof(bytes4) {
-    anumber(bytes4);
-    return this.xofInto(new Uint8Array(bytes4));
+  xof(bytes5) {
+    number2(bytes5);
+    return this.xofInto(new Uint8Array(bytes5));
   }
   digestInto(out) {
-    aoutput(out, this);
+    output2(out, this);
     if (this.finished)
       throw new Error("digest() was already called");
     this.writeInto(out);
@@ -42681,10 +42602,10 @@ function isBytesLike2(value) {
 }
 var HexCharacters2 = "0123456789abcdef";
 function hexlify2(data7) {
-  const bytes4 = getBytes2(data7);
+  const bytes5 = getBytes2(data7);
   let result = "0x";
-  for (let i = 0; i < bytes4.length; i++) {
-    const v = bytes4[i];
+  for (let i = 0; i < bytes5.length; i++) {
+    const v = bytes5[i];
     result += HexCharacters2[(v & 240) >> 4] + HexCharacters2[v & 15];
   }
   return result;
@@ -42699,36 +42620,36 @@ function dataLength2(data7) {
   return getBytes2(data7).length;
 }
 function dataSlice2(data7, start, end) {
-  const bytes4 = getBytes2(data7);
-  if (end != null && end > bytes4.length) {
+  const bytes5 = getBytes2(data7);
+  if (end != null && end > bytes5.length) {
     assert2(false, "cannot slice beyond data bounds", "BUFFER_OVERRUN", {
-      buffer: bytes4,
-      length: bytes4.length,
+      buffer: bytes5,
+      length: bytes5.length,
       offset: end
     });
   }
-  return hexlify2(bytes4.slice(start == null ? 0 : start, end == null ? bytes4.length : end));
+  return hexlify2(bytes5.slice(start == null ? 0 : start, end == null ? bytes5.length : end));
 }
 function stripZerosLeft2(data7) {
-  let bytes4 = hexlify2(data7).substring(2);
-  while (bytes4.startsWith("00")) {
-    bytes4 = bytes4.substring(2);
+  let bytes5 = hexlify2(data7).substring(2);
+  while (bytes5.startsWith("00")) {
+    bytes5 = bytes5.substring(2);
   }
-  return "0x" + bytes4;
+  return "0x" + bytes5;
 }
 function zeroPad2(data7, length, left) {
-  const bytes4 = getBytes2(data7);
-  assert2(length >= bytes4.length, "padding exceeds data length", "BUFFER_OVERRUN", {
-    buffer: new Uint8Array(bytes4),
+  const bytes5 = getBytes2(data7);
+  assert2(length >= bytes5.length, "padding exceeds data length", "BUFFER_OVERRUN", {
+    buffer: new Uint8Array(bytes5),
     length,
     offset: length + 1
   });
   const result = new Uint8Array(length);
   result.fill(0);
   if (left) {
-    result.set(bytes4, length - bytes4.length);
+    result.set(bytes5, length - bytes5.length);
   } else {
-    result.set(bytes4, 0);
+    result.set(bytes5, 0);
   }
   return hexlify2(result);
 }
@@ -42916,15 +42837,15 @@ function getAlpha2(letter) {
 var BN_013 = BigInt(0);
 var BN_582 = BigInt(58);
 function encodeBase582(_value) {
-  const bytes4 = getBytes2(_value);
-  let value = toBigInt2(bytes4);
+  const bytes5 = getBytes2(_value);
+  let value = toBigInt2(bytes5);
   let result = "";
   while (value) {
     result = Alphabet2[Number(value % BN_582)] + result;
     value /= BN_582;
   }
-  for (let i = 0; i < bytes4.length; i++) {
-    if (bytes4[i]) {
+  for (let i = 0; i < bytes5.length; i++) {
+    if (bytes5[i]) {
       break;
     }
     result = Alphabet2[0] + result;
@@ -42979,14 +42900,14 @@ var EventPayload2 = class {
 };
 
 // ../bls-bn254-js/node_modules/ethers/lib.esm/utils/utf8.js
-function errorFunc2(reason, offset, bytes4, output3, badCodepoint) {
-  assertArgument2(false, `invalid codepoint at offset ${offset}; ${reason}`, "bytes", bytes4);
+function errorFunc2(reason, offset, bytes5, output4, badCodepoint) {
+  assertArgument2(false, `invalid codepoint at offset ${offset}; ${reason}`, "bytes", bytes5);
 }
-function ignoreFunc2(reason, offset, bytes4, output3, badCodepoint) {
+function ignoreFunc2(reason, offset, bytes5, output4, badCodepoint) {
   if (reason === "BAD_PREFIX" || reason === "UNEXPECTED_CONTINUE") {
     let i = 0;
-    for (let o = offset + 1; o < bytes4.length; o++) {
-      if (bytes4[o] >> 6 !== 2) {
+    for (let o = offset + 1; o < bytes5.length; o++) {
+      if (bytes5[o] >> 6 !== 2) {
         break;
       }
       i++;
@@ -42994,18 +42915,18 @@ function ignoreFunc2(reason, offset, bytes4, output3, badCodepoint) {
     return i;
   }
   if (reason === "OVERRUN") {
-    return bytes4.length - offset - 1;
+    return bytes5.length - offset - 1;
   }
   return 0;
 }
-function replaceFunc2(reason, offset, bytes4, output3, badCodepoint) {
+function replaceFunc2(reason, offset, bytes5, output4, badCodepoint) {
   if (reason === "OVERLONG") {
     assertArgument2(typeof badCodepoint === "number", "invalid bad code point for replacement", "badCodepoint", badCodepoint);
-    output3.push(badCodepoint);
+    output4.push(badCodepoint);
     return 0;
   }
-  output3.push(65533);
-  return ignoreFunc2(reason, offset, bytes4, output3, badCodepoint);
+  output4.push(65533);
+  return ignoreFunc2(reason, offset, bytes5, output4, badCodepoint);
 }
 var Utf8ErrorFuncs2 = Object.freeze({
   error: errorFunc2,
@@ -43016,11 +42937,11 @@ function getUtf8CodePoints2(_bytes, onError) {
   if (onError == null) {
     onError = Utf8ErrorFuncs2.error;
   }
-  const bytes4 = getBytes2(_bytes, "bytes");
+  const bytes5 = getBytes2(_bytes, "bytes");
   const result = [];
   let i = 0;
-  while (i < bytes4.length) {
-    const c = bytes4[i++];
+  while (i < bytes5.length) {
+    const c = bytes5[i++];
     if (c >> 7 === 0) {
       result.push(c);
       continue;
@@ -43038,21 +42959,21 @@ function getUtf8CodePoints2(_bytes, onError) {
       overlongMask = 65535;
     } else {
       if ((c & 192) === 128) {
-        i += onError("UNEXPECTED_CONTINUE", i - 1, bytes4, result);
+        i += onError("UNEXPECTED_CONTINUE", i - 1, bytes5, result);
       } else {
-        i += onError("BAD_PREFIX", i - 1, bytes4, result);
+        i += onError("BAD_PREFIX", i - 1, bytes5, result);
       }
       continue;
     }
-    if (i - 1 + extraLength >= bytes4.length) {
-      i += onError("OVERRUN", i - 1, bytes4, result);
+    if (i - 1 + extraLength >= bytes5.length) {
+      i += onError("OVERRUN", i - 1, bytes5, result);
       continue;
     }
     let res = c & (1 << 8 - extraLength - 1) - 1;
     for (let j = 0; j < extraLength; j++) {
-      let nextChar = bytes4[i];
+      let nextChar = bytes5[i];
       if ((nextChar & 192) != 128) {
-        i += onError("MISSING_CONTINUE", i, bytes4, result);
+        i += onError("MISSING_CONTINUE", i, bytes5, result);
         res = null;
         break;
       }
@@ -43064,15 +42985,15 @@ function getUtf8CodePoints2(_bytes, onError) {
       continue;
     }
     if (res > 1114111) {
-      i += onError("OUT_OF_RANGE", i - 1 - extraLength, bytes4, result, res);
+      i += onError("OUT_OF_RANGE", i - 1 - extraLength, bytes5, result, res);
       continue;
     }
     if (res >= 55296 && res <= 57343) {
-      i += onError("UTF16_SURROGATE", i - 1 - extraLength, bytes4, result, res);
+      i += onError("UTF16_SURROGATE", i - 1 - extraLength, bytes5, result, res);
       continue;
     }
     if (res <= overlongMask) {
-      i += onError("OVERLONG", i - 1 - extraLength, bytes4, result, res);
+      i += onError("OVERLONG", i - 1 - extraLength, bytes5, result, res);
       continue;
     }
     result.push(res);
@@ -43119,8 +43040,8 @@ function _toUtf8String2(codePoints) {
     return String.fromCharCode((codePoint >> 10 & 1023) + 55296, (codePoint & 1023) + 56320);
   }).join("");
 }
-function toUtf8String2(bytes4, onError) {
-  return _toUtf8String2(getUtf8CodePoints2(bytes4, onError));
+function toUtf8String2(bytes5, onError) {
+  return _toUtf8String2(getUtf8CodePoints2(bytes5, onError));
 }
 function toUtf8CodePoints2(str, form) {
   return getUtf8CodePoints2(toUtf8Bytes2(str, form));
@@ -44661,10 +44582,10 @@ function parseEther2(ether) {
 
 // ../bls-bn254-js/node_modules/ethers/lib.esm/utils/uuid.js
 function uuidV42(randomBytes8) {
-  const bytes4 = getBytes2(randomBytes8, "randomBytes");
-  bytes4[6] = bytes4[6] & 15 | 64;
-  bytes4[8] = bytes4[8] & 63 | 128;
-  const value = hexlify2(bytes4);
+  const bytes5 = getBytes2(randomBytes8, "randomBytes");
+  bytes5[6] = bytes5[6] & 15 | 64;
+  bytes5[8] = bytes5[8] & 63 | 128;
+  const value = hexlify2(bytes5);
   return [
     value.substring(2, 10),
     value.substring(10, 14),
@@ -44935,12 +44856,12 @@ function checkResultErrors2(result) {
   return errors;
 }
 function getValue3(value) {
-  let bytes4 = toBeArray2(value);
-  assert2(bytes4.length <= WordSize2, "value out-of-bounds", "BUFFER_OVERRUN", { buffer: bytes4, length: WordSize2, offset: bytes4.length });
-  if (bytes4.length !== WordSize2) {
-    bytes4 = getBytesCopy2(concat2([Padding2.slice(bytes4.length % WordSize2), bytes4]));
+  let bytes5 = toBeArray2(value);
+  assert2(bytes5.length <= WordSize2, "value out-of-bounds", "BUFFER_OVERRUN", { buffer: bytes5, length: WordSize2, offset: bytes5.length });
+  if (bytes5.length !== WordSize2) {
+    bytes5 = getBytesCopy2(concat2([Padding2.slice(bytes5.length % WordSize2), bytes5]));
   }
-  return bytes4;
+  return bytes5;
 }
 var Coder2 = class {
   // The coder name:
@@ -44992,12 +44913,12 @@ var Writer2 = class {
   }
   // Arrayish item; pad on the right to *nearest* WordSize
   writeBytes(value) {
-    let bytes4 = getBytesCopy2(value);
-    const paddingOffset = bytes4.length % WordSize2;
+    let bytes5 = getBytesCopy2(value);
+    const paddingOffset = bytes5.length % WordSize2;
     if (paddingOffset) {
-      bytes4 = getBytesCopy2(concat2([bytes4, Padding2.slice(paddingOffset)]));
+      bytes5 = getBytesCopy2(concat2([bytes5, Padding2.slice(paddingOffset)]));
     }
-    return this.#writeData(bytes4);
+    return this.#writeData(bytes5);
   }
   // Numeric item; pad on the left *to* WordSize
   writeValue(value) {
@@ -45083,10 +45004,10 @@ var Reader2 = class _Reader {
   }
   // Read bytes
   readBytes(length, loose) {
-    let bytes4 = this.#peekBytes(0, length, !!loose);
+    let bytes5 = this.#peekBytes(0, length, !!loose);
     this.#incrementBytesRead(length);
-    this.#offset += bytes4.length;
-    return bytes4.slice(0, length);
+    this.#offset += bytes5.length;
+    return bytes5.slice(0, length);
   }
   // Read a numeric values
   readValue() {
@@ -45124,30 +45045,30 @@ computeHmac2.register = function(func) {
 Object.freeze(computeHmac2);
 
 // ../bls-bn254-js/node_modules/ethers/node_modules/@noble/hashes/esm/_assert.js
-function number2(n3) {
+function number3(n3) {
   if (!Number.isSafeInteger(n3) || n3 < 0)
     throw new Error(`Wrong positive integer: ${n3}`);
 }
-function bytes2(b3, ...lengths) {
+function bytes3(b3, ...lengths) {
   if (!(b3 instanceof Uint8Array))
     throw new Error("Expected Uint8Array");
   if (lengths.length > 0 && !lengths.includes(b3.length))
     throw new Error(`Expected Uint8Array of length ${lengths}, not of length=${b3.length}`);
 }
-function hash2(hash3) {
-  if (typeof hash3 !== "function" || typeof hash3.create !== "function")
+function hash3(hash4) {
+  if (typeof hash4 !== "function" || typeof hash4.create !== "function")
     throw new Error("Hash should be wrapped by utils.wrapConstructor");
-  number2(hash3.outputLen);
-  number2(hash3.blockLen);
+  number3(hash4.outputLen);
+  number3(hash4.blockLen);
 }
-function exists2(instance, checkFinished = true) {
+function exists3(instance, checkFinished = true) {
   if (instance.destroyed)
     throw new Error("Hash instance has been destroyed");
   if (checkFinished && instance.finished)
     throw new Error("Hash#digest() has already been called");
 }
-function output2(out, instance) {
-  bytes2(out);
+function output3(out, instance) {
+  bytes3(out);
   const min = instance.outputLen;
   if (out.length < min) {
     throw new Error(`digestInto() expects output buffer of length at least ${min}`);
@@ -45230,9 +45151,9 @@ var Hash3 = class {
     return this._cloneInto();
   }
 };
-var toStr2 = {}.toString;
+var toStr3 = {}.toString;
 function checkOpts2(defaults, opts) {
-  if (opts !== void 0 && toStr2.call(opts) !== "[object Object]")
+  if (opts !== void 0 && toStr3.call(opts) !== "[object Object]")
     throw new Error("Options should be object or undefined");
   const merged = Object.assign(defaults, opts);
   return merged;
@@ -45336,7 +45257,7 @@ var Keccak3 = class _Keccak extends Hash3 {
     this.posOut = 0;
     this.finished = false;
     this.destroyed = false;
-    number2(outputLen);
+    number3(outputLen);
     if (0 >= this.blockLen || this.blockLen >= 200)
       throw new Error("Sha3 supports only keccak-f1600 function");
     this.state = new Uint8Array(200);
@@ -45348,7 +45269,7 @@ var Keccak3 = class _Keccak extends Hash3 {
     this.pos = 0;
   }
   update(data7) {
-    exists2(this);
+    exists3(this);
     const { blockLen, state } = this;
     data7 = toBytes3(data7);
     const len = data7.length;
@@ -45373,8 +45294,8 @@ var Keccak3 = class _Keccak extends Hash3 {
     this.keccak();
   }
   writeInto(out) {
-    exists2(this, false);
-    bytes2(out);
+    exists3(this, false);
+    bytes3(out);
     this.finish();
     const bufferOut = this.state;
     const { blockLen } = this;
@@ -45393,12 +45314,12 @@ var Keccak3 = class _Keccak extends Hash3 {
       throw new Error("XOF is not possible for this instance");
     return this.writeInto(out);
   }
-  xof(bytes4) {
-    number2(bytes4);
-    return this.xofInto(new Uint8Array(bytes4));
+  xof(bytes5) {
+    number3(bytes5);
+    return this.xofInto(new Uint8Array(bytes5));
   }
   digestInto(out) {
-    output2(out, this);
+    output3(out, this);
     if (this.finished)
       throw new Error("digest() was already called");
     this.writeInto(out);
@@ -45490,7 +45411,7 @@ var SHA22 = class extends Hash3 {
     this.view = createView3(this.buffer);
   }
   update(data7) {
-    exists2(this);
+    exists3(this);
     const { view, buffer, blockLen } = this;
     data7 = toBytes3(data7);
     const len = data7.length;
@@ -45515,8 +45436,8 @@ var SHA22 = class extends Hash3 {
     return this;
   }
   digestInto(out) {
-    exists2(this);
-    output2(out, this);
+    exists3(this);
+    output3(out, this);
     this.finished = true;
     const { buffer, view, blockLen, isLE: isLE4 } = this;
     let { pos } = this;
@@ -45879,37 +45800,37 @@ var sha2564 = /* @__PURE__ */ wrapConstructor3(() => new SHA2563());
 
 // ../bls-bn254-js/node_modules/ethers/node_modules/@noble/hashes/esm/hmac.js
 var HMAC3 = class extends Hash3 {
-  constructor(hash3, _key) {
+  constructor(hash4, _key) {
     super();
     this.finished = false;
     this.destroyed = false;
-    hash2(hash3);
+    hash3(hash4);
     const key = toBytes3(_key);
-    this.iHash = hash3.create();
+    this.iHash = hash4.create();
     if (typeof this.iHash.update !== "function")
       throw new Error("Expected instance of class which extends utils.Hash");
     this.blockLen = this.iHash.blockLen;
     this.outputLen = this.iHash.outputLen;
     const blockLen = this.blockLen;
     const pad = new Uint8Array(blockLen);
-    pad.set(key.length > blockLen ? hash3.create().update(key).digest() : key);
+    pad.set(key.length > blockLen ? hash4.create().update(key).digest() : key);
     for (let i = 0; i < pad.length; i++)
       pad[i] ^= 54;
     this.iHash.update(pad);
-    this.oHash = hash3.create();
+    this.oHash = hash4.create();
     for (let i = 0; i < pad.length; i++)
       pad[i] ^= 54 ^ 92;
     this.oHash.update(pad);
     pad.fill(0);
   }
   update(buf) {
-    exists2(this);
+    exists3(this);
     this.iHash.update(buf);
     return this;
   }
   digestInto(out) {
-    exists2(this);
-    bytes2(out, this.outputLen);
+    exists3(this);
+    bytes3(out, this.outputLen);
     this.finished = true;
     this.iHash.digestInto(out);
     this.oHash.update(out);
@@ -45939,23 +45860,23 @@ var HMAC3 = class extends Hash3 {
     this.iHash.destroy();
   }
 };
-var hmac3 = (hash3, key, message) => new HMAC3(hash3, key).update(message).digest();
-hmac3.create = (hash3, key) => new HMAC3(hash3, key);
+var hmac3 = (hash4, key, message) => new HMAC3(hash4, key).update(message).digest();
+hmac3.create = (hash4, key) => new HMAC3(hash4, key);
 
 // ../bls-bn254-js/node_modules/ethers/node_modules/@noble/hashes/esm/pbkdf2.js
-function pbkdf2Init2(hash3, _password, _salt, _opts) {
-  hash2(hash3);
+function pbkdf2Init2(hash4, _password, _salt, _opts) {
+  hash3(hash4);
   const opts = checkOpts2({ dkLen: 32, asyncTick: 10 }, _opts);
   const { c, dkLen, asyncTick } = opts;
-  number2(c);
-  number2(dkLen);
-  number2(asyncTick);
+  number3(c);
+  number3(dkLen);
+  number3(asyncTick);
   if (c < 1)
     throw new Error("PBKDF2: iterations (c) should be >= 1");
   const password = toBytes3(_password);
   const salt2 = toBytes3(_salt);
   const DK = new Uint8Array(dkLen);
-  const PRF = hmac3.create(hash3, password);
+  const PRF = hmac3.create(hash4, password);
   const PRFSalt = PRF._cloneInto().update(salt2);
   return { c, dkLen, asyncTick, DK, PRF, PRFSalt };
 }
@@ -45967,8 +45888,8 @@ function pbkdf2Output2(PRF, PRFSalt, DK, prfW, u) {
   u.fill(0);
   return DK;
 }
-function pbkdf24(hash3, password, salt2, opts) {
-  const { c, dkLen, DK, PRF, PRFSalt } = pbkdf2Init2(hash3, password, salt2, opts);
+function pbkdf24(hash4, password, salt2, opts) {
+  const { c, dkLen, DK, PRF, PRFSalt } = pbkdf2Init2(hash4, password, salt2, opts);
   let prfW;
   const arr = new Uint8Array(4);
   const view = createView3(arr);
@@ -46069,12 +45990,12 @@ function scryptInit2(password, salt2, _opts) {
     maxmem: 1024 ** 3 + 1024
   }, _opts);
   const { N: N5, r, p, dkLen, asyncTick, maxmem, onProgress } = opts;
-  number2(N5);
-  number2(r);
-  number2(p);
-  number2(dkLen);
-  number2(asyncTick);
-  number2(maxmem);
+  number3(N5);
+  number3(r);
+  number3(p);
+  number3(dkLen);
+  number3(asyncTick);
+  number3(maxmem);
   if (onProgress !== void 0 && typeof onProgress !== "function")
     throw new Error("progressCb should be function");
   const blockSize = 128 * r;
@@ -46277,12 +46198,12 @@ var _1n16 = BigInt(1);
 var _2n14 = BigInt(2);
 var u8a4 = (a) => a instanceof Uint8Array;
 var hexes3 = /* @__PURE__ */ Array.from({ length: 256 }, (_, i) => i.toString(16).padStart(2, "0"));
-function bytesToHex3(bytes4) {
-  if (!u8a4(bytes4))
+function bytesToHex3(bytes5) {
+  if (!u8a4(bytes5))
     throw new Error("Uint8Array expected");
   let hex3 = "";
-  for (let i = 0; i < bytes4.length; i++) {
-    hex3 += hexes3[bytes4[i]];
+  for (let i = 0; i < bytes5.length; i++) {
+    hex3 += hexes3[bytes5[i]];
   }
   return hex3;
 }
@@ -46312,13 +46233,13 @@ function hexToBytes3(hex3) {
   }
   return array;
 }
-function bytesToNumberBE3(bytes4) {
-  return hexToNumber3(bytesToHex3(bytes4));
+function bytesToNumberBE3(bytes5) {
+  return hexToNumber3(bytesToHex3(bytes5));
 }
-function bytesToNumberLE3(bytes4) {
-  if (!u8a4(bytes4))
+function bytesToNumberLE3(bytes5) {
+  if (!u8a4(bytes5))
     throw new Error("Uint8Array expected");
-  return hexToNumber3(bytesToHex3(Uint8Array.from(bytes4).reverse()));
+  return hexToNumber3(bytesToHex3(Uint8Array.from(bytes5).reverse()));
 }
 function numberToBytesBE3(n3, len) {
   return hexToBytes3(n3.toString(16).padStart(len * 2, "0"));
@@ -46500,11 +46421,11 @@ function pow22(x, power, modulo) {
   }
   return res;
 }
-function invert3(number3, modulo) {
-  if (number3 === _0n16 || modulo <= _0n16) {
-    throw new Error(`invert: expected positive integers, got n=${number3} mod=${modulo}`);
+function invert3(number4, modulo) {
+  if (number4 === _0n16 || modulo <= _0n16) {
+    throw new Error(`invert: expected positive integers, got n=${number4} mod=${modulo}`);
   }
-  let a = mod3(number3, modulo);
+  let a = mod3(number4, modulo);
   let b3 = modulo;
   let x = _0n16, y = _1n17, u = _1n17, v = _0n16;
   while (a !== _0n16) {
@@ -46701,10 +46622,10 @@ function Field3(ORDER, bitLen4, isLE4 = false, redef = {}) {
     // We don't have const-time bigints anyway, so probably will be not very useful
     cmov: (a, b3, c) => c ? b3 : a,
     toBytes: (num) => isLE4 ? numberToBytesLE3(num, BYTES) : numberToBytesBE3(num, BYTES),
-    fromBytes: (bytes4) => {
-      if (bytes4.length !== BYTES)
-        throw new Error(`Fp.fromBytes: expected ${BYTES}, got ${bytes4.length}`);
-      return isLE4 ? bytesToNumberLE3(bytes4) : bytesToNumberBE3(bytes4);
+    fromBytes: (bytes5) => {
+      if (bytes5.length !== BYTES)
+        throw new Error(`Fp.fromBytes: expected ${BYTES}, got ${bytes5.length}`);
+      return isLE4 ? bytesToNumberLE3(bytes5) : bytesToNumberBE3(bytes5);
     }
   });
   return Object.freeze(f3);
@@ -46734,7 +46655,7 @@ function mapHashToField3(key, fieldOrder, isLE4 = false) {
 var _0n17 = BigInt(0);
 var _1n18 = BigInt(1);
 function wNAF3(c, bits) {
-  const constTimeNegate2 = (condition, item) => {
+  const constTimeNegate = (condition, item) => {
     const neg = item.negate();
     return condition ? neg : item;
   };
@@ -46744,7 +46665,7 @@ function wNAF3(c, bits) {
     return { windows, windowSize };
   };
   return {
-    constTimeNegate: constTimeNegate2,
+    constTimeNegate,
     // non-const time multiplication ladder
     unsafeLadder(elm, n3) {
       let p = c.ZERO;
@@ -46810,9 +46731,9 @@ function wNAF3(c, bits) {
         const cond1 = window2 % 2 !== 0;
         const cond2 = wbits < 0;
         if (wbits === 0) {
-          f3 = f3.add(constTimeNegate2(cond1, precomputes[offset1]));
+          f3 = f3.add(constTimeNegate(cond1, precomputes[offset1]));
         } else {
-          p = p.add(constTimeNegate2(cond2, precomputes[offset2]));
+          p = p.add(constTimeNegate(cond2, precomputes[offset2]));
         }
       }
       return { p, f: f3 };
@@ -46939,8 +46860,8 @@ function weierstrassPoints3(opts) {
     const a = point.toAffine();
     return concatBytes6(Uint8Array.from([4]), Fp5.toBytes(a.x), Fp5.toBytes(a.y));
   });
-  const fromBytes = CURVE.fromBytes || ((bytes4) => {
-    const tail = bytes4.subarray(1);
+  const fromBytes = CURVE.fromBytes || ((bytes5) => {
+    const tail = bytes5.subarray(1);
     const x = Fp5.fromBytes(tail.subarray(0, Fp5.BYTES));
     const y = Fp5.fromBytes(tail.subarray(Fp5.BYTES, 2 * Fp5.BYTES));
     return { x, y };
@@ -47360,10 +47281,10 @@ function weierstrass3(curveDef) {
         return cat(Uint8Array.from([4]), x, Fp5.toBytes(a.y));
       }
     },
-    fromBytes(bytes4) {
-      const len = bytes4.length;
-      const head = bytes4[0];
-      const tail = bytes4.subarray(1);
+    fromBytes(bytes5) {
+      const len = bytes5.length;
+      const head = bytes5[0];
+      const tail = bytes5.subarray(1);
       if (len === compressedLen && (head === 2 || head === 3)) {
         const x = bytesToNumberBE3(tail);
         if (!isValidFieldElement(x))
@@ -47385,9 +47306,9 @@ function weierstrass3(curveDef) {
     }
   });
   const numToNByteStr = (num) => bytesToHex3(numberToBytesBE3(num, CURVE.nByteLength));
-  function isBiggerThanHalfOrder(number3) {
+  function isBiggerThanHalfOrder(number4) {
     const HALF = CURVE_ORDER >> _1n19;
-    return number3 > HALF;
+    return number4 > HALF;
   }
   function normalizeS(s) {
     return isBiggerThanHalfOrder(s) ? modN(-s) : s;
@@ -47517,13 +47438,13 @@ function weierstrass3(curveDef) {
     const b3 = Point3.fromHex(publicB);
     return b3.multiply(normPrivateKeyToScalar(privateA)).toRawBytes(isCompressed);
   }
-  const bits2int = CURVE.bits2int || function(bytes4) {
-    const num = bytesToNumberBE3(bytes4);
-    const delta = bytes4.length * 8 - CURVE.nBitLength;
+  const bits2int = CURVE.bits2int || function(bytes5) {
+    const num = bytesToNumberBE3(bytes5);
+    const delta = bytes5.length * 8 - CURVE.nBitLength;
     return delta > 0 ? num >> BigInt(delta) : num;
   };
-  const bits2int_modN = CURVE.bits2int_modN || function(bytes4) {
-    return modN(bits2int(bytes4));
+  const bits2int_modN = CURVE.bits2int_modN || function(bytes5) {
+    return modN(bits2int(bytes5));
   };
   const ORDER_MASK = bitMask3(CURVE.nBitLength);
   function int2octets(num) {
@@ -47536,13 +47457,13 @@ function weierstrass3(curveDef) {
   function prepSig(msgHash, privateKey, opts = defaultSigOpts) {
     if (["recovered", "canonical"].some((k) => k in opts))
       throw new Error("sign() legacy options not supported");
-    const { hash: hash3, randomBytes: randomBytes8 } = CURVE;
+    const { hash: hash4, randomBytes: randomBytes8 } = CURVE;
     let { lowS, prehash, extraEntropy: ent } = opts;
     if (lowS == null)
       lowS = true;
     msgHash = ensureBytes3("msgHash", msgHash);
     if (prehash)
-      msgHash = ensureBytes3("prehashed msgHash", hash3(msgHash));
+      msgHash = ensureBytes3("prehashed msgHash", hash4(msgHash));
     const h1int = bits2int_modN(msgHash);
     const d = normPrivateKeyToScalar(privateKey);
     const seedArgs = [int2octets(d), int2octets(h1int)];
@@ -47641,15 +47562,15 @@ function weierstrass3(curveDef) {
 }
 
 // ../bls-bn254-js/node_modules/ethers/node_modules/@noble/curves/esm/_shortw_utils.js
-function getHash3(hash3) {
+function getHash3(hash4) {
   return {
-    hash: hash3,
-    hmac: (key, ...msgs) => hmac3(hash3, key, concatBytes5(...msgs)),
+    hash: hash4,
+    hmac: (key, ...msgs) => hmac3(hash4, key, concatBytes5(...msgs)),
     randomBytes: randomBytes6
   };
 }
 function createCurve2(curveDef, defHash) {
-  const create = (hash3) => weierstrass3({ ...curveDef, ...getHash3(hash3) });
+  const create = (hash4) => weierstrass3({ ...curveDef, ...getHash3(hash4) });
   return Object.freeze({ ...create(defHash), create });
 }
 
@@ -47972,19 +47893,19 @@ var Signature2 = class _Signature {
       return new _Signature(_guard9, ZeroHash2, ZeroHash2, 27);
     }
     if (typeof sig === "string") {
-      const bytes4 = getBytes2(sig, "signature");
-      if (bytes4.length === 64) {
-        const r2 = hexlify2(bytes4.slice(0, 32));
-        const s2 = bytes4.slice(32, 64);
+      const bytes5 = getBytes2(sig, "signature");
+      if (bytes5.length === 64) {
+        const r2 = hexlify2(bytes5.slice(0, 32));
+        const s2 = bytes5.slice(32, 64);
         const v2 = s2[0] & 128 ? 28 : 27;
         s2[0] &= 127;
         return new _Signature(_guard9, r2, hexlify2(s2), v2);
       }
-      if (bytes4.length === 65) {
-        const r2 = hexlify2(bytes4.slice(0, 32));
-        const s2 = bytes4.slice(32, 64);
+      if (bytes5.length === 65) {
+        const r2 = hexlify2(bytes5.slice(0, 32));
+        const s2 = bytes5.slice(32, 64);
         assertError((s2[0] & 128) === 0, "non-canonical s");
-        const v2 = _Signature.getNormalizedV(bytes4[64]);
+        const v2 = _Signature.getNormalizedV(bytes5[64]);
         return new _Signature(_guard9, r2, hexlify2(s2), v2);
       }
       assertError(false, "invalid raw signature length");
@@ -48001,9 +47922,9 @@ var Signature2 = class _Signature {
       }
       if (yParityAndS != null) {
         assertError(isHexString2(yParityAndS, 32), "invalid yParityAndS");
-        const bytes4 = getBytes2(yParityAndS);
-        bytes4[0] &= 127;
-        return hexlify2(bytes4);
+        const bytes5 = getBytes2(yParityAndS);
+        bytes5[0] &= 127;
+        return hexlify2(bytes5);
       }
       assertError(false, "missing s");
     }(sig.s, sig.yParityAndS);
@@ -48142,18 +48063,18 @@ var SigningKey2 = class _SigningKey {
    *    //_result:
    */
   static computePublicKey(key, compressed) {
-    let bytes4 = getBytes2(key, "key");
-    if (bytes4.length === 32) {
-      const pubKey = secp256k12.getPublicKey(bytes4, !!compressed);
+    let bytes5 = getBytes2(key, "key");
+    if (bytes5.length === 32) {
+      const pubKey = secp256k12.getPublicKey(bytes5, !!compressed);
       return hexlify2(pubKey);
     }
-    if (bytes4.length === 64) {
+    if (bytes5.length === 64) {
       const pub = new Uint8Array(65);
       pub[0] = 4;
-      pub.set(bytes4, 1);
-      bytes4 = pub;
+      pub.set(bytes5, 1);
+      bytes5 = pub;
     }
-    const point = secp256k12.ProjectivePoint.fromHex(bytes4);
+    const point = secp256k12.ProjectivePoint.fromHex(bytes5);
     return hexlify2(point.toRawBytes(compressed));
   }
   /**
@@ -49519,10 +49440,10 @@ function id2(value) {
 var COMPRESSED$12 = "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";
 var FENCED2 = /* @__PURE__ */ new Map([[8217, "apostrophe"], [8260, "fraction slash"], [12539, "middle dot"]]);
 var NSM_MAX2 = 4;
-function decode_arithmetic2(bytes4) {
+function decode_arithmetic2(bytes5) {
   let pos = 0;
   function u16() {
-    return bytes4[pos++] << 8 | bytes4[pos++];
+    return bytes5[pos++] << 8 | bytes5[pos++];
   }
   let symbol_count = u16();
   let total = 1;
@@ -49537,7 +49458,7 @@ function decode_arithmetic2(bytes4) {
   let read_buffer = 0;
   function read_bit() {
     if (read_width == 0) {
-      read_buffer = read_buffer << 8 | bytes4[pos++];
+      read_buffer = read_buffer << 8 | bytes5[pos++];
       read_width = 8;
     }
     return read_buffer >> --read_width & 1;
@@ -49585,11 +49506,11 @@ function decode_arithmetic2(bytes4) {
   return symbols.map((x) => {
     switch (x - offset) {
       case 3:
-        return offset + 65792 + (bytes4[pos_payload++] << 16 | bytes4[pos_payload++] << 8 | bytes4[pos_payload++]);
+        return offset + 65792 + (bytes5[pos_payload++] << 16 | bytes5[pos_payload++] << 8 | bytes5[pos_payload++]);
       case 2:
-        return offset + 256 + (bytes4[pos_payload++] << 8 | bytes4[pos_payload++]);
+        return offset + 256 + (bytes5[pos_payload++] << 8 | bytes5[pos_payload++]);
       case 1:
-        return offset + bytes4[pos_payload++];
+        return offset + bytes5[pos_payload++];
       default:
         return x - 1;
     }
@@ -50201,12 +50122,12 @@ function determine_group2(unique) {
   return groups;
 }
 function flatten2(split6) {
-  return split6.map(({ input, error, output: output3 }) => {
+  return split6.map(({ input, error, output: output4 }) => {
     if (error) {
       let msg = error.message;
       throw new Error(split6.length == 1 ? msg : `Invalid label ${bidi_qq2(safe_str_from_cps2(input, 63))}: ${msg}`);
     }
-    return str_from_cps2(output3);
+    return str_from_cps2(output4);
   }).join(STOP_CH2);
 }
 function error_disallowed2(cp) {
@@ -50308,21 +50229,21 @@ function checkComponent2(comp) {
   return comp;
 }
 function ensNameSplit2(name) {
-  const bytes4 = toUtf8Bytes2(ensNormalize2(name));
+  const bytes5 = toUtf8Bytes2(ensNormalize2(name));
   const comps = [];
   if (name.length === 0) {
     return comps;
   }
   let last = 0;
-  for (let i = 0; i < bytes4.length; i++) {
-    const d = bytes4[i];
+  for (let i = 0; i < bytes5.length; i++) {
+    const d = bytes5[i];
     if (d === 46) {
-      comps.push(checkComponent2(bytes4.slice(last, i)));
+      comps.push(checkComponent2(bytes5.slice(last, i)));
       last = i + 1;
     }
   }
-  assertArgument2(last < bytes4.length, "invalid ENS name; empty component", "name", name);
-  comps.push(checkComponent2(bytes4.slice(last)));
+  assertArgument2(last < bytes5.length, "invalid ENS name; empty component", "name", name);
+  comps.push(checkComponent2(bytes5.slice(last)));
   return comps;
 }
 function ensNormalize2(name) {
@@ -50357,10 +50278,10 @@ function dnsEncode2(name, _maxLength) {
   assertArgument2(length <= 255, "DNS encoded label cannot exceed 255", "length", length);
   return hexlify2(concat2(ensNameSplit2(name).map((comp) => {
     assertArgument2(comp.length <= length, `label ${JSON.stringify(name)} exceeds ${length} bytes`, "name", name);
-    const bytes4 = new Uint8Array(comp.length + 1);
-    bytes4.set(comp, 1);
-    bytes4[0] = bytes4.length - 1;
-    return bytes4;
+    const bytes5 = new Uint8Array(comp.length + 1);
+    bytes5.set(comp, 1);
+    bytes5[0] = bytes5.length - 1;
+    return bytes5;
   }))) + "00";
 }
 
@@ -50419,12 +50340,12 @@ var BN_284 = BigInt(28);
 var BN_354 = BigInt(35);
 var BN_MAX_UINT2 = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 var BLOB_SIZE2 = 4096 * 32;
-function getVersionedHash2(version3, hash3) {
+function getVersionedHash2(version3, hash4) {
   let versioned = version3.toString(16);
   while (versioned.length < 2) {
     versioned = "0" + versioned;
   }
-  versioned += sha2565(hash3).substring(4);
+  versioned += sha2565(hash4).substring(4);
   return "0x" + versioned;
 }
 function handleAddress2(value) {
@@ -51447,12 +51368,12 @@ var BN_019 = BigInt(0);
 var BN_111 = BigInt(1);
 var BN_MAX_UINT2564 = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 function hexPadRight2(value) {
-  const bytes4 = getBytes2(value);
-  const padOffset = bytes4.length % 32;
+  const bytes5 = getBytes2(value);
+  const padOffset = bytes5.length % 32;
   if (padOffset) {
-    return concat2([bytes4, padding2.slice(padOffset)]);
+    return concat2([bytes5, padding2.slice(padOffset)]);
   }
-  return hexlify2(bytes4);
+  return hexlify2(bytes5);
 }
 var hexTrue2 = toBeHex2(BN_111, 32);
 var hexFalse2 = toBeHex2(BN_019, 32);
@@ -51495,9 +51416,9 @@ var domainChecks2 = {
     assertArgument2(false, `invalid domain value "verifyingContract"`, "domain.verifyingContract", value);
   },
   salt: function(value) {
-    const bytes4 = getBytes2(value, "domain.salt");
-    assertArgument2(bytes4.length === 32, `invalid domain value "salt"`, "domain.salt", value);
-    return hexlify2(bytes4);
+    const bytes5 = getBytes2(value, "domain.salt");
+    assertArgument2(bytes5.length === 32, `invalid domain value "salt"`, "domain.salt", value);
+    return hexlify2(bytes5);
   }
 };
 function getBaseEncoder2(type) {
@@ -51522,8 +51443,8 @@ function getBaseEncoder2(type) {
       const width = parseInt(match[1]);
       assertArgument2(width !== 0 && width <= 32 && match[1] === String(width), "invalid bytes width", "type", type);
       return function(value) {
-        const bytes4 = getBytes2(value);
-        assertArgument2(bytes4.length === width, `invalid length for ${type}`, "value", value);
+        const bytes5 = getBytes2(value);
+        assertArgument2(bytes5.length === width, `invalid length for ${type}`, "value", value);
         return hexPadRight2(value);
       };
     }
@@ -53181,16 +53102,16 @@ function getBuiltinCallException2(action, tx, data7, abiCoder) {
   let revert = null;
   if (data7) {
     message = "execution reverted";
-    const bytes4 = getBytes2(data7);
+    const bytes5 = getBytes2(data7);
     data7 = hexlify2(data7);
-    if (bytes4.length === 0) {
+    if (bytes5.length === 0) {
       message += " (no data present; likely require(false) occurred";
       reason = "require(false)";
-    } else if (bytes4.length % 32 !== 4) {
+    } else if (bytes5.length % 32 !== 4) {
       message += " (could not decode reason; invalid data length)";
-    } else if (hexlify2(bytes4.slice(0, 4)) === "0x08c379a0") {
+    } else if (hexlify2(bytes5.slice(0, 4)) === "0x08c379a0") {
       try {
-        reason = abiCoder.decode(["string"], bytes4.slice(4))[0];
+        reason = abiCoder.decode(["string"], bytes5.slice(4))[0];
         revert = {
           signature: "Error(string)",
           name: "Error",
@@ -53200,9 +53121,9 @@ function getBuiltinCallException2(action, tx, data7, abiCoder) {
       } catch (error) {
         message += " (could not decode reason; invalid string data)";
       }
-    } else if (hexlify2(bytes4.slice(0, 4)) === "0x4e487b71") {
+    } else if (hexlify2(bytes5.slice(0, 4)) === "0x4e487b71") {
       try {
-        const code = Number(abiCoder.decode(["uint256"], bytes4.slice(4))[0]);
+        const code = Number(abiCoder.decode(["uint256"], bytes5.slice(4))[0]);
         revert = {
           signature: "Panic(uint256)",
           name: "Panic",
@@ -53330,11 +53251,11 @@ var AbiCoder2 = class _AbiCoder {
 
 // ../bls-bn254-js/node_modules/ethers/lib.esm/abi/bytes32.js
 function encodeBytes32String2(text) {
-  const bytes4 = toUtf8Bytes2(text);
-  if (bytes4.length > 31) {
+  const bytes5 = toUtf8Bytes2(text);
+  if (bytes5.length > 31) {
     throw new Error("bytes32 string must be less than 32 bytes");
   }
-  return zeroPadBytes2(bytes4, 32);
+  return zeroPadBytes2(bytes5, 32);
 }
 function decodeBytes32String2(_bytes) {
   const data7 = getBytes2(_bytes, "bytes");
@@ -53482,8 +53403,8 @@ var Indexed2 = class {
   /**
    *  @_ignore:
    */
-  constructor(hash3) {
-    defineProperties2(this, { hash: hash3, _isIndexed: true });
+  constructor(hash4) {
+    defineProperties2(this, { hash: hash4, _isIndexed: true });
   }
 };
 var PanicReasons4 = {
@@ -54053,16 +53974,16 @@ var Interface2 = class _Interface {
       fragment = f3;
     }
     let message = "invalid length for result data";
-    const bytes4 = getBytesCopy2(data7);
-    if (bytes4.length % 32 === 0) {
+    const bytes5 = getBytesCopy2(data7);
+    if (bytes5.length % 32 === 0) {
       try {
-        return this.#abiCoder.decode(fragment.outputs, bytes4);
+        return this.#abiCoder.decode(fragment.outputs, bytes5);
       } catch (error) {
         message = "could not decode result data";
       }
     }
     assert2(false, message, "BAD_DATA", {
-      value: hexlify2(bytes4),
+      value: hexlify2(bytes5),
       info: { method: fragment.name, signature: fragment.format() }
     });
   }
@@ -54645,7 +54566,7 @@ var Block2 = class {
    *  Returns a JSON-friendly value.
    */
   toJSON() {
-    const { baseFeePerGas, difficulty, extraData, gasLimit, gasUsed, hash: hash3, miner, prevRandao, nonce, number: number3, parentHash, parentBeaconBlockRoot, stateRoot, receiptsRoot, timestamp, transactions } = this;
+    const { baseFeePerGas, difficulty, extraData, gasLimit, gasUsed, hash: hash4, miner, prevRandao, nonce, number: number4, parentHash, parentBeaconBlockRoot, stateRoot, receiptsRoot, timestamp, transactions } = this;
     return {
       _type: "Block",
       baseFeePerGas: toJson2(baseFeePerGas),
@@ -54655,11 +54576,11 @@ var Block2 = class {
       gasUsed: toJson2(gasUsed),
       blobGasUsed: toJson2(this.blobGasUsed),
       excessBlobGas: toJson2(this.excessBlobGas),
-      hash: hash3,
+      hash: hash4,
       miner,
       prevRandao,
       nonce,
-      number: number3,
+      number: number4,
       parentHash,
       timestamp,
       parentBeaconBlockRoot,
@@ -54706,16 +54627,16 @@ var Block2 = class {
     if (typeof indexOrHash === "number") {
       tx = this.#transactions[indexOrHash];
     } else {
-      const hash3 = indexOrHash.toLowerCase();
+      const hash4 = indexOrHash.toLowerCase();
       for (const v of this.#transactions) {
         if (typeof v === "string") {
-          if (v !== hash3) {
+          if (v !== hash4) {
             continue;
           }
           tx = v;
           break;
         } else {
-          if (v.hash === hash3) {
+          if (v.hash === hash4) {
             continue;
           }
           tx = v;
@@ -55042,7 +54963,7 @@ var TransactionReceipt2 = class {
       to,
       from,
       contractAddress,
-      hash: hash3,
+      hash: hash4,
       index,
       blockHash,
       blockNumber,
@@ -55064,7 +54985,7 @@ var TransactionReceipt2 = class {
       blobGasUsed: toJson2(this.blobGasUsed),
       blobGasPrice: toJson2(this.blobGasPrice),
       gasUsed: toJson2(this.gasUsed),
-      hash: hash3,
+      hash: hash4,
       index,
       logs,
       logsBloom,
@@ -55291,7 +55212,7 @@ var TransactionResponse2 = class _TransactionResponse {
    *  Returns a JSON-compatible representation of this transaction.
    */
   toJSON() {
-    const { blockNumber, blockHash, index, hash: hash3, type, to, from, nonce, data: data7, signature, accessList, blobVersionedHashes } = this;
+    const { blockNumber, blockHash, index, hash: hash4, type, to, from, nonce, data: data7, signature, accessList, blobVersionedHashes } = this;
     return {
       _type: "TransactionResponse",
       accessList,
@@ -55303,7 +55224,7 @@ var TransactionResponse2 = class _TransactionResponse {
       from,
       gasLimit: toJson2(this.gasLimit),
       gasPrice: toJson2(this.gasPrice),
-      hash: hash3,
+      hash: hash4,
       maxFeePerGas: toJson2(this.maxFeePerGas),
       maxPriorityFeePerGas: toJson2(this.maxPriorityFeePerGas),
       maxFeePerBlobGas: toJson2(this.maxFeePerBlobGas),
@@ -55410,8 +55331,8 @@ var TransactionResponse2 = class _TransactionResponse {
         if (block == null) {
           return;
         }
-        for (const hash3 of block) {
-          if (hash3 === this.hash) {
+        for (const hash4 of block) {
+          if (hash4 === this.hash) {
             return;
           }
         }
@@ -56470,7 +56391,7 @@ var BaseContract2 = class _BaseContract {
   /**
    *  @_ignore:
    */
-  async queryTransaction(hash3) {
+  async queryTransaction(hash4) {
     throw new Error("@TODO");
   }
   /*
@@ -56758,17 +56679,17 @@ var ContractFactory2 = class _ContractFactory {
   /**
    *  Create a new **ContractFactory** from the standard Solidity JSON output.
    */
-  static fromSolidity(output3, runner) {
-    assertArgument2(output3 != null, "bad compiler output", "output", output3);
-    if (typeof output3 === "string") {
-      output3 = JSON.parse(output3);
+  static fromSolidity(output4, runner) {
+    assertArgument2(output4 != null, "bad compiler output", "output", output4);
+    if (typeof output4 === "string") {
+      output4 = JSON.parse(output4);
     }
-    const abi = output3.abi;
+    const abi = output4.abi;
     let bytecode = "";
-    if (output3.bytecode) {
-      bytecode = output3.bytecode;
-    } else if (output3.evm && output3.evm.bytecode) {
-      bytecode = output3.evm.bytecode;
+    if (output4.bytecode) {
+      bytecode = output4.bytecode;
+    } else if (output4.evm && output4.evm.bytecode) {
+      bytecode = output4.evm.bytecode;
     }
     return new this(abi, bytecode, runner);
   }
@@ -57102,9 +57023,9 @@ var EnsResolver2 = class _EnsResolver {
               try {
                 linkage.push({ type: "!metadata", value: response.bodyText });
               } catch (error2) {
-                const bytes4 = response.body;
-                if (bytes4) {
-                  linkage.push({ type: "!metadata", value: hexlify2(bytes4) });
+                const bytes5 = response.body;
+                if (bytes5) {
+                  linkage.push({ type: "!metadata", value: hexlify2(bytes5) });
                 }
                 return { url: null, linkage };
               }
@@ -58054,9 +57975,9 @@ var PollingTransactionSubscriber2 = class extends OnBlockSubscriber2 {
    *  Create a new **PollingTransactionSubscriber** attached to
    *  %%provider%%, listening for %%hash%%.
    */
-  constructor(provider, hash3) {
+  constructor(provider, hash4) {
     super(provider);
-    this.#hash = hash3;
+    this.#hash = hash4;
   }
   async _poll(blockNumber, provider) {
     const tx = await provider.getTransactionReceipt(this.#hash);
@@ -58210,8 +58131,8 @@ async function getSubscription2(_event, provider) {
     }
   }
   if (isHexString2(_event, 32)) {
-    const hash3 = _event.toLowerCase();
-    return { type: "transaction", tag: getTag2("tx", { hash: hash3 }), hash: hash3 };
+    const hash4 = _event.toLowerCase();
+    return { type: "transaction", tag: getTag2("tx", { hash: hash4 }), hash: hash4 };
   }
   if (_event.orphan) {
     const event = _event;
@@ -58822,7 +58743,7 @@ var AbstractProvider2 = class {
   }
   // Write
   async broadcastTransaction(signedTx) {
-    const { blockNumber, hash: hash3, network } = await resolveProperties2({
+    const { blockNumber, hash: hash4, network } = await resolveProperties2({
       blockNumber: this.getBlockNumber(),
       hash: this._perform({
         method: "broadcastTransaction",
@@ -58831,7 +58752,7 @@ var AbstractProvider2 = class {
       network: this.getNetwork()
     });
     const tx = Transaction2.from(signedTx);
-    if (tx.hash !== hash3) {
+    if (tx.hash !== hash4) {
       throw new Error("@TODO: the returned hash did not match");
     }
     return this._wrapTransactionResponse(tx, network).replaceableTransaction(blockNumber);
@@ -58865,26 +58786,26 @@ var AbstractProvider2 = class {
     }
     return this._wrapBlock(params, network);
   }
-  async getTransaction(hash3) {
+  async getTransaction(hash4) {
     const { network, params } = await resolveProperties2({
       network: this.getNetwork(),
-      params: this.#perform({ method: "getTransaction", hash: hash3 })
+      params: this.#perform({ method: "getTransaction", hash: hash4 })
     });
     if (params == null) {
       return null;
     }
     return this._wrapTransactionResponse(params, network);
   }
-  async getTransactionReceipt(hash3) {
+  async getTransactionReceipt(hash4) {
     const { network, params } = await resolveProperties2({
       network: this.getNetwork(),
-      params: this.#perform({ method: "getTransactionReceipt", hash: hash3 })
+      params: this.#perform({ method: "getTransactionReceipt", hash: hash4 })
     });
     if (params == null) {
       return null;
     }
     if (params.gasPrice == null && params.effectiveGasPrice == null) {
-      const tx = await this.#perform({ method: "getTransaction", hash: hash3 });
+      const tx = await this.#perform({ method: "getTransaction", hash: hash4 });
       if (tx == null) {
         throw new Error("report this; could not find tx or effectiveGasPrice");
       }
@@ -58892,10 +58813,10 @@ var AbstractProvider2 = class {
     }
     return this._wrapTransactionReceipt(params, network);
   }
-  async getTransactionResult(hash3) {
+  async getTransactionResult(hash4) {
     const { result } = await resolveProperties2({
       network: this.getNetwork(),
-      result: this.#perform({ method: "getTransactionResult", hash: hash3 })
+      result: this.#perform({ method: "getTransactionResult", hash: hash4 })
     });
     if (result == null) {
       return null;
@@ -58969,16 +58890,16 @@ var AbstractProvider2 = class {
     }
     return null;
   }
-  async waitForTransaction(hash3, _confirms, timeout) {
+  async waitForTransaction(hash4, _confirms, timeout) {
     const confirms = _confirms != null ? _confirms : 1;
     if (confirms === 0) {
-      return this.getTransactionReceipt(hash3);
+      return this.getTransactionReceipt(hash4);
     }
     return new Promise(async (resolve, reject) => {
       let timer = null;
       const listener = async (blockNumber) => {
         try {
-          const receipt = await this.getTransactionReceipt(hash3);
+          const receipt = await this.getTransactionReceipt(hash4);
           if (receipt != null) {
             if (blockNumber - receipt.blockNumber + 1 >= confirms) {
               resolve(receipt);
@@ -59342,9 +59263,9 @@ var AbstractProvider2 = class {
 };
 function _parseString2(result, start) {
   try {
-    const bytes4 = _parseBytes2(result, start);
-    if (bytes4) {
-      return toUtf8String2(bytes4);
+    const bytes5 = _parseBytes2(result, start);
+    if (bytes5) {
+      return toUtf8String2(bytes5);
     }
   } catch (error) {
   }
@@ -59897,13 +59818,13 @@ var JsonRpcSigner2 = class extends AbstractSigner2 {
   }
   async sendTransaction(tx) {
     const blockNumber = await this.provider.getBlockNumber();
-    const hash3 = await this.sendUncheckedTransaction(tx);
+    const hash4 = await this.sendUncheckedTransaction(tx);
     return await new Promise((resolve, reject) => {
       const timeouts = [1e3, 100];
       let invalids = 0;
       const checkTx = async () => {
         try {
-          const tx2 = await this.provider.getTransaction(hash3);
+          const tx2 = await this.provider.getTransaction(hash4);
           if (tx2 != null) {
             resolve(tx2.replaceableTransaction(blockNumber));
             return;
@@ -59913,7 +59834,7 @@ var JsonRpcSigner2 = class extends AbstractSigner2 {
             if (error.info == null) {
               error.info = {};
             }
-            error.info.sendTransactionHash = hash3;
+            error.info.sendTransactionHash = hash4;
             reject(error);
             return;
           }
@@ -59922,7 +59843,7 @@ var JsonRpcSigner2 = class extends AbstractSigner2 {
             if (error.info == null) {
               error.info = {};
             }
-            error.info.sendTransactionHash = hash3;
+            error.info.sendTransactionHash = hash4;
             if (invalids > 10) {
               reject(error);
               return;
@@ -60010,8 +59931,8 @@ var JsonRpcApiProvider2 = class extends AbstractProvider2 {
             break;
           }
           batch.push(payloads.shift());
-          const bytes4 = JSON.stringify(batch.map((p) => p.payload));
-          if (bytes4.length > this.#options.batchMaxSize) {
+          const bytes5 = JSON.stringify(batch.map((p) => p.payload));
+          if (bytes5.length > this.#options.batchMaxSize) {
             payloads.unshift(batch.pop());
             break;
           }
@@ -63364,10 +63285,10 @@ var U12 = [0, 235474187, 470948374, 303765277, 941896748, 908933415, 607530554, 
 var U22 = [0, 185469197, 370938394, 487725847, 741876788, 657861945, 975451694, 824852259, 1483753576, 1400783205, 1315723890, 1164071807, 1950903388, 2135319889, 1649704518, 1767536459, 2967507152, 3152976349, 2801566410, 2918353863, 2631447780, 2547432937, 2328143614, 2177544179, 3901806776, 3818836405, 4270639778, 4118987695, 3299409036, 3483825537, 3535072918, 3652904859, 2077965243, 1893020342, 1841768865, 1724457132, 1474502543, 1559041666, 1107234197, 1257309336, 598438867, 681933534, 901210569, 1052338372, 261314535, 77422314, 428819965, 310463728, 3409685355, 3224740454, 3710368113, 3593056380, 3875770207, 3960309330, 4045380933, 4195456072, 2471224067, 2554718734, 2237133081, 2388260884, 3212035895, 3028143674, 2842678573, 2724322336, 4138563181, 4255350624, 3769721975, 3955191162, 3667219033, 3516619604, 3431546947, 3347532110, 2933734917, 2782082824, 3099667487, 3016697106, 2196052529, 2313884476, 2499348523, 2683765030, 1179510461, 1296297904, 1347548327, 1533017514, 1786102409, 1635502980, 2087309459, 2003294622, 507358933, 355706840, 136428751, 53458370, 839224033, 957055980, 605657339, 790073846, 2373340630, 2256028891, 2607439820, 2422494913, 2706270690, 2856345839, 3075636216, 3160175349, 3573941694, 3725069491, 3273267108, 3356761769, 4181598602, 4063242375, 4011996048, 3828103837, 1033297158, 915985419, 730517276, 545572369, 296679730, 446754879, 129166120, 213705253, 1709610350, 1860738147, 1945798516, 2029293177, 1239331162, 1120974935, 1606591296, 1422699085, 4148292826, 4233094615, 3781033664, 3931371469, 3682191598, 3497509347, 3446004468, 3328955385, 2939266226, 2755636671, 3106780840, 2988687269, 2198438022, 2282195339, 2501218972, 2652609425, 1201765386, 1286567175, 1371368976, 1521706781, 1805211710, 1620529459, 2105887268, 1988838185, 533804130, 350174575, 164439672, 46346101, 870912086, 954669403, 636813900, 788204353, 2358957921, 2274680428, 2592523643, 2441661558, 2695033685, 2880240216, 3065962831, 3182487618, 3572145929, 3756299780, 3270937875, 3388507166, 4174560061, 4091327024, 4006521127, 3854606378, 1014646705, 930369212, 711349675, 560487590, 272786309, 457992840, 106852767, 223377554, 1678381017, 1862534868, 1914052035, 2031621326, 1211247597, 1128014560, 1580087799, 1428173050, 32283319, 182621114, 401639597, 486441376, 768917123, 651868046, 1003007129, 818324884, 1503449823, 1385356242, 1333838021, 1150208456, 1973745387, 2125135846, 1673061617, 1756818940, 2970356327, 3120694122, 2802849917, 2887651696, 2637442643, 2520393566, 2334669897, 2149987652, 3917234703, 3799141122, 4284502037, 4100872472, 3309594171, 3460984630, 3545789473, 3629546796, 2050466060, 1899603969, 1814803222, 1730525723, 1443857720, 1560382517, 1075025698, 1260232239, 575138148, 692707433, 878443390, 1062597235, 243256656, 91341917, 409198410, 325965383, 3403100636, 3252238545, 3704300486, 3620022987, 3874428392, 3990953189, 4042459122, 4227665663, 2460449204, 2578018489, 2226875310, 2411029155, 3198115200, 3046200461, 2827177882, 2743944855];
 var U32 = [0, 218828297, 437656594, 387781147, 875313188, 958871085, 775562294, 590424639, 1750626376, 1699970625, 1917742170, 2135253587, 1551124588, 1367295589, 1180849278, 1265195639, 3501252752, 3720081049, 3399941250, 3350065803, 3835484340, 3919042237, 4270507174, 4085369519, 3102249176, 3051593425, 2734591178, 2952102595, 2361698556, 2177869557, 2530391278, 2614737639, 3145456443, 3060847922, 2708326185, 2892417312, 2404901663, 2187128086, 2504130317, 2555048196, 3542330227, 3727205754, 3375740769, 3292445032, 3876557655, 3926170974, 4246310725, 4027744588, 1808481195, 1723872674, 1910319033, 2094410160, 1608975247, 1391201670, 1173430173, 1224348052, 59984867, 244860394, 428169201, 344873464, 935293895, 984907214, 766078933, 547512796, 1844882806, 1627235199, 2011214180, 2062270317, 1507497298, 1423022939, 1137477952, 1321699145, 95345982, 145085239, 532201772, 313773861, 830661914, 1015671571, 731183368, 648017665, 3175501286, 2957853679, 2807058932, 2858115069, 2305455554, 2220981195, 2474404304, 2658625497, 3575528878, 3625268135, 3473416636, 3254988725, 3778151818, 3963161475, 4213447064, 4130281361, 3599595085, 3683022916, 3432737375, 3247465558, 3802222185, 4020912224, 4172763771, 4122762354, 3201631749, 3017672716, 2764249623, 2848461854, 2331590177, 2280796200, 2431590963, 2648976442, 104699613, 188127444, 472615631, 287343814, 840019705, 1058709744, 671593195, 621591778, 1852171925, 1668212892, 1953757831, 2037970062, 1514790577, 1463996600, 1080017571, 1297403050, 3673637356, 3623636965, 3235995134, 3454686199, 4007360968, 3822090177, 4107101658, 4190530515, 2997825956, 3215212461, 2830708150, 2779915199, 2256734592, 2340947849, 2627016082, 2443058075, 172466556, 122466165, 273792366, 492483431, 1047239e3, 861968209, 612205898, 695634755, 1646252340, 1863638845, 2013908262, 1963115311, 1446242576, 1530455833, 1277555970, 1093597963, 1636604631, 1820824798, 2073724613, 1989249228, 1436590835, 1487645946, 1337376481, 1119727848, 164948639, 81781910, 331544205, 516552836, 1039717051, 821288114, 669961897, 719700128, 2973530695, 3157750862, 2871682645, 2787207260, 2232435299, 2283490410, 2667994737, 2450346104, 3647212047, 3564045318, 3279033885, 3464042516, 3980931627, 3762502690, 4150144569, 4199882800, 3070356634, 3121275539, 2904027272, 2686254721, 2200818878, 2384911031, 2570832044, 2486224549, 3747192018, 3528626907, 3310321856, 3359936201, 3950355702, 3867060991, 4049844452, 4234721005, 1739656202, 1790575107, 2108100632, 1890328081, 1402811438, 1586903591, 1233856572, 1149249077, 266959938, 48394827, 369057872, 418672217, 1002783846, 919489135, 567498868, 752375421, 209336225, 24197544, 376187827, 459744698, 945164165, 895287692, 574624663, 793451934, 1679968233, 1764313568, 2117360635, 1933530610, 1343127501, 1560637892, 1243112415, 1192455638, 3704280881, 3519142200, 3336358691, 3419915562, 3907448597, 3857572124, 4075877127, 4294704398, 3029510009, 3113855344, 2927934315, 2744104290, 2159976285, 2377486676, 2594734927, 2544078150];
 var U42 = [0, 151849742, 303699484, 454499602, 607398968, 758720310, 908999204, 1059270954, 1214797936, 1097159550, 1517440620, 1400849762, 1817998408, 1699839814, 2118541908, 2001430874, 2429595872, 2581445614, 2194319100, 2345119218, 3034881240, 3186202582, 2801699524, 2951971274, 3635996816, 3518358430, 3399679628, 3283088770, 4237083816, 4118925222, 4002861748, 3885750714, 1002142683, 850817237, 698445255, 548169417, 529487843, 377642221, 227885567, 77089521, 1943217067, 2061379749, 1640576439, 1757691577, 1474760595, 1592394909, 1174215055, 1290801793, 2875968315, 2724642869, 3111247143, 2960971305, 2405426947, 2253581325, 2638606623, 2487810577, 3808662347, 3926825029, 4044981591, 4162096729, 3342319475, 3459953789, 3576539503, 3693126241, 1986918061, 2137062819, 1685577905, 1836772287, 1381620373, 1532285339, 1078185097, 1229899655, 1040559837, 923313619, 740276417, 621982671, 439452389, 322734571, 137073913, 19308535, 3871163981, 4021308739, 4104605777, 4255800159, 3263785589, 3414450555, 3499326569, 3651041127, 2933202493, 2815956275, 3167684641, 3049390895, 2330014213, 2213296395, 2566595609, 2448830231, 1305906550, 1155237496, 1607244650, 1455525988, 1776460110, 1626319424, 2079897426, 1928707164, 96392454, 213114376, 396673818, 514443284, 562755902, 679998e3, 865136418, 983426092, 3708173718, 3557504664, 3474729866, 3323011204, 4180808110, 4030667424, 3945269170, 3794078908, 2507040230, 2623762152, 2272556026, 2390325492, 2975484382, 3092726480, 2738905026, 2857194700, 3973773121, 3856137295, 4274053469, 4157467219, 3371096953, 3252932727, 3673476453, 3556361835, 2763173681, 2915017791, 3064510765, 3215307299, 2156299017, 2307622919, 2459735317, 2610011675, 2081048481, 1963412655, 1846563261, 1729977011, 1480485785, 1362321559, 1243905413, 1126790795, 878845905, 1030690015, 645401037, 796197571, 274084841, 425408743, 38544885, 188821243, 3613494426, 3731654548, 3313212038, 3430322568, 4082475170, 4200115116, 3780097726, 3896688048, 2668221674, 2516901860, 2366882550, 2216610296, 3141400786, 2989552604, 2837966542, 2687165888, 1202797690, 1320957812, 1437280870, 1554391400, 1669664834, 1787304780, 1906247262, 2022837584, 265905162, 114585348, 499347990, 349075736, 736970802, 585122620, 972512814, 821712160, 2595684844, 2478443234, 2293045232, 2174754046, 3196267988, 3079546586, 2895723464, 2777952454, 3537852828, 3687994002, 3234156416, 3385345166, 4142626212, 4293295786, 3841024952, 3992742070, 174567692, 57326082, 410887952, 292596766, 777231668, 660510266, 1011452712, 893681702, 1108339068, 1258480242, 1343618912, 1494807662, 1715193156, 1865862730, 1948373848, 2100090966, 2701949495, 2818666809, 3004591147, 3122358053, 2235061775, 2352307457, 2535604243, 2653899549, 3915653703, 3764988233, 4219352155, 4067639125, 3444575871, 3294430577, 3746175075, 3594982253, 836553431, 953270745, 600235211, 718002117, 367585007, 484830689, 133361907, 251657213, 2041877159, 1891211689, 1806599355, 1654886325, 1568718495, 1418573201, 1335535747, 1184342925];
-function convertToInt322(bytes4) {
+function convertToInt322(bytes5) {
   const result = [];
-  for (let i = 0; i < bytes4.length; i += 4) {
-    result.push(bytes4[i] << 24 | bytes4[i + 1] << 16 | bytes4[i + 2] << 8 | bytes4[i + 3]);
+  for (let i = 0; i < bytes5.length; i += 4) {
+    result.push(bytes5[i] << 24 | bytes5[i + 1] << 16 | bytes5[i + 2] << 8 | bytes5[i + 3]);
   }
   return result;
 }
@@ -64007,8 +63928,8 @@ function zpad4(value, length) {
 function encodeBase58Check2(_value) {
   const value = getBytes2(_value);
   const check = dataSlice2(sha2565(sha2565(value)), 0, 4);
-  const bytes4 = concat2([value, check]);
-  return encodeBase582(bytes4);
+  const bytes5 = concat2([value, check]);
+  return encodeBase582(bytes5);
 }
 var _guard12 = {};
 function ser_I2(index, chainCode, publicKey, privateKey) {
@@ -64227,14 +64148,14 @@ var HDNodeWallet2 = class _HDNodeWallet extends BaseWallet2 {
    *  or full HD Node ([[HDNodeWallet) respectively.
    */
   static fromExtendedKey(extendedKey) {
-    const bytes4 = toBeArray2(decodeBase582(extendedKey));
-    assertArgument2(bytes4.length === 82 || encodeBase58Check2(bytes4.slice(0, 78)) === extendedKey, "invalid extended key", "extendedKey", "[ REDACTED ]");
-    const depth = bytes4[4];
-    const parentFingerprint = hexlify2(bytes4.slice(5, 9));
-    const index = parseInt(hexlify2(bytes4.slice(9, 13)).substring(2), 16);
-    const chainCode = hexlify2(bytes4.slice(13, 45));
-    const key = bytes4.slice(45, 78);
-    switch (hexlify2(bytes4.slice(0, 4))) {
+    const bytes5 = toBeArray2(decodeBase582(extendedKey));
+    assertArgument2(bytes5.length === 82 || encodeBase58Check2(bytes5.slice(0, 78)) === extendedKey, "invalid extended key", "extendedKey", "[ REDACTED ]");
+    const depth = bytes5[4];
+    const parentFingerprint = hexlify2(bytes5.slice(5, 9));
+    const index = parseInt(hexlify2(bytes5.slice(9, 13)).substring(2), 16);
+    const chainCode = hexlify2(bytes5.slice(13, 45));
+    const key = bytes5.slice(45, 78);
+    switch (hexlify2(bytes5.slice(0, 4))) {
       // Public Key
       case "0x0488b21e":
       case "0x043587cf": {
@@ -65019,7 +64940,7 @@ function loadWords6(locale) {
   let deltaOffset = 0;
   for (let i = 0; i < 2048; i++) {
     const s = style2.indexOf(data6[i * 3]);
-    const bytes4 = [
+    const bytes5 = [
       228 + (s >> 2),
       128 + codes4.indexOf(data6[i * 3 + 1]),
       128 + codes4.indexOf(data6[i * 3 + 2])
@@ -65027,10 +64948,10 @@ function loadWords6(locale) {
     if (locale === "zh_tw") {
       const common = s % 4;
       for (let i2 = common; i2 < 3; i2++) {
-        bytes4[i2] = codes4.indexOf(deltaData2[deltaOffset++]) + (i2 == 0 ? 228 : 128);
+        bytes5[i2] = codes4.indexOf(deltaData2[deltaOffset++]) + (i2 == 0 ? 228 : 128);
       }
     }
-    wordlist17.push(toUtf8String2(new Uint8Array(bytes4)));
+    wordlist17.push(toUtf8String2(new Uint8Array(bytes5)));
   }
   const checksum13 = id2(wordlist17.join("\n") + "\n");
   if (checksum13 !== Checks2[locale]) {
@@ -65259,7 +65180,7 @@ var BlsBn254 = class _BlsBn254 {
   }
   g2From(input) {
     const out = this.G2.clone();
-    out.deserialize(bytes3(input));
+    out.deserialize(bytes4(input));
     return out;
   }
   createKeyPair(_secretKey) {
@@ -65419,7 +65340,7 @@ var BlsBn254 = class _BlsBn254 {
     return _acc;
   }
 };
-function bytes3(b3) {
+function bytes4(b3) {
   if (typeof b3 === "string" && !isHexString2(b3)) {
     return utf8ToBytes4(b3);
   }
@@ -68355,7 +68276,7 @@ async function withRetry(fn, retryMessage = "retrying...", maxRetries = 20, retr
 }
 
 // ../bls-bn254-js/src/contract/utils.ts
-var factoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+var factoryAddress = "0x8464135c8F25Da09e49BC8782676a84730C318bC";
 var factoryBytecode = Deployer__factory.bytecode;
 var factoryAbi = Deployer__factory.abi;
 var buildBytecode = (constructorTypes, constructorArgs, contractBytecode) => `${contractBytecode}${encodeParams(constructorTypes, constructorArgs).slice(
