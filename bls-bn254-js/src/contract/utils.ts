@@ -16,7 +16,7 @@ import {
 } from "ethers"
 import {Deployer__factory} from "../generated"
 
-export const factoryAddress = "0x8464135c8F25Da09e49BC8782676a84730C318bC"
+export const factoryAddress = "0xAE57D98FD461975934aF97EDF0cE643FAB53B0E2"
 export const factoryBytecode = Deployer__factory.bytecode
 export const factoryAbi = Deployer__factory.abi
 
