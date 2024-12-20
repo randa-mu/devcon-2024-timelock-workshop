@@ -32,7 +32,11 @@ jobs:
       # Install Foundry (Forge and Cast)
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
-
+      
+      # Install esbuild globally
+      - name: Install esbuild globally
+        run: npm install -g esbuild
+        
       # Install Node.js dependencies
       - name: Install dependencies
         run: npm install
