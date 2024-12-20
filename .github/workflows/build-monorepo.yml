@@ -33,9 +33,8 @@ jobs:
       - name: Install Foundry
         run: |
           curl -L https://foundry.paradigm.xyz | bash
-          # Ensure the foundryup script is sourced to update PATH
+          # Add foundryup to PATH and source it to update the environment for the current shell
           source $HOME/.foundry/bin/foundryup
-          foundryup
           # Check if Foundry is installed correctly
           foundry --version
 
