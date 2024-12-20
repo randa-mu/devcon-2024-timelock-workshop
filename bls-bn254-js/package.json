@@ -9,7 +9,6 @@
     "build": "npm run build:generate && npm run build:js",
     "build:generate": "mkdir -p src/generated && npx typechain --target ethers-v6 --out-dir src/generated '../smart-contracts/out/*.sol/*.json'",
     "build:js": "esbuild ./src/index.ts --bundle --platform=node --target=node22 --outfile=dist/index.js",
-    
     "build:types": "tsc",
     "bls:newkey": "ts-node scripts/newkey.ts",
     "bls:sign": "ts-node scripts/sign.ts",

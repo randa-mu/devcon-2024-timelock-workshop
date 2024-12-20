@@ -6,8 +6,8 @@
   },
   "workspaces": [
     "smart-contracts",
-    "blocklock-agent",
-    "bls-bn254-js"
+    "bls-bn254-js",
+    "blocklock-agent"
   ],
   "devDependencies": {
     "@moonrepo/cli": "1.29.4"
