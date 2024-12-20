@@ -42,7 +42,7 @@ const program = new Command()
 
 const defaultPort = "8080"
 const defaultRPC = "http://localhost:8545"
-const defaultPrivateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+const defaultPrivateKey = "0xecc372f7755258d11d6ecce8955e9185f770cc6d9cff145cca753886e1ca9e46"
 const defaultBlsKey = "0x58aabbe98959c4dcb96c44c53be7e3bb980791fc7a9e03445c4af612a45ac906"
 
 export const BLOCKLOCK_IBE_OPTS: IbeOpts = {

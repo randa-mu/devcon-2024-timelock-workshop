@@ -13,11 +13,26 @@ export async function createProviderWithRetry(url: string, options: JsonRpcApiPr
 }
 
 export async function connectDeployer(address: string, signer: AbstractSigner): Promise<Deployer> {
-    return withTimeout(
-        Deployer__factory.connect(address, signer).waitForDeployment(),
-        30_000,
-        "Deployer did not deploy as expected..."
-    )
+    const POLL_INTERVAL = 5000; // 5 seconds interval for polling
+
+    while (true) {  // Infinite loop for continuous polling
+        try {
+            const deployer = Deployer__factory.connect(address, signer);
+
+            // Wait for the contract deployment confirmation
+            await deployer.waitForDeployment();
+
+            // Successfully connected, return the contract instance
+            console.log("Successfully connected to Deployer contract!");
+            return deployer;
+        } catch (error) {
+            // Log the retry attempt, and continue polling
+            console.log("Failed to connect, retrying in 5 seconds...");
+        }
+
+        // Wait for 5 seconds before retrying
+        await new Promise(resolve => setTimeout(resolve, POLL_INTERVAL));
+    }
 }
 
 export async function withRetry<T>(fn: () => Promise<T>, retryMessage = "retrying...", maxRetries = 20, retryDelay = 1000): Promise<T> {

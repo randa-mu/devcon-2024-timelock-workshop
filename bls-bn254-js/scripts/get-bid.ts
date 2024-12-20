@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import { SimpleAuction__factory } from "../src/generated"
+import { createProviderWithRetry } from "../src"
 import { Command, Option } from 'commander'
 
 // Define the CLI command and arguments using `commander`
@@ -10,6 +11,7 @@ const defaultRPC = "http://localhost:8545"
 program
   .addOption(new Option("--rpc-url <rpc-url>", "The websockets/HTTP URL to connect to the blockchain from")
     .default(defaultRPC)
+    .env("RPC_URL")
   )
   .requiredOption('--contractAddr <contractAddr>', 'Deployed auction smart contract address required to blockchain network')
   .requiredOption('--bidId <bid id>', 'Identifier assigned to the bid')
@@ -18,8 +20,6 @@ program.parse(process.argv)
 
 // Extract parsed options
 const options = program.opts()
-const rpcAddr: string = options.rpcURL
-const contractAddr: string = options.contractAddr
 const bidId: string = options.bidId
 
 // Define Types
@@ -43,9 +43,9 @@ interface BidResponse {
 }
 
 async function getBidDetails(bidID: bigint) {
-const rpc = new ethers.JsonRpcProvider(rpcAddr)
+  const rpc = await createProviderWithRetry(options.rpcUrl, { pollingInterval: 1000 })
+  const contract = SimpleAuction__factory.connect(options.contractAddr, rpc)
 
-const contract = SimpleAuction__factory.connect(contractAddr, rpc)
   // Call the getBidWithBidID function
   const bidDetails = await contract.getBidWithBidID(bidID);
 
@@ -63,7 +63,7 @@ const contract = SimpleAuction__factory.connect(contractAddr, rpc)
 
   // Log the values for inspection
   console.log('Sealed Amount:', {
-    U: {x: sealedAmount.u.x, y: sealedAmount.u.y},
+    U: { x: sealedAmount.u.x, y: sealedAmount.u.y },
     V: sealedAmount.v,
     W: sealedAmount.w
   });

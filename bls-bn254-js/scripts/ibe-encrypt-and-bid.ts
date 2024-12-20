@@ -1,9 +1,8 @@
-import { ethers, AbiCoder, getBytes, Interface, EventFragment, TransactionReceipt, Result } from 'ethers'
-import { encrypt_towards_identity_g1, IbeOpts, G2, Ciphertext } from '../src'
+import { ethers, AbiCoder, getBytes, Interface, EventFragment, TransactionReceipt, Result, Wallet, NonceManager } from 'ethers'
+import { encrypt_towards_identity_g1, IbeOpts, G2, Ciphertext, createProviderWithRetry } from '../src'
 import { Command, Option } from 'commander'
 import { keccak_256 } from "@noble/hashes/sha3"
 import { SimpleAuction__factory } from "../src/generated"
-import { TypesLib as BlocklockTypes } from "../src/generated/BlocklockSender"
 
 // Encrypt message with Identity-based Encryption (IBE)
 //
@@ -21,6 +20,7 @@ program
   .requiredOption('--blocknumber <blocknumber>', 'Block number when message can be decrypted')
   .addOption(new Option("--rpc-url <rpc-url>", "The websockets/HTTP URL to connect to the blockchain from")
     .default(defaultRPC)
+    .env("RPC_URL")
   )
   .requiredOption('--privateKey <privateKey>', 'Private key used to send transaction as required to blockchain network')
   .requiredOption('--contractAddr <contractAddr>', 'Deployed auction smart contract address required to blockchain network')
@@ -31,8 +31,6 @@ program.parse(process.argv)
 const options = program.opts()
 const message: string = options.message
 const blocknumber: string = options.blocknumber
-const rpcAddr: string = options.rpcURL
-const privateKey: string = options.privateKey
 const contractAddr: string = options.contractAddr
 
 const BLOCKLOCK_DEFAULT_PUBLIC_KEY = {
@@ -92,8 +90,8 @@ async function encryptAndRegister(
   ct: Ciphertext;
 }> {
   const ct = encrypt(message, blockHeight, pk);
-  const rpc = new ethers.JsonRpcProvider(rpcAddr)
-  const wallet = new ethers.Wallet(privateKey, rpc)
+  const rpc = await createProviderWithRetry(options.rpcUrl, {pollingInterval: 1000})
+  const wallet = new NonceManager(new Wallet(options.privateKey, rpc))
 
   const auctionContract = SimpleAuction__factory.connect(contractAddr, rpc)
 
