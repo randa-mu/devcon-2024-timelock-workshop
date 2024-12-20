@@ -6,7 +6,7 @@ import { Command, Option } from 'commander'
 // Fetches sealed bid data from a sealed bid auction smart contract deployed at contractAddr address
 
 // example usage
-// npm run timelock:get-bid -- --contractAddr  0x7eeeb0bd9d94d989b956052ebf8a351c52949a0d --bidId 1
+// npm run timelock:get-bid -- --contractAddr  0x5756f8502fcfb571d695c446f72b229c249ce0e6 --bidId 1
 
 // Define the CLI command and arguments using `commander`
 const program = new Command()

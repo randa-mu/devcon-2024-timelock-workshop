@@ -55,7 +55,7 @@ docker compose logs blocklock
 ```
 
 At the end of the smart contract deployment process, we will see the following deployment configurations for the Simple Auction smart contract as part of the logs in the timelock agent console:
-   - auction contract deployed to `0x7eeeb0bd9d94d989b956052ebf8a351c52949a0d`
+   - auction contract deployed to `0x5756f8502fcfb571d695c446f72b229c249ce0e6`
    - auction end block `57`
 
 We can also check the logs for the other services, e.g., `anvil`, by running the following command, 
@@ -79,7 +79,7 @@ docker exec -it bls-bn254-js-container bash
 
 1. **Encrypt and place a bid for Bidder A (3 ETH)**:
    ```bash
-   npm run timelock:encrypt-and-bid -- --message 3 --blocknumber 57 --rpc-url $RPC_URL --privateKey 0xd4153f5547461a9f34a6da4de803c651c19794f62375d559a888b0d7aac38b63 --contractAddr 0x7eeeb0bd9d94d989b956052ebf8a351c52949a0d
+   npm run timelock:encrypt-and-bid -- --message 3 --blocknumber 57 --rpc-url $RPC_URL --privateKey 0xd4153f5547461a9f34a6da4de803c651c19794f62375d559a888b0d7aac38b63 --contractAddr 0x5756f8502fcfb571d695c446f72b229c249ce0e6
    ```
    - This will generate the ciphertext to use for Bidder A’s sealed bid with the auction ending block number to ensure that the bid amount can only be decrypted once this block has been mined. Please make note of it.
 
@@ -90,7 +90,7 @@ docker exec -it bls-bn254-js-container bash
 
 2. **Encrypt and place a bid for Bidder B (4 ETH)**:
    ```bash
-   npm run timelock:encrypt-and-bid -- --message 4 --blocknumber 57 --rpc-url $RPC_URL --privateKey 0x36fba493641ed3b3272d62025652558120c372e26c6ae38f403549508da81ec9 --contractAddr 0x7eeeb0bd9d94d989b956052ebf8a351c52949a0d
+   npm run timelock:encrypt-and-bid -- --message 4 --blocknumber 57 --rpc-url $RPC_URL --privateKey 0x36fba493641ed3b3272d62025652558120c372e26c6ae38f403549508da81ec9 --contractAddr 0x5756f8502fcfb571d695c446f72b229c249ce0e6
    ```
    - This generates the ciphertext for Bidder B's bid amount of 4 ether, making Bidder B the highest bidder. Please make note of it.
 
@@ -99,14 +99,14 @@ docker exec -it bls-bn254-js-container bash
 1. **View sealed bids**:
    - For **Bidder A** with bidID 1:
      ```bash
-     npm run timelock:get-bid -- --contractAddr  0x7eeeb0bd9d94d989b956052ebf8a351c52949a0d --bidId 1
+     npm run timelock:get-bid -- --contractAddr  0x5756f8502fcfb571d695c446f72b229c249ce0e6 --bidId 1
      ```
    
    Based on the output for the decryptionKey being `0x`, we can see that the timelock agent has not yet passed the decryption key back to the smart contract. This is because the block number for decryption (auction ending block number `57`) has not reached.
    
    We can repeat the step above to get the current on-chain bid data for **Bidder B** but changing the bidID to 2, i.e., 
    ```bash
-   npm run timelock:get-bid -- --contractAddr  0x7eeeb0bd9d94d989b956052ebf8a351c52949a0d --bidId 2
+   npm run timelock:get-bid -- --contractAddr  0x5756f8502fcfb571d695c446f72b229c249ce0e6 --bidId 2
    ```
 
 ### Step 4: Skip to blocks to end the auction
@@ -131,13 +131,14 @@ When we check the logs for the timelock service:
 docker compose logs blocklock
 ```
 we should see a new transaction being sent at block `58` in the Anvil blockchain logs as well as the following logs in the timelock agent console showing that the timelock encryption agent has now signed the Ciphertexts from the two earlier sealed bid events and sent the decryption key to the `SignatureSender` smart contract which forwards the signature to the `SimpleAuction` smart contract via the `BlocklockSender` contract:
-     ```
-     creating a timelock signature for block 57
-     fulfilling signature request 1
-     fulfilling signature request 2
-     fulfilled signature request
-     fulfilled signature request
-     ```
+
+   ```bash
+   creating a timelock signature for block 57
+   fulfilling signature request 1
+   fulfilling signature request 2
+   fulfilled signature request
+   fulfilled signature request
+   ```
 
 The transaction sent will also update the auction state to `Ended` to end the auction on-chain.
 
@@ -152,7 +153,7 @@ docker exec -it bls-bn254-js-container bash
 1. **View unsealed bids**:
    - Retrieve and decode data for Bidder A to view the `decryptionKey` and check the `revealed` status and `unsealedAmount`:
      ```bash
-     npm run timelock:get-bid -- --contractAddr  0x7eeeb0bd9d94d989b956052ebf8a351c52949a0d --bidId 1
+     npm run timelock:get-bid -- --contractAddr  0x5756f8502fcfb571d695c446f72b229c249ce0e6 --bidId 1
      ```
 
    This should return five outputs on separate lines. These are:
@@ -172,7 +173,7 @@ docker exec -it bls-bn254-js-container bash
 
 2. **View highest bid amount and highest Bidder Address**:
    ```bash
-   cast call 0x7eeeb0bd9d94d989b956052ebf8a351c52949a0d "getHighestBid()" --rpc-url $RPC_URL
+   cast call 0x5756f8502fcfb571d695c446f72b229c249ce0e6 "getHighestBid()" --rpc-url $RPC_URL
    ```
 
    Decode the output from the above command:
@@ -183,7 +184,7 @@ docker exec -it bls-bn254-js-container bash
 
    Next, let us get the address of the highest bidder from the auction smart contract:
    ```bash
-   cast call 0x7eeeb0bd9d94d989b956052ebf8a351c52949a0d "getHighestBidder()" --rpc-url $RPC_URL
+   cast call 0x5756f8502fcfb571d695c446f72b229c249ce0e6 "getHighestBidder()" --rpc-url $RPC_URL
    ```
 
    Decode the output from the above command:
