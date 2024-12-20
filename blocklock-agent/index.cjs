@@ -68256,11 +68256,18 @@ async function createProviderWithRetry(url, options2 = {}, maxRetries = 20, retr
   }, "Connection failed. Retrying...", maxRetries, retryDelay);
 }
 async function connectDeployer(address, signer) {
-  return withTimeout(
-    Deployer__factory.connect(address, signer).waitForDeployment(),
-    3e4,
-    "Deployer did not deploy as expected..."
-  );
+  const POLL_INTERVAL = 5e3;
+  while (true) {
+    try {
+      const deployer = Deployer__factory.connect(address, signer);
+      await deployer.waitForDeployment();
+      console.log("Successfully connected to Deployer contract!");
+      return deployer;
+    } catch (error) {
+      console.log("Failed to connect, retrying in 5 seconds...");
+    }
+    await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL));
+  }
 }
 async function withRetry(fn, retryMessage = "retrying...", maxRetries = 20, retryDelay = 1e3) {
   try {
@@ -68334,16 +68341,6 @@ function getCreate2Address3({
 async function isDeployed(address, provider) {
   const code = await provider.getCode(address);
   return code.slice(2).length > 0;
-}
-
-// ../bls-bn254-js/src/index.ts
-function withTimeout(inner, timeoutMs, message = "timed out") {
-  return Promise.race([
-    inner,
-    new Promise(
-      (_, reject) => setTimeout(() => reject(message), timeoutMs)
-    )
-  ]);
 }
 
 // src/deployments.ts
