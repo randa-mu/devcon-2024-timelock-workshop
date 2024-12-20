@@ -31,12 +31,7 @@ jobs:
 
       # Install Foundry (Forge and Cast)
       - name: Install Foundry
-        run: |
-          curl -L https://foundry.paradigm.xyz | bash
-          # Add foundryup to PATH and source it to update the environment for the current shell
-          source $HOME/.foundry/bin/foundryup
-          # Check if Foundry is installed correctly
-          foundry --version
+        uses: foundry-rs/foundry-toolchain@v1
 
       # Install Node.js dependencies
       - name: Install dependencies
