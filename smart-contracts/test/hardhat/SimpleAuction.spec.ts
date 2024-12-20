@@ -514,11 +514,9 @@ describe("SimpleAuction Contract", function () {
     const sigBytes = AbiCoder.defaultAbiCoder().encode(["uint256", "uint256"], [sig[0], sig[1]]);
 
     // receive decryption key after auction end block
+    // this step also decrypts the sealed bid
     const decryption_key = preprocess_decryption_key_g1(parsedCiphertext, { x: sig[0], y: sig[1] }, BLOCKLOCK_IBE_OPTS);
     await decryptionSender.connect(owner).fulfilDecryptionRequest(requestID, decryption_key, sigBytes);
-
-    // reveal bid with decryption key
-    await auction.revealBid(requestID);
 
     let bid1 = await auction.getBidWithBidID(requestID);
     expect(bid1.unsealedAmount).to.be.equal(msg);
@@ -620,10 +618,6 @@ describe("SimpleAuction Contract", function () {
       BLOCKLOCK_IBE_OPTS,
     );
     await decryptionSender.connect(owner).fulfilDecryptionRequest(requestID2, decryption_key2, sigBytes);
-
-    // reveal bid with decryption key
-    await auction.revealBid(requestID1);
-    await auction.revealBid(requestID2);
 
     let bid1 = await auction.getBidWithBidID(requestID1);
     expect(bid1.unsealedAmount).to.be.equal(bidAmount1);

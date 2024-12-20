@@ -129,7 +129,6 @@ contract SimpleAuctionTest is Test {
 
         decryptionSender.fulfilDecryptionRequest(bidID, decryptionKeyBidder1, signatureBidder1);
 
-        auction.revealBid(bidID);
         vm.stopPrank();
 
         (,, uint256 unsealedAmount, address bidderAddressWithBidID,) = auction.getBidWithBidID(bidID);
@@ -158,9 +157,6 @@ contract SimpleAuctionTest is Test {
 
         decryptionSender.fulfilDecryptionRequest(bidID1, decryptionKeyBidder1, signatureBidder1);
 
-        // Reveal the bids
-        auction.revealBid(bidID1);
-
         vm.stopPrank();
 
         // Bidder fulfills the highest bid
@@ -186,9 +182,6 @@ contract SimpleAuctionTest is Test {
         vm.startPrank(auctioneer);
 
         decryptionSender.fulfilDecryptionRequest(bidID1, decryptionKeyBidder1, signatureBidder1);
-
-        // Reveal the bids
-        auction.revealBid(bidID1);
 
         vm.stopPrank();
 
@@ -220,9 +213,6 @@ contract SimpleAuctionTest is Test {
         vm.startPrank(auctioneer);
 
         decryptionSender.fulfilDecryptionRequest(bidID1, decryptionKeyBidder1, signatureBidder1);
-
-        // Reveal the bids
-        auction.revealBid(bidID1);
 
         vm.stopPrank();
 

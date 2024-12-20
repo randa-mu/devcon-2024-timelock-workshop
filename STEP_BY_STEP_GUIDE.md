@@ -1,6 +1,6 @@
 # Developer Workshop: Secure Sealed-Bid Auction with Timelock Encryption
 
-In this workshop, we are working with a **Simple Auction Smart Contract** that utilizes **sealed bids** and **timelock encryption** for enhanced security and privacy.
+In this workshop, we will be working with a **Simple Auction Smart Contract** that utilizes **sealed bids** and **timelock encryption** for enhanced security and privacy.
 
 #### Key Concepts:
 
@@ -46,7 +46,7 @@ docker exec -it bls-bn254-js-container bash
 
 The run the following command to deploy the factory contract:
 ```bash
-cd .. && forge create smart-contracts/src/deployer/Deployer.sol:Deployer --private-key 0xe46f7a0c8e6110e8386242cad3491bd38fb794a28dfa751e826a03c8818fe282 --rpc-url $RPC_URL && exit
+cd .. && forge create smart-contracts/src/deployer/Deployer.sol:Deployer --private-key 0xe46f7a0c8e6110e8386242cad3491bd38fb794a28dfa751e826a03c8818fe282 --rpc-url $RPC_URL --broadcast && exit
 ```
 
 Let us check that the rest of the contracts are deployed via the factory contract by running the following command: 
@@ -149,7 +149,7 @@ Let's return to our `bls-bns245-js` interactive terminal window:
 docker exec -it bls-bn254-js-container bash
 ```
 
-1. **View bid data with decryption key**:
+1. **View unsealed bids**:
    - Retrieve and decode data for Bidder A to view the `decryptionKey` and check the `revealed` status and `unsealedAmount`:
      ```bash
      npm run timelock:get-bid -- --contractAddr  0x7eeeb0bd9d94d989b956052ebf8a351c52949a0d --bidId 1
@@ -162,42 +162,15 @@ docker exec -it bls-bn254-js-container bash
       * `address bidder` - the wallet address of the bidder.
       * `bool revealed` - a boolean true or false indicating whether the bid has been unsealed or not.
 
-   We can now see that the decryptionKey has been sent to the auction smart contract after the auction end block number was identified by the timelock agent. The decryptionKey is no longer an empty byte string `0x`. Using the ciphertext and decryption key from the output above, we can decrypt the sealed bid on-chain to reveal the bid amount and confirm that the amount is the same as the amounts we encrypted to ciphertexts earlier for each bidder - Bidder A and Bidder B.
+   We can now see that the decryptionKey has been sent to the auction smart contract after the auction end block number was identified by the timelock agent. The decryptionKey is no longer an empty byte string `0x`. 
+   The unsealedAmount is also in plain text and no longer zero and bool revealed is now true.
 
-2. **Decrypt bid amounts with decryption keys (i.e., signature over the Ciphertext)**:
-
-   Firstly, for Bidder A with bid Id 1:
-   ```bash
-   cast send 0x7eeeb0bd9d94d989b956052ebf8a351c52949a0d "revealBid(uint256)" 1 --private-key 0xd4153f5547461a9f34a6da4de803c651c19794f62375d559a888b0d7aac38b63 --rpc-url $RPC_URL
-   ```
-
-   When we decrypt the sealed bid for Bidder A with Bid ID 1 we should now see the unsealed bid amount in plaintext when we fetch the associated bid data again:
-   ```bash
-   npm run timelock:get-bid -- --contractAddr  0x7eeeb0bd9d94d989b956052ebf8a351c52949a0d --bidId 1
-   ```
-
-   If we convert the decrypted value from wei to ether for Bidder A, we should get 3 ether which we encrypted as wei earlier for Bidder A in Step 2.
+   We can also convert the decrypted bid amount from wei to ether to verify that is the same ether amount that was encrypted earlier, e.g.,:
    ```bash
    cast from-wei 3000000000000000000
    ```
 
-   We can repeat the same steps for Bidder B's sealed bid with bid Id 2 and Bidder B's private key (*note that anyone can call the reveal bid function as the decryption key is now on-chain*).
-
-   ```bash
-   cast send 0x7eeeb0bd9d94d989b956052ebf8a351c52949a0d "revealBid(uint256)" 2 --private-key 0x36fba493641ed3b3272d62025652558120c372e26c6ae38f403549508da81ec9 --rpc-url $RPC_URL
-   ```
-
-   When we decrypt the sealed bid for Bidder B with Bid ID 2 we should now see the unsealed bid amount in plaintext when we fetch the associated bid data again:
-   ```bash
-   npm run timelock:get-bid -- --contractAddr  0x7eeeb0bd9d94d989b956052ebf8a351c52949a0d --bidId 2
-   ```
-
-   Convert decrypted bid amount from wei to ether:
-   ```bash
-   cast from-wei 4000000000000000000
-   ```
-
-3. **View highest bid amount and highest Bidder Address**:
+2. **View highest bid amount and highest Bidder Address**:
    ```bash
    cast call 0x7eeeb0bd9d94d989b956052ebf8a351c52949a0d "getHighestBid()" --rpc-url $RPC_URL
    ```
