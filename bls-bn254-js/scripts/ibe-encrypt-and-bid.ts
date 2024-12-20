@@ -5,10 +5,9 @@ import { keccak_256 } from "@noble/hashes/sha3"
 import { SimpleAuction__factory } from "../src/generated"
 
 // Encrypt message with Identity-based Encryption (IBE)
-//
-// Usage
-//  yarn timelock:encrypt-and-bid --message "plaintext message to timelock encrypt, i.e., bid amount" --blocknumber "block number when message can be decrypted"
-// yarn timelock:encrypt-and-bid --message 3 --blocknumber 57 --rpcURL http://localhost:8545 --privateKey 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --contractAddr 0x9ffbd8531ac770df4ed8fcd02d76d328ee6cad91
+
+// Example usage
+// npm run timelock:encrypt-and-bid -- --message 3 --blocknumber 57 --rpc-url $RPC_URL --privateKey 0xd4153f5547461a9f34a6da4de803c651c19794f62375d559a888b0d7aac38b63 --contractAddr 0x7eeeb0bd9d94d989b956052ebf8a351c52949a0d
 
 // Define the CLI command and arguments using `commander`
 const program = new Command()
