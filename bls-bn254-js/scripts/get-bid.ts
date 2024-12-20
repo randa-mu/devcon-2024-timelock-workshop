@@ -12,6 +12,7 @@ program
     .default(defaultRPC)
   )
   .requiredOption('--contractAddr <contractAddr>', 'Deployed auction smart contract address required to blockchain network')
+  .requiredOption('--bidId <bid id>', 'Identifier assigned to the bid')
 
 program.parse(process.argv)
 
@@ -19,6 +20,7 @@ program.parse(process.argv)
 const options = program.opts()
 const rpcAddr: string = options.rpcURL
 const contractAddr: string = options.contractAddr
+const bidId: string = options.bidId
 
 // Define Types
 interface PointG2 {
@@ -60,8 +62,11 @@ const contract = SimpleAuction__factory.connect(contractAddr, rpc)
   const decryptionKeyBytes = ethers.hexlify(decryptionKey); // Convert hex to byte array
 
   // Log the values for inspection
-  console.log('Sealed Amount u.x:', sealedAmount.u.x);
-  console.log('Sealed Amount u.y:', sealedAmount.u.y);
+  console.log('Sealed Amount:', {
+    U: {x: sealedAmount.u.x, y: sealedAmount.u.y},
+    V: sealedAmount.v,
+    W: sealedAmount.w
+  });
   console.log('Decryption Key:', decryptionKeyBytes);
   console.log('Unsealed Amount:', unsealedAmount);
   console.log('Bidder Address:', bidder);
@@ -69,5 +74,5 @@ const contract = SimpleAuction__factory.connect(contractAddr, rpc)
 }
 
 // Usage (assuming `contract` is already instantiated with the ABI)
-const bidID = BigInt('1'); // Example bidID
+const bidID = BigInt(bidId); // Example bidID
 getBidDetails(bidID);
