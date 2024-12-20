@@ -112,9 +112,20 @@ async function encryptAndRegister(
     iface.getEvent("NewBid"),
   );
 
+  const u: { x: [bigint, bigint], y: [bigint, bigint] } = {
+    x: [ct.U.x.c0, ct.U.x.c1],
+    y: [ct.U.y.c0, ct.U.y.c1]
+  }
+
+  const ciphertextObj = {
+    U: u,
+    V: `0x${ct.V.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '')}`,
+    W: `0x${ct.W.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '')}`
+  }
+
   console.log(`Bid id and timelock request id: ${bidID}`)
-  console.log(`Bid transaction receipt: ${JSON.stringify(receipt, null, 2)}`)
-  console.log(`Ciphertext: ${JSON.stringify(ct, null, 2)}`)
+  console.log(`Bid transaction hash: ${receipt.hash}`)
+  console.log("Ciphertext:", ciphertextObj)
 
   return {
     id: bidID.toString(),
