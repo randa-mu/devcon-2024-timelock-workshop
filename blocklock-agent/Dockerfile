@@ -23,51 +23,16 @@ RUN curl -L https://foundry.paradigm.xyz | bash
 ENV PATH="/root/.foundry/bin:${PATH}"
 RUN foundryup
 
-# Install Moon binary
-RUN curl -fsSL https://moonrepo.dev/install/moon.sh | bash
-ENV PATH="/root/.moon/bin:$PATH"
-
-#### SKELETON STAGE
-#### Scaffolds repository skeleton structures.
-
-FROM base AS skeleton
-
 # Copy the entire repository and scaffold
 COPY . .
 COPY /.git ./.
-RUN moon docker scaffold blocklock-agent
 
-#### BUILD STAGE
-#### Builds the project.
+RUN npm i 
 
-FROM base AS build
-
-# Copy toolchain from skeleton
-COPY --from=skeleton /root/.proto /root/.proto
-
-# Copy workspace configs
-COPY --from=skeleton /app/.moon/docker/workspace .
-
-# Install project dependencies
-RUN moon docker setup
-
-# Copy project sources from skeleton
-COPY --from=skeleton /app/.moon/docker/sources .
-COPY --from=skeleton /app/.git /app/.git
-
-# Build the project
-RUN moon run blocklock-agent:build
+RUN npm run build:all
 
 # Prune extraneous dependencies
 RUN rm -rf /root/.npm/_logs/* && npm cache clean --force
 
-#### START STAGE
-#### Runs the project.
-
-FROM base AS start
-
-# Copy the built project to the start stage
-COPY --from=build /app/blocklock-agent/index.cjs /app/index.cjs
-
 # Define the command to run the application
-CMD ["node", "/app/index.cjs"]
+CMD ["node", "/app/blocklock-agent/index.cjs"]

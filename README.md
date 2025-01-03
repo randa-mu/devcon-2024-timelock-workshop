@@ -65,10 +65,11 @@ Follow these steps to set up your local environment for the workshop:
     ```bash
     docker compose up -d
     ```
+
     Docker Compose will automatically:
-    - Create all required images.
-    - Build the services as needed.
-    - Set up networks and containers.
+        - Create all required images.
+        - Build the services as needed.
+        - Set up networks and containers.
 
 3. **Verify Running Containers
 To check that all services are running correctly, use**:

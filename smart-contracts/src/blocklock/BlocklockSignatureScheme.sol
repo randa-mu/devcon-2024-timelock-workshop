@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.28;
+pragma solidity 0.8.24;
 
 import {BLS} from "../lib/BLS.sol";
 import {ISignatureScheme} from "../interfaces/ISignatureScheme.sol";
@@ -8,7 +8,7 @@ contract BlocklockSignatureScheme is ISignatureScheme {
     using BLS for bytes;
 
     string public constant SCHEME_ID = "BN254-BLS-BLOCKLOCK";
-    bytes public constant DST = bytes("IBE_BN254G1_XMD:KECCAK-256_SVDW_RO_H1_");
+    bytes public constant DST = bytes("BLOCKLOCK_BN254G1_XMD:KECCAK-256_SVDW_RO_H1_");
 
     /**
      * @dev See {ISignatureScheme-verifySignature}.

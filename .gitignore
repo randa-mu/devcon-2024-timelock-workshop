@@ -1,3 +1,7 @@
+# moon
+.moon/cache
+.moon/docker
+
 # Logs
 logs
 *.log

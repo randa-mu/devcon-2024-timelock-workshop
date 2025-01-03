@@ -23,54 +23,18 @@ RUN curl -L https://foundry.paradigm.xyz | bash
 ENV PATH="/root/.foundry/bin:${PATH}"
 RUN foundryup
 
-# Install Moon binary
-RUN curl -fsSL https://moonrepo.dev/install/moon.sh | bash
-ENV PATH="/root/.moon/bin:$PATH"
-
 # Copy the entire repository to /app in the container
 COPY . .
 
-#### SKELETON STAGE
-#### Scaffolds repository skeleton structures.
+RUN npm i 
 
-FROM base AS skeleton
-
-# Scaffold the repository using Moon
-RUN moon docker scaffold bls-bn254-js
-
-#### BUILD STAGE
-#### Builds the project.
-
-FROM base AS build
-
-# Copy toolchain from skeleton
-COPY --from=skeleton /root/.proto /root/.proto
-
-# Copy workspace configs
-COPY --from=skeleton /app/.moon/docker/workspace .
-
-# Install project dependencies
-RUN moon docker setup
+RUN npm run build:all
 
 # Install the esbuild package
 RUN npm install -g esbuild
 
-# Copy project sources from skeleton
-COPY --from=skeleton /app/.moon/docker/sources .
-
-# Build the project
-RUN moon run bls-bn254-js:build
-
 # Prune extraneous dependencies
 RUN rm -rf /root/.npm/_logs/* && npm cache clean --force
-
-#### START STAGE
-#### Runs the project.
-
-FROM base AS start
-
-# Copy the built project to the start stage
-COPY --from=build /app/bls-bn254-js /app/bls-bn254-js
 
 # Set working directory for users to execute commands
 WORKDIR /app/bls-bn254-js

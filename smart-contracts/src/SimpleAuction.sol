@@ -1,15 +1,17 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.28;
+pragma solidity 0.8.24;
 
+import {TypesLib} from "./lib/TypesLib.sol";
 import {SimpleAuctionBase} from "./SimpleAuctionBase.sol";
 
 contract SimpleAuction is SimpleAuctionBase {
     constructor(
+        address owner,
         uint256 durationBlocks,
         uint256 reservePrice,
         uint256 highestBidPaymentWindowBlocks,
         address timelockContract
-    ) SimpleAuctionBase(durationBlocks, reservePrice, highestBidPaymentWindowBlocks, timelockContract) {}
+    ) SimpleAuctionBase(owner, durationBlocks, reservePrice, highestBidPaymentWindowBlocks, timelockContract) {}
 
     /**
      * @notice Submits a sealed bid in the ongoing auction, uniquely identified and linked to the sender.
@@ -42,7 +44,7 @@ contract SimpleAuction is SimpleAuctionBase {
      * @param sealedAmount A `bytes` value representing the encrypted bid amount, ensuring bid privacy.
      * @return bidID The unique identifier generated for the submitted bid.
      */
-    function sealedBid(bytes calldata sealedAmount)
+    function sealedBid(TypesLib.Ciphertext calldata sealedAmount)
         external
         payable
         override

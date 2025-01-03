@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.28;
+pragma solidity 0.8.24;
 
 import "../lib/TypesLib.sol";
 
@@ -10,7 +10,9 @@ interface IBlocklockSender {
      * The blocklock decryption key will be generated once the chain reaches the specified `blockHeight`.
      * @return requestID The unique identifier assigned to this blocklock request.
      */
-    function requestBlocklock(uint256 blockHeight, bytes calldata ciphertext) external returns (uint256 requestID);
+    function requestBlocklock(uint256 blockHeight, TypesLib.Ciphertext calldata ciphertext)
+        external
+        returns (uint256 requestID);
 
     /**
      * @notice Retrieves a specific request by its ID.
@@ -19,4 +21,14 @@ interface IBlocklockSender {
      * @return The Request struct corresponding to the given requestId.
      */
     function getRequest(uint256 requestId) external view returns (TypesLib.BlocklockRequest memory);
+
+    /**
+     * Decrypt a ciphertext into a plaintext using a decryption key.
+     * @param ciphertext The ciphertext to decrypt.
+     * @param decryptionKey The decryption key that can be used to decrypt the ciphertext.
+     */
+    function decrypt(TypesLib.Ciphertext calldata ciphertext, bytes calldata decryptionKey)
+        external
+        view
+        returns (bytes memory);
 }

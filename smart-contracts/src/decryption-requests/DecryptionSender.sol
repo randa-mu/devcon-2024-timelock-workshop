@@ -3,10 +3,14 @@ pragma solidity 0.8.24;
 
 import {BLS} from "../lib/BLS.sol";
 import {TypesLib} from "../lib/TypesLib.sol";
+import {console} from "forge-std/console.sol";
 import {BytesLib} from "../lib/BytesLib.sol";
 
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {Multicall} from "@openzeppelin/contracts/utils/Multicall.sol";
+
+import {IDecryptionSender} from "../interfaces/IDecryptionSender.sol";
+import {IDecryptionReceiver} from "../interfaces/IDecryptionReceiver.sol";
 
 import {ISignatureReceiver} from "../interfaces/ISignatureReceiver.sol";
 import {ISignatureSender} from "../interfaces/ISignatureSender.sol";
@@ -16,29 +20,28 @@ import {ISignatureSchemeAddressProvider} from "../interfaces/ISignatureSchemeAdd
 /// @notice Smart Contract for Conditional Threshold Signing of messages sent within signature requests.
 /// by contract addresses implementing the SignatureReceiverBase abstract contract which implements the ISignatureReceiver interface.
 /// @notice Signature requests can also be made for requests requiring immediate signing of messages as the conditions are optional.
-contract SignatureSender is ISignatureSender, AccessControl, Multicall {
+contract DecryptionSender is IDecryptionSender, AccessControl, Multicall {
     using BytesLib for bytes;
 
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
     uint256 public lastRequestID = 0;
     BLS.PointG2 private publicKey = BLS.PointG2({x: [uint256(0), uint256(0)], y: [uint256(0), uint256(0)]});
-    mapping(uint256 => TypesLib.SignatureRequest) public requestsInFlight;
+    mapping(uint256 => TypesLib.DecryptionRequest) public requestsInFlight;
 
     ISignatureSchemeAddressProvider public immutable signatureSchemeAddressProvider;
 
-    event SignatureRequested(
+    event DecryptionRequested(
         uint256 indexed requestID,
         address indexed callback,
         string schemeID,
-        bytes message,
-        bytes messageHashToSign,
         bytes condition,
+        bytes ciphertext,
         uint256 requestedAt
     );
-    event SignatureRequestFulfilled(uint256 indexed requestID);
+    event DecryptionReceiverCallbackSuccess(uint256 indexed requestID, bytes decryptionKey, bytes signature);
 
-    error SignatureCallbackFailed(uint256 requestID);
+    error DecryptionReceiverCallbackFailed(uint256 requestID);
 
     modifier onlyOwner() {
         _checkRole(ADMIN_ROLE);
@@ -57,16 +60,16 @@ contract SignatureSender is ISignatureSender, AccessControl, Multicall {
     }
 
     /**
-     * @dev See {ISignatureSender-requestSignature}.
+     * @dev See {IDecryptionSender-registerCiphertext}.
      */
-    function requestSignature(string calldata schemeID, bytes calldata message, bytes calldata condition)
+    function registerCiphertext(string calldata schemeID, bytes calldata ciphertext, bytes calldata condition)
         external
         returns (uint256)
     {
         lastRequestID += 1;
 
         require(signatureSchemeAddressProvider.isSupportedScheme(schemeID), "Signature scheme not supported");
-        require(message.isLengthWithinBounds(1, 4096), "Message failed length bounds check");
+        require(ciphertext.isLengthWithinBounds(1, 4096), "Message failed length bounds check");
         // condition is optional
         require(condition.isLengthWithinBounds(0, 4096), "Condition failed length bounds check");
         uint256 conditionLength = condition.length;
@@ -75,74 +78,78 @@ contract SignatureSender is ISignatureSender, AccessControl, Multicall {
         }
 
         address schemeContractAddress = signatureSchemeAddressProvider.getSignatureSchemeAddress(schemeID);
-        ISignatureScheme sigScheme = ISignatureScheme(schemeContractAddress);
-        bytes memory messageHash = sigScheme.hashToBytes(message);
+        require(schemeContractAddress > address(0), "invalid signature scheme");
 
-        requestsInFlight[lastRequestID] = TypesLib.SignatureRequest({
-            callback: msg.sender,
-            message: message,
-            messageHash: messageHash,
+        requestsInFlight[lastRequestID] = TypesLib.DecryptionRequest({
+            schemeID: schemeID,
+            ciphertext: ciphertext,
             condition: condition,
-            schemeID: schemeID
+            decryptionKey: hex"",
+            signature: hex"",
+            callback: msg.sender
         });
 
-        emit SignatureRequested(lastRequestID, msg.sender, schemeID, message, messageHash, condition, block.timestamp);
+        emit DecryptionRequested(lastRequestID, msg.sender, schemeID, condition, ciphertext, block.timestamp);
+
         return lastRequestID;
     }
 
     /**
-     * @dev See {ISignatureSender-fulfilSignatureRequest}.
+     * @dev See {IDecryptionSender-fulfilSignatureRequest}.
      */
-    function fulfilSignatureRequest(uint256 requestID, bytes calldata signature) external onlyOwner {
+    function fulfilDecryptionRequest(uint256 requestID, bytes calldata decryptionKey, bytes calldata signature)
+        external
+        onlyOwner
+    {
         require(isInFlight(requestID), "No request with specified requestID");
-        TypesLib.SignatureRequest memory request = requestsInFlight[requestID];
+        TypesLib.DecryptionRequest memory request = requestsInFlight[requestID];
 
         string memory schemeID = request.schemeID;
-
         address schemeContractAddress = signatureSchemeAddressProvider.getSignatureSchemeAddress(schemeID);
+        require(schemeContractAddress > address(0), "invalid scheme");
+
         ISignatureScheme sigScheme = ISignatureScheme(schemeContractAddress);
-
-        require(
-            sigScheme.verifySignature(request.messageHash, signature, getPublicKeyBytes()),
-            "Signature verification failed"
-        );
-
+        bytes memory messageHash = sigScheme.hashToBytes(request.condition);
+        require(sigScheme.verifySignature(messageHash, signature, getPublicKeyBytes()), "Signature verification failed");
         (bool success,) = request.callback.call(
-            abi.encodeWithSelector(ISignatureReceiver.receiveSignature.selector, requestID, signature)
+            abi.encodeWithSelector(
+                IDecryptionReceiver.receiveDecryptionData.selector, requestID, decryptionKey, signature
+            )
         );
+
         if (!success) {
-            revert SignatureCallbackFailed(requestID);
+            revert DecryptionReceiverCallbackFailed(requestID);
         } else {
-            emit SignatureRequestFulfilled(requestID);
+            emit DecryptionReceiverCallbackSuccess(requestID, decryptionKey, signature);
             delete requestsInFlight[requestID];
         }
     }
 
     /**
-     * @dev See {ISignatureSender-getPublicKey}.
+     * @dev See {IDecryptionSender-getPublicKey}.
      */
     function getPublicKey() public view returns (uint256[2] memory, uint256[2] memory) {
         return (publicKey.x, publicKey.y);
     }
 
     /**
-     * @dev See {ISignatureSender-getPublicKeyBytes}.
+     * @dev See {IDecryptionSender-getPublicKeyBytes}.
      */
     function getPublicKeyBytes() public view returns (bytes memory) {
         return BLS.g2Marshal(publicKey);
     }
 
     /**
-     * @dev See {ISignatureSender-isInFlight}.
+     * @dev See {IDecryptionSender-isInFlight}.
      */
     function isInFlight(uint256 requestID) public view returns (bool) {
         return requestsInFlight[requestID].callback != address(0);
     }
 
     /**
-     * @dev See {ISignatureSender-getRequestInFlight}.
+     * @dev See {IDecryptionSender-getRequestInFlight}.
      */
-    function getRequestInFlight(uint256 requestID) external view returns (TypesLib.SignatureRequest memory) {
+    function getRequestInFlight(uint256 requestID) external view returns (TypesLib.DecryptionRequest memory) {
         return requestsInFlight[requestID];
     }
 }

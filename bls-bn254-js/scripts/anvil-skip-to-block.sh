@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Usage:
-# ./anvil-skip-to-block 5 http://localhost:8545
+# ./anvil-skip-to-block.sh 57 http://localhost:8545
 
 # Check if target block number is passed as the first argument
 if [ -z "$1" ]; then

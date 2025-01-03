@@ -1,59 +1,70 @@
-import { bn254 as _bn254 } from '@noble/curves/bn254'
-import { psiFrobenius } from '@noble/curves/abstract/tower'
-import { BasicWCurve } from '@noble/curves/abstract/weierstrass'
-import { FpIsSquare } from '@noble/curves/abstract/modular'
-import { keccak_256 } from '@noble/hashes/sha3'
-import { randomBytes } from '@noble/hashes/utils'
-import { bls, CurveFn } from '@noble/curves/abstract/bls'
+import { bn254 as _bn254 } from "@noble/curves/bn254"
+import { psiFrobenius } from "@noble/curves/abstract/tower"
+import { BasicWCurve } from "@noble/curves/abstract/weierstrass"
+import { validateField, FpIsSquare } from "@noble/curves/abstract/modular"
+import { keccak_256 } from "@noble/hashes/sha3"
+import { randomBytes } from "@noble/hashes/utils"
+import { bls, CurveFn } from "@noble/curves/abstract/bls"
 
 // seed used by the cofactor clearing on G2
 const SEED = BigInt("4965661367192848881")
 
 // Create a SVDW mapping with constant parameters for G1
 const G1_SVDW = mapToCurveSVDW(_bn254.G1.CURVE, {
+    // Z = 1 satisfies the conditions described in https://datatracker.ietf.org/doc/html/rfc9380#svdw
+    z: _bn254.G1.CURVE.Fp.ONE,
+    // c1, c2, c3, c4 are the SvdW constants described in https://datatracker.ietf.org/doc/html/rfc9380#straightline-svdw
+    // c1 = g(Z)
     c1: _bn254.G1.CURVE.Fp.create(
         BigInt(4)
     ),
+    // c2 = -Z / 2
     c2: _bn254.G1.CURVE.Fp.create(
         BigInt(
             '10944121435919637611123202872628637544348155578648911831344518947322613104291'
         )
     ),
+    // c3 = sqrt(-g(Z) * (3 * Z^2 + 4 * A))     # sgn0(c3) MUST equal 0
     c3: _bn254.G1.CURVE.Fp.create(
         BigInt(
             '8815841940592487685674414971303048083897117035520822607866'
         )
     ),
+    // c4 = -4 * g(Z) / (3 * Z^2 + 4 * A)
     c4: _bn254.G1.CURVE.Fp.create(
         BigInt(
             '7296080957279758407415468581752425029565437052432607887563012631548408736189'
         )
     ),
-    z: _bn254.G1.CURVE.Fp.ONE,
 });
 
 // Create a SVDW mapping with constant parameters for G2
 const G2_SVDW = mapToCurveSVDW(_bn254.G2.CURVE, {
+    // Z = 1 satisfies the conditions described in https://datatracker.ietf.org/doc/html/rfc9380#svdw
+    z: _bn254.G2.CURVE.Fp.ONE,
+    // c1, c2, c3, c4 are the SvdW constants described in https://datatracker.ietf.org/doc/html/rfc9380#straightline-svdw
+    // c1 = g(Z)
     c1: _bn254.G2.CURVE.Fp.create(
         { c0: BigInt('19485874751759354771024239261021720505790618469301721065564631296452457478374'), c1: BigInt('266929791119991161246907387137283842545076965332900288569378510910307636690') }
     ),
+    // c2 = -Z / 2
     c2: _bn254.G2.CURVE.Fp.create(
         { c0: BigInt('10944121435919637611123202872628637544348155578648911831344518947322613104291'), c1: BigInt(0) }
     ),
+    // c3 = sqrt(-g(Z) * (3 * Z^2 + 4 * A))     # sgn0(c3) MUST equal 0
     c3: _bn254.G2.CURVE.Fp.create(
         { c0: BigInt('18992192239972082890849143911285057164064277369389217330423471574879236301292'), c1: BigInt('21819008332247140148575583693947636719449476128975323941588917397607662637108') }
     ),
+    // c4 = -4 * g(Z) / (3 * Z^2 + 4 * A)
     c4: _bn254.G2.CURVE.Fp.create(
         { c0: BigInt('10499238450719652342378357227399831140106360636427411350395554762472100376473'), c1: BigInt('6940174569119770192419592065569379906172001098655407502803841283667998553941') }
     ),
-    z: _bn254.G2.CURVE.Fp.ONE,
 });
 
 // Hash to field parameters for G1
 export const htfDefaultsG1 = Object.freeze({
     // DST: a domain separation tag defined in section 2.2.5
     DST: 'BN254G1_XMD:KECCAK-256_SVDW_RO_',
-    encodeDST: 'BN254G1_XMD:KECCAK-256_SVDW_RO_',
     p: _bn254.fields.Fp.ORDER,
     m: 1,
     k: 128,
@@ -65,14 +76,13 @@ export const htfDefaultsG1 = Object.freeze({
 export const htfDefaultsG2 = Object.freeze({
     // DST: a domain separation tag defined in section 2.2.5
     DST: 'BN254G2_XMD:KECCAK-256_SVDW_RO_',
-    encodeDST: 'BN254G2_XMD:KECCAK-256_SVDW_RO_',
     p: _bn254.fields.Fp.ORDER,
     m: 2,
     k: 128,
     expand: 'xmd',
     hash: keccak_256,
 } as const);
-  
+
 // Ψ endomorphism for BN254
 const { G2psi, G2psi2, psi } = psiFrobenius(_bn254.fields.Fp, _bn254.fields.Fp2, _bn254.fields.Fp2.create({ c0: BigInt(9), c1: BigInt(1) })) // 9 + i is the nonresidue
 
@@ -81,65 +91,75 @@ const { G2psi, G2psi2, psi } = psiFrobenius(_bn254.fields.Fp, _bn254.fields.Fp2,
  * Contains G1 / G2 operations and pairings.
  */
 export const bn254: CurveFn = bls({
-  // Fields
-  fields: { Fp: _bn254.fields.Fp, Fp2: _bn254.fields.Fp2, Fp6: _bn254.fields.Fp6, Fp12: _bn254.fields.Fp12, Fr: _bn254.fields.Fr },
-  G1: {
-    ..._bn254.G1.CURVE,
+    // Fields
+    fields: { Fp: _bn254.fields.Fp, Fp2: _bn254.fields.Fp2, Fp6: _bn254.fields.Fp6, Fp12: _bn254.fields.Fp12, Fr: _bn254.fields.Fr },
+    G1: {
+        ..._bn254.G1.CURVE,
+        htfDefaults: htfDefaultsG1,
+        ShortSignature: _bn254.ShortSignature,
+        mapToCurve: (scalars: bigint[]) => {
+            return G1_SVDW(_bn254.G1.CURVE.Fp.create(scalars[0]));
+        },
+    },
+    G2: {
+        ..._bn254.G2.CURVE,
+        htfDefaults: htfDefaultsG2,
+        mapToCurve: (scalars: bigint[]) => {
+            const u = _bn254.G2.CURVE.Fp.create(
+                { c0: scalars[0], c1: scalars[1] }
+            )
+            return G2_SVDW(u);
+        },
+        // Maps the point into the prime-order subgroup G2.
+        /// Based on http://cacr.uwaterloo.ca/techreports/2011/cacr2011-26.pdf, 6.1
+        /// Adapted from: https://github.com/nikkolasg/bn254_hash2curve/blob/5995e36149b0119fa2a97dfcc00758729f00cc93/src/hash2g2.rs#L291
+        clearCofactor: (c, P) => {
+            const x = SEED;
+            const p0 = P.multiplyUnsafe(x);           // [x]P
+            const p1 = G2psi(c, p0.add(p0.double())); // Ψ([3x]P)
+            const p2 = G2psi2(c, p0);                 // Ψ²([x]P)
+            const p3 = G2psi(c, G2psi2(c, P))         // Ψ³(P)
+            // [x]P + Ψ([3x]P) + Ψ²([x]P) + Ψ³(P)
+            return p0.add(p1.add(p2.add(p3)))
+        },
+        Signature: _bn254.Signature,
+    },
+    params: {
+        ..._bn254.params,
+        xNegative: false,
+        twistType: 'divisive',
+    },
     htfDefaults: htfDefaultsG1,
-    ShortSignature: _bn254.ShortSignature,
-    mapToCurve: (scalars: bigint[]) => {
-        return G1_SVDW(_bn254.G1.CURVE.Fp.create(scalars[0]));
-    },
-  },
-  G2: {
-    ..._bn254.G2.CURVE,
-    htfDefaults: htfDefaultsG2,
-    mapToCurve: (scalars: bigint[]) => {
-        const u = _bn254.G2.CURVE.Fp.create(
-            { c0: scalars[0], c1: scalars[1] }
-        )
-        return G2_SVDW(u);
-    },
-    // Maps the point into the prime-order subgroup G2.
-    /// Based on http://cacr.uwaterloo.ca/techreports/2011/cacr2011-26.pdf, 6.1
-    /// Adapted from: https://github.com/nikkolasg/bn254_hash2curve/blob/5995e36149b0119fa2a97dfcc00758729f00cc93/src/hash2g2.rs#L291
-    clearCofactor: (c, P) => {
-        const x = SEED;
-        const p0 = P.multiplyUnsafe(x);           // [x]P
-        const p1 = G2psi(c, p0.add(p0.double())); // Ψ([3x]P)
-        const p2 = G2psi2(c, p0);                 // Ψ²([x]P)
-        const p3 = G2psi(c, G2psi2(c, P))         // Ψ³(P)
-        // [x]P + Ψ([3x]P) + Ψ²([x]P) + Ψ³(P)
-        return p0.add(p1.add(p2.add(p3)))
-    },  
-    Signature: _bn254.Signature,
-  },
-  params: {
-    ..._bn254.params, 
-    xNegative: false,
-    twistType: 'divisive',
-  },
-  htfDefaults: htfDefaultsG1,
-  hash: htfDefaultsG1.hash,
-  randomBytes: randomBytes,
+    hash: htfDefaultsG1.hash,
+    randomBytes: randomBytes,
 
-  postPrecompute: (Rx, Ry, Rz, Qx, Qy, pointAdd) => {
-    const q = psi(Qx, Qy);
-    ({ Rx, Ry, Rz } = pointAdd(Rx, Ry, Rz, q[0], q[1]));
-    const q2 = psi(q[0], q[1]);
-    pointAdd(Rx, Ry, Rz, q2[0], _bn254.fields.Fp2.neg(q2[1]));
-  },
+    postPrecompute: (Rx, Ry, Rz, Qx, Qy, pointAdd) => {
+        const q = psi(Qx, Qy);
+        ({ Rx, Ry, Rz } = pointAdd(Rx, Ry, Rz, q[0], q[1]));
+        const q2 = psi(q[0], q[1]);
+        pointAdd(Rx, Ry, Rz, q2[0], _bn254.fields.Fp2.neg(q2[1]));
+    },
 });
+
+export function mapToG1(scalars: bigint[]) {
+    return G1_SVDW(_bn254.G1.CURVE.Fp.create(scalars[0]));
+}
+
+export function mapToG2(scalars: bigint[]) {
+    const u = _bn254.G2.CURVE.Fp.create(
+        { c0: scalars[0], c1: scalars[1] }
+    )
+    return G2_SVDW(u);
+}
 
 function mapToCurveSVDW<T>(CG: BasicWCurve<T>, opts: { c1: T, c2: T, c3: T, c4: T, z: T }): (u: T) => { x: T, y: T } {
     const Fp = CG.Fp;
     const is_square = FpIsSquare(Fp);
 
-    // mod.validateField(Fp)
-    // if (!Fp.isValid(opts.A) || !Fp.isValid(opts.B) || !Fp.isValid(opts.Z))
-    //     throw new Error('mapToCurveSimpleSVDW: invalid opts')
-    // const isSquare = SVDWFpIsSquare(Fp)
-    // if (!Fp.isOdd) throw new Error('Fp.isOdd is not implemented!')
+    validateField(Fp)
+    if (!Fp.isValid(CG.a) || !Fp.isValid(CG.b) || !Fp.isValid(opts.z))
+        throw new Error('mapToCurveSimpleSVDW: invalid opts')
+    if (!Fp.isOdd) throw new Error('Fp.isOdd is not implemented!')
 
     // https://www.ietf.org/archive/id/draft-irtf-cfrg-hash-to-curve-10.html#section-f.1
     //    1. c1 = g(Z)

@@ -19,8 +19,10 @@ contract SimpleAuctionScript is Script {
     function run() public {
         vm.startBroadcast();
 
+        address owner = msg.sender;
+
         // Deploy signature scheme address provider
-        SignatureSchemeAddressProvider sigAddrProvider = new SignatureSchemeAddressProvider();
+        SignatureSchemeAddressProvider sigAddrProvider = new SignatureSchemeAddressProvider(owner);
         console.log("SignatureSchemeAddressProvider deployed to:", address(sigAddrProvider));
 
         // Deploy blocklock signature scheme
@@ -35,7 +37,7 @@ contract SimpleAuctionScript is Script {
             hex"1053ca090929d58ca117e0295d110bb76a0d80963cbf31d55046631cf7bc74d6169229de700b59ec8fdaa0333664cb05c22b3a365544275696f94afd47108487048833a4b3115b9e6b09f679b620862dfd9c6fb1a7e2d6e1cfff2d463f6901e713209084ce174365fe42524f7cb19934106c3f6a347a74faf25ebd51bdef1160";
         BLS.PointG2 memory pk = abi.decode(validPK, (BLS.PointG2));
 
-        SignatureSender sigsender = new SignatureSender(pk.x, pk.y, address(sigAddrProvider));
+        SignatureSender sigsender = new SignatureSender(pk.x, pk.y, owner, address(sigAddrProvider));
         console.log("SignatureSender deployed to:", address(sigsender));
 
         BlocklockSender tlock = new BlocklockSender(address(sigsender));
@@ -43,7 +45,7 @@ contract SimpleAuctionScript is Script {
 
         // Deploy simple auction
         SimpleAuction simpleAuction =
-            new SimpleAuction(durationBlocks, reservePrice, highestBidPaymentWindowBlocks, address(tlock));
+            new SimpleAuction(owner, durationBlocks, reservePrice, highestBidPaymentWindowBlocks, address(tlock));
 
         console.log("\nSimpleAuction configuration parameters");
         console.log("Simple Auction contract deployed to:", address(simpleAuction));

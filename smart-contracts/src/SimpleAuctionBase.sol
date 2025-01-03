@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.28;
+pragma solidity 0.8.24;
 
+import {TypesLib} from "./lib/TypesLib.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {IBlocklockSender} from "./interfaces/IBlocklockSender.sol";
 import {IBlocklockReceiver} from "./interfaces/IBlocklockReceiver.sol";
@@ -10,7 +11,7 @@ import {IBlocklockReceiver} from "./interfaces/IBlocklockReceiver.sol";
 abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
     struct Bid {
         uint256 bidID; // Unique identifier for the bid
-        bytes sealedAmount; // Encrypted / sealed bid amount
+        TypesLib.Ciphertext sealedAmount; // Encrypted / sealed bid amount
         bytes decryptionKey; // The timelock decryption key used to unseal the sealed bid
         uint256 unsealedAmount; // Decrypted/unsealed bid amount, revealed after auction end
         address bidder; // Address of the bidder
@@ -42,7 +43,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
     mapping(address => uint256) public bidderToBidID; // Mapping of bidders to their bid IDs
 
     // ** Events **
-    event NewBid(uint256 indexed bidID, address indexed bidder, bytes sealedAmount);
+    event NewBid(uint256 indexed bidID, address indexed bidder, TypesLib.Ciphertext sealedAmount);
     event AuctionEnded(address indexed winner, uint256 amount);
     event BidUnsealed(uint256 indexed bidID, address bidder, uint256 unsealedAmount);
     event HighestBidFulfilled(address indexed bidder, uint256 amount);
@@ -87,12 +88,13 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
     /// @param highestBidPaymentWindowBlocks Number of blocks allowed for the highest bid payment after auction end
     /// @param timelockContract The address of the timelock encryption smart contract
     constructor(
+        address owner,
         uint256 durationBlocks,
         uint256 _reservePrice,
         uint256 highestBidPaymentWindowBlocks,
         address timelockContract
     ) {
-        auctioneer = msg.sender;
+        auctioneer = owner;
         auctionEndBlock = block.number + durationBlocks;
         highestBidPaymentDeadlineBlock = auctionEndBlock + highestBidPaymentWindowBlocks;
         reservePrice = _reservePrice;
@@ -123,7 +125,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
      *        which conceals the actual bid until it is unsealed later.
      * @return uint256 A unique identifier (`bidID`) generated for tracking the bid.
      */
-    function sealedBid(bytes calldata sealedAmount)
+    function sealedBid(TypesLib.Ciphertext calldata sealedAmount)
         external
         payable
         virtual
@@ -266,30 +268,24 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
         require(
             bidsById[requestID].decryptionKey.length == 0, "Bid decryption key already received from timelock contract."
         );
+
+        if (auctionState != AuctionState.Ended) {
+            auctionState = AuctionState.Ended;
+            emit AuctionEnded(highestBidder, highestBid);
+        }
+
         Bid storage bid = bidsById[requestID];
+        // store the decryption key
         bid.decryptionKey = decryptionKey;
+
+        // decrypt bid amount
+        uint256 decryptedSealedBidAmount = abi.decode(timelock.decrypt(bid.sealedAmount, bid.decryptionKey), (uint256));
+        bid.unsealedAmount = decryptedSealedBidAmount;
+
+        // update highest bid
+        updateHighestBid(requestID, decryptedSealedBidAmount);
+
         emit DecryptionKeyReceived(requestID, decryptionKey);
-    }
-
-    /**
-     * @notice Reveals a sealed bid by setting its unsealed amount and updating the highest bid if applicable.
-     *
-     * @dev Allows a bidder to reveal their bid, provided the bid has a valid decryption key.
-     *
-     * Requirements:
-     * - The bid ID must exist.
-     * - The bid must not have been previously revealed.
-     * - The bid must have a decryption key.
-     *
-     * @param bidID The unique identifier for the bid to be revealed.
-     * @param unsealedAmount The actual bid amount to be revealed.
-     */
-    function revealBid(uint256 bidID, uint256 unsealedAmount) external onlyAuctioneer {
-        require(bidsById[bidID].bidID != 0, "Bid ID does not exist.");
-        require(!bidsById[bidID].revealed, "Bid already revealed.");
-        require(bidsById[bidID].decryptionKey.length > 0, "Bid decryption key not received from timelock contract.");
-
-        updateHighestBid(bidID, unsealedAmount);
     }
 
     // ** Internal Functions **
@@ -364,7 +360,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
         external
         view
         returns (
-            bytes memory sealedAmount,
+            TypesLib.Ciphertext memory sealedAmount,
             bytes memory decryptionKey,
             uint256 unsealedAmount,
             address _bidder,
@@ -392,7 +388,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
         external
         view
         returns (
-            bytes memory sealedAmount,
+            TypesLib.Ciphertext memory sealedAmount,
             bytes memory decryptionKey,
             uint256 unsealedAmount,
             address bidder,
@@ -416,7 +412,7 @@ abstract contract SimpleAuctionBase is IBlocklockReceiver, ReentrancyGuard {
      * @param sealedAmount The encrypted value of the bid amount.
      * @return The unique identifier for the generated bid.
      */
-    function generateBidID(bytes calldata sealedAmount) internal returns (uint256) {
+    function generateBidID(TypesLib.Ciphertext calldata sealedAmount) internal returns (uint256) {
         uint256 bidID = timelock.requestBlocklock(auctionEndBlock, sealedAmount);
         return bidID;
     }
