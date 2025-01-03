@@ -81,7 +81,7 @@ docker exec -it bls-bn254-js-container bash
    ```bash
    npm run timelock:encrypt-and-bid -- --message 3 --blocknumber 57 --rpc-url $RPC_URL --privateKey 0xd4153f5547461a9f34a6da4de803c651c19794f62375d559a888b0d7aac38b63 --contractAddr 0x5756f8502fcfb571d695c446f72b229c249ce0e6
    ```
-   - This will generate the ciphertext to use for Bidder A’s sealed bid with the auction ending block number to ensure that the bid amount can only be decrypted once this block has been mined. Please make note of it.
+   - This will generate the ciphertext to use for Bidder A’s sealed bid linked to the auction ending block number to ensure that the bid amount can only be decrypted once this block has been mined. A reserve price of 0.1 ether is also collected from every bidder and locked in as a deposit to ensure that the highest bid is fulfilled. 
 
    We can confuirm the bid in Wei using the following command:
    ```bash
